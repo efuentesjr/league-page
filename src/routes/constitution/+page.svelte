@@ -406,15 +406,15 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
           <tr class="consolation">
             <td colspan="2">TOILET BOWL</td>
           </tr>
-          <tr>
+          <tr class="no-border">
             <td>9th</td>
             <td>1st Draft Pick</td>
           </tr>
-          <tr class="no-border">
+            <tr class="no-border">
             <td>10th</td>
             <td>2nd Draft Pick</td>
           </tr>
-          <tr class="no-border">
+          <tr>
             <td>11th</td>
             <td>3rd Draft Pick</td>
           </tr>
@@ -430,11 +430,11 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <td>14th</td>
             <td>6th Draft Pick</td>
           </tr>
-          <tr>
+          <tr class="no-border">
             <td>15th</td>
             <td>7th Draft Pick</td>
           </tr>
-          <tr class="no-border">
+          <tr>
             <td>16th</td>
             <td>8th Draft Pick</td>
           </tr>
