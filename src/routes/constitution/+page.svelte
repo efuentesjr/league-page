@@ -336,7 +336,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
       .draft-order-table th,
       .draft-order-table td {
         padding: 10px;
-        border: 1px solid #ccc; /* Changed border color to light gray (#ccc) */
+        border: 1px solid #ccc; /* Light gray border */
       }
 
       .playoffs,
@@ -348,88 +348,63 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
       .table-header {
         background-color: #b0e0ff;
       }
+
+      /* Custom style to remove bottom border from specific rows */
+      .no-border td {
+        border-bottom: none;
+      }
+
+      /* Remove the top border of the next row to create a seamless connection */
+      .no-border + tr td {
+        border-top: none;
+      }
     </style>
 
-    <table class="draft-order-table">
-      <thead>
-        <tr class="table-header">
-          <th>Seed</th>
-          <th>Pick</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="playoffs">
-          <td colspan="2">PLAYOFFS</td>
-        </tr>
-        <tr>
-          <td>1st</td>
-          <td>16th Pick</td>
-        </tr>
-        <tr>
-          <td>2nd</td>
-          <td>15th Pick</td>
-        </tr>
-        <tr>
-          <td>3rd</td>
-          <td>14th Pick</td>
-        </tr>
-        <tr>
-          <td>4th</td>
-          <td>13th Pick</td>
-        </tr>
-        <tr>
-          <td>5th</td>
-          <td>12th Pick</td>
-        </tr>
-        <tr>
-          <td>6th</td>
-          <td>11th Pick</td>
-        </tr>
-        <tr>
-          <td>7th</td>
-          <td>10th Pick</td>
-        </tr>
-        <tr>
-          <td>8th</td>
-          <td>9th Pick</td>
-        </tr>
-        <tr class="consolation">
-          <td colspan="2">TOILET BOWL</td>
-        </tr>
-        <tr>
-          <td>9th</td>
-          <td>1st Draft Pick</td>
-        </tr>
-        <tr>
-          <td>10th</td>
-          <td>2nd Pick</td>
-        </tr>
-        <tr>
-          <td>11th</td>
-          <td>3rd Pick</td>
-        </tr>
-        <tr>
-          <td>12th</td>
-          <td>4th Pick</td>
-        </tr>
-        <tr>
-          <td>13th</td>
-          <td>5th Pick</td>
-        </tr>
-        <tr>
-          <td>14th</td>
-          <td>6th Pick</td>
-        </tr>
-        <tr>
-          <td>15th</td>
-          <td>7th Pick</td>
-        </tr>
-        <tr>
-          <td>16th</td>
-          <td>8th Pick</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="subBlock">
+      <table class="draft-order-table">
+        <thead>
+          <tr class="table-header">
+            <th>Seed</th>
+            <th>Pick</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>9th</td>
+            <td>1st Draft Pick</td>
+          </tr>
+          <tr class="no-border">
+            <td>10th</td>
+            <td>2nd Draft Pick</td>
+          </tr>
+          <tr>
+            <td>11th</td>
+            <td>3rd Draft Pick</td>
+          </tr>
+          <tr>
+            <td>12th</td>
+            <td>4th Draft Pick</td>
+          </tr>
+          <tr class="no-border">
+            <td>13th</td>
+            <td>5th Draft Pick</td>
+          </tr>
+          <tr>
+            <td>14th</td>
+            <td>6th Draft Pick</td>
+          </tr>
+          <tr>
+            <td>15th</td>
+            <td>7th Draft Pick</td>
+          </tr>
+          <tr class="no-border">
+            <td>16th</td>
+            <td>8th Draft Pick</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
 
 
 
