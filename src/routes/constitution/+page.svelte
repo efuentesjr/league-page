@@ -408,44 +408,39 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
           </tr>
           <tr class="no-border">
             <td>9th</td>
-            <td>1st Draft Pick</td>
+            <td>1st Draft Pick *TBD</td>
           </tr>
             <tr class="no-border">
             <td>10th</td>
-            <td>2nd Draft Pick</td>
+            <td>2nd Draft Pick *TBD</td>
           </tr>
           <tr>
             <td>11th</td>
-            <td>3rd Draft Pick</td>
+            <td>3rd Draft Pick *TBD</td>
           </tr>
           <tr class="no-border">
             <td>12th</td>
-            <td>4th Draft Pick</td>
+            <td>4th Draft Pick *TBD</td>
           </tr>
           <tr class="no-border">
             <td>13th</td>
-            <td>5th Draft Pick</td>
+            <td>5th Draft Pick *TBD</td>
           </tr>
           <tr>
             <td>14th</td>
-            <td>6th Draft Pick</td>
+            <td>6th Draft Pick *TBD</td>
           </tr>
           <tr class="no-border">
             <td>15th</td>
-            <td>7th Draft Pick</td>
+            <td>7th Draft Pick *TBD</td>
           </tr>
           <tr>
             <td>16th</td>
-            <td>8th Draft Pick</td>
+            <td>8th Draft Pick *TBD</td>
           </tr>
         </tbody>
       </table>
     </div>
-
-   
-
-
-
 
     <h2 class="sectionHeading" bind:this={three}>Section 3 Scoring System</h2>
 
