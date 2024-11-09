@@ -205,9 +205,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     <h4 bind:this={oneTwoTwo}>1.2.2 Lending Players Prohibition</h4>
     <div class="subBlock">
-        <p>Any player traded may not be re-acquired via trade by the original team for at least six weeks following the initial trade. The only exception to this rule is during the offseason.
-
-However, for trades involving any player ranked in the top 35, re-acquisition by the original team is prohibited for two years after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this rule.</p>
+        <p>Any player traded may not be re-acquired via trade by the original team for at least six weeks following the initial trade. The only exception to this rule is during the offseason. However, for trades involving any player ranked in the top 35, re-acquisition by the original team is prohibited for two years after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this rule.</p>
     </div>
     
     <h4 bind:this={oneTwoThree}>1.2.3 Trade Deadline</h4>
@@ -259,9 +257,12 @@ However, for trades involving any player ranked in the top 35, re-acquisition by
             <li>Round #4 | 1-16</li>
             <li>Round #5 | 1-16</li>
     </div>
-    <p>If you trade future draft picks, you are required to actively manage your team through the playoffs in those seasons. If you fail to do so, the commissioners reserve the right to set your lineup to the best possible lineup each week in order to maintain the integrity of the draft picks.<p/>    
+
+        <p>If you trade future draft picks, you are required to actively manage your team through the playoffs in those seasons. If you fail to do so, the commissioners reserve the right to set your lineup to the best possible lineup each week in order to maintain the integrity of the draft picks.<p/>
+
     <h3 bind:this={twoThree}>2.3 Draft Day Trades</h3>
     <p>If a trade is being made during the draft, one or both parties can alert the commissioner to pause the draft to allow for extra time to negotiate the trade.</p>
+
     <h3 bind:this={twoThree}>2.4 Draft Order Determiniation</h3>
     <p>The playoffs will decide the follwiong years draft order as follows:</p>
     <div class="subBlock">
