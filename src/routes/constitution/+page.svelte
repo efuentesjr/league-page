@@ -265,9 +265,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     <h3 bind:this={twoThree}>2.4 Draft Order Determiniation</h3>
     <p>The playoffs will decide the follwiong years draft order as follows:</p>
-    <div class="subBlock">
-            <li>SEED</li>
-    
+
     <h2 class="sectionHeading" bind:this={three}>Section 3 Scoring System</h2>
 
     <h3 bind:this={threeOne}>3.1 Scoring System</h3>
