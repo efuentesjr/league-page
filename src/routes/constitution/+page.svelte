@@ -282,7 +282,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
       .draft-order-table th,
       .draft-order-table td {
         padding: 10px;
-        border: 1px solid #000;
+        border: 1px solid #ccc; /* Changed border color to light gray (#ccc) */
       }
 
       .playoffs,
@@ -376,6 +376,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         </tr>
       </tbody>
     </table>
+
     </div>
 
     <h2 class="sectionHeading" bind:this={three}>Section 3 Scoring System</h2>
