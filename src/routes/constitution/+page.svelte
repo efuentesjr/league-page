@@ -422,11 +422,11 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <td>12th</td>
             <td>4th Draft Pick</td>
           </tr>
-          <tr class="no-border">
+          <tr>
             <td>13th</td>
             <td>5th Draft Pick</td>
           </tr>
-          <tr class="no-border">
+          <tr>
             <td>14th</td>
             <td>6th Draft Pick</td>
           </tr>
