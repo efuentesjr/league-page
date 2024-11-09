@@ -250,27 +250,29 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     <h3 bind:this={twoOne}>2.2 Draft Order</h3>
     <p>The draft order each year will be a linear.</p>
-    <style>
-      .subBlock {
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        max-width: 400px;
-        margin: 20px auto;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
+    <script>
+      // No additional JavaScript needed if you're just displaying the table
+    </script>
 
-      .round-table {
+    <style>
+      /* Basic styling for the table */
+      .draft-order-table {
         width: 100%;
         border-collapse: collapse;
         text-align: center;
         font-family: Arial, sans-serif;
       }
 
-      .round-table th,
-      .round-table td {
+      .draft-order-table th,
+      .draft-order-table td {
         padding: 10px;
-        border: 1px solid #ccc;
+        border: 1px solid #ccc; /* Changed border color to light gray (#ccc) */
+      }
+
+      .playoffs,
+      .consolation {
+        background-color: #007acc;
+        color: white;
       }
 
       .table-header {
@@ -279,7 +281,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     </style>
 
     <div class="subBlock">
-      <table class="round-table">
+      <table class="draft-order-table">
         <thead>
           <tr class="table-header">
             <th>Round</th>
@@ -310,6 +312,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         </tbody>
       </table>
     </div>
+
     <p>If you trade future draft picks, you are required to actively manage your team through the playoffs in those seasons. If you fail to do so, the commissioners reserve the right to set your lineup to the best possible lineup each week in order to maintain the integrity of the draft picks.<p/>
 
     <h3 bind:this={twoThree}>2.3 Draft Day Trades</h3>
