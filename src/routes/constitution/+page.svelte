@@ -359,7 +359,6 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         border-top: none;
       }
     </style>
-
     <div class="subBlock">
       <table class="draft-order-table">
         <thead>
@@ -369,11 +368,49 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
           </tr>
         </thead>
         <tbody>
+          <tr class="playoffs">
+            <td colspan="2">PLAYOFFS</td>
+          </tr>
+          <tr>
+            <td>1st</td>
+            <td>16th Draft Pick</td>
+          </tr>
+          <tr>
+            <td>2nd</td>
+            <td>15th Draft Pick</td>
+          </tr>
+          <tr>
+            <td>3rd</td>
+            <td>14th Draft Pick</td>
+          </tr>
+          <tr>
+            <td>4th</td>
+            <td>13th Draft Pick</td>
+          </tr>
+          <tr>
+            <td>5th</td>
+            <td>12th Draft Pick</td>
+          </tr>
+          <tr>
+            <td>6th</td>
+            <td>11th Draft Pick</td>
+          </tr>
+          <tr>
+            <td>7th</td>
+            <td>10th Draft Pick</td>
+          </tr>
+          <tr>
+            <td>8th</td>
+            <td>9th Draft Pick</td>
+          </tr>
+          <tr class="consolation">
+            <td colspan="2">TOILET BOWL</td>
+          </tr>
           <tr>
             <td>9th</td>
             <td>1st Draft Pick</td>
           </tr>
-          <tr class="no-border">
+          <tr>
             <td>10th</td>
             <td>2nd Draft Pick</td>
           </tr>
@@ -385,7 +422,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <td>12th</td>
             <td>4th Draft Pick</td>
           </tr>
-          <tr class="no-border">
+          <tr>
             <td>13th</td>
             <td>5th Draft Pick</td>
           </tr>
@@ -397,13 +434,15 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <td>15th</td>
             <td>7th Draft Pick</td>
           </tr>
-          <tr class="no-border">
+          <tr>
             <td>16th</td>
             <td>8th Draft Pick</td>
           </tr>
         </tbody>
       </table>
     </div>
+
+   
 
 
 
