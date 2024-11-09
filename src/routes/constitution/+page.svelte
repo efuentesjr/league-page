@@ -222,7 +222,7 @@ However, for trades involving any player ranked in the top 35, re-acquisition by
     
     <h4 bind:this={oneTwoFive}>1.2.5 Veto/Trade Process</h4>
     <div class="subBlock">
-        <p>Only the Comishiner may VETO trades. See Sections</p><h4 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Trading</h4>
+        <p>Only the Comishiner may VETO trades. See Sections</p><h1 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Trading</h1>
     </div>
     
     
@@ -235,14 +235,14 @@ However, for trades involving any player ranked in the top 35, re-acquisition by
 
     <p>FAAB budgets carries over to the next season, to the maximum amount of $999</p>
 
-    <h4 bind:this={oneTwoThree}>1.3 Waiver Wire/FAAB Collusion</h4>
+    <h4 bind:this={oneTwoThree}>1.3.1 Waiver Wire/FAAB Collusion</h4>
     <div class="subBlock">
         <p>Collusion includes any coordinated efforts to manipulate the waiver wire or FAAB system for an unfair advantage. This includes, but is not limited to:
         <ul>
             <li>Pooling FAAB budgets between teams.</li>
             <li>Dropping a player with the intent of allowing a specific team to acquire them, particularly if it’s known that the team with the highest FAAB will likely pick up the player.</li>
 
-    <p>The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction freezes, or other sanctions as outlined in the league’s collusion policy.</p>
+        <p>The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction freezes, or other sanctions as outlined in the league’s collusion policy.</p>
     </div>
     
     <h2 class="sectionHeading" bind:this={two}>Section 2 Drafting</h2>
