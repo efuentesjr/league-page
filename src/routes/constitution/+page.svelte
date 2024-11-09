@@ -265,12 +265,21 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     <h3 bind:this={twoThree}>2.4 Draft Order Determiniation</h3>
     <p>The playoffs will determine the draft order for the following year as follows:</p>
-    <div class="subBlock">
     <script>
       // No additional JavaScript needed if you're just displaying the table
     </script>
 
     <style>
+      /* Styling for the subBlock container */
+      .subBlock {
+        padding: 20px;
+        background-color: #f9f9f9; /* Light background color */
+        border-radius: 8px; /* Rounded corners */
+        max-width: 600px; /* Width limit */
+        margin: 20px auto; /* Center and add margin */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+      }
+
       /* Basic styling for the table */
       .draft-order-table {
         width: 100%;
@@ -282,7 +291,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
       .draft-order-table th,
       .draft-order-table td {
         padding: 10px;
-        border: 1px solid #ccc; /* Changed border color to light gray (#ccc) */
+        border: 1px solid #ccc; /* Light gray border */
       }
 
       .playoffs,
@@ -296,86 +305,89 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
       }
     </style>
 
-    <table class="draft-order-table">
-      <thead>
-        <tr class="table-header">
-          <th>Seed</th>
-          <th>Pick</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="playoffs">
-          <td colspan="2">PLAYOFFS</td>
-        </tr>
-        <tr>
-          <td>1st</td>
-          <td>16th Pick</td>
-        </tr>
-        <tr>
-          <td>2nd</td>
-          <td>15th Pick</td>
-        </tr>
-        <tr>
-          <td>3rd</td>
-          <td>14th Pick</td>
-        </tr>
-        <tr>
-          <td>4th</td>
-          <td>13th Pick</td>
-        </tr>
-        <tr>
-          <td>5th</td>
-          <td>12th Pick</td>
-        </tr>
-        <tr>
-          <td>6th</td>
-          <td>11th Pick</td>
-        </tr>
-        <tr>
-          <td>7th</td>
-          <td>10th Pick</td>
-        </tr>
-        <tr>
-          <td>8th</td>
-          <td>9th Pick</td>
-        </tr>
-        <tr class="consolation">
-          <td colspan="2">CONSOLATION</td>
-        </tr>
-        <tr>
-          <td>9th</td>
-          <td>1st Draft Pick</td>
-        </tr>
-        <tr>
-          <td>10th</td>
-          <td>2nd Pick</td>
-        </tr>
-        <tr>
-          <td>11th</td>
-          <td>3rd Pick</td>
-        </tr>
-        <tr>
-          <td>12th</td>
-          <td>4th Pick</td>
-        </tr>
-        <tr>
-          <td>13th</td>
-          <td>5th Pick</td>
-        </tr>
-        <tr>
-          <td>14th</td>
-          <td>6th Pick</td>
-        </tr>
-        <tr>
-          <td>15th</td>
-          <td>7th Pick</td>
-        </tr>
-        <tr>
-          <td>16th</td>
-          <td>8th Pick</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="subBlock">
+      <table class="draft-order-table">
+        <thead>
+          <tr class="table-header">
+            <th>Seed</th>
+            <th>Pick</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="playoffs">
+            <td colspan="2">PLAYOFFS</td>
+          </tr>
+          <tr>
+            <td>1st</td>
+            <td>16th Pick</td>
+          </tr>
+          <tr>
+            <td>2nd</td>
+            <td>15th Pick</td>
+          </tr>
+          <tr>
+            <td>3rd</td>
+            <td>14th Pick</td>
+          </tr>
+          <tr>
+            <td>4th</td>
+            <td>13th Pick</td>
+          </tr>
+          <tr>
+            <td>5th</td>
+            <td>12th Pick</td>
+          </tr>
+          <tr>
+            <td>6th</td>
+            <td>11th Pick</td>
+          </tr>
+          <tr>
+            <td>7th</td>
+            <td>10th Pick</td>
+          </tr>
+          <tr>
+            <td>8th</td>
+            <td>9th Pick</td>
+          </tr>
+          <tr class="consolation">
+            <td colspan="2">CONSOLATION</td>
+          </tr>
+          <tr>
+            <td>9th</td>
+            <td>1st Draft Pick</td>
+          </tr>
+          <tr>
+            <td>10th</td>
+            <td>2nd Pick</td>
+          </tr>
+          <tr>
+            <td>11th</td>
+            <td>3rd Pick</td>
+          </tr>
+          <tr>
+            <td>12th</td>
+            <td>4th Pick</td>
+          </tr>
+          <tr>
+            <td>13th</td>
+            <td>5th Pick</td>
+          </tr>
+          <tr>
+            <td>14th</td>
+            <td>6th Pick</td>
+          </tr>
+          <tr>
+            <td>15th</td>
+            <td>7th Pick</td>
+          </tr>
+          <tr>
+            <td>16th</td>
+            <td>8th Pick</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
 
     </div>
 
