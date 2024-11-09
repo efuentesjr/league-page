@@ -259,9 +259,13 @@ However, for trades involving any player ranked in the top 35, re-acquisition by
             <li>Round #4 | 1-16</li>
             <li>Round #5 | 1-16</li>
     </div>
-    
+    <p>If you trade future draft picks, you are required to actively manage your team through the playoffs in those seasons. If you fail to do so, the commissioners reserve the right to set your lineup to the best possible lineup each week in order to maintain the integrity of the draft picks.<p/>    
     <h3 bind:this={twoThree}>2.3 Draft Day Trades</h3>
     <p>If a trade is being made during the draft, one or both parties can alert the commissioner to pause the draft to allow for extra time to negotiate the trade.</p>
+    <h3 bind:this={twoThree}>2.4 Draft Order Determiniation</h3>
+    <p>The playoffs will decide the follwiong years draft order as follows:</p>
+    <div class="subBlock">
+            <li>SEED</li>
     
     <h2 class="sectionHeading" bind:this={three}>Section 3 Scoring System</h2>
 
