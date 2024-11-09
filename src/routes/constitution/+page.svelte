@@ -375,7 +375,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <td>1st</td>
             <td>16th Draft Pick</td>
           </tr>
-          <tr class="no-border">
+          <tr>
             <td>2nd</td>
             <td>15th Draft Pick</td>
           </tr>
@@ -410,11 +410,11 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <td>9th</td>
             <td>1st Draft Pick</td>
           </tr>
-          <tr>
+          <tr class="no-border">
             <td>10th</td>
             <td>2nd Draft Pick</td>
           </tr>
-          <tr>
+          <tr class="no-border">
             <td>11th</td>
             <td>3rd Draft Pick</td>
           </tr>
@@ -422,11 +422,11 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <td>12th</td>
             <td>4th Draft Pick</td>
           </tr>
-          <tr>
+          <tr class="no-border">
             <td>13th</td>
             <td>5th Draft Pick</td>
           </tr>
-          <tr>
+          <tr class="no-border">
             <td>14th</td>
             <td>6th Draft Pick</td>
           </tr>
@@ -434,7 +434,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <td>15th</td>
             <td>7th Draft Pick</td>
           </tr>
-          <tr>
+          <tr class="no-border">
             <td>16th</td>
             <td>8th Draft Pick</td>
           </tr>
