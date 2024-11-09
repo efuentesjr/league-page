@@ -441,11 +441,98 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         </tbody>
       </table>
     </div>
+    <p>*TBD - The exact draft order will be determined using a lottery-style drawing with a ping pong machine. Each pick will be drawn randomly to ensure fairness.<p/>
 
     <h2 class="sectionHeading" bind:this={three}>Section 3 Scoring System</h2>
 
     <h3 bind:this={threeOne}>3.1 Scoring System</h3>
-    <p>The league scoring system breakdown is listed on the Sleeper fantasy app (for the most part, it follows typical .5PPR Scoring). The scoring system will never change without a majority league vote.</p>
+    <p>The league scoring system breakdown is listed on the Sleeper fantasy app as well.</p>
+    <div class="scoring-table">
+  <table>
+    <tr>
+      <td>Passing Yards</td>
+      <td>
+        <input type="text" value="30"> yards
+        <div class="description">(1 point every 30 yards)</div>
+      </td>
+    </tr>
+    <tr>
+      <td>Passing TD</td>
+      <td>
+        <input type="text" value="4">
+      </td>
+    </tr>
+    <tr>
+      <td>Passing 1st Down</td>
+      <td>
+        <input type="text">
+      </td>
+    </tr>
+    <tr>
+      <td>2-Pt Conversion</td>
+      <td>
+        <input type="text" value="2">
+      </td>
+    </tr>
+    <tr>
+      <td>Pass Intercepted</td>
+      <td>
+        <input type="text" value="-1">
+      </td>
+    </tr>
+    <tr>
+      <td>Pick 6 Thrown</td>
+      <td>
+        <input type="text">
+      </td>
+    </tr>
+    <tr>
+      <td>Pass Completed</td>
+      <td>
+        <input type="text" value="0.3">
+      </td>
+    </tr>
+    <tr>
+      <td>Incomplete Pass</td>
+      <td>
+        <input type="text" value="-0.3">
+      </td>
+    </tr>
+    <tr>
+      <td>Pass Attempts</td>
+      <td>
+        <input type="text" value="0">
+      </td>
+    </tr>
+    <!-- New rows based on the image you provided -->
+    <tr>
+      <td>QB Sacked</td>
+      <td>
+        <input type="text" value="-0.2">
+      </td>
+    </tr>
+    <tr>
+      <td>40+ Yard Completion Bonus</td>
+      <td>
+        <input type="text" value="0.1">
+      </td>
+    </tr>
+    <tr>
+      <td>40+ Yard Pass TD Bonus</td>
+      <td>
+        <input type="text" value="0.1">
+      </td>
+    </tr>
+    <tr>
+      <td>50+ Yard Pass TD Bonus</td>
+      <td>
+        <input type="text" value="0.3">
+      </td>
+    </tr>
+  </table>
+</div>
+
+    <p>The scoring system will never change without a majority league vote.</p>
     
     <h2 class="sectionHeading" bind:this={four}>Section 4 Postseason</h2>
     
