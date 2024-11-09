@@ -182,33 +182,32 @@
 
     <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Trading</h3>
     
-    <p>Trading of players and draft picks (up to 3 drafts away) are allowed. 
+    <p>Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.
 
-Trades might take a day or two to process. Only the Commish has the authority to VETO a trade. In our 11-year history, only two trades have ever been vetoed.
-
-Tradable assets include players, draft picks, and FAAB $. Conditional trading is also allowed. For example, a manager may trade for a QB who is speculated to be benched. The condition could be: TEAM A trades a QB to TEAM B for a #1 pick, with the condition that the QB starts for the rest of the season barring (not counting) injury. If the QB gets benched, the draft pick is reduced to a 2nd-round pick instead.</p>
-    <p>The Commish will (mandatory) reach out to the two managers in cases where a trade is in question prior to vetoing a trade. If the two managers find the Commish's ruling biased, they can appeal to both Co-Commissioners, and it takes both Co-Commissioners to overturn the Commish's ruling.</p>
+When a conditional trade takes place, the Commissioner must be notified, and a note will be added to the profiles of the players involved. It is the responsibility of the managers involved in the trade to monitor the conditions and inform the Commissioner if the terms are not met./p>
 
     <h4 bind:this={oneTwoOne}>1.2.1 Trade Collusion</h4>
     <div class="subBlock">
-        <p>If any owners are suspected of accepting bribes/offering bribes to enhance their/another owners team via trade, trading any assets other than fantasy players, draft picks, FAAB $, or otherwise found guilty of engaging in any form of collusion*, all parties involved in the trade will be susceptible to punishment. The punishments will go as followed:</p>
+        <p>If any team managers are suspected of offering or accepting bribes to enhance their own team or another manager’s team via trade, trading assets other than fantasy players, draft picks, or FAAB dollars, or otherwise found guilty of any form of collusion*, all parties involved in the trade will be subject to disciplinary action. Punishments may include the following:</p>
         
         <ul>
             <li>First Offense – Immediate reduction of FAAB budget by 80%</li>
-            <li>Second Offense – Immediate freeze on all transaction types for the next 18 weeks of regular season and playoff fantasy football games, including trades and waiver wire bids</li>
+            <li>Second Offense – An immediate freeze on all transaction types—including trades and waiver wire bids—for the next 17 weeks of regular season and playoff fantasy football games. This equates to a one-year suspension from all trades and waiver wire activity.</li>
             <li>Third Offense – A league meeting of all members not involved in any of the improper trades/activity in question will take place to discuss next steps.</li>
         </ul>
 
-        <p>All trades that are found guilty of collusion, will be reversed/denied. If the trade had affected the outcome of previous games, the results of those games will be revised.  </p>
+        <p>All trades that are found guilty of collusion, will be reversed/denied. If the trade had affected the outcome of previous games, the results of those games will be revised.</p>
 
-        <p>*Collusion includes the organizing of veto votes against an acceptable trade.</p>
+        <p>Collusion includes any coordinated efforts by managers to intentionally stack one team by trading players, draft picks, or FAAB dollars to create an unfair advantage over the rest of the league. The commissioners recognize that collusion does not necessarily occur through a single trade but may develop over a series of trades. Therefore, the commissioners will maintain a record of all trades between any two teams to monitor for potential collusion.</p>
 
-        <p>The commissioner will err on the side of letting owners manage their teams the way they see fit. Any collusion will need to be clear. The commissioner reserves the right to step in and at the very least assess the thinking of any team involved in a heavily lop-sided trade. </p>
+        <p>The commissioner will err on the side of allowing team managers to manage their teams as they see fit. Any suspected collusion must be clear and convincing. However, the commissioner reserves the right to step in and, at a minimum, assess the rationale behind any heavily lopsided trade.</p>
     </div>
 
     <h4 bind:this={oneTwoTwo}>1.2.2 Lending Players Prohibition</h4>
     <div class="subBlock">
-        <p>Any player traded may not be re-acquired via trade within 6 weeks of the original trade. However, the offseason is an exception. Any trade involving a top-35 ranked player will not allow re-acquisition until 2 years after the original trade, no off season exception. The player will be tagged with "NO TRADE BACK TO and FROM." Any teams engaging in this behavior will be subject to the aforementioned collusion punishments.</p>
+        <p>Any player traded may not be re-acquired via trade by the original team for at least six weeks following the initial trade. The only exception to this rule is during the offseason.
+
+However, for trades involving any player ranked in the top 35, re-acquisition by the original team is prohibited for two years after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this rule.</p>
     </div>
     
     <h4 bind:this={oneTwoThree}>1.2.3 Trade Deadline</h4>
@@ -218,7 +217,7 @@ Tradable assets include players, draft picks, and FAAB $. Conditional trading is
     
     <h4 bind:this={oneTwoFour}>1.2.4 Trade Restrictions</h4>
     <div class="subBlock">
-        <p>You will not be able to trade draft picks that are more than 3 drafts away. For example, during the 2021 season you cannot trade any picks in or after the 2025 draft. You may only trade FAAB $ from the current season.</p>
+        <p>You will not be able to trade draft picks that are more than 3 drafts away. For example, during the 2021 season you cannot trade any picks in or after the 2025 draft.</p>
     </div>
     
     <h4 bind:this={oneTwoFive}>1.2.5 Veto/Trade Process</h4>
@@ -230,21 +229,30 @@ Tradable assets include players, draft picks, and FAAB $. Conditional trading is
     
     <h3 bind:this={oneThree}>1.3 Waiver Wire</h3>
 
-    <p>Begining 2023 season MFFL will be adding a bouns FAAB $ to those managers that attend and participate in the leagues competition commitee and in person draft. For those that live out of town they must follow along and participate live during the draft. No AUTO drafting.</p>
+    <p>Beginning in the 2023 season, the MFFL will award bonus FAAB (Free Agent Acquisition Budget) dollars to managers who attend and actively participate in the league’s Competition Committee meetings and the in-person draft. Out-of-town managers must follow along and participate live during the draft to qualify—auto-drafting is not allowed.</p>
     
-    <p>FAAB Waiver wire system. Each team will begin the season with $100-$200, exact amount to be announced each season by the Commish. NO $0 bids are allowed. Bids will process Thursdays at 2am.</p>
+    <p>FAAB Waiver Wire System: Each team will begin the season with a Free Agent Acquisition Budget (FAAB) between $100 and $200, with the exact amount announced by the Commissioner before the season starts. No $0 bids are allowed. Waiver bids will process every Thursday at 2:00 a.m.</p>
 
     <p>FAAB budgets carries over to the next season, to the maximum amount of $999</p>
-    
+
+    <h4 bind:this={oneTwoThree}>1.3 Waiver Wire/FAAB Collusion</h4>
+    <div class="subBlock">
+        <p>Collusion includes any coordinated efforts to manipulate the waiver wire or FAAB system for an unfair advantage. This includes, but is not limited to:
+        <ul>
+            <li>Pooling FAAB budgets between teams.</li>
+            <li>Dropping a player with the intent of allowing a specific team to acquire them, particularly if it’s known that the team with the highest FAAB will likely pick up the player.</li>
+
+    <p>The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction freezes, or other sanctions as outlined in the league’s collusion policy.</p>
+    </div>
     
     <h2 class="sectionHeading" bind:this={two}>Section 2 Drafting</h2>
     
-    <h3 bind:this={twoOne}>2.1 Draft Order</h3>
-    <p>The draft order each year will be a linear draft in reverse order of the previous year’s regular season standings.</p>
-
-    <h3 bind:this={twoTwo}>2.2 Rookie Drafts</h3>
-    <p>Rokkie drafts will consist of 3 round of drafting, with 5 minutes alotted for each pick. To make room for the incoming players, benches will be expanded by (5) spots. These spots will be removed in mid-August, at which point you will need to have cut the necessary players.</p>
+    <h3 bind:this={twoTwo}>2.1 Rookie Drafts</h3>
+    <p>The draft will consist of rookies only and will be held over 5 rounds, with a 5-minute limit for each pick. To accommodate incoming players, bench sizes will temporarily expand by five spots when we transition the league to the next season. These additional spots will be removed shortly after the draft, at which point you must have cut the necessary players to comply with roster limits.</p>
     <p>Any spots not filled during the draft, can be filled immediately afterwards from the waiver wire.</p>
+
+    <h3 bind:this={twoOne}>2.2 Draft Order</h3>
+    <p>The draft order each year will be a linear draft in reverse order of the previous year’s regular season standings.</p>
     
     <h3 bind:this={twoThree}>2.3 Draft Day Trades</h3>
     <p>If a trade is being made during the draft, one or both parties can alert the commissioner to pause the draft to allow for extra time to negotiate the trade.</p>
