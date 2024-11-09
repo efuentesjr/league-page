@@ -222,7 +222,7 @@ However, for trades involving any player ranked in the top 35, re-acquisition by
     
     <h4 bind:this={oneTwoFive}>1.2.5 Veto/Trade Process</h4>
     <div class="subBlock">
-        <p>Only the Comishiner may VETO trades. See Sections</p><h1 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Trading</h1>
+        <p>Only the Comishiner may VETO trades. See Sections</p><h6 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Trading</h6>
     </div>
     
     
@@ -241,18 +241,24 @@ However, for trades involving any player ranked in the top 35, re-acquisition by
         <ul>
             <li>Pooling FAAB budgets between teams.</li>
             <li>Dropping a player with the intent of allowing a specific team to acquire them, particularly if it’s known that the team with the highest FAAB will likely pick up the player.</li>
-
-        <p>The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction freezes, or other sanctions as outlined in the league’s collusion policy.</p>
     </div>
+        <p>The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction freezes, or other sanctions as outlined in the league’s collusion policy.</p>
     
     <h2 class="sectionHeading" bind:this={two}>Section 2 Drafting</h2>
     
-    <h3 bind:this={twoTwo}>2.1 Rookie Drafts</h3>
-    <p>The draft will consist of rookies only and will be held over 5 rounds, with a 5-minute limit for each pick. To accommodate incoming players, bench sizes will temporarily expand by five spots when we transition the league to the next season. These additional spots will be removed shortly after the draft, at which point you must have cut the necessary players to comply with roster limits.</p>
+    <h3 bind:this={twoTwo}>2.1 Drafts</h3>
+    <p>The draft will consist of rookies only and will take place over 5 rounds, with a 5-minute limit per pick. To accommodate incoming players, bench sizes will temporarily expand by five spots at the start of the season, following the Competition Committee meeting. These additional spots will be removed shortly after the draft, at which point all teams must reduce their rosters to comply with standard roster limits.</p>
     <p>Any spots not filled during the draft, can be filled immediately afterwards from the waiver wire.</p>
 
     <h3 bind:this={twoOne}>2.2 Draft Order</h3>
-    <p>The draft order each year will be a linear draft in reverse order of the previous year’s regular season standings.</p>
+    <p>The draft order each year will be a linear.</p>
+    <div class="subBlock">
+            <li>Round #1 | 1-16</li>
+            <li>Round #2 | 1-16</li>
+            <li>Round #3 | 1-16</li>
+            <li>Round #4 | 1-16</li>
+            <li>Round #5 | 1-16</li>
+    </div>
     
     <h3 bind:this={twoThree}>2.3 Draft Day Trades</h3>
     <p>If a trade is being made during the draft, one or both parties can alert the commissioner to pause the draft to allow for extra time to negotiate the trade.</p>
