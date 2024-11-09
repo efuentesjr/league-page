@@ -375,7 +375,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <td>1st</td>
             <td>16th Draft Pick</td>
           </tr>
-          <tr class=".no border td">
+          <tr class="no border">
             <td>2nd</td>
             <td>15th Draft Pick</td>
           </tr>
