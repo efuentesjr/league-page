@@ -29,7 +29,7 @@ export const managers = [
       "roster": 1,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
       "name": "Eddie Fuentes Jr  |  Commish",
       "location": "Manor TX", // (optional)
-      "bio": "Bears Down!",
+      "bio": "Da Bears! Bears Down! 🐻⬇️",
       "photo": "/managers/EFJ.jpg", // square ratio recommended (no larger than 500x500)
       "fantasyStart": 2014, // (optional) when did the manager start playing fantasy football
       "favoriteTeam": "chi", // (optional) favorite NFL team, (follows convention: nyj, sea, mia, etc.) MUST BE LOWERCASE
