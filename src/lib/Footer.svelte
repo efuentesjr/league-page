@@ -128,6 +128,7 @@
 	<br />
 	<!-- PLEASE DO NOT REMOVE THE BUILT BY -->
 	<span class="creator">Built by <a href="">Nicholas Melhado</a><br /></span>
+	<span class="creator">Backend maintained and updated by <a href="https://manor-dynasty-league.vercel.app/manager?manager=0">Eddie Fuentes</a><br /></span>
 	<!-- You can remove the donation link (although any donations to help
 	 maintain and enhance League Page would be greatly appreciated!) -->
 	
