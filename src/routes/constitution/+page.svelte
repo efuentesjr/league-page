@@ -242,13 +242,132 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     </div>
         <p>The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction freezes, or other sanctions as outlined in the league’s collusion policy.</p>
     
-    <h2 class="sectionHeading" bind:this={two}>Section 2 Drafting</h2>
+   <h2 class="sectionHeading" bind:this={four}>Section 2 Postseason</h2>
     
-    <h3 bind:this={twoTwo}>2.1 Drafts</h3>
+    <h3 bind:this={fourOne}>2.1 Playoffs</h3>
+    <p>At the end of the season 8 teams will make the playoffs. The first round of playoffs will commence in week 15. Each team that wins their division, North, South, East & West (4) and the 4 wild card teams that finish with the best records overall from the remaining teams, will receive a playoff berth. Each playoff matchup will only last one week and the winner will advance. Week 18 will not be used.</p>
+    <p>The first-round matchups will be determined by end-of-season seeding: 1 vs. 8, 2 vs. 7, 3 vs. 6, and 4 vs. 5. In the following rounds, each team stays on their side of the bracket as they advance.<p/>
+<style>
+    /* General Styling */
+    .bracket-container {
+        display: flex;
+        gap: 10px; /* Reduced space between rounds */
+    }
+
+    .round {
+        display: flex;
+        flex-direction: column;
+        gap: 8px; /* Reduced gap between matchups */
+        align-items: center; /* Center align content in each round */
+    }
+
+    .round-title {
+        font-size: 0.75em;
+        text-align: center;
+        color: #aaa;
+        margin-bottom: 5px;
+    }
+
+    .matchup {
+        background-color: #3b3f4a;
+        padding: 5px; /* Smaller padding for more compact boxes */
+        border-radius: 4px;
+        width: 100px; /* Reduced width */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Center-align teams without boxes */
+    .team, .tbd, .championship {
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        width: 100px; /* Match width for alignment */
+        font-size: 0.7em; /* Reduced font size */
+    }
+
+    .tbd {
+        color: #666;
+    }
+
+    .championship {
+        font-size: 0.75em;
+        color: orange;
+    }
+
+    /* Vertical spacing for alignment */
+    .round:nth-child(2) .matchup {
+        margin-top: 35px; /* Adjusted to vertically center with Round 1 */
+    }
+
+    .round:nth-child(3) .matchup {
+        margin-top: 70px; /* Adjusted further for Finals */
+    }
+</style>
+
+<div class="bracket-container">
+    <!-- Round 1 -->
+    <div class="round">
+        <div class="round-title">Round 1 <br><small>(Week 15)</small></div>
+
+        <div class="matchup">
+            <div class="team">#1 Fristoe23</div>
+            <div class="team">#8 PrimeTimeJG</div>
+        </div>
+
+        <div class="matchup">
+            <div class="team">#4 Alinz</div>
+            <div class="team">#5 efuentesjr</div>
+        </div>
+
+        <div class="matchup">
+            <div class="team">#3 TreyF</div>
+            <div class="team">#6 JoshuaR23</div>
+        </div>
+
+        <div class="matchup">
+            <div class="team">#2 NickBowens</div>
+            <div class="team">#7 88Boyz11</div>
+        </div>
+    </div>
+
+    <!-- Round 2 -->
+    <div class="round">
+        <div class="round-title">Round 2 <br><small>(Week 16)</small></div>
+
+        <div class="matchup">
+            <div class="tbd">TBD</div>
+            <div class="tbd">TBD</div>
+        </div>
+
+        <div class="matchup">
+            <div class="tbd">TBD</div>
+            <div class="tbd">TBD</div>
+        </div>
+    </div>
+
+    <!-- Finals -->
+    <div class="round">
+        <div class="round-title">Finals <br><small>(Week 17)</small></div>
+
+        <div class="matchup">
+            <div class="championship">🏆 Champ</div>
+            <div class="tbd">TBD</div>
+            <div class="tbd">TBD</div>
+        </div>
+    </div>
+</div>
+    
+
+    <h2 class="sectionHeading" bind:this={two}>Section 3 Drafting</h2>
+    
+    <h3 bind:this={twoTwo}>3.1 Drafts</h3>
     <p>The draft will consist of rookies only and will take place over 5 rounds, with a 5-minute limit per pick. To accommodate incoming players, bench sizes will temporarily expand by five spots at the start of the season, following the Competition Committee meeting. These additional spots will be removed shortly after the draft, at which point all teams must reduce their rosters to comply with standard roster limits.</p>
     <p>Any spots not filled during the draft, can be filled immediately afterwards from the waiver wire.</p>
 
-    <h3 bind:this={twoOne}>2.2 Draft Order</h3>
+    <h3 bind:this={twoOne}>3.2 Draft Order</h3>
     <p>The draft order each year will be a linear.</p>
     <script>
       // No additional JavaScript needed if you're just displaying the table
@@ -315,10 +434,10 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     <p>If you trade future draft picks, you are required to actively manage your team through the playoffs in those seasons. If you fail to do so, the commissioners reserve the right to set your lineup to the best possible lineup each week in order to maintain the integrity of the draft picks.<p/>
 
-    <h3 bind:this={twoThree}>2.3 Draft Day Trades</h3>
+    <h3 bind:this={twoThree}>3.3 Draft Day Trades</h3>
     <p>If a trade is being negotiated during the draft, either party may request that the Commissioner pause the draft to allow additional time for the trade discussions.</p>
 
-    <h3 bind:this={twoThree}>2.4 Draft Order Determiniation</h3>
+    <h3 bind:this={twoThree}>3.4 Draft Order Determiniation</h3>
     <p>The playoffs will determine the draft order for the following year as follows:</p>
     <script>
       // No additional JavaScript needed if you're just displaying the table
@@ -443,9 +562,9 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     </div>
     <p>*TBD - The exact draft order will be determined using a lottery-style drawing with a ping pong machine. Each pick will be drawn randomly to ensure fairness.<p/>
 
-    <h2 class="sectionHeading" bind:this={three}>Section 3 Scoring System</h2>
+    <h2 class="sectionHeading" bind:this={three}>Section 4 Scoring System</h2>
 
-    <h3 bind:this={threeOne}>3.1 Scoring System</h3>
+    <h3 bind:this={threeOne}>4.1 Scoring System</h3>
     <p>The league scoring system breakdown is listed on the Sleeper fantasy app as well.</p>
     <div class="scoring-table">
       <table>
@@ -715,124 +834,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     </div>
     <p>The scoring system will never change without a majority league vote, 9 Minumum votes.</p>
     
-    <h2 class="sectionHeading" bind:this={four}>Section 4 Postseason</h2>
-    
-    <h3 bind:this={fourOne}>4.1 Playoffs</h3>
-    <p>At the end of the season 8 teams will make the playoffs. The first round of playoffs will commence in week 15. Each team that wins their division, North, South, East & West (4) and the 4 wild card teams that finish with the best records overall from the remaining teams, will receive a playoff berth. Each playoff matchup will only last one week and the winner will advance. Week 18 will not be used.</p>
-    <p>The first-round matchups will be determined by end-of-season seeding: 1 vs. 8, 2 vs. 7, 3 vs. 6, and 4 vs. 5. In the following rounds, each team stays on their side of the bracket as they advance.<p/>
-<style>
-    /* General Styling */
-    .bracket-container {
-        display: flex;
-        gap: 10px; /* Reduced space between rounds */
-    }
-
-    .round {
-        display: flex;
-        flex-direction: column;
-        gap: 8px; /* Reduced gap between matchups */
-        align-items: center; /* Center align content in each round */
-    }
-
-    .round-title {
-        font-size: 0.75em;
-        text-align: center;
-        color: #aaa;
-        margin-bottom: 5px;
-    }
-
-    .matchup {
-        background-color: #3b3f4a;
-        padding: 5px; /* Smaller padding for more compact boxes */
-        border-radius: 4px;
-        width: 100px; /* Reduced width */
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    /* Center-align teams without boxes */
-    .team, .tbd, .championship {
-        font-weight: bold;
-        color: white;
-        text-align: center;
-        width: 100px; /* Match width for alignment */
-        font-size: 0.7em; /* Reduced font size */
-    }
-
-    .tbd {
-        color: #666;
-    }
-
-    .championship {
-        font-size: 0.75em;
-        color: orange;
-    }
-
-    /* Vertical spacing for alignment */
-    .round:nth-child(2) .matchup {
-        margin-top: 35px; /* Adjusted to vertically center with Round 1 */
-    }
-
-    .round:nth-child(3) .matchup {
-        margin-top: 70px; /* Adjusted further for Finals */
-    }
-</style>
-
-<div class="bracket-container">
-    <!-- Round 1 -->
-    <div class="round">
-        <div class="round-title">Round 1 <br><small>(Week 15)</small></div>
-
-        <div class="matchup">
-            <div class="team">#1 Fristoe23</div>
-            <div class="team">#8 PrimeTimeJG</div>
-        </div>
-
-        <div class="matchup">
-            <div class="team">#4 Alinz</div>
-            <div class="team">#5 efuentesjr</div>
-        </div>
-
-        <div class="matchup">
-            <div class="team">#3 TreyF</div>
-            <div class="team">#6 JoshuaR23</div>
-        </div>
-
-        <div class="matchup">
-            <div class="team">#2 NickBowens</div>
-            <div class="team">#7 88Boyz11</div>
-        </div>
-    </div>
-
-    <!-- Round 2 -->
-    <div class="round">
-        <div class="round-title">Round 2 <br><small>(Week 16)</small></div>
-
-        <div class="matchup">
-            <div class="tbd">TBD</div>
-            <div class="tbd">TBD</div>
-        </div>
-
-        <div class="matchup">
-            <div class="tbd">TBD</div>
-            <div class="tbd">TBD</div>
-        </div>
-    </div>
-
-    <!-- Finals -->
-    <div class="round">
-        <div class="round-title">Finals <br><small>(Week 17)</small></div>
-
-        <div class="matchup">
-            <div class="championship">🏆 Champ</div>
-            <div class="tbd">TBD</div>
-            <div class="tbd">TBD</div>
-        </div>
-    </div>
-</div>
-
+ 
 
     <h3 bind:this={fourTwo}>4.2 Seeding Tiebreakers</h3>
     <p>If two teams finish with the same record the tiebreakers will go as followed:</p>
