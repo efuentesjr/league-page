@@ -724,7 +724,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     /* General Styling */
     .bracket-container {
         display: flex;
-        gap: 40px;
+        gap: 20px;
     }
 
     .round {
@@ -740,24 +740,40 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         margin-bottom: 10px;
     }
 
-    .team {
-        text-align: left;
-        font-weight: bold;
-        color: white;
-        padding-left: 10px;
+    .matchup {
+        background-color: #3b3f4a;
+        padding: 15px;
+        border-radius: 8px;
+        width: 200px;
+        height: 70px; /* Set fixed height for alignment */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
-    .tbd {
-        color: #666;
-        text-align: left;
-        padding-left: 10px;
+    .team {
+        display: flex;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+    }
+
+    .team:last-child {
+        margin-bottom: 0;
+    }
+
+    .score {
+        display: none; /* Hide scores in Round 1 */
     }
 
     .championship {
         font-size: 1.2em;
         color: orange;
-        text-align: left;
-        padding-left: 10px;
+    }
+
+    .tbd {
+        color: #666;
     }
 </style>
 
@@ -766,39 +782,54 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <div class="round">
         <div class="round-title">Round 1 <br><small>(Week 15)</small></div>
 
-        <div class="team">#1 Fristoe23</div>
-        <div class="team">#8 PrimeTimeJG</div>
+        <div class="matchup">
+            <div class="team">#1 Fristoe23</div>
+            <div class="team">#8 PrimeTimeJG</div>
+        </div>
 
-        <div class="team">#4 Alinz</div>
-        <div class="team">#5 efuentesjr</div>
+        <div class="matchup">
+            <div class="team">#4 Alinz</div>
+            <div class="team">#5 efuentesjr</div>
+        </div>
 
-        <div class="team">#3 TreyF</div>
-        <div class="team">#6 JoshuaR23</div>
+        <div class="matchup">
+            <div class="team">#3 TreyF</div>
+            <div class="team">#6 JoshuaR23</div>
+        </div>
 
-        <div class="team">#2 NickBowens</div>
-        <div class="team">#7 TexasTimeshifts</div>
+        <div class="matchup">
+            <div class="team">#2 NickBowens</div>
+            <div class="team">#7 TexasTimeshifts</div>
+        </div>
     </div>
 
     <!-- Round 2 -->
     <div class="round">
         <div class="round-title">Round 2 <br><small>(Week 16)</small></div>
 
-        <div class="tbd">TBD</div>
-        <div class="tbd">TBD</div>
+        <div class="matchup">
+            <div class="tbd">TBD</div>
+            <div class="tbd">TBD</div>
+        </div>
 
-        <div class="tbd">TBD</div>
-        <div class="tbd">TBD</div>
+        <div class="matchup">
+            <div class="tbd">TBD</div>
+            <div class="tbd">TBD</div>
+        </div>
     </div>
 
     <!-- Finals -->
     <div class="round">
         <div class="round-title">Finals <br><small>(Week 17)</small></div>
 
-        <div class="championship">🏆 Championship</div>
-        <div class="tbd">TBD</div>
-        <div class="tbd">TBD</div>
+        <div class="matchup">
+            <div class="championship">🏆 Championship</div>
+            <div class="tbd">TBD</div>
+            <div class="tbd">TBD</div>
+        </div>
     </div>
 </div>
+
 
     <h3 bind:this={fourTwo}>4.2 Seeding Tiebreakers</h3>
     <p>If two teams finish with the same record the tiebreakers will go as followed:</p>
