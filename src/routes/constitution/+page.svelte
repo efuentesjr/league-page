@@ -724,28 +724,28 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     /* General Styling */
     .bracket-container {
         display: flex;
-        gap: 40px; /* Space between rounds */
+        gap: 10px; /* Space between rounds */
     }
 
     .round {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 10px;
         align-items: center; /* Center align content in each round */
     }
 
     .round-title {
-        font-size: 1.2em;
+        font-size: .9em;
         text-align: center;
         color: #aaa;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 
     .matchup {
         background-color: #3b3f4a;
         padding: 15px;
-        border-radius: 8px;
-        width: 200px;
+        border-radius: 6x;
+        width: 100px;
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -765,7 +765,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     }
 
     .championship {
-        font-size: 1.2em;
+        font-size: .9em;
         color: orange;
     }
 
@@ -775,7 +775,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     }
 
     .round:nth-child(3) .matchup {
-        margin-top: 80px; /* Adjust further for Finals */
+        margin-top: 50px; /* Adjust further for Finals */
     }
 </style>
 
