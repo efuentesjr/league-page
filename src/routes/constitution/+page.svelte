@@ -276,7 +276,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         background-color: #3b3f4a;
         padding: 5px; /* Smaller padding for more compact boxes */
         border-radius: 4px;
-        width: 100px; /* Reduced width */
+        width: 90px; /* Reduced width */
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -288,7 +288,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         font-weight: bold;
         color: white;
         text-align: center;
-        width: 100px; /* Match width for alignment */
+        width: 90px; /* Match width for alignment */
         font-size: 0.7em; /* Reduced font size */
     }
 
@@ -843,8 +843,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     
     <h3 bind:this={fiveOne}>5.1 League Tanking Policy</h3>
     <p>Tanking may be a strategy that a manager employs to improve the team’s draft position. Please make sure to fully understand the potential consequences of tanking. Leaving your lineup empty is not allowed, as this is considered "ghosting" your team. Ghosting will result in the manager being removed from the league. Please notify the commissioner when tanking.</p>
-    <P>
-
+    
     <h2 class="sectionHeading" bind:this={six}>Section 6 Replacing Managers</h2>
     
     <h3 bind:this={sixOne}>6.1 Removing Managers</h3>
