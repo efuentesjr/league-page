@@ -724,18 +724,18 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     /* General Styling */
     .bracket-container {
         display: flex;
-        gap: 20px; /* Space between rounds */
+        gap: 15px; /* Space between rounds */
     }
 
     .round {
         display: flex;
         flex-direction: column;
-        gap: 10px; /* Reduced gap between matchups */
+        gap: 8px; /* Reduced gap between matchups */
         align-items: center; /* Center align content in each round */
     }
 
     .round-title {
-        font-size: 0.8em;
+        font-size: 0.75em;
         text-align: center;
         color: #aaa;
         margin-bottom: 5px;
@@ -743,9 +743,9 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     .matchup {
         background-color: #3b3f4a;
-        padding: 8px; /* Reduced padding */
-        border-radius: 4px; /* Smaller rounded corners */
-        width: 120px; /* Reduced width for smaller boxes */
+        padding: 5px; /* Smaller padding for more compact boxes */
+        border-radius: 4px;
+        width: 100px; /* Reduced width */
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -757,8 +757,8 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         font-weight: bold;
         color: white;
         text-align: center;
-        width: 120px; /* Match width for alignment */
-        font-size: 0.85em; /* Slightly smaller font */
+        width: 100px; /* Match width for alignment */
+        font-size: 0.7em; /* Reduced font size */
     }
 
     .tbd {
@@ -766,17 +766,17 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     }
 
     .championship {
-        font-size: 0.85em;
+        font-size: 0.75em;
         color: orange;
     }
 
     /* Vertical spacing for alignment */
     .round:nth-child(2) .matchup {
-        margin-top: 30px; /* Adjust to vertically center with Round 1 */
+        margin-top: 20px; /* Adjust to vertically center with Round 1 */
     }
 
     .round:nth-child(3) .matchup {
-        margin-top: 60px; /* Adjust further for Finals */
+        margin-top: 40px; /* Adjust further for Finals */
     }
 </style>
 
@@ -826,7 +826,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         <div class="round-title">Finals <br><small>(Week 17)</small></div>
 
         <div class="matchup">
-            <div class="championship">🏆 Championship</div>
+            <div class="championship">🏆 Champ</div>
             <div class="tbd">TBD</div>
             <div class="tbd">TBD</div>
         </div>
