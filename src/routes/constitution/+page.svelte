@@ -220,11 +220,9 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     
     <h4 bind:this={oneTwoFive}>1.2.5 Veto/Trade Process</h4>
     <div class="subBlock">
-        <p>Only the Comishiner may VETO trades. See Sections</p><h6 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Trading</h6>
+        <p>Only the Commissioner may veto trades. See Sections "1.2 Trading"<p/>
     </div>
-    
-    
-    
+       
     <h3 bind:this={oneThree}>1.3 Waiver Wire</h3>
 
     <p>Beginning in the 2023 season, the MFFL will award bonus FAAB (Free Agent Acquisition Budget) dollars to managers who attend and actively participate in the league’s Competition Committee meetings and the in-person draft. Out-of-town managers must follow along and participate live during the draft to qualify—auto-drafting is not allowed.</p>
@@ -319,23 +317,23 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         <div class="round-title">Round 1 <br><small>(Week 15)</small></div>
 
         <div class="matchup">
-            <div class="team">#1 Fristoe23</div>
-            <div class="team">#8 PrimeTimeJG</div>
+            <div class="team">#1 TEAM A</div>
+            <div class="team">#8 TEAM H</div>
         </div>
 
         <div class="matchup">
-            <div class="team">#4 Alinz</div>
-            <div class="team">#5 efuentesjr</div>
+            <div class="team">#4 TEAM 3</div>
+            <div class="team">#5 TEAM F</div>
         </div>
 
         <div class="matchup">
-            <div class="team">#3 TreyF</div>
-            <div class="team">#6 JoshuaR23</div>
+            <div class="team">#3 TEAM 4</div>
+            <div class="team">#6 TEAM 5</div>
         </div>
 
         <div class="matchup">
-            <div class="team">#2 NickBowens</div>
-            <div class="team">#7 88Boyz11</div>
+            <div class="team">#2 TEAM B</div>
+            <div class="team">#7 TEAM G</div>
         </div>
     </div>
 
@@ -841,24 +839,11 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     </div>
     <p>The scoring system will never change without a majority league vote, 9 Minumum votes are required.</p>
     
- 
-
-    <h3 bind:this={fourTwo}>4.2 Seeding Tiebreakers</h3>
-    <p>If two teams finish with the same record the tiebreakers will go as followed:</p>
-
-    <ol>
-        <li>Points For</li>
-        <li>Head 2 Head Record</li>
-        <li>Division Record</li>
-        <li>Total Points Against</li>
-        <li>Coin Flip</li>
-        <li>Duel to the death</li>
-    </ol>
-
     <h2 class="sectionHeading" bind:this={five}>Section 5 Tanking Policy</h2>
     
     <h3 bind:this={fiveOne}>5.1 League Tanking Policy</h3>
-    <p>No team may intentionally leave starting roster spots empty. Any evidence of intentionally leaving roster spots empty in order to improve your draft position may be subject to punishment, including but not limited to the forfeiture of draft selections.</p>
+    <p>Tanking may be a strategy that a manager employs to improve the team’s draft position. Please make sure to fully understand the potential consequences of tanking. Leaving your lineup empty is not allowed, as this is considered "ghosting" your team. Ghosting will result in the manager being removed from the league. Please notify the commissioner when tanking.</p>
+    <P>
 
     <h2 class="sectionHeading" bind:this={six}>Section 6 Replacing Managers</h2>
     
