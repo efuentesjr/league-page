@@ -246,7 +246,13 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     
     <h3 bind:this={fourOne}>2.1 Playoffs</h3>
     <p>At the end of the season 8 teams will make the playoffs. The first round of playoffs will commence in week 15. Each team that wins their division, North, South, East & West (4) and the 4 wild card teams that finish with the best records overall from the remaining teams, will receive a playoff berth. Each playoff matchup will only last one week and the winner will advance. Week 18 will not be used.</p>
-    <p>The first-round matchups will be determined by end-of-season seeding: 1 vs. 8, 2 vs. 7, 3 vs. 6, and 4 vs. 5. In the following rounds, each team stays on their side of the bracket as they advance.<p/>
+    <p>The seed determination is as follows:<p/>
+        <ul>
+            <li>1. Overall record.</li>
+            <li>2. Points for.</li>
+            <li>3. Poins Against.</li>
+            <li>4. Coin flip. (In extream cases).</li>
+    <p>The first-round matchups will be determined by end-of-season seeding | 1-vs-8 | 2-vs-7 | 3-vs-6 | 4-vs-5 |. In the following rounds, each team stays on their side of the bracket as they advance.<p/>
 <style>
     /* General Styling */
     .bracket-container {
@@ -359,6 +365,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         </div>
     </div>
 </div>
+    <p>A similar bracket for the remaining 8 teams, called the "Toilet Bowl," will be formed following the same logic.<p/>
     
 
     <h2 class="sectionHeading" bind:this={two}>Section 3 Drafting</h2>
@@ -832,7 +839,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             </tr>
         </table>
     </div>
-    <p>The scoring system will never change without a majority league vote, 9 Minumum votes.</p>
+    <p>The scoring system will never change without a majority league vote, 9 Minumum votes are required.</p>
     
  
 
