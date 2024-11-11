@@ -724,18 +724,18 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     /* General Styling */
     .bracket-container {
         display: flex;
-        gap: 10px; /* Space between rounds */
+        gap: 20px; /* Space between rounds */
     }
 
     .round {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 10px; /* Reduced gap between matchups */
         align-items: center; /* Center align content in each round */
     }
 
     .round-title {
-        font-size: .9em;
+        font-size: 0.8em;
         text-align: center;
         color: #aaa;
         margin-bottom: 5px;
@@ -743,9 +743,9 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     .matchup {
         background-color: #3b3f4a;
-        padding: 15px;
-        border-radius: 6x;
-        width: 100px;
+        padding: 8px; /* Reduced padding */
+        border-radius: 4px; /* Smaller rounded corners */
+        width: 120px; /* Reduced width for smaller boxes */
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -757,7 +757,8 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         font-weight: bold;
         color: white;
         text-align: center;
-        width: 200px; /* Match width for alignment */
+        width: 120px; /* Match width for alignment */
+        font-size: 0.85em; /* Slightly smaller font */
     }
 
     .tbd {
@@ -765,17 +766,17 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     }
 
     .championship {
-        font-size: .9em;
+        font-size: 0.85em;
         color: orange;
     }
 
     /* Vertical spacing for alignment */
     .round:nth-child(2) .matchup {
-        margin-top: 40px; /* Adjust to vertically center with Round 1 */
+        margin-top: 30px; /* Adjust to vertically center with Round 1 */
     }
 
     .round:nth-child(3) .matchup {
-        margin-top: 50px; /* Adjust further for Finals */
+        margin-top: 60px; /* Adjust further for Finals */
     }
 </style>
 
