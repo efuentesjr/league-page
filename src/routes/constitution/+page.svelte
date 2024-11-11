@@ -685,8 +685,35 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             </tr>
         </table>
     </div>
-
-    <p>The scoring system will never change without a majority league vote.</p>
+    <div class="scoring-table">
+        <table>
+            <tr>
+                <td>1st Down Bonus - TE</td>
+                <td>
+                    <input type="text" value="1">
+                </td>
+            </tr>
+            <tr>
+                <td>Fumble</td>
+                <td>
+                    <input type="text" value="0">
+                </td>
+            </tr>
+            <tr>
+                <td>Fumble Lost</td>
+                <td>
+                    <input type="text" value="-2">
+                </td>
+            </tr>
+            <tr>
+                <td>Fumble Recovery TD</td>
+                <td>
+                    <input type="text" value="6">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <p>The scoring system will never change without a majority league vote, 9 Minumum votes.</p>
     
     <h2 class="sectionHeading" bind:this={four}>Section 4 Postseason</h2>
     
