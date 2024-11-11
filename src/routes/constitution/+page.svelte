@@ -778,6 +778,15 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     .round:nth-child(3) .matchup {
         margin-top: 40px; /* Adjust further for Finals */
     }
+
+    /* Horizontal alignment adjustments */
+    .round:nth-child(2) {
+        margin-left: 20px; /* Adjust spacing for Round 2 */
+    }
+
+    .round:nth-child(3) {
+        margin-left: 40px; /* Adjust spacing for Finals */
+    }
 </style>
 
 <div class="bracket-container">
@@ -802,7 +811,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
         <div class="matchup">
             <div class="team">#2 NickBowens</div>
-            <div class="team">#7 TexasTimeshifts</div>
+            <div class="team">#7 88Boyz11</div>
         </div>
     </div>
 
@@ -832,6 +841,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         </div>
     </div>
 </div>
+
 
     <h3 bind:this={fourTwo}>4.2 Seeding Tiebreakers</h3>
     <p>If two teams finish with the same record the tiebreakers will go as followed:</p>
