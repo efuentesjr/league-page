@@ -724,7 +724,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     /* General Styling */
     .bracket-container {
         display: flex;
-        gap: 15px; /* Space between rounds */
+        gap: 10px; /* Reduced space between rounds */
     }
 
     .round {
@@ -772,20 +772,11 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     /* Vertical spacing for alignment */
     .round:nth-child(2) .matchup {
-        margin-top: 20px; /* Adjust to vertically center with Round 1 */
+        margin-top: 35px; /* Adjusted to vertically center with Round 1 */
     }
 
     .round:nth-child(3) .matchup {
-        margin-top: 40px; /* Adjust further for Finals */
-    }
-
-    /* Horizontal alignment adjustments */
-    .round:nth-child(2) {
-        margin-left: 20px; /* Adjust spacing for Round 2 */
-    }
-
-    .round:nth-child(3) {
-        margin-left: 40px; /* Adjust spacing for Finals */
+        margin-top: 70px; /* Adjusted further for Finals */
     }
 </style>
 
