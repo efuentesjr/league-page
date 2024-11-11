@@ -724,13 +724,14 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     /* General Styling */
     .bracket-container {
         display: flex;
-        gap: 20px;
+        gap: 40px; /* Space between rounds */
     }
 
     .round {
         display: flex;
         flex-direction: column;
         gap: 20px;
+        align-items: center; /* Center align content in each round */
     }
 
     .round-title {
@@ -745,26 +746,22 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         padding: 15px;
         border-radius: 8px;
         width: 200px;
-        height: 70px; /* Set fixed height for alignment */
         text-align: center;
         display: flex;
         flex-direction: column;
         justify-content: center;
     }
 
-    .team {
-        display: flex;
-        justify-content: center;
+    /* Center-align teams without boxes */
+    .team, .tbd, .championship {
         font-weight: bold;
         color: white;
+        text-align: center;
+        width: 200px; /* Match width for alignment */
     }
 
-    .team:last-child {
-        margin-bottom: 0;
-    }
-
-    .score {
-        display: none; /* Hide scores in Round 1 */
+    .tbd {
+        color: #666;
     }
 
     .championship {
@@ -772,8 +769,13 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         color: orange;
     }
 
-    .tbd {
-        color: #666;
+    /* Vertical spacing for alignment */
+    .round:nth-child(2) .matchup {
+        margin-top: 40px; /* Adjust to vertically center with Round 1 */
+    }
+
+    .round:nth-child(3) .matchup {
+        margin-top: 80px; /* Adjust further for Finals */
     }
 </style>
 
@@ -829,7 +831,6 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         </div>
     </div>
 </div>
-
 
     <h3 bind:this={fourTwo}>4.2 Seeding Tiebreakers</h3>
     <p>If two teams finish with the same record the tiebreakers will go as followed:</p>
