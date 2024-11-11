@@ -842,12 +842,12 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <h2 class="sectionHeading" bind:this={five}>Section 5 Tanking Policy</h2>
     
     <h3 bind:this={fiveOne}>5.1 League Tanking Policy</h3>
-    <p>Tanking may be a strategy that a manager employs to improve the team’s draft position. Please make sure to fully understand the potential consequences of tanking. Leaving your lineup empty is not allowed, as this is considered "ghosting" your team. Ghosting will result in the manager being removed from the league. Please notify the commissioner when tanking.</p>
+    <p>Tanking may be a strategy that a manager employs to improve the team’s draft position. Please make sure to fully understand the potential consequences of tanking, that may include the following season strength of schedule. Leaving your lineup empty is not allowed, as this is considered "ghosting" your team. Ghosting will result in the manager being removed from the league. Please notify the commissioner when tanking.</p>
     
     <h2 class="sectionHeading" bind:this={six}>Section 6 Replacing Managers</h2>
     
     <h3 bind:this={sixOne}>6.1 Removing Managers</h3>
-    <p>Short of continuously failing to set a valid lineup, or confirmed collusion, no manager can be removed against their will. Participation, through the league chat, trade offers, and the waiver wire, is strongly encouraged but generally grounds for removal.</p>
+    <p>A manager can be removed against their will in cases of repeatedly failing to set a valid lineup, confirmed collusion, or lack of participation in the competition committee, in-person draft, league chat, trade offers, or waiver wire. Staying active throughout the season is strongly encouraged, as inactivity may be considered grounds for removal.</p>
     
     <h3 bind:this={sixTwo}>6.2 Replacing Managers</h3>
     <p>When a manager needs to be replaced, the commisiooners will try to find a suitable candidate with some connection to at least a portion of the existing managers. Priority will be placed on managers who are eager to take on a dynasty commitment and will be very active within the league.</p>
