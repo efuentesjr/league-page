@@ -448,89 +448,243 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <h3 bind:this={threeOne}>3.1 Scoring System</h3>
     <p>The league scoring system breakdown is listed on the Sleeper fantasy app as well.</p>
     <div class="scoring-table">
-  <table>
-    <tr>
-      <td>Passing Yards</td>
-      <td>
-        <input type="text" value="30"> yards
-        <div class="description">(1 point every 30 yards)</div>
-      </td>
-    </tr>
-    <tr>
-      <td>Passing TD</td>
-      <td>
-        <input type="text" value="4">
-      </td>
-    </tr>
-    <tr>
-      <td>Passing 1st Down</td>
-      <td>
-        <input type="text">
-      </td>
-    </tr>
-    <tr>
-      <td>2-Pt Conversion</td>
-      <td>
-        <input type="text" value="2">
-      </td>
-    </tr>
-    <tr>
-      <td>Pass Intercepted</td>
-      <td>
-        <input type="text" value="-1">
-      </td>
-    </tr>
-    <tr>
-      <td>Pick 6 Thrown</td>
-      <td>
-        <input type="text">
-      </td>
-    </tr>
-    <tr>
-      <td>Pass Completed</td>
-      <td>
-        <input type="text" value="0.3">
-      </td>
-    </tr>
-    <tr>
-      <td>Incomplete Pass</td>
-      <td>
-        <input type="text" value="-0.3">
-      </td>
-    </tr>
-    <tr>
-      <td>Pass Attempts</td>
-      <td>
-        <input type="text" value="0">
-      </td>
-    </tr>
-    <!-- New rows based on the image you provided -->
-    <tr>
-      <td>QB Sacked</td>
-      <td>
-        <input type="text" value="-0.2">
-      </td>
-    </tr>
-    <tr>
-      <td>40+ Yard Completion Bonus</td>
-      <td>
-        <input type="text" value="0.1">
-      </td>
-    </tr>
-    <tr>
-      <td>40+ Yard Pass TD Bonus</td>
-      <td>
-        <input type="text" value="0.1">
-      </td>
-    </tr>
-    <tr>
-      <td>50+ Yard Pass TD Bonus</td>
-      <td>
-        <input type="text" value="0.3">
-      </td>
-    </tr>
-  </table>
-</div>
+      <table>
+        <tr>
+          <td>Passing Yards</td>
+          <td>
+            <input type="text" value="30"> yards
+            <div class="description">(1 point every 30 yards)</div>
+          </td>
+        </tr>
+        <tr>
+          <td>Passing TD</td>
+          <td>
+            <input type="text" value="4">
+          </td>
+        </tr>
+        <tr>
+          <td>Passing 1st Down</td>
+          <td>
+            <input type="text" value="0">
+          </td>
+        </tr>
+        <tr>
+          <td>2-Pt Conversion</td>
+          <td>
+            <input type="text" value="2">
+          </td>
+        </tr>
+        <tr>
+          <td>Pass Intercepted</td>
+          <td>
+            <input type="text" value="-1">
+          </td>
+        </tr>
+        <tr>
+          <td>Pick 6 Thrown</td>
+          <td>
+            <input type="text" value="0">
+          </td>
+        </tr>
+        <tr>
+          <td>Pass Completed</td>
+          <td>
+            <input type="text" value="0.3">
+          </td>
+        </tr>
+        <tr>
+          <td>Incomplete Pass</td>
+          <td>
+            <input type="text" value="-0.3">
+          </td>
+        </tr>
+        <tr>
+          <td>Pass Attempts</td>
+          <td>
+            <input type="text" value="0">
+          </td>
+        </tr>
+        <!-- New rows based on the image you provided -->
+        <tr>
+          <td>QB Sacked</td>
+          <td>
+            <input type="text" value="-0.2">
+          </td>
+        </tr>
+        <tr>
+          <td>40+ Yard Completion Bonus</td>
+          <td>
+            <input type="text" value="0.1">
+          </td>
+        </tr>
+        <tr>
+          <td>40+ Yard Pass TD Bonus</td>
+          <td>
+            <input type="text" value="0.1">
+          </td>
+        </tr>
+        <tr>
+          <td>50+ Yard Pass TD Bonus</td>
+          <td>
+            <input type="text" value="0.3">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="scoring-table">
+      <table>
+        <tr>
+          <td>Rushing Yards</td>
+          <td>
+            <input type="text" value="10"> yards
+            <div class="description">(1 point every 10 yards)</div>
+          </td>
+        </tr>
+        <tr>
+          <td>Rushing TD</td>
+          <td>
+            <input type="text" value="6">
+          </td>
+        </tr>
+        <tr>
+          <td>Rushing 1st Down</td>
+          <td>
+            <input type="text" value="1">
+          </td>
+        </tr>
+        <tr>
+          <td>2-Pt Conversion</td>
+          <td>
+            <input type="text" value="2">
+          </td>
+        </tr>
+        <tr>
+          <td>Rush Attempts</td>
+          <td>
+            <input type="text" value="0">
+          </td>
+        </tr>
+        <tr>
+          <td>40+ Yard Rush Bonus</td>
+          <td>
+            <input type="text" value="0.3">
+          </td>
+        </tr>
+        <tr>
+          <td>40+ Yard Rush TD Bonus</td>
+          <td>
+            <input type="text" vlaue="0">
+          </td>
+        </tr>
+        <tr>
+          <td>50+ Yard Rush TD Bonus</td>
+          <td>
+            <input type="text" value="0.3">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="scoring-table">
+        <table>
+            <tr>
+                <td>Reception</td>
+                <td>
+                    <input type="text" value="1">
+                </td>
+            </tr>
+            <tr>
+                <td>Receiving Yards</td>
+                <td>
+                    <input type="text" value="10"> yards
+                    <div class="description">(1 point every 10 yards)</div>
+                </td>
+            </tr>
+            <tr>
+                <td>Receiving TD</td>
+                <td>
+                    <input type="text" value="6">
+                </td>
+            </tr>
+            <tr>
+                <td>Receiving 1st Down</td>
+                <td>
+                    <input type="text" value="0">
+                </td>
+            </tr>
+            <tr>
+                <td>2-Pt Conversion</td>
+                <td>
+                    <input type="text" value="2">
+                </td>
+            </tr>
+            <tr>
+                <td>0-4 Yard Reception Bonus</td>
+                <td>
+                    <input type="text" value="0">
+                </td>
+            </tr>
+            <tr>
+                <td>5-9 Yard Reception Bonus</td>
+                <td>
+                    <input type="text" value="0">
+                </td>
+            </tr>
+            <tr>
+                <td>10-19 Yard Reception Bonus</td>
+                <td>
+                    <input type="text" value="0">
+                </td>
+            </tr>
+            <tr>
+                <td>20-29 Yard Reception Bonus</td>
+                <td>
+                    <input type="text" value="0">
+                </td>
+            </tr>
+            <tr>
+                <td>30-39 Yard Reception Bonus</td>
+                <td>
+                    <input type="text" value="0.1">
+                </td>
+            </tr>
+            <tr>
+                <td>40+ Yard Reception Bonus</td>
+                <td>
+                    <input type="text" value="0.2">
+                </td>
+            </tr>
+            <tr>
+                <td>40+ Yard Reception TD Bonus</td>
+                <td>
+                    <input type="text" value="0.1">
+                </td>
+            </tr>
+            <tr>
+                <td>50+ Yard Reception TD Bonus</td>
+                <td>
+                    <input type="text" value="0.4">
+                </td>
+            </tr>
+            <tr>
+                <td>Reception bonus - rb</td>
+                <td>
+                    <input type="text" value="0">
+                </td>
+            </tr>
+            <tr>
+                <td>Reception bonus - wr</td>
+                <td>
+                    <input type="text" value="0">
+                </td>
+            </tr>
+            <tr>
+                <td>Reception bonus - te</td>
+                <td>
+                    <input type="text" value="0.6">
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <p>The scoring system will never change without a majority league vote.</p>
     
