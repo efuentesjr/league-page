@@ -718,8 +718,114 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <h2 class="sectionHeading" bind:this={four}>Section 4 Postseason</h2>
     
     <h3 bind:this={fourOne}>4.1 Playoffs</h3>
-    <p>At the end of the season 6 teams will make the playoffs. The first round of playoffs will commence in week 15. Each team that wins their division and the 4 wild card teams that finish with the best records, will receive a playoff berth. The 2 teams that win their division will receive a bye week in the first round of the playoffs. Each playoff matchup will only last one week and the winner will advance. Week 18 will not be used.</p>
-    
+    <p>At the end of the season 8 teams will make the playoffs. The first round of playoffs will commence in week 15. Each team that wins their division, North, South, East & West (4) and the 4 wild card teams that finish with the best records overall from the remaining teams, will receive a playoff berth. Each playoff matchup will only last one week and the winner will advance. Week 18 will not be used.</p>
+    <p>The first-round matchups will be determined by end-of-season seeding: 1 vs. 8, 2 vs. 7, 3 vs. 6, and 4 vs. 5. In the following rounds, each team stays on their side of the bracket as they advance.<p/>
+<style>
+    /* General Styling */
+    .bracket-container {
+        display: flex;
+        gap: 20px;
+    }
+
+    .round {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .round-title {
+        font-size: 1.2em;
+        text-align: center;
+        color: #aaa;
+        margin-bottom: 10px;
+    }
+
+    .matchup {
+        background-color: #3b3f4a;
+        padding: 15px;
+        border-radius: 8px;
+        width: 200px;
+        text-align: center;
+    }
+
+    .team {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+    }
+
+    .team:last-child {
+        margin-bottom: 0;
+    }
+
+    .score {
+        color: #aaa;
+    }
+
+    .championship {
+        font-size: 1.2em;
+        color: orange;
+    }
+
+    .tbd {
+        color: #666;
+    }
+</style>
+
+<div class="bracket-container">
+    <!-- Round 1 -->
+    <div class="round">
+        <div class="round-title">Round 1 <br><small>(Week 15)</small></div>
+
+        <div class="matchup">
+            <div class="team"><span>#1 Fristoe23</span> <span class="score">180.83</span></div>
+            <div class="team"><span>#8 PrimeTimeJG</span> <span class="score">139.30</span></div>
+        </div>
+
+        <div class="matchup">
+            <div class="team"><span>#4 Alinz</span> <span class="score">147.60</span></div>
+            <div class="team"><span>#5 efuentesjr</span> <span class="score">148.26</span></div>
+        </div>
+
+        <div class="matchup">
+            <div class="team"><span>#3 TreyF</span> <span class="score">160.48</span></div>
+            <div class="team"><span>#6 JoshuaR23</span> <span class="score">164.20</span></div>
+        </div>
+
+        <div class="matchup">
+            <div class="team"><span>#2 NickBowens</span> <span class="score">154.60</span></div>
+            <div class="team"><span>#7 TexasTimeshifts</span> <span class="score">107.51</span></div>
+        </div>
+    </div>
+
+    <!-- Round 2 -->
+    <div class="round">
+        <div class="round-title">Round 2 <br><small>(Week 16)</small></div>
+
+        <div class="matchup">
+            <div class="tbd">TBD</div>
+            <div class="tbd">TBD</div>
+        </div>
+
+        <div class="matchup">
+            <div class="tbd">TBD</div>
+            <div class="tbd">TBD</div>
+        </div>
+    </div>
+
+    <!-- Finals -->
+    <div class="round">
+        <div class="round-title">Finals <br><small>(Week 17)</small></div>
+
+        <div class="matchup">
+            <div class="championship">🏆 Championship</div>
+            <div class="tbd">TBD</div>
+            <div class="tbd">TBD</div>
+        </div>
+    </div>
+</div>
+
+
     <h3 bind:this={fourTwo}>4.2 Seeding Tiebreakers</h3>
     <p>If two teams finish with the same record the tiebreakers will go as followed:</p>
 
