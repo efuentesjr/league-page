@@ -252,27 +252,27 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <li>4. Coin flip. (In extream cases).</li>
     <p>The first-round matchups will be determined by end-of-season seeding | 1-vs-8 | 2-vs-7 | 3-vs-6 | 4-vs-5 |. In the following rounds, each team stays on their side of the bracket as they advance.<p/>
 <style>
-    /* General Reset */
+    /* General Styling */
     .bracket-container {
         display: flex;
         gap: 10px; /* Reduced space between rounds */
-        margin: 0 auto; /* Center the container */
+        margin: 0; /* No extra margin */
         padding: 0;
-        justify-content: center; /* Center align */
+        justify-content: flex-start; /* Align to the left */
     }
 
     .round {
         display: flex;
         flex-direction: column;
         gap: 8px; /* Reduced gap between matchups */
-        align-items: center; /* Center align content in each round */
+        align-items: flex-start; /* Align content to the left in each round */
         padding: 0;
         margin: 0;
     }
 
     .round-title {
         font-size: 0.75em;
-        text-align: center;
+        text-align: left; /* Align title to the left */
         color: #aaa;
         margin-bottom: 5px;
     }
@@ -289,11 +289,11 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         margin: 0; /* Remove default margin */
     }
 
-    /* Center-align teams without boxes */
+    /* Left-align teams without boxes */
     .team, .tbd, .championship {
         font-weight: bold;
         color: white;
-        text-align: center;
+        text-align: left; /* Align text to the left */
         width: 90px; /* Match width for alignment */
         font-size: 0.7em; /* Reduced font size */
         margin: 0; /* Remove default margin */
@@ -370,6 +370,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         </div>
     </div>
 </div>
+
 
     <p>A similar bracket for the remaining 8 teams, called the "Toilet Bowl," will be formed following the same logic.<p/>
     
