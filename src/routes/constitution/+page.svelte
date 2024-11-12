@@ -252,10 +252,13 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <li>4. Coin flip. (In extream cases).</li>
     <p>The first-round matchups will be determined by end-of-season seeding | 1-vs-8 | 2-vs-7 | 3-vs-6 | 4-vs-5 |. In the following rounds, each team stays on their side of the bracket as they advance.<p/>
 <style>
-    /* General Styling */
+    /* General Reset */
     .bracket-container {
         display: flex;
         gap: 10px; /* Reduced space between rounds */
+        margin: 0 auto; /* Center the container */
+        padding: 0;
+        justify-content: center; /* Center align */
     }
 
     .round {
@@ -263,6 +266,8 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         flex-direction: column;
         gap: 8px; /* Reduced gap between matchups */
         align-items: center; /* Center align content in each round */
+        padding: 0;
+        margin: 0;
     }
 
     .round-title {
@@ -281,6 +286,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         display: flex;
         flex-direction: column;
         justify-content: center;
+        margin: 0; /* Remove default margin */
     }
 
     /* Center-align teams without boxes */
@@ -290,6 +296,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         text-align: center;
         width: 90px; /* Match width for alignment */
         font-size: 0.7em; /* Reduced font size */
+        margin: 0; /* Remove default margin */
     }
 
     .tbd {
@@ -317,23 +324,23 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         <div class="round-title">Round 1 <br><small>(Week 15)</small></div>
 
         <div class="matchup">
-            <div class="team">#1 TEAM A</div>
-            <div class="team">#8 TEAM H</div>
+            <div class="team">#1 TEAM</div>
+            <div class="team">#8 TEAM</div>
         </div>
 
         <div class="matchup">
-            <div class="team">#4 TEAM 3</div>
-            <div class="team">#5 TEAM F</div>
+            <div class="team">#4 TEAM</div>
+            <div class="team">#5 TEAM</div>
         </div>
 
         <div class="matchup">
-            <div class="team">#3 TEAM 4</div>
-            <div class="team">#6 TEAM 5</div>
+            <div class="team">#3 TEAM</div>
+            <div class="team">#6 TEAM</div>
         </div>
 
         <div class="matchup">
-            <div class="team">#2 TEAM B</div>
-            <div class="team">#7 TEAM G</div>
+            <div class="team">#2 TEAM</div>
+            <div class="team">#7 TEAM</div>
         </div>
     </div>
 
@@ -342,13 +349,13 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         <div class="round-title">Round 2 <br><small>(Week 16)</small></div>
 
         <div class="matchup">
-            <div class="tbd">TBD</div>
-            <div class="tbd">TBD</div>
+            <div class="tbd">#1/#8</div>
+            <div class="tbd">#4/#5</div>
         </div>
 
         <div class="matchup">
-            <div class="tbd">TBD</div>
-            <div class="tbd">TBD</div>
+            <div class="tbd">#3/#6</div>
+            <div class="tbd">#2/#7</div>
         </div>
     </div>
 
@@ -363,6 +370,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         </div>
     </div>
 </div>
+
     <p>A similar bracket for the remaining 8 teams, called the "Toilet Bowl," will be formed following the same logic.<p/>
     
 
