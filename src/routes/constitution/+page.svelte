@@ -250,6 +250,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
             <li>2. Points for.</li>
             <li>3. Poins Against.</li>
             <li>4. Coin flip. (In extream cases).</li>
+        <ul/>
     <p>The first-round matchups will be determined by end-of-season seeding | 1-vs-8 | 2-vs-7 | 3-vs-6 | 4-vs-5 |. In the following rounds, each team stays on their side of the bracket as they advance.<p/>
 <style>
     /* General Styling */
