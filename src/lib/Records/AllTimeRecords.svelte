@@ -33,7 +33,6 @@
         showTies = false;
         // Now, proceed with pushing data to these arrays as needed
         ...
-    }
 
         for(const key in lRR) {
             const leagueManagerRecord = lRR[key];
