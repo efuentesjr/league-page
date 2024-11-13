@@ -25,6 +25,8 @@
 
 
     const setRankingsData = (lRR) => {
+    console.log('Initial leagueManagerRecords:', leagueManagerRecords)
+    console.log('Initial transactionTotals.allTime:', transactionTotals.allTime)
         winPercentages = [];
         lineupIQs = [];
         fptsHistories = [];
