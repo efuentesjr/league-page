@@ -860,7 +860,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <h3 bind:this={sixTwo}>6.2 Replacing Managers</h3>
     <p>When a manager is replaced, the commissioners will try to find a suitable candidate with some connection to at least a portion of the existing managers. A list of potential candidates is maintained by the commissioner. If you know of someone interested in joining, please provide their name to the commissioner. Priority will be given to managers who are eager to commit to a dynasty league and will be highly active within the league.</p>
     
-    <h3 bind:this={sixThree}>6.3 Quitting and Replacement  of Incentive Managers</h3>
+    <h3 bind:this={sixThree}>6.3 Quitting/Replacement of Inactive Managers</h3>
     <p>In the event that a manager chooses to quit the league, the following conditions must be met:</p>
     <p>1. A reigning champion CANNOT leave the league; they must return to defend or lose their championship!<p/>
     <p>2. If future draft picks are traded, a manager CANNOT leave their team. If you plan on quitting, please keep this in mind.<p/>
@@ -879,6 +879,94 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         <li>1st place: $1000</li>
         <li>2nd place: $75</li>
     </ul>
+    <div>
+    <h2>2024 LEAGUE BOOKKEEPING</h2>
+
+    <h3>Incoming Money</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Number of Owners</td>
+                <td>16</td>
+            </tr>
+            <tr>
+                <td>Cost to Play (Fee)</td>
+                <td>$75.00</td>
+            </tr>
+            <tr>
+                <td>Total Collect</td>
+                <td>$1,200.00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Outgoing Money</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1st Place Payout</td>
+                <td>$1,000.00</td>
+                <td>$200.00</td>
+            </tr>
+            <tr>
+                <td>2nd Place Payout</td>
+                <td>$75.00</td>
+                <td>$125.00</td>
+            </tr>
+            <tr>
+                <td>Trophy Plaque</td>
+                <td>$5.00</td>
+                <td>$120.00</td>
+            </tr>
+            <tr>
+                <td>Trophy Shipment</td>
+                <td>$25.00</td>
+                <td>$95.00</td>
+            </tr>
+            <tr>
+                <td>Ring</td>
+                <td>$35.00</td>
+                <td>$60.00</td>
+            </tr>
+            <tr>
+                <td>Loser's T-shirt</td>
+                <td>$10.00</td>
+                <td>$50.00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Rolling Budget</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Surplus Budget</td>
+                <td>-</td>
+                <td>$50.00</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
     
     <h3 bind:this={sevenThree}>7.3 Raising Dues</h3>
     <p>A ⅔ majority vote is required in order to raise league dues. In the event that a manager is no longer financially comfortable with the buyin, finding a co-manager to split the cost is reccomended.</p>
