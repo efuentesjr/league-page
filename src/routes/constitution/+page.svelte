@@ -459,7 +459,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <style>
       /* Basic styling for the table */
       .draft-order-table {
-        width: 75%;
+        width: 80%;
         border-collapse: collapse;
         text-align: center;
         font-family: Arial, sans-serif;
