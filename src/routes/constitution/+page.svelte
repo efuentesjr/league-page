@@ -184,7 +184,7 @@
     
     <p>Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.
 
-When a conditional trade takes place, the Commissioner must be notified, and a note will be added to the profiles of the players involved. It is the responsibility of the managers involved in the trade to monitor the conditions and inform the Commissioner if the terms are not met./p>
+When a conditional trade takes place, the Commissioner must be notified, and a note will be added to the profiles of the players involved. It is the responsibility of the managers involved in the trade to monitor the conditions and inform the Commissioner if the terms are not met.</p>
 
     <h4 bind:this={oneTwoOne}>1.2.1 Trade Collusion</h4>
     <div class="subBlock">
@@ -205,7 +205,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     <h4 bind:this={oneTwoTwo}>1.2.2 Lending Players Prohibition</h4>
     <div class="subBlock">
-        <p>Any player traded may not be re-acquired via trade by the original team for at least six weeks following the initial trade. The only exception to this rule is during the offseason. However, for trades involving any player ranked in the top 35, re-acquisition by the original team is prohibited for two years after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this rule.</p>
+        <p>for trades involving any player ranked in the top 35, re-acquisition by the original team is prohibited for two years after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this rule.</p>
     </div>
     
     <h4 bind:this={oneTwoThree}>1.2.3 Trade Deadline</h4>
@@ -225,7 +225,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
        
     <h3 bind:this={oneThree}>1.3 Waiver Wire</h3>
 
-    <p>Beginning in the 2023 season, the MFFL will award bonus FAAB (Free Agent Acquisition Budget) dollars to managers who attend and actively participate in the league’s Competition Committee meetings and the in-person draft. Out-of-town managers must follow along and participate live during the draft to qualify—auto-drafting is not allowed.</p>
+    <p>Beginning in the 2023 season, MFFL will award bonus FAAB (Free Agent Acquisition Budget) dollars to managers who attend and actively participate in the league’s Competition Committee meetings and the in-person draft. Out-of-town managers must follow along and participate live during the draft to qualify—auto-drafting is not allowed.</p>
     
     <p>FAAB Waiver Wire System: Each team will begin the season with a Free Agent Acquisition Budget (FAAB) between $100 and $200, with the exact amount announced by the Commissioner before the season starts. No $0 bids are allowed. Waiver bids will process every Thursday at 2:00 a.m.</p>
 
@@ -866,7 +866,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <p>2. If future draft picks are traded, a manager CANNOT leave their team. If you plan on quitting, please keep this in mind.<p/>
     <p>3. Once you leave the MFFL, you can NEVER return. Keep in mind that if you quit or are removed from the league, you will not be invited back.<p/>
 
-    <p>To support the incoming manager, their team will immediately qualify for the #1 draft lottery. Additionally, a bonus may be added to their FAAB for the initial season.<p/>
+    <p>A FAAB bonus may be added to new incoming managers for the initial season.<p/>
 
     <h2 class="sectionHeading" bind:this={seven}>Section 7 League Finances</h2>
     
