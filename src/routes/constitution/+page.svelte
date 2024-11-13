@@ -152,7 +152,7 @@
     
     <h3 class="subSectionHeading" bind:this={oneOne}>1.1 Positional Breakdown</h3>
     
-    <p>28 Total Players</p>
+    <p>26 Total Players</p>
     
     <p class="underscore">Starters</p>
     <ul>
@@ -168,8 +168,8 @@
     </ul>
     
     <p>10 Bench (Expanded by 5 between the competition committee and draft day during the off-season).</p>
-
-    <p>3 IR Spots (Player must be labeled as IR, Out, or Covid in the Sleeper App)</p>
+    <p>3 IR Spots (Player must be labeled as IR, Out, or Covid in the Sleeper App).</p>
+    <p>4 Taxi Squad (You may keep 2nd year players in the taxi squad, but only true rookies will be able to move in and out).
     
         <h4 bind:this={oneOneOne}>1.1.1 Position Maximums</h4>
         
