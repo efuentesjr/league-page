@@ -22,44 +22,46 @@ const setRankingsData = (lRR) => {
 
     for (const key in lRR) {
         const leagueManagerRecord = lRR[key]
-        const wins = leagueManagerRecord.wins / 2  // Adjust count for display
-        const ties = leagueManagerRecord.ties / 2   // Adjust count for display
-        const losses = leagueManagerRecord.losses / 2 // Adjust count for display
-        const denominator = (leagueManagerRecord.wins + leagueManagerRecord.ties + leagueManagerRecord.losses) > 0
-            ? (leagueManagerRecord.wins + leagueManagerRecord.ties + leagueManagerRecord.losses)
-            : 1
         
-        // Use original values for percentage calculation
+        // Original values for accurate All-Time Win Percentage Rankings
+        const originalWins = leagueManagerRecord.wins
+        const originalTies = leagueManagerRecord.ties
+        const originalLosses = leagueManagerRecord.losses
+        const denominator = (originalWins + originalTies + originalLosses) > 0
+            ? (originalWins + originalTies + originalLosses)
+            : 1
+
+        // Calculate accurate win percentage with original values
         winPercentages.push({
             managerID: key,
-            percentage: round((leagueManagerRecord.wins + leagueManagerRecord.ties / 2) / denominator * 100), // Correct percentage
-            wins,  // Display-adjusted wins
-            ties,  // Display-adjusted ties
-            losses // Display-adjusted losses
+            percentage: round((originalWins + originalTies / 2) / denominator * 100), // Use original values
+            wins: originalWins / 2,  // Adjusted for display in playoffs
+            ties: originalTies / 2,  // Adjusted for display in playoffs
+            losses: originalLosses / 2 // Adjusted for display in playoffs
         })
 
-        // Other stats, adjust only where duplication exists
+        // Use adjusted values only for display if duplicated, but use original for calculations
         let lineupIQ = {
             managerID: key,
-            fpts: round(leagueManagerRecord.fptsFor / 2)  // Divide fpts by 2 for display if duplicated
+            fpts: round(leagueManagerRecord.fptsFor / 2)  // Display adjusted
         }
 
         if (leagueManagerRecord.potentialPoints) {
-            lineupIQ.iq = round((leagueManagerRecord.fptsFor / leagueManagerRecord.potentialPoints) * 100) // Use original values here
-            lineupIQ.potentialPoints = round(leagueManagerRecord.potentialPoints / 2)  // Adjust only if duplicated
+            lineupIQ.iq = round((leagueManagerRecord.fptsFor / leagueManagerRecord.potentialPoints) * 100)  // Original values for accuracy
+            lineupIQ.potentialPoints = round(leagueManagerRecord.potentialPoints / 2)  // Display adjusted
         }
 
         lineupIQs.push(lineupIQ)
 
-        // Adjust fpts for display if duplicated, but keep calculation intact
+        // Adjusted for display if duplicated, use original for calculations
         fptsHistories.push({
             managerID: key,
-            fptsFor: round(leagueManagerRecord.fptsFor / 2),  // Display-adjusted if duplicated
-            fptsAgainst: round(leagueManagerRecord.fptsAgainst / 2),  // Display-adjusted if duplicated
-            fptsPerGame: round((leagueManagerRecord.fptsFor / denominator)), // Calculation correct
+            fptsFor: round(leagueManagerRecord.fptsFor / 2),  // Display adjusted
+            fptsAgainst: round(leagueManagerRecord.fptsAgainst / 2),  // Display adjusted
+            fptsPerGame: round((leagueManagerRecord.fptsFor / denominator)), // Calculated with original values
         })
 
-        if (leagueManagerRecord.ties > 0) showTies = true
+        if (originalTies > 0) showTies = true
     }
 
     // Only display-adjusted if these are duplicated
