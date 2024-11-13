@@ -879,7 +879,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         <li>1st place: $1000</li>
         <li>2nd place: $75</li>
     </ul>
-<div style="width: 85%; margin: 0 auto; font-family: Arial, sans-serif;">
+<div style="width: 95%; margin: 0 auto; font-family: Arial, sans-serif;">
     <h2 style="text-align: center; background-color: #333333; color: white; padding: 5px; margin: 0;">2024 League Bookkeeping</h2>
 
     <h3 style="background-color: #333333; color: white; padding: 5px; margin: 0;">Incoming Money</h3>
