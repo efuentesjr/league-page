@@ -229,7 +229,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     <p>FAAB budgets carries over to the next season, to the maximum amount of $999</p>
 
-    <h4 bind:this={oneTwoThree}>1.3.1 Waiver Wire/FAAB Collusion</h4>
+    <h4 bind:this={oneThreeOne}>1.3.1 Waiver Wire/FAAB Collusion</h4>
     <div class="subBlock">
         <p>Collusion includes any coordinated efforts to manipulate the waiver wire or FAAB system for an unfair advantage. This includes, but is not limited to:
         <ul>
@@ -238,9 +238,9 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     </div>
         <p>The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction freezes, or other sanctions as outlined in the league’s collusion policy.</p>
     
-   <h2 class="sectionHeading" bind:this={four}>Section 2 Postseason</h2>
+   <h2 class="sectionHeading" bind:this={two}>Section 2 Postseason</h2>
     
-    <h3 bind:this={fourOne}>2.1 Playoffs</h3>
+    <h3 bind:this={twoOne}>2.1 Playoffs</h3>
     <p>At the end of the season 8 teams will make the playoffs. The first round of playoffs will commence in week 15. Each team that wins their division, North, South, East & West (4) and the 4 wild card teams that finish with the best records overall from the remaining teams, will receive a playoff berth. Each playoff matchup will only last one week and the winner will advance. Week 18 will not be used.</p>
     <p>The seed determination is as follows:<p/>
             <p>1. Overall record.<p/>
@@ -372,13 +372,13 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <p>A similar bracket for the remaining 8 teams, called the "Toilet Bowl," will be formed following the same logic.<p/>
     
 
-    <h2 class="sectionHeading" bind:this={two}>Section 3 Drafting</h2>
+    <h2 class="sectionHeading" bind:this={three}>Section 3 Drafting</h2>
     
-    <h3 bind:this={twoTwo}>3.1 Drafts</h3>
+    <h3 bind:this={threeOne}>3.1 Drafts</h3>
     <p>The draft will consist of rookies only and will take place over 5 rounds, with a 5-minute limit per pick. To accommodate incoming players, bench sizes will temporarily expand by five spots at the start of the season, following the Competition Committee meeting. These additional spots will be removed shortly after the draft, at which point all teams must reduce their rosters to comply with standard roster limits.</p>
     <p>Any spots not filled during the draft, can be filled immediately afterwards from the waiver wire.</p>
 
-    <h3 bind:this={twoOne}>3.2 Draft Order</h3>
+    <h3 bind:this={threeTwo}>3.2 Draft Order</h3>
     <p>The draft order each year will be a linear.</p>
     <script>
       // No additional JavaScript needed if you're just displaying the table
@@ -445,10 +445,10 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     <p>If you trade future draft picks, you are required to actively manage your team through the playoffs in those seasons. If you fail to do so, the commissioners reserve the right to set your lineup to the best possible lineup each week in order to maintain the integrity of the draft picks.<p/>
 
-    <h3 bind:this={twoThree}>3.3 Draft Day Trades</h3>
+    <h3 bind:this={threeThree}>3.3 Draft Day Trades</h3>
     <p>If a trade is being negotiated during the draft, either party may request that the Commissioner pause the draft to allow additional time for the trade discussions.</p>
 
-    <h3 bind:this={twoThree}>3.4 Draft Order Determiniation</h3>
+    <h3 bind:this={threeFour}>3.4 Draft Order Determiniation</h3>
     <p>The playoffs will determine the draft order for the following year as follows:</p>
     <script>
       // No additional JavaScript needed if you're just displaying the table
@@ -575,7 +575,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
 
     <h2 class="sectionHeading" bind:this={three}>Section 4 Scoring System</h2>
 
-    <h3 bind:this={threeOne}>4.1 Scoring System</h3>
+    <h3 bind:this={fourOne}>4.1 Scoring System</h3>
     <p>For the complete scoring breakdown please see Sleeper fantasy app.</p>
     <div class="scoring-table">
       <table>
