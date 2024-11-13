@@ -25,12 +25,15 @@
 
 
     const setRankingsData = (lRR) => {
-        winPercentages = [];
+        winPercentages = [];  // Clears the array before populating
         lineupIQs = [];
         fptsHistories = [];
         tradesData = [];
         waiversData = [];
         showTies = false;
+        // Now, proceed with pushing data to these arrays as needed
+        ...
+    }
 
         for(const key in lRR) {
             const leagueManagerRecord = lRR[key];
