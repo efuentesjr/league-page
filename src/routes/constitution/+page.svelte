@@ -573,7 +573,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     </div>
     <p>*TBD - The exact draft order will be determined using a lottery-style drawing with a ping pong machine. Each pick will be drawn randomly to ensure fairness.<p/>
 
-    <h2 class="sectionHeading" bind:this={three}>Section 4 Scoring System</h2>
+    <h2 class="sectionHeading" bind:this={four}>Section 4 Scoring System</h2>
 
     <h3 bind:this={fourOne}>4.1 Scoring System</h3>
     <p>For the complete scoring breakdown please see Sleeper fantasy app.</p>
