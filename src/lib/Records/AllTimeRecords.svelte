@@ -23,68 +23,72 @@
         })
     }
 
+const setRankingsData = (lRR) => {
+    // Clear arrays to prevent duplicate entries
+    winPercentages = []
+    lineupIQs = []
+    fptsHistories = []
+    tradesData = []
+    waiversData = []
+    showTies = false
 
-    const setRankingsData = (lRR) => {
-        winPercentages = [];  // Clears the array before populating
-        lineupIQs = [];
-        fptsHistories = [];
-        tradesData = [];
-        waiversData = [];
-        showTies = false;
-        // Now, proceed with pushing data to these arrays as needed
-        ...
-
-        for(const key in lRR) {
-            const leagueManagerRecord = lRR[key];
-            const denominator = (leagueManagerRecord.wins + leagueManagerRecord.ties + leagueManagerRecord.losses) > 0 ? (leagueManagerRecord.wins + leagueManagerRecord.ties + leagueManagerRecord.losses) : 1;
-            winPercentages.push({
-                managerID: key,
-                percentage: round((leagueManagerRecord.wins + leagueManagerRecord.ties / 2) / denominator * 100),
-                wins: leagueManagerRecord.wins,
-                ties: leagueManagerRecord.ties,
-                losses: leagueManagerRecord.losses,
-            })
-
-            let lineupIQ = {
-                managerID: key,
-                fpts: round(leagueManagerRecord.fptsFor),
-            }
-
-            if(leagueManagerRecord.potentialPoints) {
-                lineupIQ.iq = round(leagueManagerRecord.fptsFor / leagueManagerRecord.potentialPoints * 100);
-                lineupIQ.potentialPoints = round(leagueManagerRecord.potentialPoints);
-            }
-
-            lineupIQs.push(lineupIQ)
+    // Populate winPercentages, lineupIQs, fptsHistories, etc.
+    for (const key in lRR) {
+        const leagueManagerRecord = lRR[key]
+        const denominator = (leagueManagerRecord.wins + leagueManagerRecord.ties + leagueManagerRecord.losses) > 0
+            ? (leagueManagerRecord.wins + leagueManagerRecord.ties + leagueManagerRecord.losses)
+            : 1
         
-            fptsHistories.push({
-                managerID: key,
-                fptsFor: round(leagueManagerRecord.fptsFor),
-                fptsAgainst: round(leagueManagerRecord.fptsAgainst),
-                fptsPerGame: round(leagueManagerRecord.fptsFor / denominator),
-            })
-        
-            if(leagueManagerRecord.ties > 0) showTies = true;
+        winPercentages.push({
+            managerID: key,
+            percentage: round((leagueManagerRecord.wins + leagueManagerRecord.ties / 2) / denominator * 100),
+            wins: leagueManagerRecord.wins,
+            ties: leagueManagerRecord.ties,
+            losses: leagueManagerRecord.losses,
+        })
+
+        let lineupIQ = {
+            managerID: key,
+            fpts: round(leagueManagerRecord.fptsFor),
         }
 
-        for(const managerID in transactionTotals.allTime) {
-            tradesData.push({
-                managerID,
-                trades: transactionTotals.allTime[managerID].trade,
-            })
-            waiversData.push({
-                managerID,
-                waivers: transactionTotals.allTime[managerID].waiver,
-            })
+        if (leagueManagerRecord.potentialPoints) {
+            lineupIQ.iq = round(leagueManagerRecord.fptsFor / leagueManagerRecord.potentialPoints * 100)
+            lineupIQ.potentialPoints = round(leagueManagerRecord.potentialPoints)
         }
 
+        lineupIQs.push(lineupIQ)
 
-        winPercentages.sort((a, b) => b.percentage - a.percentage);
-        lineupIQs.sort((a, b) => b.iq - a.iq);
-        fptsHistories.sort((a, b) => b.fptsFor - a.fptsFor);
-        tradesData.sort((a, b) => b.trades - a.trades);
-        waiversData.sort((a, b) => b.waivers - a.waivers);
+        fptsHistories.push({
+            managerID: key,
+            fptsFor: round(leagueManagerRecord.fptsFor),
+            fptsAgainst: round(leagueManagerRecord.fptsAgainst),
+            fptsPerGame: round(leagueManagerRecord.fptsFor / denominator),
+        })
+
+        if (leagueManagerRecord.ties > 0) showTies = true
     }
+
+    for (const managerID in transactionTotals.allTime) {
+        tradesData.push({
+            managerID,
+            trades: transactionTotals.allTime[managerID].trade,
+        })
+        waiversData.push({
+            managerID,
+            waivers: transactionTotals.allTime[managerID].waiver,
+        })
+    }
+
+    // Sort the arrays for display
+    winPercentages.sort((a, b) => b.percentage - a.percentage)
+    lineupIQs.sort((a, b) => b.iq - a.iq)
+    fptsHistories.sort((a, b) => b.fptsFor - a.fptsFor)
+    tradesData.sort((a, b) => b.trades - a.trades)
+    waiversData.sort((a, b) => b.waivers - a.waivers)
+}
+
+
 
     $:setRankingsData(leagueManagerRecords)
 </script>
