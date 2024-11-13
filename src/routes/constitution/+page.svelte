@@ -115,14 +115,14 @@
     <h3 class="noUnderscore clickable" on:click={() => goToSection(two)}>Section 2: Postseason</h3>
         <h4 class="noUnderscore clickable" on:click={() => goToSection(twoOne)}>2.1 Playoffs</h4>
 
-    <h3 class="noUnderscore clickable" on:click={() => goToSection(two)}>Section 3: Drafting</h3>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(twoOne)}>3.1 Draft Order</h4>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(twoTwo)}>3.2 Rookie Drafts</h4>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(twoThree)}>3.3 Draft Day Trades</h4>
+    <h3 class="noUnderscore clickable" on:click={() => goToSection(three)}>Section 3: Drafting</h3>
+        <h4 class="noUnderscore clickable" on:click={() => goToSection(threeOne)}>3.1 Draft Order</h4>
+        <h4 class="noUnderscore clickable" on:click={() => goToSection(threeTwo)}>3.2 Rookie Drafts</h4>
+        <h4 class="noUnderscore clickable" on:click={() => goToSection(threeThree)}>3.3 Draft Day Trades</h4>
     
-    <h3 class="noUnderscore clickable" on:click={() => goToSection(three)}>Section 4: Scoring System</h3>
+    <h3 class="noUnderscore clickable" on:click={() => goToSection(four)}>Section 4: Scoring System</h3>
     
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(threeOne)}>4.1 Voting on Scoring System</h4>
+        <h4 class="noUnderscore clickable" on:click={() => goToSection(fourOne)}>4.1 Voting on Scoring System</h4>
     
     <h3 class="noUnderscore clickable" on:click={() => goToSection(five)}>Section 5: Tanking Policy</h3>
     
