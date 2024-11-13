@@ -578,7 +578,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <h2 class="sectionHeading" bind:this={three}>Section 4 Scoring System</h2>
 
     <h3 bind:this={threeOne}>4.1 Scoring System</h3>
-    <p>The league scoring system breakdown is listed on the Sleeper fantasy app as well.</p>
+    <p>For the complete scoring breakdown please see Sleeper fantasy app.</p>
     <div class="scoring-table">
       <table>
         <tr>
@@ -858,24 +858,27 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     <p>A manager can be removed against their will in cases of repeatedly failing to set a valid lineup, confirmed collusion, or lack of participation in the competition committee, in-person draft, league chat, trade offers, or waiver wire. Staying active throughout the season is strongly encouraged, as inactivity may be considered grounds for removal.</p>
     
     <h3 bind:this={sixTwo}>6.2 Replacing Managers</h3>
-    <p>When a manager needs to be replaced, the commisiooners will try to find a suitable candidate with some connection to at least a portion of the existing managers. Priority will be placed on managers who are eager to take on a dynasty commitment and will be very active within the league.</p>
+    <p>When a manager is replaced, the commissioners will try to find a suitable candidate with some connection to at least a portion of the existing managers. A list of potential candidates is maintained by the commissioner. If you know of someone interested in joining, please provide their name to the commissioner. Priority will be given to managers who are eager to commit to a dynasty league and will be highly active within the league.</p>
     
-    <h3 bind:this={sixThree}>6.3 Replacement Incentive</h3>
-    <p>In the event that a manager chooses to quit the league or is removed by a comissioner, an incoming manager is offered a 50% reductioon on their first year buy-in.</p>
+    <h3 bind:this={sixThree}>6.3 Quitting and Replacement  of Incentive Managers</h3>
+    <p>In the event that a manager chooses to quit the league, the following conditions must be met:</p>
+    <p>1. A reigning champion CANNOT leave the league; they must return to defend or lose their championship!<p/>
+    <p>2. If future draft picks are traded, a manager CANNOT leave their team. If you plan on quitting, please keep this in mind.<p/>
+    <p>3. Once you leave the MFFL, you can NEVER return. Keep in mind that if you quit or are removed from the league, you will not be invited back.<p/>
+
+    <p>To support the incoming manager, their team will immediately qualify for the #1 draft lottery. Additionally, a bonus may be added to their FAAB for the initial season.<p/>
 
     <h2 class="sectionHeading" bind:this={seven}>Section 7 League Finances</h2>
     
     <h3 bind:this={sevenOne}>7.1 League Dues</h3>
-    <p>League dues are set at {dues}$. Dues are collected through <a href="https://www.leaguesafe.com/league/3949641">LeagueSafe</a> and collection will be sent out no later than the first of August. All managers must be fully paid up before the start of regular season. In the event that a manager fails to pay before the deadline, a 10% penalty will be addd to their payment and will go towards the payouts at the end of the year.</p>
+    <p>League dues are set at ${dues} and are collected by the commissioner. All managers must be fully paid by no later than Week 6 of the season.</p>
     
     <h3 bind:this={sevenTwo}>7.2 Payout</h3>
     <p>League payout is structured as follows:</p>
     <ul>
-        <li>1st place: {dues * 8}$</li>
-        <li>2nd place: {dues * 3}$</li>
-        <li>3rd place: {dues}$</li>
+        <li>1st place: $1000</li>
+        <li>2nd place: $75</li>
     </ul>
-    <p>In the event that a manager was fined due to late payment, their extra fee will be added to the winner's payout. Similarly, if new managers come into the league and the payout is smaller, the difference will come out of the winner's prize.</p>
     
     <h3 bind:this={sevenThree}>7.3 Raising Dues</h3>
     <p>A ⅔ majority vote is required in order to raise league dues. In the event that a manager is no longer financially comfortable with the buyin, finding a co-manager to split the cost is reccomended.</p>
