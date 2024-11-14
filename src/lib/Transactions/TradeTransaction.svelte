@@ -4,34 +4,6 @@
 	import TransactionMove from './TransactionMove.svelte';
 
 	export let transaction, players, leagueTeamManagers;
-
-	// Initialize tradeCount as an empty object
-	let tradeCount = {};
-
-	// Populate tradeCount with initial structure
-	for (const manager of leagueTeamManagers) {
-	  tradeCount[manager.id] = {};
-	  for (const otherManager of leagueTeamManagers) {
-	    if (manager.id !== otherManager.id) {
-	      tradeCount[manager.id][otherManager.id] = 0;
-	    }
-	  }
-	}
-
-	// Assuming each transaction involves exactly two rosters/managers
-	const [managerA, managerB] = transaction.rosters;
-
-	// Increment trade count between managerA and managerB if both are valid
-	if (managerA && managerB) {
-	  tradeCount[managerA][managerB]++;
-	  tradeCount[managerB][managerA]++;
-	}
-
-	// Function to get the manager name by ID
-	const getManagerName = (managerId) => {
-	  const manager = leagueTeamManagers.find(mgr => mgr.id === managerId);
-	  return manager ? manager.name : 'Unknown';
-	};
 </script>
 
 <style>
@@ -89,19 +61,19 @@
         width: 100%;
         border-collapse: collapse;
         table-layout: fixed;
+        /*
+            the height setting is ignored, but
+            allows the holder class div to have
+            a height of 100%
+        */
         height: 1px;
-        margin-top: 1em;
     }
 
-    thead {
-        background-color: var(--blueOne);
-        color: var(--fff);
-    }
-
-    th, td {
-        padding: 8px;
-        border: 1px solid var(--ddd);
-        text-align: center;
+    tbody {
+        background-color: var(--fff);
+        border-top: 2px solid var(--blueOne);
+        border-left: 2px solid var(--blueOne);
+        border-right: 1px solid var(--ddd);
     }
 
     .holder {
@@ -149,27 +121,3 @@
         {transaction.date}
     </span>
 </div>
-
-<!-- Trade Count Table -->
-<h3>Trade Counts Between Managers</h3>
-<table>
-    <thead>
-        <tr>
-            <th>Manager</th>
-            {#each leagueTeamManagers as otherManager}
-                <th>{otherManager.name}</th>
-            {/each}
-        </tr>
-    </thead>
-    <tbody>
-        {#each leagueTeamManagers as manager}
-            <tr>
-                <td>{manager.name}</td>
-                {#each leagueTeamManagers as otherManager}
-                    <td>{manager.id !== otherManager.id ? tradeCount[manager.id][otherManager.id] || 0 : '-'}</td>
-                {/each}
-            </tr>
-        {/each}
-    </tbody>
-</table>
-
