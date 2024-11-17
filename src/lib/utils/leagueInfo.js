@@ -1,13 +1,12 @@
 /*   STEP 1   */
 export const leagueID = "1062784235112607744"; // your league ID
-export const leagueName = "MFFL"; // your league name
+export const leagueName = "Welcome to MFFLs website, where competition and camaraderie go hand in hand!!"; // your league name
 export const dues = 75; // (optional) used in template constitution page
 export const dynasty = true; // true for dynasty leagues, false for redraft and keeper
 export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VITE_CONTENTFUL_SPACE environment variables
 
 /*   STEP 2   */
 export const homepageText = `
-  <p style="font-size: 13px;">Welcome to MFFLs website, where competition and camaraderie go hand in hand!!</p>
   <img src="/managers/2023.jpeg" alt="League Logo" style="width: 100%; height: auto; margin-top: 10px;" />
   <p style="font-size: 12px;">
     Founded in 2014 by Eddie Fuentes, I invited a tight-knit group of friends and family. From there, we've built a league where every season is a battle for glory. What started with nine teams in three divisions has grown into a fierce sixteen-team league with four divisions, using a superflex and PPR scoring system and a prize pool of $1,000 up for grabs.
