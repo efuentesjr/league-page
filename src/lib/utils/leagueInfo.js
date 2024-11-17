@@ -7,7 +7,7 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 
 /*   STEP 2   */
 export const homepageText = `
-  <p style="font-size: 13px; margin-top: 20px;">Welcome to MFFLs website, where competition and camaraderie go hand in hand!!</p>
+  <p style="font-size: 13px;">Welcome to MFFLs website, where competition and camaraderie go hand in hand!!</p>
   <img src="/managers/2023.jpeg" alt="League Logo" style="width: 100%; height: auto; margin-top: 10px;" />
   <p style="font-size: 12px;">
     Founded in 2014 by Eddie Fuentes, I invited a tight-knit group of friends and family. From there, we've built a league where every season is a battle for glory. What started with nine teams in three divisions has grown into a fierce sixteen-team league with four divisions, using a superflex and PPR scoring system and a prize pool of $1,000 up for grabs.
