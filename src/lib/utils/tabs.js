@@ -78,4 +78,9 @@ export const tabs = [
         label: 'Go to Sleeper',
         dest: `https://sleeper.app/leagues/${leagueID}`,
     },
+        {
+        icon: 'schedule',
+        label: 'Coming Soon',
+        dest: '',
+    },
 ];
