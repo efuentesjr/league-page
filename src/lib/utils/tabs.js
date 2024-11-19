@@ -81,6 +81,6 @@ export const tabs = [
         {
         icon: 'schedule',
         label: 'Coming Soon',
-        dest: '',
+        dest: '/MockDraft',
     },
 ];
