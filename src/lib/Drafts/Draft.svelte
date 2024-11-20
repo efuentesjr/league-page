@@ -1,14 +1,14 @@
 <script>
-  	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
-	import LinearProgress from '@smui/linear-progress';
+    import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
+    import LinearProgress from '@smui/linear-progress';
     import { onMount } from 'svelte';
     import DraftRow from './DraftRow.svelte';
-    import { gotoManager } from '$lib/utils/helper'
-	import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
-    
+    import { gotoManager } from '$lib/utils/helper';
+    import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
+
     export let draftData, leagueTeamManagers, previous = false, year, players;
 
-    const {draftOrder, draft, accuracy, reversalRound, draftType} = draftData;
+    const { draftOrder, draft, accuracy, reversalRound, draftType } = draftData;
 
     let progress = 0;
     let closed = false;
@@ -16,7 +16,7 @@
     onMount(loadAccuracy);
 
     function loadAccuracy() {
-        if(!accuracy) return;
+        if (!accuracy) return;
         let timer;
         progress = 0;
         closed = false;
@@ -30,7 +30,6 @@
                     closed = true;
                 }
             }
-
         }, 100);
     }
 </script>
@@ -60,23 +59,23 @@
         overflow-x: auto;
     }
 
-	:global(.draftTeam) {
+    :global(.draftTeam) {
         font-size: 0.8em;
-		text-align: center;
-		padding: 5px 0;
-		background-color: var(--transactHeader);
+        text-align: center;
+        padding: 5px 0;
+        background-color: var(--transactHeader);
         white-space: break-spaces;
         line-height: 1em;
         height: 5em;
         vertical-align: initial;
-	}
+    }
 
-	:global(.draftBoard table) {
+    :global(.draftBoard table) {
         border-collapse: collapse;
         table-layout: fixed;
         width: 100%;
         min-width: 1200px;
-	}
+    }
 
     :global(.draftBoard td) {
         border-right: 1px solid #ddd;
@@ -88,44 +87,56 @@
         border-right: none;
     }
 
-	.avatar {
-		border-radius: 50%;
-        height: 30px;
-        width: 30px;
-        margin: 0.4em 0;
-		border: 0.25px solid #777;
-	}
+    .avatar {
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+        object-fit: cover;
+        margin: auto;
+    }
 
     .clickable {
         cursor: pointer;
     }
-	
-	:global(.curDraftName) {
+
+    :global(.curDraftName) {
         color: #888;
         font-size: 0.7em;
         font-style: italic;
     }
 </style>
 
-{#if accuracy  && !closed}
+<!-- Accuracy Progress Bar -->
+{#if accuracy && !closed}
     <div class="accuracy">
         <div class="accuracyText">
-            Upcomig draft order accuracy: {parseInt(progress*100)}%
+            Upcoming draft order accuracy: {parseInt(progress * 100)}%
             <span class="disclaimer">(accuracy will improve as the regular season progresses)</span>
         </div>
         <LinearProgress {progress} {closed} />
     </div>
 {/if}
 
+<!-- Draft Table -->
 <DataTable class="draftBoard">
     <Head>
         <Row>
             {#each draftOrder as draftPosition}
                 {#if draftPosition}
                     <Cell class="draftTeam">
-                        <img class="avatar clickable" on:click={() => gotoManager({year, leagueTeamManagers, rosterID: draftPosition})} src="{getAvatarFromTeamManagers(leagueTeamManagers, draftPosition, year)}" alt="{getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year)} avatar"/>
+                        <img 
+                            class="avatar clickable" 
+                            on:click={() => gotoManager({ year, leagueTeamManagers, rosterID: draftPosition })} 
+                            src="{getAvatarFromTeamManagers(leagueTeamManagers, draftPosition, year)}" 
+                            alt="{getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year)} avatar"
+                        />
                         <br />
-                        <span class="clickable" on:click={() => gotoManager({year, leagueTeamManagers, rosterID: draftPosition})}>{getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year)}{@html getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year) != getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition) ? `<br /><span class="curDraftName">(${getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition)})</span>` : ''}</span>
+                        <span class="clickable" on:click={() => gotoManager({ year, leagueTeamManagers, rosterID: draftPosition })}>
+                            {getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year)}
+                            {@html getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year) != getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition) 
+                                ? `<br /><span class="curDraftName">(${getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition)})</span>` 
+                                : ''}
+                        </span>
                     </Cell>
                 {/if}
             {/each}
@@ -133,8 +144,19 @@
     </Head>
     <Body>
         {#each draft as draftRow, row}
-            <DraftRow {draftRow} row={row + 1} {previous} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
+            <Row>
+                <!-- Hardcode the TH.png image for pick 1.1 -->
+                {#if row === 0 && draftRow[0]}
+                    <Cell>
+                        <img src="./TH.png" alt="Player Image" class="avatar" />
+                    </Cell>
+                {:else}
+                    <!-- Render DraftRow component for other rows -->
+                    <DraftRow {draftRow} row={row + 1} {previous} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
+                {/if}
+            </Row>
         {/each}
     </Body>
 </DataTable>
+
 
