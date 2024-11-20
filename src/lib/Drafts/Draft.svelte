@@ -145,13 +145,14 @@
     <Body>
         {#each draft as draftRow, row}
             <Row>
+                <!-- Loop through each cell in the row -->
                 {#each draftRow as draftCol, col}
                     <Cell>
                         {#if row === 0 && col === 0}
-                            <!-- Hardcoded image for 1.1 square -->
+                            <!-- Hardcoded TH.png for 1.1 -->
                             <img src="./TH.png" alt="Player Image" class="avatar" />
                         {:else}
-                            <!-- Render the DraftRow component for other cells -->
+                            <!-- Render empty cell or dynamic data -->
                             <DraftRow {draftRow} row={row + 1} {previous} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
                         {/if}
                     </Cell>
