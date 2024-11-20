@@ -145,18 +145,18 @@
     <Body>
         {#each draft as draftRow, row}
             <Row>
-                <!-- Hardcode the TH.png image for pick 1.1 -->
-                {#if row === 0 && draftRow[0]}
+                {#each draftRow as draftCol, col}
                     <Cell>
-                        <img src="./TH.png" alt="Player Image" class="avatar" />
+                        {#if row === 0 && col === 0}
+                            <!-- Hardcoded image for 1.1 square -->
+                            <img src="./TH.png" alt="Player Image" class="avatar" />
+                        {:else}
+                            <!-- Render the DraftRow component for other cells -->
+                            <DraftRow {draftRow} row={row + 1} {previous} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
+                        {/if}
                     </Cell>
-                {:else}
-                    <!-- Render DraftRow component for other rows -->
-                    <DraftRow {draftRow} row={row + 1} {previous} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
-                {/if}
+                {/each}
             </Row>
         {/each}
     </Body>
 </DataTable>
-
-
