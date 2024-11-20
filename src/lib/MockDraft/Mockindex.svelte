@@ -1,63 +1,88 @@
 <script>
-	import { waitForAll } from '$lib/utils/helper';
-    import LinearProgress from '@smui/linear-progress';
-    import Draft from './MockDraft.svelte'; 
+    import { getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
+    import { Row, Cell } from '@smui/data-table';
 
-    export let upcomingDraftData, previousDraftsData, leagueTeamManagersData, playersData;
+    // Props passed to this component
+    export let mockDraftRow, mockPlayers, row, draftType, reversalRound, leagueTeamManagers, year;
 </script>
 
 <style>
-	.loading {
-		display: block;
-		width: 85%;
-		max-width: 500px;
-		margin: 80px auto;
-	}
-
-    h4 {
-        text-align: center;
+    :global(.mockDraftCell) {
+        background-color: var(--mockDraftHighlight); /* Highlight mock draft cells */
+        border: 1px solid var(--mockDraftBorder); /* Optional border for clarity */
     }
 
-    h6 {
+    .draftPos {
+        position: absolute;
+        top: 0.3em;
+        left: 0.3em;
+        font-style: italic;
+        color: #aaa;
+    }
+
+    .newOwner {
+        font-style: italic;
+        color: #444;
         text-align: center;
+        white-space: break-spaces;
+        line-height: 1.2em;
+    }
+
+    .playerAvatar {
+        display: inline-block;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 45%;
+        height: 30px;
+        width: 30px;
+        background-position: center;
+        border-radius: 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .name {
+        display: block;
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        left: 0;
+        white-space: break-spaces;
+        line-height: 1em;
+        bottom: 0.5em;
+        color: rgba(0, 0, 0, 0.87);
     }
 </style>
 
+<Row>
+    {#each mockDraftRow as draftCol, col}
+        <Cell class="mockDraftCell">
+            <!-- Draft Position -->
+            <span class="draftPos">
+                {row}.{col + 1}
+            </span>
 
-{#await waitForAll(upcomingDraftData, leagueTeamManagersData, playersData) }
-	<div class="loading">
-		<p>Retrieving upcoming draft...</p>
-		<br />
-		<LinearProgress indeterminate />
-	</div>
-{:then [upcomingDraft, leagueTeamManagers, {players}] }
-    <h4>Upcoming {upcomingDraft.year} Draft</h4>
-    <Draft draftData={upcomingDraft} {leagueTeamManagers} year={upcomingDraft.year} {players} />
-{:catch error}
-	<!-- promise was rejected -->
-	<p>Something went wrong: {error.message}</p>
-{/await}
+            <!-- Team or Player Details -->
+            {#if draftCol}
+                <!-- Team Name -->
+                <div class="newOwner">
+                    {getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}
+                </div>
 
+                <!-- Player Avatar -->
+                <div
+                    class="playerAvatar"
+                    style="background-image: url(https://collegeplayerscdn.com/images/{mockPlayers[draftCol.player].id}.jpg), url('/default_player_image.png')">
+                </div>
 
-{#await waitForAll(previousDraftsData, leagueTeamManagersData, playersData) }
-	<hr />
-	<h4>Previous Drafts</h4>
-	<div class="loading">
-		<p>Retrieving previous drafts...</p>
-		<br />
-		<LinearProgress indeterminate />
-	</div>
-{:then [previousDrafts, leagueTeamManagers, {players}] }
-	<!-- Don't display anything unless there are previous drafts -->
-	{#if previousDrafts.length}
-		<hr />
-		<h4>Previous Drafts</h4>
-		{#each previousDrafts as previousDraft}
-			<h6>{previousDraft.year} Draft</h6>
-			<Draft draftData={previousDraft} previous={true} {leagueTeamManagers} year={previousDraft.year} {players} />
-		{/each}
-	{/if}
-{:catch error}
-	<!-- promise was rejected -->
-	<p>Something went wrong: {error.message}</p>
-{/await}
+                <!-- Player Name and Details -->
+                <div class="name">
+                    {mockPlayers[draftCol.player].name}
+                    ({mockPlayers[draftCol.player].position}, {mockPlayers[draftCol.player].college})
+                </div>
+            {/if}
+        </Cell>
+    {/each}
+</Row>
+
