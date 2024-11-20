@@ -1,139 +1,116 @@
 <script>
-  	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
-	import LinearProgress from '@smui/linear-progress';
     import { onMount } from 'svelte';
-    import DraftRow from './MockDraftRow.svelte';
-    import { gotoManager } from '$lib/utils/helper'
-	import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
-    
-    export let draftData, leagueTeamManagers, previous = false, year, players;
+    import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
+    import MockDraftRow from './MockDraftRow.svelte'; // Component to display individual rows
 
-    const {draftOrder, draft, accuracy, reversalRound, draftType} = draftData;
+    // Props passed to the component
+    export let mockDraftData, leagueTeamManagers, year;
 
-    let progress = 0;
-    let closed = false;
+    // Destructure mock draft data
+    let draftOrder = mockDraftData.draftOrder; // Original mock draft order
+    let collegePlayers = []; // Store for 2025 college players
+    let isLoading = true;
 
-    onMount(loadAccuracy);
+    // Fetch players on component mount
+    onMount(async () => {
+        try {
+            const response = await fetch('https://example.com/api/college-players/2025'); // Replace with actual API URL
+            if (!response.ok) throw new Error('Failed to fetch player data');
+            collegePlayers = await response.json(); // Assume response is an array of player objects
+        } catch (error) {
+            console.error('Error fetching college players:', error);
+        } finally {
+            isLoading = false;
 
-    function loadAccuracy() {
-        if(!accuracy) return;
-        let timer;
-        progress = 0;
-        closed = false;
-        clearInterval(timer);
-        timer = setInterval(() => {
-            progress += 0.01;
-            if (progress >= accuracy) {
-                clearInterval(timer);
-                if (progress >= 1) {
-                    progress = 1;
-                    closed = true;
+            // Fill draft spots with fetched players
+            draftOrder = draftOrder.map((spot, index) => {
+                if (!spot.player && collegePlayers[index]) {
+                    return {
+                        ...spot,
+                        player: collegePlayers[index], // Add a player to the draft spot
+                    };
                 }
-            }
+                return spot;
+            });
+        }
+    });
 
-        }, 100);
+    // Function to save the modified draft order
+    async function saveDraftOrder() {
+        try {
+            const response = await fetch('https://example.com/api/mock-drafts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ draftOrder }),
+            });
+            if (!response.ok) throw new Error('Failed to save draft');
+            console.log('Mock draft saved successfully!');
+        } catch (error) {
+            console.error('Error saving draft:', error);
+        }
+    }
+
+    // Function to reset the draft order to its original state
+    function resetDraftOrder() {
+        draftOrder = [...mockDraftData.draftOrder]; // Reset to the initial draft order
     }
 </script>
 
 <style>
-    .accuracy {
-        display: block;
-        width: 80%;
-        max-width: 800px;
-        margin: 2em auto 3em;
+    .mockDraftBoard {
+        margin: 2em auto;
+        max-width: 1000px;
     }
 
-    .accuracyText {
-        font-size: 0.7em;
-        color: #666;
+    .actions {
+        margin: 1em auto;
+        text-align: center;
     }
 
-    .disclaimer {
-        font-style: italic;
-        color: #888;
-    }
-
-    :global(.draftBoard) {
-        display: block;
-        width: 95%;
-        margin: 2em auto 3em;
-        overflow-x: auto;
-    }
-
-	:global(.draftTeam) {
-        font-size: 0.8em;
-		text-align: center;
-		padding: 5px 0;
-		background-color: var(--transactHeader);
-        white-space: break-spaces;
-        line-height: 1em;
-        height: 5em;
-        vertical-align: initial;
-	}
-
-	:global(.draftBoard table) {
-        border-collapse: collapse;
-        table-layout: fixed;
-        width: 100%;
-        min-width: 1200px;
-	}
-
-    :global(.draftBoard td) {
-        border-right: 1px solid #ddd;
-        height: 7em;
-        font-size: 0.7em;
-    }
-
-    :global(.draftBoard td:last-of-type) {
-        border-right: none;
-    }
-
-	.avatar {
-		border-radius: 50%;
-        height: 30px;
-        width: 30px;
-        margin: 0.4em 0;
-		border: 0.25px solid #777;
-	}
-
-    .clickable {
+    button {
+        margin: 0 0.5em;
+        padding: 0.5em 1em;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        border-radius: 4px;
         cursor: pointer;
     }
-	
-	:global(.curDraftName) {
-        color: #888;
-        font-size: 0.7em;
-        font-style: italic;
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
     }
 </style>
 
-{#if accuracy  && !closed}
-    <div class="accuracy">
-        <div class="accuracyText">
-            Upcomig draft order accuracy: {parseInt(progress*100)}%
-            <span class="disclaimer">(accuracy will improve as the regular season progresses)</span>
-        </div>
-        <LinearProgress {progress} {closed} />
-    </div>
-{/if}
+<h1>Mock Draft</h1>
+<p>Modify the upcoming draft order to simulate different scenarios with the 2025 college players.</p>
 
-<DataTable class="draftBoard">
-    <Head>
-        <Row>
-            {#each draftOrder as draftPosition}
-                {#if draftPosition}
-                    <Cell class="draftTeam">
-                        <img class="avatar clickable" on:click={() => gotoManager({year, leagueTeamManagers, rosterID: draftPosition})} src="{getAvatarFromTeamManagers(leagueTeamManagers, draftPosition, year)}" alt="{getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year)} avatar"/>
-                        <br />
-                        <span class="clickable" on:click={() => gotoManager({year, leagueTeamManagers, rosterID: draftPosition})}>{getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year)}{@html getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year) != getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition) ? `<br /><span class="curDraftName">(${getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition)})</span>` : ''}</span>
-                    </Cell>
-                {/if}
+<div class="actions">
+    <button on:click={saveDraftOrder}>Save Mock Draft</button>
+    <button on:click={resetDraftOrder}>Reset Mock Draft</button>
+</div>
+
+{#if isLoading}
+    <p>Loading 2025 college players...</p>
+{:else}
+    <DataTable class="mockDraftBoard">
+        <Head>
+            <Row>
+                <Cell>Team</Cell>
+                <Cell>Player</Cell>
+            </Row>
+        </Head>
+        <Body>
+            {#each draftOrder as draftRow}
+                <MockDraftRow {draftRow} />
             {/each}
-        </Row>
-    </Head>
-    <Body>
-        {#each draft as draftRow, row}
-            <DraftRow {mockdraftRow} row={row + 1} {previous} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
-        {/each}
-    </Body>
-</DataTable>
+        </Body>
+    </DataTable>
+{/if}
