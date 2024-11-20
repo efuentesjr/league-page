@@ -1,7 +1,7 @@
 <script>
 	import { waitForAll } from '$lib/utils/helper';
     import LinearProgress from '@smui/linear-progress';
-    import Draft from './Draft.svelte'; 
+    import Draft from './MockDraft.svelte'; 
 
     export let upcomingDraftData, previousDraftsData, leagueTeamManagersData, playersData;
 </script>
