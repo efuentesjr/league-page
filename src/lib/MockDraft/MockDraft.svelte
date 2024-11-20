@@ -2,7 +2,7 @@
   	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
 	import LinearProgress from '@smui/linear-progress';
     import { onMount } from 'svelte';
-    import DraftRow from './DraftRow.svelte';
+    import DraftRow from './MockDraftRow.svelte';
     import { gotoManager } from '$lib/utils/helper'
 	import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
     
@@ -133,7 +133,7 @@
     </Head>
     <Body>
         {#each draft as draftRow, row}
-            <DraftRow {draftRow} row={row + 1} {previous} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
+            <DraftRow {mockdraftRow} row={row + 1} {previous} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
         {/each}
     </Body>
 </DataTable>
