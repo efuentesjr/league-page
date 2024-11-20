@@ -1,16 +1,15 @@
 <script>
-  	import { getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
-    import {Row, Cell } from '@smui/data-table';
-    export let draftRow, draftType, row, reversalRound, previous=false, players, year, leagueTeamManagers;
+    import { getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
+    import { Row, Cell } from '@smui/data-table';
+
+    // Props passed to this component
+    export let mockDraftRow, mockPlayers, row, draftType, reversalRound, leagueTeamManagers, year;
 </script>
 
 <style>
-    :global(.draftCell) {
-        position: relative;
-    }
-
-    :global(.changedHands) {
-        background-color: var(--draftSwapped);
+    :global(.mockDraftCell) {
+        background-color: var(--mockDraftHighlight); /* Highlight mock draft cells */
+        border: 1px solid var(--mockDraftBorder); /* Optional border for clarity */
     }
 
     .draftPos {
@@ -21,14 +20,6 @@
         color: #aaa;
     }
 
-    .draftPosPrev {
-        position: absolute;
-        top: 0.1em;
-        left: 0.1em;
-        font-style: italic;
-        color: #444;
-    }
-
     .newOwner {
         font-style: italic;
         color: #444;
@@ -37,67 +28,19 @@
         line-height: 1.2em;
     }
 
-	:global(.prevQB) {
-		background-color: var(--QBfade);
-	}
-
-	:global(.prevWR) {
-		background-color: var(--WRfade);
-	}
-
-	:global(.prevRB) {
-		background-color: var(--RBfade);
-	}
-
-	:global(.prevTE) {
-		background-color: var(--TEfade);
-	}
-
-	:global(.prevK) {
-		background-color: var(--Kfade);
-	}
-
-	:global(.prevDEF) {
-		background-color: var(--DEfadeFfade);
-	}
-
-    :global(.prevCB) {
-        background-color: var(--CBfade);
-    }
-
-    :global(.prevSS) {
-        background-color: var(--SSfade);
-    }
-
-    :global(.prevFS) {
-        background-color: var(--FSfade);
-    }
-
-    :global(.prevDE) {
-        background-color: var(--DEfade);
-    }
-
-    :global(.prevDL) {
-        background-color: var(--DLfade);
-    }
-
-    :global(.prevLB) {
-        background-color: var(--LBfade);
-    }
-
-	.playerAvatar {
-		display: inline-block;
+    .playerAvatar {
+        display: inline-block;
         position: absolute;
         transform: translate(-50%, -50%);
         left: 50%;
         top: 45%;
-		height: 25px;
-		width: 25px;
-		background-position: center;
-		border-radius: 100%;
-		background-repeat: no-repeat;
-		background-size: auto 25px;
-	}
+        height: 30px;
+        width: 30px;
+        background-position: center;
+        border-radius: 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 
     .name {
         display: block;
@@ -113,38 +56,32 @@
 </style>
 
 <Row>
-    {#each draftRow as draftCol, col}
-        {#if !previous || draftCol}
-            <Cell class="draftCell{draftCol ? ' changedHands' : ''}{previous ? ` prev${players[draftCol.player].pos}` : ''}">
-                <span class="draftPos{previous ? "Prev" : ""}">
-                    {#if draftType == "auction" && previous}
-                        ${draftCol.amount}
-                    {:else if draftType == "snake" && !reversalRound}
-                        {row}.{row % 2 == 0 ? draftRow.length - col : col + 1}{draftCol?.newOwner ? ` ${getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}` : ''}
-                    {:else if draftType == "snake" && reversalRound}
-                        {#if (row < reversalRound && row % 2 == 0) || (row >= reversalRound && row % 2 == 1)}
-                            {row}.{draftRow.length - col}
-                        {:else}
-                            {row}.{col + 1}
-                        {/if}
-                        {draftCol?.newOwner ? ` ${getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}` : ''}
-                    {:else}
-                        {#if !reversalRound || row < reversalRound}
-                            {row}.{col+1}{draftCol?.newOwner ? ` ${getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}` : ''}
-                        {:else}
-                            {row}.{draftRow.length - col}{draftCol?.newOwner ? ` ${getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}` : ''}
-                        {/if}
-                    {/if}
-                </span>
-                {#if draftCol && !previous}
-                    <div class="newOwner">{getTeamNameFromTeamManagers(leagueTeamManagers, draftCol)}</div>
-                {/if}
-                {#if previous}
-                    <div class="playerAvatar" style="{players[draftCol.player].pos == "DEF" ? `background-image: url(https://sleepercdn.com/images/team_logos/nfl/${draftCol.player.toLowerCase()}.png)` : `background-image: url(https://sleepercdn.com/content/nfl/players/thumb/${draftCol.player}.jpg), url(https://sleepercdn.com/images/v2/icons/player_default.webp)`}" />
-                    <br />
-                    <div class="name">{`${players[draftCol.player].fn} ${players[draftCol.player].ln}`}{players[draftCol.player].pos == "DEF" ? "" : ` (${players[draftCol.player].t})`}</div>
-                {/if}
-            </Cell>
-        {/if}
+    {#each mockDraftRow as draftCol, col}
+        <Cell class="mockDraftCell">
+            <!-- Draft Position -->
+            <span class="draftPos">
+                {row}.{col + 1}
+            </span>
+
+            <!-- Team or Player Details -->
+            {#if draftCol}
+                <!-- Team Name -->
+                <div class="newOwner">
+                    {getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}
+                </div>
+
+                <!-- Player Avatar -->
+                <div
+                    class="playerAvatar"
+                    style="background-image: url(https://collegeplayerscdn.com/images/{mockPlayers[draftCol.player].id}.jpg), url('/default_player_image.png')">
+                </div>
+
+                <!-- Player Name and Details -->
+                <div class="name">
+                    {mockPlayers[draftCol.player].name}
+                    ({mockPlayers[draftCol.player].position}, {mockPlayers[draftCol.player].college})
+                </div>
+            {/if}
+        </Cell>
     {/each}
 </Row>
