@@ -1,4 +1,4 @@
-import {leagueID} from '$lib/utils/leagueInfo';
+import { leagueID } from '$lib/utils/leagueInfo';
 
 export const tabs = [
     {
@@ -65,10 +65,9 @@ export const tabs = [
     },
     {
         icon: 'view_comfy',
-        label: 'Drafts',
+        label: 'Draft Info',
         nest: true,
         children: [
-            {
             {
                 icon: 'view_comfy',
                 label: 'Drafts',
@@ -92,3 +91,4 @@ export const tabs = [
         dest: '/resources',
     },
 ];
+
