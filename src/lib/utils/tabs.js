@@ -65,7 +65,7 @@ export const tabs = [
     },
     {
         icon: 'view_comfy',
-        label: 'Draft Info',
+        label: 'Drafts',
         nest: true,
         children: [
             {
