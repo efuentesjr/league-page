@@ -1,4 +1,4 @@
-import { leagueID } from '$lib/utils/leagueInfo';
+import {leagueID} from '$lib/utils/leagueInfo';
 
 export const tabs = [
     {
@@ -47,6 +47,11 @@ export const tabs = [
                 dest: '/standings',
             },
             {
+                icon: 'view_comfy',
+                label: 'Drafts',
+                dest: '/drafts',
+            },
+            {
                 icon: 'emoji_events',
                 label: 'Trophy Room',
                 dest: '/awards',
@@ -61,29 +66,12 @@ export const tabs = [
                 label: 'Constitution',
                 dest: '/constitution',
             },
-        ]
-    },
-    {
-        icon: 'view_comfy',
-        label: 'Drafts',
-        nest: true,
-        children: [
             {
-                icon: 'view_comfy',
-                label: 'Drafts',
-                dest: '/drafts',
-            },
-            {
-                icon: 'view_comfy',
-                label: 'Mock Draft',
-                dest: '/mockdrafts',
+                icon: 'sports_football',
+                label: 'Go to Sleeper',
+                dest: `https://sleeper.app/leagues/${leagueID}`,
             },
         ]
-    },
-    {
-        icon: 'sports_football',
-        label: 'Go to Sleeper',
-        dest: `https://sleeper.app/leagues/${leagueID}`,
     },
     {
         icon: 'lightbulb',
@@ -91,4 +79,3 @@ export const tabs = [
         dest: '/resources',
     },
 ];
-
