@@ -47,11 +47,6 @@ export const tabs = [
                 dest: '/standings',
             },
             {
-                icon: 'view_comfy',
-                label: 'Drafts',
-                dest: '/drafts',
-            },
-            {
                 icon: 'emoji_events',
                 label: 'Trophy Room',
                 dest: '/awards',
@@ -65,6 +60,24 @@ export const tabs = [
                 icon: 'history_edu',
                 label: 'Constitution',
                 dest: '/constitution',
+            },
+        ]
+    },
+    {
+        icon: 'view_comfy',
+        label: 'Drafts',
+        nest: true,
+        children: [
+            {
+            {
+                icon: 'view_comfy',
+                label: 'Drafts',
+                dest: '/drafts',
+            },
+            {
+                icon: 'view_comfy',
+                label: 'Mock Draft',
+                dest: '/mockdrafts',
             },
         ]
     },
