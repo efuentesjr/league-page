@@ -68,6 +68,11 @@ export const tabs = [
             },
         ]
     },
+        {
+        icon: 'schedule',
+        label: 'Mock Draft',
+        dest: '/MockDraft',
+    },
     {
         icon: 'history_edu',
         label: 'Constitution',
