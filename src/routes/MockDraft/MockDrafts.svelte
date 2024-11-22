@@ -1,7 +1,8 @@
 <div class="container">
     <h1>Upcoming 2025 Mock Draft</h1>
     <!-- Use the full URL -->
-    <img src="https://manor-dynasty-league.vercel.app/MockDraft/MockDraft.png" alt="Mock Draft Table" class="draftTable" />
+    <a href="/MockDraft/MockDraft.png" target="_blank">Test Image</a>
+
 </div>
 
 <style>
