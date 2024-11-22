@@ -1,6 +1,6 @@
 <div class="container">
     <h1>Upcoming 2025 Mock Draft</h1>
-    <!-- Use a direct path to the static image -->
+    <!-- Use the direct static path -->
     <img src="/MockDraft/MockDraft.png" alt="Mock Draft Table" class="draftTable" />
 </div>
 
