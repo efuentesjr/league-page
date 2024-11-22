@@ -47,11 +47,6 @@ export const tabs = [
                 dest: '/rivalry',
             },
             {
-                icon: 'view_comfy',
-                label: 'Drafts',
-                dest: '/drafts',
-            },
-            {
                 icon: 'emoji_events',
                 label: 'Trophy Room',
                 dest: '/awards',
@@ -62,16 +57,16 @@ export const tabs = [
                 dest: '/records',
             },
             {
+                icon: 'view_comfy',
+                label: 'Drafts',
+                dest: '/drafts',
+            },
+            {
                 icon: 'sports_football',
                 label: 'Go to Sleeper',
                 dest: `https://sleeper.app/leagues/${leagueID}`,
             },
         ]
-    },
-        {
-        icon: 'schedule',
-        label: 'Mock Draft',
-        dest: '/MockDraft',
     },
     {
         icon: 'history_edu',
