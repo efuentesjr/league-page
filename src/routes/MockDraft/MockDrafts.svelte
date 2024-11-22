@@ -1,7 +1,8 @@
-<script>
-    // Import the PNG file directly
-    import draftImage from '$lib/MockDraft/MockDraft.png';
-</script>
+<div class="container">
+    <h1>Upcoming 2025 Mock Draft</h1>
+    <!-- Use a direct path to the static image -->
+    <img src="/MockDraft/MockDraft.png" alt="Mock Draft Table" class="draftTable" />
+</div>
 
 <style>
     .container {
@@ -25,9 +26,3 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 </style>
-
-<div class="container">
-    <h1>Upcoming 2025 Mock Draft</h1>
-    <!-- Display the imported image -->
-    <img src="{draftImage}" alt="Mock Draft Table" class="draftTable" />
-</div>
