@@ -8,8 +8,7 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 /*   STEP 2   */
 export const homepageText = `
   <img src="/managers/2023.jpeg" alt="League Logo" style="width: 100%; height: auto; margin-top: 0px;" />
-  <p style="font-size: 13px;">
-	We are back and in full effect!</p>
+  <p style="font-size: 13px;">We are back and in full effect!</p>
   <p></p>
   <p></p>
 `;
