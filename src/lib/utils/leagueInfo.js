@@ -1,6 +1,6 @@
 /*   STEP 1   */
 export const leagueID = "1199099864982507520"; // your league ID
-export const leagueName = "MFFL"; // your league name
+export const leagueName = "MFFL 2025"; // your league name
 export const dues = 75; // (optional) used in template constitution page
 export const dynasty = true; // true for dynasty leagues, false for redraft and keeper
 export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VITE_CONTENTFUL_SPACE environment variables
@@ -9,9 +9,7 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 export const homepageText = `
   <img src="/managers/2023.jpeg" alt="League Logo" style="width: 100%; height: auto; margin-top: 0px;" />
   <p style="font-size: 13px;">
-    Founded in 2014 by Eddie Fuentes, we began with a tight-knit group of friends. From there, we've built a league where every season is a battle for glory. What started with nine teams in three divisions has grown into a fierce sixteen-team league with four divisions, using a superflex, PPR and Premium  TE scoring system and a prize pool of $1,000 up for grabs.
-    Our core teams, The Comeback Kid, Raiders Fantasy Blue Ballers, SlickBears, 88Boyz11, and Texas Timeshifts have set the tone since day one, bringing intense rivalries and unforgettable matchups. A few years later, the competition heated up with the addition of The People’s Champion, Bay Area Party Supplies, Vick2Times, and our latest players, Fristoe, Prime Time JG, CeeDees TDs, and finally, Do It To Them and Loud and Stroud.
-    With seasoned veterans and eager newcomers, every season is a fresh chance to battle it out for ultimate bragging rights and the $1000.00 PAYOUT!</p>
+	We are back and in full effect!</p>
   <p></p>
   <p></p>
 `;
