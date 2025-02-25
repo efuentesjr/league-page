@@ -85,7 +85,7 @@
     "cookie": "^0.4.1",
     "fast-xml-parser": "^4.2.5",
     "fuzzyjs": "^5.0.1",
-    "svelte": "^3.50.1"
+    "svelte": "^3.50.1",
     "yargs": "^17.0.0"
   }
 }
