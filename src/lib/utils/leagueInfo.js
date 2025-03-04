@@ -152,7 +152,6 @@ export const managers = [
     {
       "roster": 5,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
       "name": "Gerardo Calles",
-      "tookOver": 2020, // (optional) used if a manager took over a team, delete this line or change to null otherwise
       "location": "Austin TX", // (optional)
       "bio": "The People's 2X Champ is ready for any and all challengers.",
       "photo": "/managers/GC.jpg", // square ratio recommended (no larger than 500x500)
@@ -174,7 +173,6 @@ export const managers = [
     {
       "roster": 9,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
       "name": "Mario Abundis",
-      "tookOver": 2020, // (optional) used if a manager took over a team, delete this line or change to null otherwise
       "location": "Hutto TX", // (optional)
       "bio": "Waiting for Jerry to make his final move.",
       "photo": "/managers/MA.jpg", // square ratio recommended (no larger than 500x500)
@@ -196,7 +194,6 @@ export const managers = [
     {
       "roster": 3,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
       "name": "Jordan Fristoe",
-      "tookOver": 2020, // (optional) used if a manager took over a team, delete this line or change to null otherwise
       "location": "Pflugerville TX", // (optional)
       "bio": "Win baby win",
       "photo": "/managers/JF.jpg", // square ratio recommended (no larger than 500x500)
@@ -218,7 +215,6 @@ export const managers = [
       {
       "roster": 11,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
       "name": "Adrian Abundis",
-      "tookOver": 2020, // (optional) used if a manager took over a team, delete this line or change to null otherwise
       "location": "Austin TX", // (optional)
       "bio": "We are here to build a legacy of success and championships",
       "photo": "/managers/AA.jpg", // square ratio recommended (no larger than 500x500)
@@ -240,7 +236,6 @@ export const managers = [
     {
       "roster": 12,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
       "name": "Isaiah Ivarra",
-      "tookOver": 2020, // (optional) used if a manager took over a team, delete this line or change to null otherwise
       "location": "Manor TX", // (optional)
       "bio": "If anyone's looking to make moves- whether it's buying, selling, or just chatting- I'm always open.",
       "photo": "/managers/IIV.jpg", // square ratio recommended (no larger than 500x500)
@@ -262,11 +257,10 @@ export const managers = [
     {
       "roster": 10,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
       "name": "Jeremiah Gonzalez",
-      "tookOver": 2020, // (optional) used if a manager took over a team, delete this line or change to null otherwise
       "location": "Austin TX", // (optional)
       "bio": "If we playin, we STAY IN",
       "photo": "/managers/JG.jpg", // square ratio recommended (no larger than 500x500)
-      "fantasyStart": 2021, // (optional) when did the manager start playing fantasy football
+      "fantasyStart": 2018 2021, // (optional) when did the manager start playing fantasy football
       "favoriteTeam": "hou", // (optional) favorite NFL team, (follows convention: nyj, sea, mia, etc.) MUST BE LOWERCASE
       "mode": "Dynasty", // (optional) 'Win Now', 'Dynasty', or 'Rebuild' (anything else and you will need to add a new png to /static/ similar to the 'Rebuild.png' and 'Win Now.png' currently in there)
       "rival": {
@@ -284,7 +278,6 @@ export const managers = [
   	{
       "roster": 15,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
       "name": "Nick Bowens",
-      "tookOver": 2020, // (optional) used if a manager took over a team, delete this line or change to null otherwise
       "location": "Austin TX", // (optional)
       "bio": "BTA every week!🫵🏾",
       "photo": "/managers/NB.jpg", // square ratio recommended (no larger than 500x500)
@@ -306,11 +299,10 @@ export const managers = [
 	{
       "roster": 14,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
       "name": "Vick Vega",
-      "tookOver": 2019, // (optional) used if a manager took over a team, delete this line or change to null otherwise
       "location": "Marengo IL", // (optional)
       "bio": "Aim low",
       "photo": "/managers/VV.jpg", // square ratio recommended (no larger than 500x500)
-      "fantasyStart": 2021, // (optional) when did the manager start playing fantasy football
+      "fantasyStart": 2019, // (optional) when did the manager start playing fantasy football
       "favoriteTeam": "chi", // (optional) favorite NFL team, (follows convention: nyj, sea, mia, etc.) MUST BE LOWERCASE
       "mode": "Rebuild", // (optional) 'Win Now', 'Dynasty', or 'Rebuild' (anything else and you will need to add a new png to /static/ similar to the 'Rebuild.png' and 'Win Now.png' currently in there)
       "rival": {
@@ -322,6 +314,27 @@ export const managers = [
       "valuePosition": "QB", // (optional) Favorite position (QB, WR, RB, TE, etc.)
       "rookieOrVets": "Vets", // (optional) 'Rookies' or 'Vets' (anything else and you will need to add a new png to /static/ similar to the 'Rookies.png' and 'Vets.png' currently in there)
       "philosophy": "Teach yo man how to squabble",
+      "tradingScale": 7, // 1 - 10
+      "preferredContact": "Sleeper", // 'Text', 'WhatsApp', 'Sleeper', 'Email', 'Phone', 'Discord', and 'Carrier Pigeon' are currently supplied in the template
+    },
+	{
+      "roster": 7,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
+      "name": "Jeremiah Rodriguez",
+      "location": "Manor TX", // (optional)
+      "bio": "All for one, one for all!",
+      "photo": "/managers/JeR.jpg", // square ratio recommended (no larger than 500x500)
+      "fantasyStart": 2014, // (optional) when did the manager start playing fantasy football
+      "favoriteTeam": "lv", // (optional) favorite NFL team, (follows convention: nyj, sea, mia, etc.) MUST BE LOWERCASE
+      "mode": "Rebuild", // (optional) 'Win Now', 'Dynasty', or 'Rebuild' (anything else and you will need to add a new png to /static/ similar to the 'Rebuild.png' and 'Win Now.png' currently in there)
+      "rival": {
+        name: "Joaquin Puente", // Can be anything (usually your rival's name)
+        link: 13, // manager array number within this array, or null to link back to all managers page
+        image: "/managers/JP.jpg", // either a specific manager photo or '/managers/everyone.png' or '/managers/question.png'
+      },
+      "favoritePlayer": 6804, // (optional) this corresponds to the Sleeper player ID (https://api.sleeper.app/v1/players/nfl)
+      "valuePosition": "QB", // (optional) Favorite position (QB, WR, RB, TE, etc.)
+      "rookieOrVets": "Vets", // (optional) 'Rookies' or 'Vets' (anything else and you will need to add a new png to /static/ similar to the 'Rookies.png' and 'Vets.png' currently in there)
+      "philosophy": "Raaaaaiiddderrrrrrss",
       "tradingScale": 7, // 1 - 10
       "preferredContact": "Sleeper", // 'Text', 'WhatsApp', 'Sleeper', 'Email', 'Phone', 'Discord', and 'Carrier Pigeon' are currently supplied in the template
     },
