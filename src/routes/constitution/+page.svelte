@@ -854,7 +854,8 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     
     <h3 bind:this={sixOne}>6.1 Removing Managers</h3>
     <p>A manager can be removed against their will in cases of repeatedly failing to set a valid lineup, confirmed collusion, or lack of participation in the competition committee, in-person draft, league chat, trade offers, or waiver wire. Staying active throughout the season is strongly encouraged, as inactivity may be considered grounds for removal.</p>
-    
+    <p>⚾ Three Strikes & You're Out Rule ⚾:<p/>
+    <p>If a manager’s team finishes 15th or 16th 📉 in back-to-back seasons, they must plead their strategy 🗣️ to the commissioner & co-commissioners 👥. If approved, they’ll get one final season 🛑—a probation year ⏳—where their team must improve 📈 as outlined by the commissioners. Failure to do so? Strike three, and you’re out! 🚫<p/>
     <h3 bind:this={sixTwo}>6.2 Replacing Managers</h3>
     <p>When a manager is replaced, the commissioners will try to find a suitable candidate with some connection to at least a portion of the existing managers. A list of potential candidates is maintained by the commissioner. If you know of someone interested in joining, please provide their name to the commissioner. Priority will be given to managers who are eager to commit to a dynasty league and will be highly active within the league.</p>
     
