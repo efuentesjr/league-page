@@ -19,6 +19,66 @@
 </script>
 
 <style>
+
+    <style>
+      /* Basic styling for the table */
+      .draft-order-table {
+        width: 80%;
+        border-collapse: collapse;
+        text-align: center;
+        font-family: Arial, sans-serif;
+      }
+
+      .draft-order-table th,
+      .draft-order-table td {
+        padding: 10px;
+        border: 1px solid #ccc; /* Light gray border */
+      }
+
+      .playoffs,
+      .consolation {
+        background-color: #007acc;
+        color: white;
+      }
+
+      .table-header {
+        background-color: #b0e0ff;
+      }
+
+      /* Custom style to remove bottom border from specific rows */
+      .no-border td {
+        border-bottom: none;
+      }
+
+      /* Remove the top border of the next row to create a seamless connection */
+      .no-border + tr td {
+        border-top: none;
+      }
+
+      /* Basic styling for the table */
+      .draft-order-table {
+        width: 75%;
+        border-collapse: collapse;
+        text-align: center;
+        font-family: Arial, sans-serif;
+      }
+
+      .draft-order-table th,
+      .draft-order-table td {
+        padding: 10px;
+        border: 1px solid #ccc; /* Changed border color to light gray (#ccc) */
+      }
+
+      .playoffs,
+      .consolation {
+        background-color: #007acc;
+        color: white;
+      }
+
+      .table-header {
+        background-color: #b0e0ff;
+      }
+
     .constitution {
         position: relative;
         z-index: 1;
@@ -502,32 +562,6 @@
       // No additional JavaScript needed if you're just displaying the table
     </script>
 
-    <style>
-      /* Basic styling for the table */
-      .draft-order-table {
-        width: 75%;
-        border-collapse: collapse;
-        text-align: center;
-        font-family: Arial, sans-serif;
-      }
-
-      .draft-order-table th,
-      .draft-order-table td {
-        padding: 10px;
-        border: 1px solid #ccc; /* Changed border color to light gray (#ccc) */
-      }
-
-      .playoffs,
-      .consolation {
-        background-color: #007acc;
-        color: white;
-      }
-
-      .table-header {
-        background-color: #b0e0ff;
-      }
-    </style>
-
     <div class="subBlock">
       <table class="draft-order-table">
         <thead>
@@ -572,41 +606,6 @@
       // No additional JavaScript needed if you're just displaying the table
     </script>
 
-    <style>
-      /* Basic styling for the table */
-      .draft-order-table {
-        width: 80%;
-        border-collapse: collapse;
-        text-align: center;
-        font-family: Arial, sans-serif;
-      }
-
-      .draft-order-table th,
-      .draft-order-table td {
-        padding: 10px;
-        border: 1px solid #ccc; /* Light gray border */
-      }
-
-      .playoffs,
-      .consolation {
-        background-color: #007acc;
-        color: white;
-      }
-
-      .table-header {
-        background-color: #b0e0ff;
-      }
-
-      /* Custom style to remove bottom border from specific rows */
-      .no-border td {
-        border-bottom: none;
-      }
-
-      /* Remove the top border of the next row to create a seamless connection */
-      .no-border + tr td {
-        border-top: none;
-      }
-    </style>
     <div class="subBlock">
       <table class="draft-order-table">
         <thead>
