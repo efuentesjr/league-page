@@ -387,26 +387,12 @@
             <tr><td>TE</td><td class="right">none</td></tr>
         </table>
     </div>
-.divisions-container {
-    display: flex;
-    flex-wrap: wrap; /* Ensures divisions stay responsive */
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
-    text-align: center; /* Centers text inside each division */
-    gap: 20px; /* Adds spacing between divisions */
-    height: 100vh; /* Ensures full height of the screen */
-}
 
-.division {
-    width: 200px; /* Adjust width as needed */
-    padding: 10px;
-    border: 1px solid #000; /* Just for visibility */
-}
     <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Divisions</h3>
     <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
     <div class="subBlock divisions-container">
         <div class="division">
-            <h5>North Division</h5>
+        <h5>North Division</h5>
             <ul>
                 <li>Team 1</li>
                 <li>Team 2</li>
@@ -415,7 +401,7 @@
             </ul>
         </div>
         <div class="division">
-            <h5>South Division</h5>
+        <h5>South Division</h5>
             <ul>
                 <li>Team 5</li>
                 <li>Team 6</li>
@@ -424,7 +410,7 @@
             </ul>
         </div>
         <div class="division">
-            <h5>East Division</h5>
+        <h5>East Division</h5>
             <ul>
                 <li>Team 9</li>
                 <li>Team 10</li>
@@ -433,7 +419,7 @@
             </ul>
         </div>
         <div class="division">
-            <h5>West Division</h5>
+        <h5>West Division</h5>
             <ul>
                 <li>Team 13</li>
                 <li>Team 14</li>
