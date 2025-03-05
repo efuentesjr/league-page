@@ -557,9 +557,6 @@
 
     <h3 bind:this={threeTwo}>3.2 Draft Order</h3>
     <p>The draft order each year will be a linear.</p>
-    <script>
-      // No additional JavaScript needed if you're just displaying the table
-    </script>
 
     <div class="subBlock">
       <table class="draft-order-table">
