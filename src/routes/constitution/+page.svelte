@@ -97,6 +97,71 @@
     p {
         color: #777;
     }
+
+        /* General Styling */
+        .bracket-container {
+            display: flex;
+            gap: 10px; /* Reduced space between rounds */
+            margin: 0; /* No extra margin */
+            padding: 0;
+            justify-content: flex-start; /* Align to the left */
+        }
+
+        .round {
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Reduced gap between matchups */
+            align-items: flex-start; /* Align content to the left in each round */
+            padding: 0;
+            margin: 0;
+        }
+
+        .round-title {
+            font-size: 0.75em;
+            text-align: left; /* Align title to the left */
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        .matchup {
+            background-color: #3b3f4a;
+            padding: 5px; /* Smaller padding for more compact boxes */
+            border-radius: 4px;
+            width: 90px; /* Reduced width */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0; /* Remove default margin */
+        }
+
+        /* Left-align teams without boxes */
+        .team, .tbd, .championship {
+            font-weight: bold;
+            color: white;
+            text-align: left; /* Align text to the left */
+            width: 90px; /* Match width for alignment */
+            font-size: 0.7em; /* Reduced font size */
+            margin: 0; /* Remove default margin */
+        }
+
+        .tbd {
+            color: #666;
+        }
+
+        .championship {
+            font-size: 0.75em;
+            color: orange;
+        }
+
+        /* Vertical spacing for alignment */
+        .round:nth-child(2) .matchup {
+            margin-top: 35px; /* Adjusted to vertically center with Round 1 */
+        }
+
+        .round:nth-child(3) .matchup {
+            margin-top: 70px; /* Adjusted further for Finals */
+        }
 </style>
 
 <div class="constitution">
