@@ -245,7 +245,7 @@
         <li>TE</li>
         <li>FLEX (RB/WR/TE)</li>
         <li>FLEX (RB/WR/TE)</li>
-        <li>SUPERFLEX (QB/RB/WR/TE</li>
+        <li>SUPERFLEX (QB/RB/WR/TE)</li>
     </ul>
     <p>10 Bench (Expanded by 5 between the competition committee and draft day during the off-season).</p>
     <p>3 IR Spots (Player must be labeled as IR, Out, or Covid in the Sleeper App).</p>
@@ -301,6 +301,7 @@
             </ul>
         </div>
     </div>
+
 
     <h3 class="subSectionHeading" bind:this={oneThree}>1.3 Trading</h3>
     <p>Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.</p>
