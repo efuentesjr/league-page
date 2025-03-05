@@ -650,7 +650,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         <tr>
           <td>40+ Yard Pass TD Bonus</td>
           <td>
-            <input type="text" value="0.1">
+            <input type="text" value=".1">
           </td>
         </tr>
         <tr>
