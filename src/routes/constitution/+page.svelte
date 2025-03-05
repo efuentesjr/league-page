@@ -103,14 +103,16 @@
     <h3 class="noUnderscore clickable" on:click={() => goToSection(one)}>Section 1: Roster</h3>
         <h4 class="noUnderscore clickable" on:click={() => goToSection(oneOne)}>1.1 Positional Breakdown</h4>
             <h5 class="noUnderscore clickable" on:click={() => goToSection(oneOneOne)}>1.1.1 Position Maximums</h5>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Trading</h4>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.2.1 Trade Collusion</h5>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoTwo)}>1.2.2 Lending Players Prohibition</h5>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoThree)}>1.2.3 Trade Deadline</h5>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoFour)}>1.2.4 Trade Restrictions</h5>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoFive)}>1.2.5 Veto/Trade Process</h5>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(oneThree)}>1.3 Waiver Wire</h4>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.3.1 Waiver Wire/FAAB Collusion</h5>
+        <h4 class="noUnderscore clickable" on:click={() => goToSection(oneOne)}>1.2 Divisions</h4>
+            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.2.1 Divisional Structure</h5>
+        <h4 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.3 Trading</h4>
+            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.3.1 Trade Collusion</h5>
+            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoTwo)}>1.3.2 Lending Players Prohibition</h5>
+            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoThree)}>1.3.3 Trade Deadline</h5>
+            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoFour)}>1.3.4 Trade Restrictions</h5>
+            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoFive)}>1.3.5 Veto/Trade Process</h5>
+        <h4 class="noUnderscore clickable" on:click={() => goToSection(oneThree)}>1.4 Waiver Wire</h4>
+            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.4.1 Waiver Wire/FAAB Collusion</h5>
 
     <h3 class="noUnderscore clickable" on:click={() => goToSection(two)}>Section 2: Postseason</h3>
         <h4 class="noUnderscore clickable" on:click={() => goToSection(twoOne)}>2.1 Playoffs</h4>
@@ -177,12 +179,78 @@
             </table>
         </div>
 
+    <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Divisions</h3>
+    <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
+    <div class="subBlock divisions-container">
+        <div class="division">
+            <h5>North Division</h5>
+            <ul>
+                <li>Team 1</li>
+                <li>Team 2</li>
+                <li>Team 3</li>
+                <li>Team 4</li>
+            </ul>
+        </div>
+
+        <div class="division">
+            <h5>South Division</h5>
+            <ul>
+                <li>Team 5</li>
+                <li>Team 6</li>
+                <li>Team 7</li>
+                <li>Team 8</li>
+            </ul>
+        </div>
+
+        <div class="division">
+            <h5>East Division</h5>
+            <ul>
+                <li>Team 9</li>
+                <li>Team 10</li>
+                <li>Team 11</li>
+                <li>Team 12</li>
+            </ul>
+        </div>
+
+        <div class="division">
+            <h5>West Division</h5>
+            <ul>
+                <li>Team 13</li>
+                <li>Team 14</li>
+                <li>Team 15</li>
+                <li>Team 16</li>
+            </ul>
+        </div>
+    </div>
+
+<style>
+    .divisions-container {
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .division {
+        text-align: center;
+        min-width: 150px;
+    }
+    
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    li {
+        margin: 5px 0;
+    }
+</style>
+
 
     <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Trading</h3>
     
     <p>Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.
-
-When a conditional trade takes place, the Commissioner must be notified, and a note will be added to the profiles of the players involved. It is the responsibility of the managers involved in the trade to monitor the conditions and inform the Commissioner if the terms are not met.</p>
+    When a conditional trade takes place, the Commissioner must be notified, and a note will be added to the profiles of the players involved. It is the responsibility of the managers involved in the trade to monitor the conditions and inform the Commissioner if the terms are not met.</p>
 
     <h4 bind:this={oneTwoOne}>1.2.1 Trade Collusion</h4>
     <div class="subBlock">
