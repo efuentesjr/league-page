@@ -98,129 +98,143 @@
         color: #777;
     }
 
-        /* General Styling */
-        .bracket-container {
-            display: flex;
-            gap: 10px; /* Reduced space between rounds */
-            margin: 0; /* No extra margin */
-            padding: 0;
-            justify-content: flex-start; /* Align to the left */
-        }
+    /* General Styling */
+    .bracket-container {
+        display: flex;
+        gap: 10px; /* Reduced space between rounds */
+        margin: 0; /* No extra margin */
+        padding: 0;
+        justify-content: flex-start; /* Align to the left */
+    }
 
-        .round {
-            display: flex;
-            flex-direction: column;
-            gap: 8px; /* Reduced gap between matchups */
-            align-items: flex-start; /* Align content to the left in each round */
-            padding: 0;
-            margin: 0;
-        }
+    .round {
+        display: flex;
+        flex-direction: column;
+        gap: 8px; /* Reduced gap between matchups */
+        align-items: flex-start; /* Align content to the left in each round */
+        padding: 0;
+        margin: 0;
+    }
 
-        .round-title {
-            font-size: 0.75em;
-            text-align: left; /* Align title to the left */
-            color: #aaa;
-            margin-bottom: 5px;
-        }
+    .round-title {
+        font-size: 0.75em;
+        text-align: left; /* Align title to the left */
+        color: #aaa;
+        margin-bottom: 5px;
+    }
 
-        .matchup {
-            background-color: #3b3f4a;
-            padding: 5px; /* Smaller padding for more compact boxes */
-            border-radius: 4px;
-            width: 90px; /* Reduced width */
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin: 0; /* Remove default margin */
-        }
+    .matchup {
+        background-color: #3b3f4a;
+        padding: 5px; /* Smaller padding for more compact boxes */
+        border-radius: 4px;
+        width: 90px; /* Reduced width */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0; /* Remove default margin */
+    }
 
-        /* Left-align teams without boxes */
-        .team, .tbd, .championship {
-            font-weight: bold;
-            color: white;
-            text-align: left; /* Align text to the left */
-            width: 90px; /* Match width for alignment */
-            font-size: 0.7em; /* Reduced font size */
-            margin: 0; /* Remove default margin */
-        }
+    /* Left-align teams without boxes */
+    .team, .tbd, .championship {
+        font-weight: bold;
+        color: white;
+        text-align: left; /* Align text to the left */
+        width: 90px; /* Match width for alignment */
+        font-size: 0.7em; /* Reduced font size */
+        margin: 0; /* Remove default margin */
+    }
 
-        .tbd {
-            color: #666;
-        }
+    .tbd {
+        color: #666;
+    }
 
-        .championship {
-            font-size: 0.75em;
-            color: orange;
-        }
+    .championship {
+        font-size: 0.75em;
+        color: orange;
+    }
 
-        /* Vertical spacing for alignment */
-        .round:nth-child(2) .matchup {
-            margin-top: 35px; /* Adjusted to vertically center with Round 1 */
-        }
+    /* Vertical spacing for alignment */
+    .round:nth-child(2) .matchup {
+        margin-top: 35px; /* Adjusted to vertically center with Round 1 */
+    }
 
-        .round:nth-child(3) .matchup {
-            margin-top: 70px; /* Adjusted further for Finals */
-        }
+    .round:nth-child(3) .matchup {
+        margin-top: 70px; /* Adjusted further for Finals */
+    }
+
+    /* Divisions Styling */
+    .divisions-container {
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .division {
+        text-align: center;
+        min-width: 150px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        margin: 5px 0;
+    }
 </style>
 
 <div class="constitution">
     <h1 class="noUnderscore">MANOR FANTASY FOOTBALL LEAGUE CONSTITUTION</h1>
-    
+
     <h2 class="noUnderscore">TABLE OF CONTENTS</h2>
 
-<h3 class="noUnderscore clickable" on:click={() => goToSection(one)}>Section 1: Roster</h3>
+    <h3 class="noUnderscore clickable" on:click={() => goToSection(one)}>Section 1: Roster</h3>
     <h4 class="noUnderscore clickable" on:click={() => goToSection(oneOne)}>1.1 Positional Breakdown</h4>
-        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneOneOne)}>1.1.1 Position Maximums</h5>
+    <h5 class="noUnderscore clickable" on:click={() => goToSection(oneOneOne)}>1.1.1 Position Maximums</h5>
     <h4 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Divisions</h4>
-        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.2.1 Divisional Structure</h5>
+    <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.2.1 Divisional Structure</h5>
     <h4 class="noUnderscore clickable" on:click={() => goToSection(oneThree)}>1.3 Trading</h4>
-        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.3.1 Trade Collusion</h5>
-        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeTwo)}>1.3.2 Lending Players Prohibition</h5>
-        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeThree)}>1.3.3 Trade Deadline</h5>
-        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFour)}>1.3.4 Trade Restrictions</h5>
-        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFive)}>1.3.5 Veto/Trade Process</h5>
+    <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.3.1 Trade Collusion</h5>
+    <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeTwo)}>1.3.2 Lending Players Prohibition</h5>
+    <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeThree)}>1.3.3 Trade Deadline</h5>
+    <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFour)}>1.3.4 Trade Restrictions</h5>
+    <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFive)}>1.3.5 Veto/Trade Process</h5>
     <h4 class="noUnderscore clickable" on:click={() => goToSection(oneFour)}>1.4 Waiver Wire</h4>
-        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneFourOne)}>1.4.1 Waiver Wire/FAAB Collusion</h5>
+    <h5 class="noUnderscore clickable" on:click={() => goToSection(oneFourOne)}>1.4.1 Waiver Wire/FAAB Collusion</h5>
 
     <h3 class="noUnderscore clickable" on:click={() => goToSection(two)}>Section 2: Postseason</h3>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(twoOne)}>2.1 Playoffs</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(twoOne)}>2.1 Playoffs</h4>
 
     <h3 class="noUnderscore clickable" on:click={() => goToSection(three)}>Section 3: Drafting</h3>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(threeOne)}>3.1 Draft Order</h4>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(threeTwo)}>3.2 Rookie Drafts</h4>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(threeThree)}>3.3 Draft Day Trades</h4>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(threeFour)}>3.4 Draft Order Determination</h4>
-    
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(threeOne)}>3.1 Draft Order</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(threeTwo)}>3.2 Rookie Drafts</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(threeThree)}>3.3 Draft Day Trades</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(threeFour)}>3.4 Draft Order Determination</h4>
+
     <h3 class="noUnderscore clickable" on:click={() => goToSection(four)}>Section 4: Scoring System</h3>
-    
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(fourOne)}>4.1 Voting on Scoring System</h4>
-    
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(fourOne)}>4.1 Voting on Scoring System</h4>
+
     <h3 class="noUnderscore clickable" on:click={() => goToSection(five)}>Section 5: Tanking Policy</h3>
-    
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(fiveOne)}>5.1 League Tanking Policy</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(fiveOne)}>5.1 League Tanking Policy</h4>
 
     <h3 class="noUnderscore clickable" on:click={() => goToSection(six)}>Section 6: Replacing Managers</h3>
-    
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(sixOne)}>6.1 Removing Managers</h4>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(sixTwo)}>6.2 Replacing Managers</h4>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(sixThree)}>6.3 Replacement Incentive</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(sixOne)}>6.1 Removing Managers</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(sixTwo)}>6.2 Replacing Managers</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(sixThree)}>6.3 Replacement Incentive</h4>
 
     <h3 class="noUnderscore clickable" on:click={() => goToSection(seven)}>Section 7: League Finances</h3>
-    
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(sevenOne)}>7.1 League Dues</h4>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(sevenTwo)}>7.2 Payout</h4>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(sevenThree)}>7.3 Raising Dues</h4>
-    
-    
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(sevenOne)}>7.1 League Dues</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(sevenTwo)}>7.2 Payout</h4>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(sevenThree)}>7.3 Raising Dues</h4>
+
     <hr />
-    
+
     <h2 class="sectionHeading" bind:this={one}>Section 1 Roster Breakdown</h2>
-    
     <h3 class="subSectionHeading" bind:this={oneOne}>1.1 Positional Breakdown</h3>
-    
     <p>26 Total Players</p>
-    
     <p class="underscore">Starters</p>
     <ul>
         <li>QB</li>
@@ -233,21 +247,19 @@
         <li>FLEX (RB/WR/TE)</li>
         <li>SUPERFLEX (QB/RB/WR/TE</li>
     </ul>
-    
     <p>10 Bench (Expanded by 5 between the competition committee and draft day during the off-season).</p>
     <p>3 IR Spots (Player must be labeled as IR, Out, or Covid in the Sleeper App).</p>
-    <p>4 Taxi Squad (You may keep 2nd year players in the taxi squad, but only true rookies will be able to move in and out).
-    
-        <h4 bind:this={oneOneOne}>1.1.1 Position Maximums</h4>
-        
-        <div class="subBlock">
-            <table class="positionMaximums">
-                <tr><td>QB</td><td class="right">none</td></tr>
-                <tr><td>RB</td><td class="right">none</td></tr>
-                <tr><td>WR</td><td class="right">none</td></tr>
-                <tr><td>TE</td><td class="right">none</td></tr>
-            </table>
-        </div>
+    <p>4 Taxi Squad (You may keep 2nd year players in the taxi squad, but only true rookies will be able to move in and out).</p>
+
+    <h4 bind:this={oneOneOne}>1.1.1 Position Maximums</h4>
+    <div class="subBlock">
+        <table class="positionMaximums">
+            <tr><td>QB</td><td class="right">none</td></tr>
+            <tr><td>RB</td><td class="right">none</td></tr>
+            <tr><td>WR</td><td class="right">none</td></tr>
+            <tr><td>TE</td><td class="right">none</td></tr>
+        </table>
+    </div>
 
     <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Divisions</h3>
     <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
@@ -261,7 +273,6 @@
                 <li>Team 4</li>
             </ul>
         </div>
-
         <div class="division">
             <h5>South Division</h5>
             <ul>
@@ -271,7 +282,6 @@
                 <li>Team 8</li>
             </ul>
         </div>
-
         <div class="division">
             <h5>East Division</h5>
             <ul>
@@ -281,7 +291,6 @@
                 <li>Team 12</li>
             </ul>
         </div>
-
         <div class="division">
             <h5>West Division</h5>
             <ul>
@@ -293,58 +302,23 @@
         </div>
     </div>
 
-    <style>
-        .divisions-container {
-            display: flex;
-            justify-content: space-around;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .division {
-            text-align: center;
-            min-width: 150px;
-        }
-        
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        
-        li {
-            margin: 5px 0;
-        }
-    </style>
-    <!-- Continue your content here -->
-</div>
-
-
-
     <h3 class="subSectionHeading" bind:this={oneThree}>1.3 Trading</h3>
-    
-    <p>Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.
-    When a conditional trade takes place, the Commissioner must be notified, and a note will be added to the profiles of the players involved. It is the responsibility of the managers involved in the trade to monitor the conditions and inform the Commissioner if the terms are not met.</p>
+    <p>Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.</p>
 
     <h4 bind:this={oneThreeOne}>1.3.1 Trade Collusion</h4>
     <div class="subBlock">
         <p>If any team managers are suspected of offering or accepting bribes to enhance their own team or another manager’s team via trade, trading assets other than fantasy players, draft picks, or FAAB dollars, or otherwise found guilty of any form of collusion*, all parties involved in the trade will be subject to disciplinary action. Punishments may include the following:</p>
-        
         <ul>
             <li>First Offense – Immediate reduction of FAAB budget by 80%</li>
             <li>Second Offense – An immediate freeze on all transaction types—including trades and waiver wire bids—for the next 17 weeks of regular season and playoff fantasy football games. This equates to a one-year suspension from all trades and waiver wire activity.</li>
             <li>Third Offense – A league meeting of all members not involved in any of the improper trades/activity in question will take place to discuss next steps.</li>
         </ul>
-
         <p>All trades that are found guilty of collusion, will be reversed/denied. If the trade had affected the outcome of previous games, the results of those games will be revised.</p>
-
-        <p>Collusion includes any coordinated efforts by managers to intentionally stack one team by trading players, draft picks, or FAAB dollars to create an unfair advantage over the rest of the league. The commissioners recognize that collusion does not necessarily occur through a single trade but may develop over a series of trades. Therefore, the commissioners will maintain a record of all trades between any two teams to monitor for potential collusion.</p>
-
-        <p>The commissioner will err on the side of allowing team managers to manage their teams as they see fit. Any suspected collusion must be clear and convincing. However, the commissioner reserves the right to step in and, at a minimum, assess the rationale behind any heavily lopsided trade.</p>
     </div>
 
     <h4 bind:this={oneThreeTwo}>1.3.2 Lending Players Prohibition</h4>
     <div class="subBlock">
-        <p>for trades involving any player ranked in the top 35, re-acquisition by the original team is prohibited for two years after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this rule.</p>
+        <p>For trades involving any player ranked in the top 35, re-acquisition by the original team is prohibited for two years after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this rule.</p>
     </div>
     
     <h4 bind:this={oneThreeThree}>1.3.3 Trade Deadline</h4>
@@ -359,26 +333,27 @@
     
     <h4 bind:this={oneThreeFive}>1.3.5 Veto/Trade Process</h4>
     <div class="subBlock">
-        <p>Only the Commissioner may veto trades. See Sections "1.2 Trading"<p/>
+        <p>Only the Commissioner may veto trades. See Sections "1.2 Trading"</p>
     </div>
-       
-    <h3 bind:this={oneFour}>1.4 Waiver Wire</h3>
 
+    <h3 bind:this={oneFour}>1.4 Waiver Wire</h3>
     <p>Beginning in the 2023 season, MFFL will award bonus FAAB (Free Agent Acquisition Budget) dollars to managers who attend and actively participate in the league’s Competition Committee meetings and the in-person draft. Out-of-town managers must follow along and participate live during the draft to qualify—auto-drafting is not allowed.</p>
     
     <p>FAAB Waiver Wire System: Each team will begin the season with a Free Agent Acquisition Budget (FAAB) between $100 and $200, with the exact amount announced by the Commissioner before the season starts. No $0 bids are allowed. Waiver bids will process every Thursday at 2:00 a.m.</p>
 
-    <p>FAAB budgets carries over to the next season, to the maximum amount of $999</p>
+    <p>FAAB budgets carry over to the next season, to the maximum amount of $999.</p>
 
     <h4 bind:this={oneFourOne}>1.4.1 Waiver Wire/FAAB Collusion</h4>
     <div class="subBlock">
-        <p>Collusion includes any coordinated efforts to manipulate the waiver wire or FAAB system for an unfair advantage. This includes, but is not limited to:
+        <p>Collusion includes any coordinated efforts to manipulate the waiver wire or FAAB system for an unfair advantage. This includes, but is not limited to:</p>
         <ul>
             <li>Pooling FAAB budgets between teams.</li>
             <li>Dropping a player with the intent of allowing a specific team to acquire them, particularly if it’s known that the team with the highest FAAB will likely pick up the player.</li>
-    </div>
+        </ul>
         <p>The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction freezes, or other sanctions as outlined in the league’s collusion policy.</p>
-    
+    </div>
+</div>
+   
    <h2 class="sectionHeading" bind:this={two}>Section 2 Postseason</h2>
     
     <h3 bind:this={twoOne}>2.1 Playoffs</h3>
