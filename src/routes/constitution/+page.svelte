@@ -598,9 +598,6 @@
 
     <h3 bind:this={threeFour}>3.4 Draft Order Determiniation</h3>
     <p>The playoffs will determine the draft order for the following year as follows:</p>
-    <script>
-      // No additional JavaScript needed if you're just displaying the table
-    </script>
 
     <div class="subBlock">
       <table class="draft-order-table">
