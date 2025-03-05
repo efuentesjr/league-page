@@ -387,7 +387,21 @@
             <tr><td>TE</td><td class="right">none</td></tr>
         </table>
     </div>
+.divisions-container {
+    display: flex;
+    flex-wrap: wrap; /* Ensures divisions stay responsive */
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    text-align: center; /* Centers text inside each division */
+    gap: 20px; /* Adds spacing between divisions */
+    height: 100vh; /* Ensures full height of the screen */
+}
 
+.division {
+    width: 200px; /* Adjust width as needed */
+    padding: 10px;
+    border: 1px solid #000; /* Just for visibility */
+}
     <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Divisions</h3>
     <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
     <div class="subBlock divisions-container">
