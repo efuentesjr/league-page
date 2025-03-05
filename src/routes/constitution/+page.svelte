@@ -184,11 +184,12 @@
     li {
         margin: 5px 0;
     }
+
 </style>
 
 <div class="constitution">
     <h1 class="noUnderscore">MANOR FANTASY FOOTBALL LEAGUE CONSTITUTION</h1>
-
+    
     <h2 class="noUnderscore">TABLE OF CONTENTS</h2>
 
     <h3 class="noUnderscore clickable" on:click={() => goToSection(one)}>Section 1: Roster</h3>
@@ -231,6 +232,8 @@
     <h4 class="noUnderscore clickable" on:click={() => goToSection(sevenThree)}>7.3 Raising Dues</h4>
 
     <hr />
+</div>
+
 
     <h2 class="sectionHeading" bind:this={one}>Section 1 Roster Breakdown</h2>
     <h3 class="subSectionHeading" bind:this={oneOne}>1.1 Positional Breakdown</h3>
