@@ -1,12 +1,16 @@
 <script>
     import { dues } from '$lib/utils/helper';
-    let one, oneOne, oneOneOne, oneTwo, oneTwoOne, oneTwoTwo, oneTwoThree, oneTwoFour, oneTwoFive, oneThree, oneThreeOne;
-    let two, twoOne, twoTwo, twoThree, twoFour;
-    let three, threeOne, threeTwo, threeThree, threeFour;
-    let four, fourOne, fourTwo;
-    let five, fiveOne;
-    let six, sixOne, sixTwo, sixThree;
-    let seven, sevenOne, sevenTwo, sevenThree;
+    
+    let one, oneOne, oneOneOne; // 1.1 Positional Breakdown
+    let oneTwo, oneTwoOne; // 1.2 Divisions
+    let oneThree, oneThreeOne, oneThreeTwo, oneThreeThree, oneThreeFour, oneThreeFive; // 1.3 Trading
+    let oneFour, oneFourOne; // 1.4 Waiver Wire
+    let two, twoOne; // 2.1 Playoffs
+    let three, threeOne, threeTwo, threeThree; // 3. Drafting
+    let four, fourOne; // 4. Scoring System
+    let five, fiveOne; // 5. Tanking Policy
+    let six, sixOne, sixTwo, sixThree; // 6. Replacing Managers
+    let seven, sevenOne, sevenTwo, sevenThree; // 7. League Finances
 
     const goToSection = (section) => {
         const top = section.getBoundingClientRect().top + window.pageYOffset;
@@ -99,20 +103,20 @@
     <h1 class="noUnderscore">MANOR FANTASY FOOTBALL LEAGUE CONSTITUTION</h1>
     
     <h2 class="noUnderscore">TABLE OF CONTENTS</h2>
-    
-    <h3 class="noUnderscore clickable" on:click={() => goToSection(one)}>Section 1: Roster</h3>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(oneOne)}>1.1 Positional Breakdown</h4>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneOneOne)}>1.1.1 Position Maximums</h5>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(oneOne)}>1.2 Divisions</h4>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.2.1 Divisional Structure</h5>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.3 Trading</h4>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.3.1 Trade Collusion</h5>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoTwo)}>1.3.2 Lending Players Prohibition</h5>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoThree)}>1.3.3 Trade Deadline</h5>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoFour)}>1.3.4 Trade Restrictions</h5>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoFive)}>1.3.5 Veto/Trade Process</h5>
-        <h4 class="noUnderscore clickable" on:click={() => goToSection(oneThree)}>1.4 Waiver Wire</h4>
-            <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.4.1 Waiver Wire/FAAB Collusion</h5>
+
+<h3 class="noUnderscore clickable" on:click={() => goToSection(one)}>Section 1: Roster</h3>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(oneOne)}>1.1 Positional Breakdown</h4>
+        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneOneOne)}>1.1.1 Position Maximums</h5>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Divisions</h4>
+        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.2.1 Divisional Structure</h5>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(oneThree)}>1.3 Trading</h4>
+        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.3.1 Trade Collusion</h5>
+        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeTwo)}>1.3.2 Lending Players Prohibition</h5>
+        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeThree)}>1.3.3 Trade Deadline</h5>
+        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFour)}>1.3.4 Trade Restrictions</h5>
+        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFive)}>1.3.5 Veto/Trade Process</h5>
+    <h4 class="noUnderscore clickable" on:click={() => goToSection(oneFour)}>1.4 Waiver Wire</h4>
+        <h5 class="noUnderscore clickable" on:click={() => goToSection(oneFourOne)}>1.4.1 Waiver Wire/FAAB Collusion</h5>
 
     <h3 class="noUnderscore clickable" on:click={() => goToSection(two)}>Section 2: Postseason</h3>
         <h4 class="noUnderscore clickable" on:click={() => goToSection(twoOne)}>2.1 Playoffs</h4>
@@ -247,12 +251,12 @@
 </style>
 
 
-    <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Trading</h3>
+    <h3 class="subSectionHeading" bind:this={oneTwo}>1.3 Trading</h3>
     
     <p>Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.
     When a conditional trade takes place, the Commissioner must be notified, and a note will be added to the profiles of the players involved. It is the responsibility of the managers involved in the trade to monitor the conditions and inform the Commissioner if the terms are not met.</p>
 
-    <h4 bind:this={oneTwoOne}>1.2.1 Trade Collusion</h4>
+    <h4 bind:this={oneTwoOne}>1.3.1 Trade Collusion</h4>
     <div class="subBlock">
         <p>If any team managers are suspected of offering or accepting bribes to enhance their own team or another manager’s team via trade, trading assets other than fantasy players, draft picks, or FAAB dollars, or otherwise found guilty of any form of collusion*, all parties involved in the trade will be subject to disciplinary action. Punishments may include the following:</p>
         
@@ -269,27 +273,27 @@
         <p>The commissioner will err on the side of allowing team managers to manage their teams as they see fit. Any suspected collusion must be clear and convincing. However, the commissioner reserves the right to step in and, at a minimum, assess the rationale behind any heavily lopsided trade.</p>
     </div>
 
-    <h4 bind:this={oneTwoTwo}>1.2.2 Lending Players Prohibition</h4>
+    <h4 bind:this={oneTwoTwo}>1.3.2 Lending Players Prohibition</h4>
     <div class="subBlock">
         <p>for trades involving any player ranked in the top 35, re-acquisition by the original team is prohibited for two years after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this rule.</p>
     </div>
     
-    <h4 bind:this={oneTwoThree}>1.2.3 Trade Deadline</h4>
+    <h4 bind:this={oneTwoThree}>1.3.3 Trade Deadline</h4>
     <div class="subBlock">
         <p>The trade deadline will be set for the Wednesday of week 7 at 8:00pm CST</p>
     </div>
     
-    <h4 bind:this={oneTwoFour}>1.2.4 Trade Restrictions</h4>
+    <h4 bind:this={oneTwoFour}>1.3.4 Trade Restrictions</h4>
     <div class="subBlock">
         <p>You will not be able to trade draft picks that are more than 3 drafts away. For example, during the 2021 season you cannot trade any picks in or after the 2025 draft.</p>
     </div>
     
-    <h4 bind:this={oneTwoFive}>1.2.5 Veto/Trade Process</h4>
+    <h4 bind:this={oneTwoFive}>1.3.5 Veto/Trade Process</h4>
     <div class="subBlock">
         <p>Only the Commissioner may veto trades. See Sections "1.2 Trading"<p/>
     </div>
        
-    <h3 bind:this={oneThree}>1.3 Waiver Wire</h3>
+    <h3 bind:this={oneThree}>1.4 Waiver Wire</h3>
 
     <p>Beginning in the 2023 season, MFFL will award bonus FAAB (Free Agent Acquisition Budget) dollars to managers who attend and actively participate in the league’s Competition Committee meetings and the in-person draft. Out-of-town managers must follow along and participate live during the draft to qualify—auto-drafting is not allowed.</p>
     
@@ -297,7 +301,7 @@
 
     <p>FAAB budgets carries over to the next season, to the maximum amount of $999</p>
 
-    <h4 bind:this={oneThreeOne}>1.3.1 Waiver Wire/FAAB Collusion</h4>
+    <h4 bind:this={oneThreeOne}>1.4.1 Waiver Wire/FAAB Collusion</h4>
     <div class="subBlock">
         <p>Collusion includes any coordinated efforts to manipulate the waiver wire or FAAB system for an unfair advantage. This includes, but is not limited to:
         <ul>
