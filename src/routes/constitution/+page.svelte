@@ -392,7 +392,7 @@
     <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
     <div class="subBlock divisions-container">
         <div class="division">
-        <h5>North Division</h5>
+        <h4>North Division</h4>
             <ul>
                 <li>Team 1</li>
                 <li>Team 2</li>
@@ -401,7 +401,7 @@
             </ul>
         </div>
         <div class="division">
-        <h5>South Division</h5>
+        <h4>South Division</h4>
             <ul>
                 <li>Team 5</li>
                 <li>Team 6</li>
@@ -410,7 +410,7 @@
             </ul>
         </div>
         <div class="division">
-        <h5>East Division</h5>
+        <h4>East Division</h4>
             <ul>
                 <li>Team 9</li>
                 <li>Team 10</li>
@@ -419,7 +419,7 @@
             </ul>
         </div>
         <div class="division">
-        <h5>West Division</h5>
+        <h4>West Division</h4>
             <ul>
                 <li>Team 13</li>
                 <li>Team 14</li>
@@ -429,6 +429,9 @@
         </div>
     </div>
 
+    <h4 bind:this={oneThreeTwo}>1.3.2 Trade Collusion</h4>
+    <div class="subBlock">
+        <p>The league will reshuffle divisions every four years to keep competition fresh and balanced. The next reshuffle is scheduled for the 2027-2028 offseason or the start of the 2028 season.<p/>
 
     <h3 class="subSectionHeading" bind:this={oneThree}>1.3 Trading</h3>
     <p>Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.</p>
