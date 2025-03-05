@@ -6,7 +6,7 @@
     let oneThree, oneThreeOne, oneThreeTwo, oneThreeThree, oneThreeFour, oneThreeFive; // 1.3 Trading
     let oneFour, oneFourOne; // 1.4 Waiver Wire
     let two, twoOne; // 2.1 Playoffs
-    let three, threeOne, threeTwo, threeThree; // 3. Drafting
+    let three, threeOne, threeTwo, threeThree, threeFour; // 3. Drafting
     let four, fourOne; // 4. Scoring System
     let five, fiveOne; // 5. Tanking Policy
     let six, sixOne, sixTwo, sixThree; // 6. Replacing Managers
@@ -125,6 +125,7 @@
         <h4 class="noUnderscore clickable" on:click={() => goToSection(threeOne)}>3.1 Draft Order</h4>
         <h4 class="noUnderscore clickable" on:click={() => goToSection(threeTwo)}>3.2 Rookie Drafts</h4>
         <h4 class="noUnderscore clickable" on:click={() => goToSection(threeThree)}>3.3 Draft Day Trades</h4>
+        <h4 class="noUnderscore clickable" on:click={() => goToSection(threeFour)}>3.4 Draft Order Determination</h4>
     
     <h3 class="noUnderscore clickable" on:click={() => goToSection(four)}>Section 4: Scoring System</h3>
     
@@ -227,28 +228,31 @@
         </div>
     </div>
 
-<style>
-    .divisions-container {
-        display: flex;
-        justify-content: space-around;
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-    
-    .division {
-        text-align: center;
-        min-width: 150px;
-    }
-    
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-    
-    li {
-        margin: 5px 0;
-    }
-</style>
+    <style>
+        .divisions-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .division {
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            margin: 5px 0;
+        }
+    </style>
+    <!-- Continue your content here -->
+</div>
+
 
 
     <h3 class="subSectionHeading" bind:this={oneThree}>1.3 Trading</h3>
