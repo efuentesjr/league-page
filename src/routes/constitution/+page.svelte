@@ -208,7 +208,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
     
     <h4 bind:this={oneTwoThree}>1.2.3 Trade Deadline</h4>
     <div class="subBlock">
-        <p>The trade deadline will be set for the Monday of week 7 after Monday night's game.</p>
+        <p>The trade deadline will be set for the Wednesday of week 7 at 8:00pm CST</p>
     </div>
     
     <h4 bind:this={oneTwoFour}>1.2.4 Trade Restrictions</h4>
