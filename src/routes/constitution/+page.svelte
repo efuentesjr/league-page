@@ -429,7 +429,7 @@
         </div>
     </div>
 
-    <h4 bind:this={oneThreeTwo}>1.3.2 Trade Collusion</h4>
+    <h4 bind:this={oneTwoTwo}>1.2.2 Divisions Reshuffle</h4>
     <div class="subBlock">
         <p>The league will reshuffle divisions every four years to keep competition fresh and balanced. The next reshuffle is scheduled for the 2027-2028 offseason or the start of the 2028 season.<p/>
     </div>
