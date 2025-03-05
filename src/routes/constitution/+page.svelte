@@ -432,7 +432,7 @@
     <h4 bind:this={oneThreeTwo}>1.3.2 Trade Collusion</h4>
     <div class="subBlock">
         <p>The league will reshuffle divisions every four years to keep competition fresh and balanced. The next reshuffle is scheduled for the 2027-2028 offseason or the start of the 2028 season.<p/>
-
+    </div>
     <h3 class="subSectionHeading" bind:this={oneThree}>1.3 Trading</h3>
     <p>Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.</p>
 
