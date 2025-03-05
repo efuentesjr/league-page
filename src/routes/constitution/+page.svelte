@@ -356,8 +356,7 @@
         </ul>
         <p>The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction freezes, or other sanctions as outlined in the league’s collusion policy.</p>
     </div>
-</div>
-   
+
    <h2 class="sectionHeading" bind:this={two}>Section 2 Postseason</h2>
     
     <h3 bind:this={twoOne}>2.1 Playoffs</h3>
