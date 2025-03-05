@@ -20,7 +20,6 @@
 
 <style>
 
-    <style>
       /* Basic styling for the table */
       .draft-order-table {
         width: 80%;
