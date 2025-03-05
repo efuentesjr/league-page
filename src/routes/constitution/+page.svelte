@@ -703,7 +703,7 @@ When a conditional trade takes place, the Commissioner must be notified, and a n
         <tr>
           <td>40+ Yard Rush TD Bonus</td>
           <td>
-            <input type="text" vlaue="0">
+            <input type="text" vlaue="0.1">
           </td>
         </tr>
         <tr>
