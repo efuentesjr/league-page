@@ -1005,7 +1005,7 @@
         </tbody>
     </table>
 
-    <h3 style="background-color: #333333; color: white; padding: 5px; margin: 0;">Outgoing Money</h3>
+    <h3 style="background-color: #333333; color: white; padding: 5px; margin: 0;">Outgoing Payments</h3>
     <table style="width: 100%; border-collapse: collapse;">
         <thead>
             <tr>
@@ -1018,34 +1018,29 @@
             <tr>
                 <td style="border: 1px solid #333; padding: 5px;">1st Place Payout</td>
                 <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 1,000.00</td>
-                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 200.00</td>
+                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 250.00</td>
             </tr>
             <tr>
                 <td style="border: 1px solid #333; padding: 5px;">2nd Place Payout</td>
                 <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 75.00</td>
-                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 125.00</td>
+                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 175.00</td>
             </tr>
             <tr>
                 <td style="border: 1px solid #333; padding: 5px;">Trophy Plaque</td>
                 <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 5.00</td>
-                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 120.00</td>
+                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 170.00</td>
             </tr>
             <tr>
                 <td style="border: 1px solid #333; padding: 5px;">Trophy Shipment</td>
                 <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 25.00</td>
-                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 95.00</td>
+                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 145.00</td>
             </tr>
             <tr>
-                <td style="border: 1px solid #333; padding: 5px;">Ring</td>
-                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 35.00</td>
-                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 60.00</td>
+                <td style="border: 1px solid #333; padding: 5px;">Rings (x2)</td>
+                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 75.00</td>
+                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 70.00</td>
             </tr>
-            <tr>
-                <td style="border: 1px solid #333; padding: 5px;">Loser's T-shirt</td>
-                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 10.00</td>
-                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 50.00</td>
-            </tr>
-        </tbody>
+         </tbody>
     </table>
 
     <h3 style="background-color: #333333; color: white; padding: 5px; margin: 0;">Rolling Budget</h3>
@@ -1061,7 +1056,7 @@
             <tr>
                 <td style="border: 1px solid #333; padding: 5px;">Surplus Budget</td>
                 <td style="border: 1px solid #333; padding: 5px; text-align: right;">-</td>
-                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 50.00</td>
+                <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 70.00</td>
             </tr>
         </tbody>
     </table>
