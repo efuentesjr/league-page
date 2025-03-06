@@ -1,22 +1,22 @@
-<script>
-    import { dues } from '$lib/utils/helper';
+    <script>
+        import { dues } from '$lib/utils/helper';
     
-    let one, oneOne, oneOneOne; // 1.1 Positional Breakdown
-    let oneTwo, oneTwoOne, oneTwoTwo; // 1.2 Divisions
-    let oneThree, oneThreeOne, oneThreeTwo, oneThreeThree, oneThreeFour, oneThreeFive; // 1.3 Trading
-    let oneFour, oneFourOne; // 1.4 Waiver Wire
-    let two, twoOne; // 2.1 Playoffs
-    let three, threeOne, threeTwo, threeThree, threeFour; // 3. Drafting
-    let four, fourOne; // 4. Scoring System
-    let five, fiveOne; // 5. Tanking Policy
-    let six, sixOne, sixTwo, sixThree; // 6. Replacing Managers
-    let seven, sevenOne, sevenTwo, sevenThree; // 7. League Finances
+        let one, oneOne, oneOneOne; // 1.1 Positional Breakdown
+        let oneTwo, oneTwoOne, oneTwoTwo; // 1.2 Divisions
+        let oneThree, oneThreeOne, oneThreeTwo, oneThreeThree, oneThreeFour, oneThreeFive; // 1.3 Trading
+        let oneFour, oneFourOne; // 1.4 Waiver Wire
+        let two, twoOne; // 2.1 Playoffs
+        let three, threeOne, threeTwo, threeThree, threeFour; // 3. Drafting
+        let four, fourOne; // 4. Scoring System
+        let five, fiveOne; // 5. Tanking Policy
+        let six, sixOne, sixTwo, sixThree; // 6. Replacing Managers
+        let seven, sevenOne, sevenTwo, sevenThree; // 7. League Finances
 
-    const goToSection = (section) => {
-        const top = section.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({left: 0, top, behavior: 'smooth'});
-    }
-</script>
+        const goToSection = (section) => {
+            const top = section.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({left: 0, top, behavior: 'smooth'});
+        }
+    </script>
 
 <style>
 
@@ -602,171 +602,74 @@
     <h3 bind:this={threeFour}>3.4 Draft Order Determiniation</h3>
     <p>The playoffs will determine the draft order for the following year as follows:</p>
 
-    <div class="subBlock">
-      <table class="draft-order-table">
+<div class="subBlock">
+    <table class="draft-order-table">
         <thead>
-          <tr class="table-header">
-            <th>Team Name</th>
-            <th>Regular Season Seed</th>
-            <th>Pick</th>
-            <th>Pick Percentage</th>
-            <th>Playoffs Seed</th>
-            <th>Playoffs Pick</th>
-            <th>Playoffs Percentage</th>
-          </tr>
+            <tr class="table-header">
+                <th>Name</th>
+                <th>Regular Season Seed</th>
+                <th>Pick</th>
+                <th>Pick %</th>
+            </tr>
         </thead>
         <tbody>
-          <tr class="team-row">
-            <td>Team A</td>
-            <td>1st</td>
-            <td>TBD</td>
-            <td>0%</td>
-            <td>1st</td>
-            <td>16th</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team B</td>
-            <td>2nd</td>
-            <td>TBD</td>
-            <td>0%</td>
-            <td>2nd</td>
-            <td>15th</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team C</td>
-            <td>3rd</td>
-            <td>TBD</td>
-            <td>0%</td>
-            <td>3rd</td>
-            <td>14th</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team D</td>
-            <td>4th</td>
-            <td>TBD</td>
-            <td>0%</td>
-            <td>4th</td>
-            <td>13th</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team E</td>
-            <td>5th</td>
-            <td>TBD</td>
-            <td>0%</td>
-            <td>5th</td>
-            <td>12th</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team F</td>
-            <td>6th</td>
-            <td>TBD</td>
-            <td>0%</td>
-            <td>6th</td>
-            <td>11th</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team G</td>
-            <td>7th</td>
-            <td>TBD</td>
-            <td>0%</td>
-            <td>7th</td>
-            <td>10th</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team H</td>
-            <td>8th</td>
-            <td>BALLS→2</td>
-            <td>14.3%</td>
-            <td>8th</td>
-            <td>9th (default)</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team I</td>
-            <td>9th</td>
-            <td>BALLS→0</td>
-            <td>0.0%</td>
-            <td>9th</td>
-            <td>BALLS→3</td>
-            <td>21.4%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team J</td>
-            <td>10th</td>
-            <td>BALLS→0</td>
-            <td>0.0%</td>
-            <td>10th</td>
-            <td>BALLS→2</td>
-            <td>14.3%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team K</td>
-            <td>11th</td>
-            <td>BALLS→3</td>
-            <td>21.4%</td>
-            <td>11th</td>
-            <td>BALLS→1</td>
-            <td>7.1%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team L</td>
-            <td>12th</td>
-            <td>BALLS→2</td>
-            <td>14.3%</td>
-            <td>12th</td>
-            <td>BALLS→0</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team M</td>
-            <td>13th</td>
-            <td>BALLS→1</td>
-            <td>7.1%</td>
-            <td>13th</td>
-            <td>BALLS→0</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team N</td>
-            <td>14th</td>
-            <td>BALLS→0</td>
-            <td>0.0%</td>
-            <td>14th</td>
-            <td>BALLS→0</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team O</td>
-            <td>15th</td>
-            <td>BALLS→0</td>
-            <td>0.0%</td>
-            <td>15th</td>
-            <td>BALLS→0</td>
-            <td>0%</td>
-          </tr>
-          <tr class="team-row">
-            <td>Team P</td>
-            <td>16th</td>
-            <td>BALLS→0</td>
-            <td>0.0%</td>
-            <td>16th</td>
-            <td>BALLS→0</td>
-            <td>0%</td>
-          </tr>
-          <tr class="total-row">
-            <td colspan="6">TOTAL PING PONG BALLS</td>
-            <td>14</td>
-          </tr>
+            <tr><td>Team A</td><td>1st</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team B</td><td>2nd</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team C</td><td>3rd</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team D</td><td>4th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team E</td><td>5th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team F</td><td>6th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team G</td><td>7th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team H</td><td>8th</td><td>BALLS→ 2</td><td>14%</td></tr>
+            <tr><td>Team I</td><td>9th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team J</td><td>10th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team K</td><td>11th</td><td>BALLS→ 3</td><td>21%</td></tr>
+            <tr><td>Team L</td><td>12th</td><td>BALLS→ 2</td><td>14%</td></tr>
+            <tr><td>Team M</td><td>13th</td><td>BALLS→ 1</td><td>7%</td></tr>
+            <tr><td>Team N</td><td>14th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team O</td><td>15th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team P</td><td>16th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr class="total-row">
+                <td colspan="3">REG. SEASON TOTAL PING PONG BALLS:</td>
+                <td>8</td>
+            </tr>
         </tbody>
-      </table>
-    </div>
+    </table>
+
+    <table class="draft-order-table">
+        <thead>
+            <tr class="table-header">
+                <th>Name</th>
+                <th>Playoffs Seed</th>
+                <th>Pick</th>
+                <th>Pick %</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Team A</td><td>1st</td><td>16th</td><td>0%</td></tr>
+            <tr><td>Team B</td><td>2nd</td><td>15th</td><td>0%</td></tr>
+            <tr><td>Team C</td><td>3rd</td><td>14th</td><td>0%</td></tr>
+            <tr><td>Team D</td><td>4th</td><td>13th</td><td>0%</td></tr>
+            <tr><td>Team E</td><td>5th</td><td>12th</td><td>0%</td></tr>
+            <tr><td>Team F</td><td>6th</td><td>11th</td><td>0%</td></tr>
+            <tr><td>Team G</td><td>7th</td><td>10th</td><td>0%</td></tr>
+            <tr><td>Team H</td><td>8th</td><td>9th</td><td>0%</td></tr>
+            <tr><td>Team I</td><td>TOILET BOWL 9th</td><td>BALLS→ 3</td><td>21%</td></tr>
+            <tr><td>Team J</td><td>10th</td><td>BALLS→ 2</td><td>14%</td></tr>
+            <tr><td>Team K</td><td>11th</td><td>BALLS→ 1</td><td>7%</td></tr>
+            <tr><td>Team L</td><td>12th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team M</td><td>13th</td><td>0</td><td>0%</td></tr>
+            <tr><td>Team N</td><td>14th</td><td>0</td><td>0%</td></tr>
+            <tr><td>Team O</td><td>15th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team P</td><td>16th</td><td>0</td><td>0%</td></tr>
+            <tr class="total-row">
+                <td colspan="3">PLAYOFFS TOTAL PING PONG BALLS:</td>
+                <td>6</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 
     <p>*TBD - The exact draft order will be determined using a lottery-style drawing with a ping pong machine. Each pick will be drawn randomly to ensure fairness.<p/>
 
