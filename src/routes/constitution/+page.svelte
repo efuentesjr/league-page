@@ -357,42 +357,41 @@
 
     <hr />
 </div>
-
-
     <h2 class="sectionHeading" bind:this={one}>Section 1 Roster Breakdown</h2>
-    <h3 class="subSectionHeading" bind:this={oneOne}>1.1 Positional Breakdown</h3>
-    <p>26 Total Players</p>
-    <p class="underscore">Starters</p>
-    <ul>
-        <li>QB</li>
-        <li>RB</li>
-        <li>RB</li>
-        <li>WR</li>
-        <li>WR</li>
-        <li>TE</li>
-        <li>FLEX (RB/WR/TE)</li>
-        <li>FLEX (RB/WR/TE)</li>
-        <li>SUPERFLEX (QB/RB/WR/TE)</li>
-    </ul>
-    <p>10 Bench (Expanded by 5 between the competition committee and draft day during the off-season).</p>
-    <p>3 IR Spots (Player must be labeled as IR, Out, or Covid in the Sleeper App).</p>
-    <p>4 Taxi Squad (You may keep 2nd year players in the taxi squad, but only true rookies will be able to move in and out).</p>
+        <h3 class="subSectionHeading" bind:this={oneOne}>1.1 Positional Breakdown</h3>
+        <p>26 Total Players</p>
+        <p class="underscore">Starters</p>
+        <ul>
+            <li>QB</li>
+            <li>RB</li>
+            <li>RB</li>
+            <li>WR</li>
+            <li>WR</li>
+            <li>TE</li>
+            <li>FLEX (RB/WR/TE)</li>
+            <li>FLEX (RB/WR/TE)</li>
+            <li>SUPERFLEX (QB/RB/WR/TE)</li>
+        </ul>
+        <p>10 Bench (Expanded by 5 between the competition committee and draft day during the off-season).</p>
+        <p>3 IR Spots (Player must be labeled as IR, Out, or Covid in the Sleeper App).</p>
+        <p>4 Taxi Squad (You may keep 2nd year players in the taxi squad, but only true rookies will be able to move in and out).</p>
 
-    <h4 bind:this={oneOneOne}>1.1.1 Position Maximums</h4>
-    <div class="subBlock">
-        <table class="positionMaximums">
-            <tr><td>QB</td><td class="right">none</td></tr>
-            <tr><td>RB</td><td class="right">none</td></tr>
-            <tr><td>WR</td><td class="right">none</td></tr>
-            <tr><td>TE</td><td class="right">none</td></tr>
-        </table>
-    </div>
+        <h4 bind:this={oneOneOne}>1.1.1 Position Maximums</h4>
+        <div class="subBlock">
+            <table class="positionMaximums">
+                <tr><td>QB</td><td class="right">none</td></tr>
+                <tr><td>RB</td><td class="right">none</td></tr>
+                <tr><td>WR</td><td class="right">none</td></tr>
+                <tr><td>TE</td><td class="right">none</td></tr>
+            </table>
+        </div>
 
-    <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Divisions</h3>
-    <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
-    <div class="subBlock divisions-container">
-        <div class="division">
-        <h4>North Division</h4>
+        <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Divisions</h3>
+        <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
+
+        <div class="subBlock divisions-container">
+            <div class="division">
+            <h4>North Division</h4>
             <ul>
                 <li>Team 1</li>
                 <li>Team 2</li>
@@ -401,7 +400,7 @@
             </ul>
         </div>
         <div class="division">
-        <h4>South Division</h4>
+            <h4>South Division</h4>
             <ul>
                 <li>Team 5</li>
                 <li>Team 6</li>
@@ -410,7 +409,7 @@
             </ul>
         </div>
         <div class="division">
-        <h4>East Division</h4>
+            <h4>East Division</h4>
             <ul>
                 <li>Team 9</li>
                 <li>Team 10</li>
@@ -419,7 +418,7 @@
             </ul>
         </div>
         <div class="division">
-        <h4>West Division</h4>
+            <h4>West Division</h4>
             <ul>
                 <li>Team 13</li>
                 <li>Team 14</li>
