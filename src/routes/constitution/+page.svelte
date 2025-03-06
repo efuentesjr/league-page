@@ -606,84 +606,168 @@
       <table class="draft-order-table">
         <thead>
           <tr class="table-header">
-            <th>Seed</th>
+            <th>Team Name</th>
+            <th>Regular Season Seed</th>
             <th>Pick</th>
+            <th>Pick Percentage</th>
+            <th>Playoffs Seed</th>
+            <th>Playoffs Pick</th>
+            <th>Playoffs Percentage</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="playoffs">
-            <td colspan="2">PLAYOFFS</td>
-          </tr>
-          <tr>
+          <tr class="team-row">
+            <td>Team A</td>
             <td>1st</td>
-            <td>16th Draft Pick</td>
-          </tr>
-          <tr>
-            <td>2nd</td>
-            <td>15th Draft Pick</td>
-          </tr>
-          <tr>
-            <td>3rd</td>
-            <td>14th Draft Pick</td>
-          </tr>
-          <tr>
-            <td>4th</td>
-            <td>13th Draft Pick</td>
-          </tr>
-          <tr>
-            <td>5th</td>
-            <td>12th Draft Pick</td>
-          </tr>
-          <tr>
-            <td>6th</td>
-            <td>11th Draft Pick</td>
-          </tr>
-          <tr>
-            <td>7th</td>
-            <td>10th Draft Pick</td>
-          </tr>
-          <tr>
-            <td>8th</td>
-            <td>9th Draft Pick</td>
-          </tr>
-          <tr class="consolation">
-            <td colspan="2">TOILET BOWL</td>
-          </tr>
-          <tr class="no-border">
-            <td>9th</td>
-            <td>1st Draft Pick *TBD</td>
-          </tr>
-            <tr class="no-border">
-            <td>10th</td>
-            <td>2nd Draft Pick *TBD</td>
-          </tr>
-          <tr>
-            <td>11th</td>
-            <td>3rd Draft Pick *TBD</td>
-          </tr>
-          <tr class="no-border">
-            <td>12th</td>
-            <td>4th Draft Pick *TBD</td>
-          </tr>
-          <tr class="no-border">
-            <td>13th</td>
-            <td>5th Draft Pick *TBD</td>
-          </tr>
-          <tr>
-            <td>14th</td>
-            <td>6th Draft Pick *TBD</td>
-          </tr>
-          <tr class="no-border">
-            <td>15th</td>
-            <td>7th Draft Pick *TBD</td>
-          </tr>
-          <tr>
+            <td>TBD</td>
+            <td>0%</td>
+            <td>1st</td>
             <td>16th</td>
-            <td>8th Draft Pick *TBD</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team B</td>
+            <td>2nd</td>
+            <td>TBD</td>
+            <td>0%</td>
+            <td>2nd</td>
+            <td>15th</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team C</td>
+            <td>3rd</td>
+            <td>TBD</td>
+            <td>0%</td>
+            <td>3rd</td>
+            <td>14th</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team D</td>
+            <td>4th</td>
+            <td>TBD</td>
+            <td>0%</td>
+            <td>4th</td>
+            <td>13th</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team E</td>
+            <td>5th</td>
+            <td>TBD</td>
+            <td>0%</td>
+            <td>5th</td>
+            <td>12th</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team F</td>
+            <td>6th</td>
+            <td>TBD</td>
+            <td>0%</td>
+            <td>6th</td>
+            <td>11th</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team G</td>
+            <td>7th</td>
+            <td>TBD</td>
+            <td>0%</td>
+            <td>7th</td>
+            <td>10th</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team H</td>
+            <td>8th</td>
+            <td>BALLS→2</td>
+            <td>14.3%</td>
+            <td>8th</td>
+            <td>9th (default)</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team I</td>
+            <td>9th</td>
+            <td>BALLS→0</td>
+            <td>0.0%</td>
+            <td>9th</td>
+            <td>BALLS→3</td>
+            <td>21.4%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team J</td>
+            <td>10th</td>
+            <td>BALLS→0</td>
+            <td>0.0%</td>
+            <td>10th</td>
+            <td>BALLS→2</td>
+            <td>14.3%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team K</td>
+            <td>11th</td>
+            <td>BALLS→3</td>
+            <td>21.4%</td>
+            <td>11th</td>
+            <td>BALLS→1</td>
+            <td>7.1%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team L</td>
+            <td>12th</td>
+            <td>BALLS→2</td>
+            <td>14.3%</td>
+            <td>12th</td>
+            <td>BALLS→0</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team M</td>
+            <td>13th</td>
+            <td>BALLS→1</td>
+            <td>7.1%</td>
+            <td>13th</td>
+            <td>BALLS→0</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team N</td>
+            <td>14th</td>
+            <td>BALLS→0</td>
+            <td>0.0%</td>
+            <td>14th</td>
+            <td>BALLS→0</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team O</td>
+            <td>15th</td>
+            <td>BALLS→0</td>
+            <td>0.0%</td>
+            <td>15th</td>
+            <td>BALLS→0</td>
+            <td>0%</td>
+          </tr>
+          <tr class="team-row">
+            <td>Team P</td>
+            <td>16th</td>
+            <td>BALLS→0</td>
+            <td>0.0%</td>
+            <td>16th</td>
+            <td>BALLS→0</td>
+            <td>0%</td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="6">TOTAL PING PONG BALLS</td>
+            <td>14</td>
           </tr>
         </tbody>
       </table>
     </div>
+
     <p>*TBD - The exact draft order will be determined using a lottery-style drawing with a ping pong machine. Each pick will be drawn randomly to ensure fairness.<p/>
 
     <h2 class="sectionHeading" bind:this={four}>Section 4 Scoring System</h2>
