@@ -599,7 +599,7 @@
     <p>If a trade is being negotiated during the draft, either party may request that the Commissioner pause the draft to allow additional time for the trade discussions.</p>
 
     <h3 bind:this={threeFour}>3.4 Draft Order Determiniation</h3>
-    <p>The playoffs will determine the draft order for the following year as follows:</p>
+    <p>In an effort to combat tanking during the regular season and encourage managers to stay competitive through the playoffs, you can earn ping pong balls based on your regular season record and by placing 1st through 3rd in the Toilet Bowl. See below:</p>
 
 <div class="subBlock">
     <table class="draft-order-table">
