@@ -598,7 +598,7 @@
     <h3 bind:this={threeThree}>3.3 Draft Day Trades</h3>
     <p>If a trade is being negotiated during the draft, either party may request that the Commissioner pause the draft to allow additional time for the trade discussions.</p>
 
-    <h3 bind:this={threeFour}>3.4 Draft Order Determiniation</h3>
+    <h3 bind:this={threeFour}>3.4 Draft Order Determination</h3>
     <p>In an effort to combat tanking during the regular season and encourage managers to stay competitive through the playoffs, you can earn ping pong balls based on your regular season record and by placing 1st through 3rd in the Toilet Bowl. See below:</p>
 
 <div class="subBlock">
@@ -612,22 +612,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr><td>Team A</td><td>1st</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team B</td><td>2nd</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team C</td><td>3rd</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team D</td><td>4th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team E</td><td>5th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team F</td><td>6th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team G</td><td>7th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team H</td><td>8th</td><td>BALLS→ 2</td><td>14%</td></tr>
-            <tr><td>Team I</td><td>9th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team J</td><td>10th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team K</td><td>11th</td><td>BALLS→ 3</td><td>21%</td></tr>
-            <tr><td>Team L</td><td>12th</td><td>BALLS→ 2</td><td>14%</td></tr>
-            <tr><td>Team M</td><td>13th</td><td>BALLS→ 1</td><td>7%</td></tr>
-            <tr><td>Team N</td><td>14th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team O</td><td>15th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team P</td><td>16th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team 1</td><td>1st</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team 2</td><td>2nd</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team 3</td><td>3rd</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team 4</td><td>4th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team 5</td><td>5th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team 6</td><td>6th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team 7</td><td>7th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>Team 8</td><td>8th</td><td>BALLS→ 2</td><td>14%</td></tr>
+            <tr><td>Team 9</td><td>9th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team 10</td><td>10th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team 11</td><td>11th</td><td>BALLS→ 3</td><td>21%</td></tr>
+            <tr><td>Team 12</td><td>12th</td><td>BALLS→ 2</td><td>14%</td></tr>
+            <tr><td>Team 13</td><td>13th</td><td>BALLS→ 1</td><td>7%</td></tr>
+            <tr><td>Team 14</td><td>14th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team 15</td><td>15th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team 16</td><td>16th</td><td>BALLS→ 0</td><td>0%</td></tr>
             <tr class="total-row">
                 <td colspan="3">REG. SEASON TOTAL PING PONG BALLS:</td>
                 <td>8</td>
@@ -645,22 +645,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr><td>Team A</td><td>1st</td><td>16th</td><td>0%</td></tr>
-            <tr><td>Team B</td><td>2nd</td><td>15th</td><td>0%</td></tr>
-            <tr><td>Team C</td><td>3rd</td><td>14th</td><td>0%</td></tr>
-            <tr><td>Team D</td><td>4th</td><td>13th</td><td>0%</td></tr>
-            <tr><td>Team E</td><td>5th</td><td>12th</td><td>0%</td></tr>
-            <tr><td>Team F</td><td>6th</td><td>11th</td><td>0%</td></tr>
-            <tr><td>Team G</td><td>7th</td><td>10th</td><td>0%</td></tr>
-            <tr><td>Team H</td><td>8th</td><td>9th</td><td>0%</td></tr>
-            <tr><td>Team I</td><td>TOILET BOWL 9th</td><td>BALLS→ 3</td><td>21%</td></tr>
-            <tr><td>Team J</td><td>10th</td><td>BALLS→ 2</td><td>14%</td></tr>
-            <tr><td>Team K</td><td>11th</td><td>BALLS→ 1</td><td>7%</td></tr>
-            <tr><td>Team L</td><td>12th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team M</td><td>13th</td><td>0</td><td>0%</td></tr>
-            <tr><td>Team N</td><td>14th</td><td>0</td><td>0%</td></tr>
-            <tr><td>Team O</td><td>15th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team P</td><td>16th</td><td>0</td><td>0%</td></tr>
+            <tr><td>Team 1</td><td>1st</td><td>16th</td><td>0%</td></tr>
+            <tr><td>Team 2</td><td>2nd</td><td>15th</td><td>0%</td></tr>
+            <tr><td>Team 3</td><td>3rd</td><td>14th</td><td>0%</td></tr>
+            <tr><td>Team 4</td><td>4th</td><td>13th</td><td>0%</td></tr>
+            <tr><td>Team 5</td><td>5th</td><td>12th</td><td>0%</td></tr>
+            <tr><td>Team 6</td><td>6th</td><td>11th</td><td>0%</td></tr>
+            <tr><td>Team 7</td><td>7th</td><td>10th</td><td>0%</td></tr>
+            <tr><td>Team 8</td><td>8th</td><td>9th</td><td>0%</td></tr>
+            <tr><td>Team 9</td><td>TOILET BOWL 9th</td><td>BALLS→ 3</td><td>21%</td></tr>
+            <tr><td>Team 10</td><td>10th</td><td>BALLS→ 2</td><td>14%</td></tr>
+            <tr><td>Team 11</td><td>11th</td><td>BALLS→ 1</td><td>7%</td></tr>
+            <tr><td>Team 12</td><td>12th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team 13</td><td>13th</td><td>0</td><td>0%</td></tr>
+            <tr><td>Team 14</td><td>14th</td><td>0</td><td>0%</td></tr>
+            <tr><td>Team 15</td><td>15th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>Team 16</td><td>16th</td><td>0</td><td>0%</td></tr>
             <tr class="total-row">
                 <td colspan="3">PLAYOFFS TOTAL PING PONG BALLS:</td>
                 <td>6</td>
