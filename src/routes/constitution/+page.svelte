@@ -389,7 +389,6 @@
         <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Divisions</h3>
         <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
 
-        <div class="subBlock divisions-container">
             <div class="division">
             <h4>North Division</h4>
             <ul>
