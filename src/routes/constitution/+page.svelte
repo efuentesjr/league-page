@@ -419,7 +419,7 @@
         <div class="division">
             <h4>West Division</h4>
             <ul>
-                <li>TM 13</li>
+                <li>Team 13</li>
                 <li>Team 14</li>
                 <li>Team 15</li>
                 <li>Team 16</li>
