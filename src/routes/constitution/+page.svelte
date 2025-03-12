@@ -419,13 +419,12 @@
         <div class="division">
             <h4>West Division</h4>
             <ul>
-                <li>Team 13</li>
+                <li>TM 13</li>
                 <li>Team 14</li>
                 <li>Team 15</li>
                 <li>Team 16</li>
             </ul>
         </div>
-    </div>
 
     <h4 bind:this={oneTwoTwo}>1.2.2 Divisions Reshuffle</h4>
     <div class="subBlock">
