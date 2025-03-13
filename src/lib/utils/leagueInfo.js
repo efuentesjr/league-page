@@ -7,7 +7,7 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 
 /*   STEP 2   */
 export const homepageText = `
-  <img src="/managers/2023.jpeg" alt="League Logo" style="width: 100%; height: auto; margin-top: 0px;" />
+  <img src="/managers/Picture1.jpg" alt="League Logo" style="width: 100%; height: auto; margin-top: 0px;" />
   <p style="font-size: 13px;">Congratulations to Nick Bowens – Cee Dees TDs, the 2024 MFFL Champion! 🏆 The offseason is here, and trading is now open. Time to start planning for next season!!</p>
 `;
 
