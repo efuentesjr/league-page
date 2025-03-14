@@ -1,6 +1,6 @@
 {
   "name": "league-page",
-  "version": "2.3.5",
+  "version": "2.4.0",
   "homepage": "https://github.com/nmelhado/league-page",
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=v18.0.0 <19.0.0",
+    "node": ">=v20.0.0",
     "npm": ">=6.0.0"
   },
   "scripts": {
