@@ -102,7 +102,7 @@
 <!-- footer with update notice -->
 <footer bind:this={el}>
     {#if outOfDate}
-	    <p class="updateNotice">There is an update available for your League Page. Follow the Update Instructions</a> to get all of the newest features!</p>
+	    <p class="updateNotice">There is an update available for your League Page. Follow the Update Instructions to get all of the newest features!</p>
     {/if}
     {#if managersOutOfDate}
 	    <p class="updateNotice">Your managers page needs an update.</p>
