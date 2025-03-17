@@ -113,11 +113,13 @@
         top: 50%;
     }
 
-    h4 {
-        text-align: center;
-        font-size: 1.8em;
-        margin: 10px;
-        font-style: italic;
+	h4 {
+  	text-align: center;
+    	font-size: 2em; /* Bigger font */
+    	font-weight: bold; /* Make it bold */
+    	font-family: 'Arial', sans-serif; /* Change font */
+    	color: #0047ab; /* Dark blue */
+    	text-transform: uppercase; /* Make text uppercase */
     }
 
     .label {
