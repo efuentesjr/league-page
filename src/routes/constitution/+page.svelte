@@ -392,36 +392,37 @@
 <div>
     <h4>North Division:</h4>
     <div class="subBlock">
-        <P>Team 1<p/>
-        <P>Team 2<p/>
-        <P>Team 3<p/>
-        <P>Team 4<p/>
+        <p>Team 1</p>
+        <p>Team 2</p>
+        <p>Team 3</p>
+        <p>Team 4</p>
     </div>
 
     <h4>South Division:</h4>
     <div class="subBlock">
-        <P>Team 5<p/>
-        <P>Team 6<p/>
-        <P>Team 7<p/>
-        <P>Team 8<p/>
+        <p>Team 5</p>
+        <p>Team 6</p>
+        <p>Team 7</p>
+        <p>Team 8</p>
     </div>
 
     <h4>East Division:</h4>
     <div class="subBlock">
-        <P>Team 9<p/>
-        <P>Team 10<p/>
-        <P>Team 11<p/>
-        <P>Team 12<p/>
+        <p>Team 9</p>
+        <p>Team 10</p>
+        <p>Team 11</p>
+        <p>Team 12</p>
     </div>
 
     <h4>West Division:</h4>
     <div class="subBlock">
-        <P>Team 13<p/>
-        <P>Team 14<p/>
-        <P>Team 15<p/>
-        <P>Team 16<p/>
+        <p>Team 13</p>
+        <p>Team 14</p>
+        <p>Team 15</p>
+        <p>Team 16</p>
     </div>
 </div>
+
 
     <h4 bind:this={oneTwoTwo}>1.2.2 Divisions Reshuffle</h4>
     <div class="subBlock">
@@ -601,7 +602,7 @@
         <thead>
             <tr class="table-header">
                 <th>Name</th>
-                <th>RS Seed</th>
+                <th>R_Seed</th>
                 <th>Balls</th>
                 <th>Pick%</th>
             </tr>
@@ -643,11 +644,11 @@
             <tr><td>TM1</td><td>1st</td><td>16th</td><td>0%</td></tr>
             <tr><td>TM2</td><td>2nd</td><td>15th</td><td>0%</td></tr>
             <tr><td>TM3</td><td>3rd</td><td>14th</td><td>0%</td></tr>
-            <tr><td>TM4</td><td>4th</td><td>13th</td><td>0%</td></tr>
-            <tr><td>TM5</td><td>5th</td><td>12th</td><td>0%</td></tr>
-            <tr><td>TM6</td><td>6th</td><td>11th</td><td>0%</td></tr>
-            <tr><td>TM7</td><td>7th</td><td>10th</td><td>0%</td></tr>
-            <tr><td>TM8</td><td>8th</td><td>9th</td><td>0%</td></tr>
+            <tr><td>TM4</td><td>4th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>TM5</td><td>5th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>TM6</td><td>6th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>TM7</td><td>7th</td><td>TBD</td><td>0%</td></tr>
+            <tr><td>TM8</td><td>8th</td><td>TBD</td><td>0%</td></tr>
             <tr><td>TM9</td><td>9th</td><td>3</td><td>21%</td></tr>
             <tr><td>TM10</td><td>10th</td><td>2</td><td>14%</td></tr>
             <tr><td>TM11</td><td>11th</td><td>1</td><td>7%</td></tr>
@@ -797,7 +798,7 @@
         <tr>
           <td>40+ Yard Rush TD Bonus</td>
           <td>
-            <input type="text" vlaue="1000">
+            <input type="text" value="0.1">
           </td>
         </tr>
         <tr>
