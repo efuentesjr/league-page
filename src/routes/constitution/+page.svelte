@@ -389,7 +389,7 @@
         <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Divisions</h3>
         <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
 
-            <div class="division">
+        <div>
             <h4>North Division</h4>
             <ul>
                 <li>Team 1</li>
@@ -397,8 +397,7 @@
                 <li>Team 3</li>
                 <li>Team 4</li>
             </ul>
-        </div>
-        <div class="division">
+
             <h4>South Division</h4>
             <ul>
                 <li>Team 5</li>
@@ -406,8 +405,7 @@
                 <li>Team 7</li>
                 <li>Team 8</li>
             </ul>
-        </div>
-        <div class="division">
+
             <h4>East Division</h4>
             <ul>
                 <li>Team 9</li>
@@ -415,8 +413,7 @@
                 <li>Team 11</li>
                 <li>Team 12</li>
             </ul>
-        </div>
-        <div class="division">
+
             <h4>West Division</h4>
             <ul>
                 <li>Team 13</li>
