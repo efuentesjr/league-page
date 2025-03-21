@@ -601,30 +601,30 @@
         <thead>
             <tr class="table-header">
                 <th>Name</th>
-                <th>Regular Season Seed</th>
-                <th>Pick</th>
-                <th>Pick %</th>
+                <th>RS Seed</th>
+                <th>Balls</th>
+                <th>Pick%</th>
             </tr>
         </thead>
         <tbody>
-            <tr><td>Team 1</td><td>1st</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team 2</td><td>2nd</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team 3</td><td>3rd</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team 4</td><td>4th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team 5</td><td>5th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team 6</td><td>6th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team 7</td><td>7th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>Team 8</td><td>8th</td><td>BALLS→ 2</td><td>14%</td></tr>
-            <tr><td>Team 9</td><td>9th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team 10</td><td>10th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team 11</td><td>11th</td><td>BALLS→ 3</td><td>21%</td></tr>
-            <tr><td>Team 12</td><td>12th</td><td>BALLS→ 2</td><td>14%</td></tr>
-            <tr><td>Team 13</td><td>13th</td><td>BALLS→ 1</td><td>7%</td></tr>
-            <tr><td>Team 14</td><td>14th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team 15</td><td>15th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team 16</td><td>16th</td><td>BALLS→ 0</td><td>0%</td></tr>
+            <tr><td>TM1</td><td>1st</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM2</td><td>2nd</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM3</td><td>3rd</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM4</td><td>4th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM5</td><td>5th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM6</td><td>6th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM7</td><td>7th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM8</td><td>8th</td><td>2</td><td>14%</td></tr>
+            <tr><td>TM9</td><td>9th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM10</td><td>10th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM11</td><td>11th</td><td>3</td><td>21%</td></tr>
+            <tr><td>TM12</td><td>12th</td><td>2</td><td>14%</td></tr>
+            <tr><td>TM13</td><td>13th</td><td>1</td><td>7%</td></tr>
+            <tr><td>TM14</td><td>14th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM15</td><td>15th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM16</td><td>16th</td><td>0</td><td>0%</td></tr>
             <tr class="total-row">
-                <td colspan="3">REG. SEASON TOTAL PING PONG BALLS:</td>
+                <td colspan="3">REG SEASON TOTAL PING PONG BALLS:</td>
                 <td>8</td>
             </tr>
         </tbody>
@@ -634,28 +634,28 @@
         <thead>
             <tr class="table-header">
                 <th>Name</th>
-                <th>Playoffs Seed</th>
-                <th>Pick</th>
-                <th>Pick %</th>
+                <th>P_Seed</th>
+                <th>Balls</th>
+                <th>Pick%</th>
             </tr>
         </thead>
         <tbody>
-            <tr><td>Team 1</td><td>1st</td><td>16th</td><td>0%</td></tr>
-            <tr><td>Team 2</td><td>2nd</td><td>15th</td><td>0%</td></tr>
-            <tr><td>Team 3</td><td>3rd</td><td>14th</td><td>0%</td></tr>
-            <tr><td>Team 4</td><td>4th</td><td>13th</td><td>0%</td></tr>
-            <tr><td>Team 5</td><td>5th</td><td>12th</td><td>0%</td></tr>
-            <tr><td>Team 6</td><td>6th</td><td>11th</td><td>0%</td></tr>
-            <tr><td>Team 7</td><td>7th</td><td>10th</td><td>0%</td></tr>
-            <tr><td>Team 8</td><td>8th</td><td>9th</td><td>0%</td></tr>
-            <tr><td>Team 9</td><td>TOILET BOWL 9th</td><td>BALLS→ 3</td><td>21%</td></tr>
-            <tr><td>Team 10</td><td>10th</td><td>BALLS→ 2</td><td>14%</td></tr>
-            <tr><td>Team 11</td><td>11th</td><td>BALLS→ 1</td><td>7%</td></tr>
-            <tr><td>Team 12</td><td>12th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team 13</td><td>13th</td><td>0</td><td>0%</td></tr>
-            <tr><td>Team 14</td><td>14th</td><td>0</td><td>0%</td></tr>
-            <tr><td>Team 15</td><td>15th</td><td>BALLS→ 0</td><td>0%</td></tr>
-            <tr><td>Team 16</td><td>16th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM1</td><td>1st</td><td>16th</td><td>0%</td></tr>
+            <tr><td>TM2</td><td>2nd</td><td>15th</td><td>0%</td></tr>
+            <tr><td>TM3</td><td>3rd</td><td>14th</td><td>0%</td></tr>
+            <tr><td>TM4</td><td>4th</td><td>13th</td><td>0%</td></tr>
+            <tr><td>TM5</td><td>5th</td><td>12th</td><td>0%</td></tr>
+            <tr><td>TM6</td><td>6th</td><td>11th</td><td>0%</td></tr>
+            <tr><td>TM7</td><td>7th</td><td>10th</td><td>0%</td></tr>
+            <tr><td>TM8</td><td>8th</td><td>9th</td><td>0%</td></tr>
+            <tr><td>TM9</td><td>9th</td><td>3</td><td>21%</td></tr>
+            <tr><td>TM10</td><td>10th</td><td>2</td><td>14%</td></tr>
+            <tr><td>TM11</td><td>11th</td><td>1</td><td>7%</td></tr>
+            <tr><td>TM12</td><td>12th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM13</td><td>13th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM14</td><td>14th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM15</td><td>15th</td><td>0</td><td>0%</td></tr>
+            <tr><td>TM16</td><td>16th</td><td>0</td><td>0%</td></tr>
             <tr class="total-row">
                 <td colspan="3">PLAYOFFS TOTAL PING PONG BALLS:</td>
                 <td>6</td>
@@ -797,7 +797,7 @@
         <tr>
           <td>40+ Yard Rush TD Bonus</td>
           <td>
-            <input type="text" vlaue="0.1">
+            <input type="text" vlaue="1000">
           </td>
         </tr>
         <tr>
