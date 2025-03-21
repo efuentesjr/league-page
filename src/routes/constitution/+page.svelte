@@ -391,35 +391,35 @@
 
 <div>
     <h4>North Division:</h4>
-    <div class="team-container">
-        <span>Team 1</span>
-        <span>Team 2</span>
-        <span>Team 3</span>
-        <span>Team 4</span>
+    <div class="subBlock">
+        <P>Team 1<p/>
+        <P>Team 2<p/>
+        <P>Team 3<p/>
+        <P>Team 4<p/>
     </div>
 
     <h4>South Division:</h4>
-    <div class="team-container">
-        <span>Team 5</span>
-        <span>Team 6</span>
-        <span>Team 7</span>
-        <span>Team 8</span>
+    <div class="subBlock">
+        <P>Team 5<p/>
+        <P>Team 6<p/>
+        <P>Team 7<p/>
+        <P>Team 8<p/>
     </div>
 
     <h4>East Division:</h4>
-    <div class="team-container">
-        <span>Team 9</span>
-        <span>Team 10</span>
-        <span>Team 11</span>
-        <span>Team 12</span>
+    <div class="subBlock">
+        <P>Team 9<p/>
+        <P>Team 10<p/>
+        <P>Team 11<p/>
+        <P>Team 12<p/>
     </div>
 
     <h4>West Division:</h4>
-    <div class="team-container">
-        <span>Team 13</span>
-        <span>Team 14</span>
-        <span>Team 15</span>
-        <span>Team 16</span>
+    <div class="subBlock">
+        <P>Team 13<p/>
+        <P>Team 14<p/>
+        <P>Team 15<p/>
+        <P>Team 16<p/>
     </div>
 </div>
 
