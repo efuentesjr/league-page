@@ -391,37 +391,38 @@
 
 <div>
     <h4>North Division:</h4>
-    <ul class="team-list">
-        <li>Team 1</li>
-        <li>Team 2</li>
-        <li>Team 3</li>
-        <li>Team 4</li>
-    </ul>
+    <div class="team-container">
+        <span>Team 1</span>
+        <span>Team 2</span>
+        <span>Team 3</span>
+        <span>Team 4</span>
+    </div>
 
     <h4>South Division:</h4>
-    <ul class="team-list">
-        <li>Team 5</li>
-        <li>Team 6</li>
-        <li>Team 7</li>
-        <li>Team 8</li>
-    </ul>
+    <div class="team-container">
+        <span>Team 5</span>
+        <span>Team 6</span>
+        <span>Team 7</span>
+        <span>Team 8</span>
+    </div>
 
     <h4>East Division:</h4>
-    <ul class="team-list">
-        <li>Team 9</li>
-        <li>Team 10</li>
-        <li>Team 11</li>
-        <li>Team 12</li>
-    </ul>
+    <div class="team-container">
+        <span>Team 9</span>
+        <span>Team 10</span>
+        <span>Team 11</span>
+        <span>Team 12</span>
+    </div>
 
     <h4>West Division:</h4>
-    <ul class="team-list">
-        <li>Team 13</li>
-        <li>Team 14</li>
-        <li>Team 15</li>
-        <li>Team 16</li>
-    </ul>
+    <div class="team-container">
+        <span>Team 13</span>
+        <span>Team 14</span>
+        <span>Team 15</span>
+        <span>Team 16</span>
+    </div>
 </div>
+
     <h4 bind:this={oneTwoTwo}>1.2.2 Divisions Reshuffle</h4>
     <div class="subBlock">
         <p>The league will reshuffle divisions every four years to keep competition fresh and balanced. The next reshuffle is scheduled for the 2027-2028 offseason or the start of the 2028 season.<p/>
