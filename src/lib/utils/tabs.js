@@ -73,7 +73,7 @@ export const tabs = [
     },
     {
         icon: 'trending_up',
-        label: 'Resources',
+        label: 'Playoff Projections,
         dest: '/resources',
     },
 ];
