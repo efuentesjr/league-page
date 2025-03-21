@@ -9,8 +9,8 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 export const homepageText = `
 <img src="/managers/2025.png" alt="League Logo" style="width: 100%; height: 100%; object-fit: fill; margin-top: 0px;" />
   <div style="text-align: center;">
-    <p style="font-size: 22px;">Congratulations!</p>
-    <p style="font-size: 20px;">Nick Bowens – Cee Dee's TD's</p>
+    <p style="font-size: 22px;">❗Congratulations❗</p>
+    <p style="font-size: 20px;">🏈Nick Bowens – Cee Dee's TD's🏈</p>
     <p style="font-size: 20px;>🏆2024 MFFL Champion🏆</p>
 </div>
 <p style="font-size: 16px;">The offseason is here, and trading is now open. Time to start planning for next season!!</p>
