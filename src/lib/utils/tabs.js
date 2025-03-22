@@ -74,6 +74,6 @@ export const tabs = [
     {
         icon: 'trending_up',
         label: 'Playoff Projections',
-        dest: '/resources',
+        dest: '/playoffs projection',
     },
 ];
