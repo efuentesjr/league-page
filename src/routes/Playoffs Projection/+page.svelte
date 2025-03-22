@@ -1,5 +1,5 @@
 <script>
-    export let data; // Receives data from +page.js
+    export let data;
 </script>
 
 <div class="container">
@@ -28,3 +28,4 @@ p {
     color: #666;
 }
 </style>
+
