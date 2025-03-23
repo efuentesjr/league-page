@@ -28,7 +28,7 @@
 
 <div class="main">
     <h4>
-        Coming soon!
+        Playoff Projections coming soon!
     </h4>
     <div class='footballHolder'>
         <img class='football' src='/deflated-football.png' alt='deflated football' />
