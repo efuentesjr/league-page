@@ -3,7 +3,7 @@
 </script>
 
 <div class="container">
-    <h1>{data.message}</h1>
+    <h1>{data?.message || "Coming Soon..."}</h1>
     <p>Stay tuned! This page is under construction.</p>
 </div>
 
