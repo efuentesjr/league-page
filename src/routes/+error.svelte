@@ -28,12 +28,12 @@
 
 <div class="main">
     <h4>
-        Hut, Hut, Blue 404!
+        Coming soon!
     </h4>
     <div class='footballHolder'>
         <img class='football' src='/deflated-football.png' alt='deflated football' />
     </div>
     <h5>
-        Nothing Here... Try Another Page!
+        Nothing Here Yet... Try Another Page!
     </h5>
 </div>
