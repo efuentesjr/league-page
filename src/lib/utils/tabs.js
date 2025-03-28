@@ -7,24 +7,14 @@ export const tabs = [
         dest: '/',
     },
     {
-        icon: 'leaderboard',
-        label: 'Standings',
-        dest: '/standings',
-    },
-    {
-        icon: 'sports',
-        label: 'Matchups',
-        dest: '/matchups',
-    },
-    {
         icon: 'swap_horiz',
         label: 'Trades & Waivers',
         dest: '/transactions',
     },
     {
-        icon: 'article',
-        label: 'Blog',
-        dest: '/blog',
+        icon: 'view_comfy',
+        label: 'Drafts',
+        dest: '/drafts',
     },
     {
         icon: 'storage',
@@ -37,9 +27,24 @@ export const tabs = [
         dest: '/managers',
     },
     {
+        icon: 'leaderboard',
+        label: 'Standings',
+        dest: '/standings',
+    },
+    {
+        icon: 'sports',
+        label: 'Matchups',
+        dest: '/matchups',
+    },
+    {
         icon: 'local_fire_department',
         label: 'Rivalry',
         dest: '/rivalry',
+    },
+    {
+        icon: 'article',
+        label: 'Blog',
+        dest: '/blog',
     },
     {
         icon: 'emoji_events',
@@ -55,11 +60,6 @@ export const tabs = [
         icon: 'history_edu',
         label: 'Constitution',
         dest: '/constitution',
-    },
-    {
-        icon: 'view_comfy',
-        label: 'Drafts',
-        dest: '/drafts',
     },
     {
         icon: 'sports_football',
