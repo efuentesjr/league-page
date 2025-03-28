@@ -27,16 +27,6 @@ export const tabs = [
         dest: '/managers',
     },
     {
-        icon: 'leaderboard',
-        label: 'Standings',
-        dest: '/standings',
-    },
-    {
-        icon: 'sports',
-        label: 'Matchups',
-        dest: '/matchups',
-    },
-    {
         icon: 'local_fire_department',
         label: 'Rivalry',
         dest: '/rivalry',
@@ -55,6 +45,16 @@ export const tabs = [
         icon: 'military_tech',
         label: 'Records',
         dest: '/records',
+    },
+    {
+        icon: 'leaderboard',
+        label: 'Standings',
+        dest: '/standings',
+    },
+    {
+        icon: 'sports',
+        label: 'Matchups',
+        dest: '/matchups',
     },
     {
         icon: 'history_edu',
