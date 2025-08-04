@@ -13,7 +13,7 @@ export const homepageText = `
     <p style="font-size: 18px;"></p>
     <p style="font-size: 18px;"></p>
 </div>
-<p style="font-size: 14px;">The offseason is here, and trading is now open. Time to start planning for next season!!</p>
+<p style="font-size: 14px;">Are you ready for some FOOTBALL!!!!</p>
 `;
 
 /*   STEP 3   */
