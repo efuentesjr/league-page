@@ -6,9 +6,9 @@ export const dynasty = true; // true for dynasty leagues, false for redraft and 
 export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VITE_CONTENTFUL_SPACE environment variables
 
 /*   STEP 2   */
-//export const homepageText = `
-//<img src="" alt="" style="width: 100%; height: 100%; object-fit: fill; margin-top: 0px;" />
-//  <div style="text-align: center;">
+export const homepageText = `
+<img src="" alt="" style="width: 100%; height: 100%; object-fit: fill; margin-top: 0px;" />
+  <div style="text-align: center;">
     <p style="font-size: 18px;"></p>
     <p style="font-size: 18px;"></p>
     <p style="font-size: 18px;"></p>
