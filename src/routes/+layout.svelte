@@ -1,3 +1,4 @@
+<!-- __layout.svelte --> 
 <script>
   export let data;
   import { onMount } from 'svelte';
