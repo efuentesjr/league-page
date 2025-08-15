@@ -28,7 +28,7 @@
 
 <div class="main">
     <h4>
-        400 Error! Notify Eddie Fuentes, you founf a bug!
+        500 Error! Notify Eddie Fuentes, you found a bug!
     </h4>
     <div class='footballHolder'>
         <img class='football' src='/deflated-football.png' alt='deflated football' />
