@@ -25,8 +25,7 @@
   padding: 0.25rem 0.5rem;
   color: black;
   font-size: 1.25rem;
-  font-weight: bold; /* make text bold */
-  background-color: rgba(255, 255, 255, 0.6); /* semi-transparent white block */
-  border-radius: 0.25rem;
+  font-weight: bold;
+  background: none; /* fully transparent background */
 }
 </style>
