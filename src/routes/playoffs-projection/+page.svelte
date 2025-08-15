@@ -26,17 +26,22 @@ ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff S
 </div>
 
 <style>
+/* Keep the image centered; don't change width, just make it taller */
 .image-wrapper {
   position: relative;
   display: block;
-  max-width: 900px;
-  margin: 0.5rem auto; /* small top space so it’s not jammed under the nav */
+  max-width: 900px;        /* keep your current page width */
+  margin: 0.5rem auto;     /* small top spacing */
 }
 
+/* Make the image taller without stretching */
 .image-wrapper img {
   display: block;
   width: 100%;
-  height: auto;
+  /* Taller look: force a 4:3-ish frame but still responsive */
+  aspect-ratio: 4 / 3;                 /* taller than 16/9 */
+  min-height: clamp(300px, 48vw, 620px); /* ensure some vertical length */
+  object-fit: cover;                   /* crop edges instead of squishing */
 }
 
 /* Title centered at the top of the image */
@@ -53,40 +58,40 @@ ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff S
   font-size: clamp(1rem, 2.5vw, 1.5rem);
 }
 
-/* Overlay panel */
+/* Overlay panel for the table */
 .overlay {
   position: absolute;
   left: 50%;
   bottom: 10px;
   transform: translateX(-50%);
   width: min(95%, 860px);
-  max-height: 45%;
+  max-height: 50%;                /* a bit taller since image is taller */
   overflow: auto;
   padding: 0.5rem 0.75rem;
   background: rgba(0,0,0,0.45);
   border-radius: 8px;
   box-shadow: 0 4px 18px rgba(0,0,0,0.25);
-  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Preformatted text: no wrapping; allow horizontal scroll to keep columns aligned */
+/* Preformatted text: keep columns aligned; allow horizontal scroll on mobile */
 .overlay pre {
   margin: 0;
   color: #fff;
   font: 500 0.9rem/1.2rem ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  white-space: pre;          /* keep columns intact */
-  overflow-x: auto;          /* let user scroll sideways on mobile */
+  white-space: pre;          /* don't wrap—preserve columns */
+  overflow-x: auto;
 }
 
 @media (max-width: 480px) {
-  .overlay { 
-    max-height: 55%;
-    bottom: 6px;
+  .overlay {
     width: 96%;
+    max-height: 58%;
+    bottom: 6px;
   }
-  .overlay pre { 
-    font-size: 0.8rem; 
-    line-height: 1.1rem; 
+  .overlay pre {
+    font-size: 0.8rem;
+    line-height: 1.1rem;
   }
 }
 </style>
