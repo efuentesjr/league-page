@@ -6,22 +6,22 @@
   <div class="overlay">
     <pre>
 ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff Status
-1   N   Brute Force Attack      0-0-0  0-0-0    0      Undetermined     Undetermined
-2   N   The Comeback Kid        0-0-0  0-0-0    0      Undetermined     Undetermined
-3   N   CeeDees TDs             0-0-0  0-0-0    0      Undetermined     Undetermined
-4   N   Bay Area Party Supplies 0-0-0  0-0-0    0      Undetermined     Undetermined
-5   w   The People's Champ      0-0-0  0-0-0    0      Undetermined     Undetermined
-6   w   PrimeTime Prodigies     0-0-0  0-0-0    0      Undetermined     Undetermined
-7   w   Do it to them           0-0-0  0-0-0    0      Undetermined     Undetermined
-8   w   88boyz11                0-0-0  0-0-0    0      Undetermined     Undetermined
-9   s   SlickBears              0-0-0  0-0-0    0      Undetermined     Undetermined
-10  s   bLuE BaLLeRs            0-0-0  0-0-0    0      Undetermined     Undetermined
-11  s   TexasTimeshifts         0-0-0  0-0-0    0      Undetermined     Undetermined
-12  s   Loud and Stroud         0-0-0  0-0-0    0      Undetermined     Undetermined
-13  E   Muad'Dib                0-0-0  0-0-0    0      Undetermined     Undetermined
-14  1   Vick2times              0-0-0  0-0-0    0      Undetermined     Undetermined
-15  4   Pete Weber Bowling Club 0-0-0  0-0-0    0      Undetermined     Undetermined
-16  2   Fields love irvings pit 0-0-0  0-0-0    0      Undetermined     Undetermined
+1   N   Brute Force Attack      0-0-0  0-0-0      0   Undetermined     Undetermined
+2   N   The Comeback Kid        0-0-0  0-0-0      0   Undetermined     Undetermined
+3   N   CeeDees TDs             0-0-0  0-0-0      0   Undetermined     Undetermined
+4   N   Bay Area Party Supplies 0-0-0  0-0-0      0   Undetermined     Undetermined
+5   W   The People's Champ      0-0-0  0-0-0      0   Undetermined     Undetermined
+6   W   PrimeTime Prodigies     0-0-0  0-0-0      0   Undetermined     Undetermined
+7   W   Do it to them           0-0-0  0-0-0      0   Undetermined     Undetermined
+8   W   88boyz11                0-0-0  0-0-0      0   Undetermined     Undetermined
+9   S   SlickBears              0-0-0  0-0-0      0   Undetermined     Undetermined
+10  S   bLuE BaLLeRs            0-0-0  0-0-0      0   Undetermined     Undetermined
+11  S   TexasTimeshifts         0-0-0  0-0-0      0   Undetermined     Undetermined
+12  S   Loud and Stroud         0-0-0  0-0-0      0   Undetermined     Undetermined
+13  E   Muad'Dib                0-0-0  0-0-0      0   Undetermined     Undetermined
+14  1   Vick2times              0-0-0  0-0-0      0   Undetermined     Undetermined
+15  4   Pete Weber Bowling Club 0-0-0  0-0-0      0   Undetermined     Undetermined
+16  2   Fields love irvings pit 0-0-0  0-0-0      0   Undetermined     Undetermined
     </pre>
   </div>
 </div>
@@ -76,4 +76,8 @@ ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff S
   margin: 0;
   color: #fff;
   font: 500 0.9rem/1.2rem ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  white-space: pre-wrap;   /* wrap long line*
+  white-space: pre-wrap;   /* wrap long lines */
+  word-break: break-word;
+}
+</style>
+
