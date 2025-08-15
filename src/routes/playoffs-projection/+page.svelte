@@ -18,13 +18,15 @@
 
 .image-wrapper .title {
   position: absolute;
-  top: 20px; /* distance from top of image */
-  left: 20px; /* distance from left of image */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   margin: 0;
   padding: 0.5rem 1rem;
   color: white;
   font-size: 2rem;
-  background-color: rgba(0, 0, 0, 0.4); /* semi-transparent background */
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 0.25rem;
 }
 </style>
