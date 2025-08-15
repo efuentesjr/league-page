@@ -1,0 +1,8 @@
+<script>
+  export let error;
+  export let status;
+</script>
+
+<h1>playoffs-projection error (status {status})</h1>
+<pre>{error?.message}</pre>
+<pre>{error?.stack}</pre>
