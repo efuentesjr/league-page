@@ -1,18 +1,12 @@
+<!-- __layout.svelte -->
 <script>
-  export let data;
-  import { onMount } from 'svelte';
-  let NavComp = null;
+  import { Nav, Footer } from '$lib/components';
 </script>
 
-<slot />
+<main>
+  <Nav /> <!-- adds the nav (small and large) -->
+  
+  <slot />
 
-{#if NavComp}
-  <svelte:component this={NavComp} />
-{/if}
-
-<script>
-  onMount(async () => {
-    // Make sure the path & filename casing match your repo exactly
-    NavComp = (await import('$lib/components/Nav.svelte')).default;
-  });
-</script>
+  <Footer /> <!-- adds the footer -->
+</main>
