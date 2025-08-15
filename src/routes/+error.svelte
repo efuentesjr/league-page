@@ -28,12 +28,12 @@
 
 <div class="main">
     <h4>
-        Playoff Projections coming soon!
+        400 Error! Notify Eddie Fuentes, you founf a bug!
     </h4>
     <div class='footballHolder'>
         <img class='football' src='/deflated-football.png' alt='deflated football' />
     </div>
     <h5>
-        Nothing Here Yet... Try Another Page!
+        Nothing Here To See. Try Another Page!
     </h5>
 </div>
