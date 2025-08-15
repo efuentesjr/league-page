@@ -1,5 +1,5 @@
 export const load = async () => {
     return {
-        message: "Coming Soon...",
+        message: "Soon...",
     };
 };
