@@ -2,7 +2,6 @@
   <img src="/playoffs-projection/Stadium.jpg" alt="Stadium" />
   <h1 class="title">Playoffs Projections</h1>
 
-  <!-- Overlay table text -->
   <div class="overlay">
     <pre>
 ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff Status
@@ -27,22 +26,20 @@ ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff S
 </div>
 
 <style>
-/* Wrapper keeps image centered and not too huge on desktop */
 .image-wrapper {
   position: relative;
   display: block;
-  max-width: 900px;   /* adjust if you want wider/narrower */
-  margin: 0 auto;
+  max-width: 900px;
+  margin: 0.5rem auto; /* small top space so it’s not jammed under the nav */
 }
 
-/* Image scales responsively */
 .image-wrapper img {
   display: block;
   width: 100%;
   height: auto;
 }
 
-/* Top-centered title over image */
+/* Title centered at the top of the image */
 .image-wrapper .title {
   position: absolute;
   top: 10px;
@@ -53,14 +50,14 @@ ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff S
   color: black;
   font-weight: bold;
   background: none;
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
 }
 
-/* Semi-transparent panel for readable overlayed text table */
+/* Overlay panel */
 .overlay {
   position: absolute;
   left: 50%;
-  bottom: 12px;
+  bottom: 10px;
   transform: translateX(-50%);
   width: min(95%, 860px);
   max-height: 45%;
@@ -69,15 +66,27 @@ ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff S
   background: rgba(0,0,0,0.45);
   border-radius: 8px;
   box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
 }
 
-/* Preformatted text keeps columns aligned and wraps if needed */
+/* Preformatted text: no wrapping; allow horizontal scroll to keep columns aligned */
 .overlay pre {
   margin: 0;
   color: #fff;
   font: 500 0.9rem/1.2rem ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  white-space: pre-wrap;   /* wrap long lines */
-  word-break: break-word;
+  white-space: pre;          /* keep columns intact */
+  overflow-x: auto;          /* let user scroll sideways on mobile */
+}
+
+@media (max-width: 480px) {
+  .overlay { 
+    max-height: 55%;
+    bottom: 6px;
+    width: 96%;
+  }
+  .overlay pre { 
+    font-size: 0.8rem; 
+    line-height: 1.1rem; 
+  }
 }
 </style>
-
