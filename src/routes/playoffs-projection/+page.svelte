@@ -25,7 +25,17 @@
         <tr><td>E</td><td><a href="#">Muad'Dib 🎗</a></td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
         <tr><td>S</td><td><a href="#">SlickBears 🎗</a></td><td>0-0-0</td><td>0</td><td>C:25.2%</td><td>C:42.1% T:17.0%</td><td>5</td><td>8.0-8.0</td><td>9</td><td>9.0-11.0</td></tr>
         <tr><td>W</td><td><a href="#">People's Champ 🎗</a></td><td>0-0-0</td><td>0</td><td>C:25.1%</td><td>C:42.1% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
-        <!-- Continue rest of rows with mapped Dv -->
+        <tr><td>E</td><td><a href="#">Pete Weber Bowl Clu</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:41.8% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>E</td><td><a href="#">Fields love irving</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:42.0% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+        <tr><td>S</td><td><a href="#">bLuE BaLLeRs</a></td><td>0-0-0</td><td>0</td><td>C:24.9%</td><td>C:41.9% T:17.3%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>W</td><td><a href="#">88boyz11</a></td><td>0-0-0</td><td>0</td><td>C:25.1%</td><td>C:42.1% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>W</td><td><a href="#">PrimeTime Prodigies</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:42.0% T:17.0%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>S</td><td><a href="#">TexasTimeshifts</a></td><td>0-0-0</td><td>0</td><td>C:24.9%</td><td>C:42.0% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>S</td><td><a href="#">Loud and Stroud</a></td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+        <tr><td>N</td><td><a href="#">Bay Area Party</a></td><td>0-0-0</td><td>0</td><td>C:25.3%</td><td>C:42.1% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>E</td><td><a href="#">Vick2times</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:42.2% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+        <tr><td>N</td><td><a href="#">CeeDees TDs 🏆</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:41.9% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>W</td><td><a href="#">Do it to them</a></td><td>0-0-0</td><td>0</td><td>C:24.6%</td><td>C:41.7% T:17.4%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
       </tbody>
     </table>
   </div>
@@ -102,3 +112,4 @@
   text-decoration: none;
 }
 </style>
+
