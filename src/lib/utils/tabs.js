@@ -7,6 +7,11 @@ export const tabs = [
         dest: '/',
     },
     {
+        icon: 'sports',
+        label: 'Matchups',
+        dest: '/matchups',
+    },
+    {
         icon: 'swap_horiz',
         label: 'Trades & Waivers',
         dest: '/transactions',
@@ -52,14 +57,14 @@ export const tabs = [
         dest: '/records',
     },
     {
+        icon: 'trending_up',
+        label: 'Playoff Projections',
+        dest: '/playoffs-projection',
+    },
+    {
         icon: 'leaderboard',
         label: 'Standings',
         dest: '/standings',
-    },
-    {
-        icon: 'sports',
-        label: 'Matchups',
-        dest: '/matchups',
     },
     {
         icon: 'history_edu',
@@ -75,10 +80,5 @@ export const tabs = [
         icon: 'lightbulb',
         label: 'Resources',
         dest: '/resources',
-    },
-    {
-        icon: 'trending_up',
-        label: 'Playoff Projections',
-        dest: '/playoffs-projection',
     },
 ];
