@@ -1,39 +1,68 @@
 <div class="image-wrapper">
   <img src="/playoffs-projection/Stadium2.jpg" alt="Stadium2" />
-  <h2 class="title">Playoffs Projections</h2>
+  <h2 class="title">Playoff Computer Analysis MFFL</h2>
 
   <div class="overlay">
-    <pre>
-                  PlayoffComputer Analysis MFFL
-Dv	TEAM 				        W-L-T Pts DivSTATUS   PlaySTATUS 	mIn	 Targets  gIn 	DivTgts
-4 	Brute Force 		    0-0-0  0   C:24.7% 	C:41.8% T:17.2%  5 	 8.0-8.0  10 	9.0-11.0
-4 	Comeback Kid 		    0-0-0  0   C:24.8% 	C:41.7% T:17.4%  5 	 8.0-8.0  10 	9.0-11.0
-1 	Muad'Dib 🎗			    0-0-0  0   C:24.8% 	C:41.7% T:17.2%  5 	 8.0-8.0  11 	9.0-11.0
-3 	SlickBears 🎗		    0-0-0  0   C:25.2% 	C:42.1% T:17.0%  5 	 8.0-8.0  9  	9.0-11.0
-2 	People's Champ🎗	  0-0-0  0   C:25.1% 	C:42.1% T:17.2%  5 	 8.0-8.0  10 	9.0-11.0
-1 	Pete Weber Bowl Clu 0-0-0  0   C:25.0% 	C:41.8% T:17.1%  5 	 8.0-8.0  11 	9.0-11.0
-1 	Fields love irving 	0-0-0  0   C:25.0% 	C:42.0% T:17.2%  5 	 8.0-8.0  10 	9.0-11.0
-3 	bLuE BaLLeRs 		    0-0-0  0   C:24.9% 	C:41.9% T:17.3%  5 	 8.0-8.0  11 	9.0-11.0
-2 	88boyz11 			      0-0-0  0   C:25.1% 	C:42.1% T:17.1%  5 	 8.0-8.0  11 	9.0-11.0
-2 	PrimeTime Prodigies	0-0-0  0   C:25.0% 	C:42.0% T:17.0%  5 	 8.0-8.0  11 	9.0-11.0
-3 	TexasTimeshifts 	  0-0-0  0   C:24.9% 	C:42.0% T:17.2%  5 	 8.0-8.0  11 	9.0-11.0
-3 	Loud and Stroud 	  0-0-0  0   C:24.8% 	C:41.7% T:17.1%  5 	 8.0-8.0  10 	9.0-11.0
-4 	Bay Area Party  	  0-0-0  0   C:25.3% 	C:42.1% T:17.2%  5 	 8.0-8.0  11 	9.0-11.0
-1 	Vick2times 			    0-0-0  0   C:25.0% 	C:42.2% T:17.1%  5 	 8.0-8.0  10 	9.0-11.0
-4 	CeeDees TDs 🏆		  0-0-0  0   C:25.0% 	C:41.9% T:17.2%  5 	 8.0-8.0  11 	9.0-11.0
-2 	Do it to them 		  0-0-0  0   C:24.6% 	C:41.7% T:17.4%  5 	 8.0-8.0  11 	9.0-11.0
-
-LEGEND:
-Status C=Clinch % 
-T=% that will end up in a tiebreak not resolved yet
-mIn=Wins needed for any chance
-Target=Projected Wins needed 
-gIn=Wins that should guarantee a spot (if any then Controls Own Destiny)
-Due to many remaining games the analysis incorporated some randomization methods. The accuracy of status,
-odds, targets, and 'paths' will depend on the depth of analysis as well as the number of remaining games.
-    </pre>
+    <table class="playoff-table">
+      <thead>
+        <tr>
+          <th>Dv</th>
+          <th>Team</th>
+          <th>W-L-T</th>
+          <th>Pts</th>
+          <th>DivSTATUS</th>
+          <th>PlaySTATUS</th>
+          <th>mIn</th>
+          <th>Targets</th>
+          <th>gIn</th>
+          <th>DivTgts</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>4</td><td>Brute Force</td><td>0-0-0</td><td>0</td><td>C:24.7%</td><td>C:41.8% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+        <tr><td>4</td><td>Comeback Kid</td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.4%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+        <tr><td>1</td><td>Muad'Dib 🎗</td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>3</td><td>SlickBears 🎗</td><td>0-0-0</td><td>0</td><td>C:25.2%</td><td>C:42.1% T:17.0%</td><td>5</td><td>8.0-8.0</td><td>9</td><td>9.0-11.0</td></tr>
+        <tr><td>2</td><td>People's Champ 🎗</td><td>0-0-0</td><td>0</td><td>C:25.1%</td><td>C:42.1% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+        <tr><td>1</td><td>Pete Weber Bowl Clu</td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:41.8% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>1</td><td>Fields love irving</td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:42.0% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+        <tr><td>3</td><td>bLuE BaLLeRs</td><td>0-0-0</td><td>0</td><td>C:24.9%</td><td>C:41.9% T:17.3%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>2</td><td>88boyz11</td><td>0-0-0</td><td>0</td><td>C:25.1%</td><td>C:42.1% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>2</td><td>PrimeTime Prodigies</td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:42.0% T:17.0%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>3</td><td>TexasTimeshifts</td><td>0-0-0</td><td>0</td><td>C:24.9%</td><td>C:42.0% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>3</td><td>Loud and Stroud</td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+        <tr><td>4</td><td>Bay Area Party</td><td>0-0-0</td><td>0</td><td>C:25.3%</td><td>C:42.1% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>1</td><td>Vick2times</td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:42.2% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+        <tr><td>4</td><td>CeeDees TDs 🏆</td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:41.9% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+        <tr><td>2</td><td>Do it to them</td><td>0-0-0</td><td>0</td><td>C:24.6%</td><td>C:41.7% T:17.4%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
+      </tbody>
+    </table>
   </div>
 </div>
+
+<style>
+.playoff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  color: #fff;
+}
+.playoff-table th,
+.playoff-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  text-align: center;
+  white-space: nowrap;
+}
+.playoff-table th {
+  font-weight: bold;
+  background: rgba(0,0,0,0.3);
+}
+.playoff-table td:first-child,
+.playoff-table td:nth-child(2) {
+  text-align: left;
+}
+</style>
 
 <style>
 .image-wrapper {
