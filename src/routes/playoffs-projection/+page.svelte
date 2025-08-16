@@ -26,28 +26,27 @@ ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff S
 </div>
 
 <style>
-/* Keep the image centered; don't change width, just make it taller */
+/* Keep content centered; use a slimmer hero banner */
 .image-wrapper {
   position: relative;
   display: block;
-  max-width: 900px;        /* keep your current page width */
-  margin: 0.5rem auto;     /* small top spacing */
+  max-width: 900px;
+  margin: 0.5rem auto;
 }
 
-/* Make the image taller without stretching */
+/* Slimmer/taller control: cap height so it doesn't eat the page */
 .image-wrapper img {
   display: block;
   width: 100%;
-  /* Taller look: force a 4:3-ish frame but still responsive */
-  aspect-ratio: 4 / 3;                 /* taller than 16/9 */
-  min-height: clamp(300px, 48vw, 620px); /* ensure some vertical length */
-  object-fit: cover;                   /* crop edges instead of squishing */
+  max-height: 300px;         /* reduce vertical space */
+  min-height: 180px;         /* avoid being too short on small phones */
+  object-fit: cover;         /* crop edges instead of stretching */
 }
 
-/* Title centered at the top of the image */
+/* Title pinned to the very top, slightly smaller */
 .image-wrapper .title {
   position: absolute;
-  top: 10px;
+  top: 0;                    /* push further up */
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
@@ -55,43 +54,37 @@ ID  Dv  Team                    W-L-T  DvWLT  Points  Division Status  Playoff S
   color: black;
   font-weight: bold;
   background: none;
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-size: clamp(0.95rem, 2.2vw, 1.25rem);
 }
 
-/* Overlay panel for the table */
+/* Overlay panel trimmed down */
 .overlay {
   position: absolute;
   left: 50%;
-  bottom: 10px;
+  bottom: 8px;               /* a bit tighter to bottom edge */
   transform: translateX(-50%);
   width: min(95%, 860px);
-  max-height: 50%;                /* a bit taller since image is taller */
+  max-height: 35%;           /* less dominant on mobile */
   overflow: auto;
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.6rem;    /* tighter padding */
   background: rgba(0,0,0,0.45);
   border-radius: 8px;
   box-shadow: 0 4px 18px rgba(0,0,0,0.25);
   -webkit-overflow-scrolling: touch;
 }
 
-/* Preformatted text: keep columns aligned; allow horizontal scroll on mobile */
+/* Keep columns aligned; allow horizontal scroll on phones */
 .overlay pre {
   margin: 0;
   color: #fff;
-  font: 500 0.9rem/1.2rem ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  white-space: pre;          /* don't wrap—preserve columns */
-  overflow-x: auto;
+  font: 500 0.85rem/1.1rem ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  white-space: pre;          /* no wrapping */
+  overflow-x: auto;          /* side-scroll when needed */
 }
 
 @media (max-width: 480px) {
-  .overlay {
-    width: 96%;
-    max-height: 58%;
-    bottom: 6px;
-  }
-  .overlay pre {
-    font-size: 0.8rem;
-    line-height: 1.1rem;
-  }
+  .image-wrapper img { max-height: 260px; }
+  .overlay { max-height: 42%; width: 96%; }
+  .overlay pre { font-size: 0.8rem; line-height: 1.05rem; }
 }
 </style>
