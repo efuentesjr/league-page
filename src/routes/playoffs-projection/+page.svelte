@@ -1,5 +1,5 @@
 <div class="image-wrapper">
-  <img src="/playoffs-projection/Stadium2.jpg" alt="Stadium2" />
+  <img src="/playoffs-projection/Stadium1.jpg" alt="Stadium1" />
   <h2 class="title">Playoffs AI Analysis</h2>
 
   <!-- TABLE overlay (scrolls) -->
