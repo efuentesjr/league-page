@@ -22,11 +22,6 @@ export const tabs = [
         dest: '/drafts',
     },
     {
-        icon: 'sports',
-        label: 'Matchups',
-        dest: '/matchups',
-    },
-    {
         icon: 'storage',
         label: 'Rosters',
         dest: '/rosters',
