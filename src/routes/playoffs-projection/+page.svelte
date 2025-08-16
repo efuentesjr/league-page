@@ -1,6 +1,6 @@
 <div class="image-wrapper">
   <img src="/playoffs-projection/Stadium2.jpg" alt="Stadium2" />
-  <h2 class="title">Playoff Computer Analysis MFFL</h2>
+  <h2 class="title">Playoff AI Analysis</h2>
 
   <!-- Centered overlayed table -->
   <div class="overlay">
@@ -90,7 +90,7 @@
 .overlay table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.75rem;    /* compact text */
+  font-size: 0.85rem;    /* compact text */
   line-height: 1rem;     /* tighter rows */
 }
 .overlay th,
