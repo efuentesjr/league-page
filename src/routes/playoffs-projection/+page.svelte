@@ -42,16 +42,17 @@ ID  Dv  Team                  W-L-T  DvWLT  Pts  Division Status  Playoff Status
 /* Title: keep inline, bigger font */
 .image-wrapper .title {
   position: absolute;
-  top: 8px;
+  top: 12px;                /* push it slightly higher */
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
   padding: 0.25rem 0.5rem;
   color: black;
-  font-weight: bold;
+  font-weight: 900;         /* extra bold */
   background: none;
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  white-space: nowrap;   /* Prevents wrapping */
+  font-size: clamp(2rem, 4vw, 3rem); /* larger scaling */
+  white-space: nowrap;      /* keep it inline (no wrapping) */
+  text-align: center;
 }
 
 /* Overlay panel: move up from bottom */
