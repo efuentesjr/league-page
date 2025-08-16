@@ -67,13 +67,13 @@ export const tabs = [
         dest: '/constitution',
     },
     {
-        icon: 'sports_football',
-        label: 'Go to Sleeper',
-         dest: `https://sleeper.app/leagues/${leagueID}`,
-    },
-    {
         icon: 'lightbulb',
         label: 'Resources',
         dest: '/resources',
+    },
+    {
+        icon: 'sports_football',
+        label: 'Go to Sleeper',
+         dest: `https://sleeper.app/leagues/${leagueID}`,
     },
 ];
