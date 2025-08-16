@@ -5,19 +5,19 @@
   <div class="overlay">
     <pre>
 ID  Dv  Team                  W-L-T  DvWLT  Pts  Division Status  Playoff Status
-1   N   CeeDees TDs 🏆        0-0-0  0-0-0   0   Undetermined     Undetermined
+1   N   CeeDees TDs🏆         0-0-0  0-0-0   0   Undetermined     Undetermined
 2   N   The Comeback Kid      0-0-0  0-0-0   0   Undetermined     Undetermined
 3   N   Brute Force Attack    0-0-0  0-0-0   0   Undetermined     Undetermined
 4   N   Bay Area Party Supp   0-0-0  0-0-0   0   Undetermined     Undetermined
-5   W   The People's Champ 🎗  0-0-0  0-0-0   0   Undetermined     Undetermined
+5   W   The People's Champ 🎗 0-0-0  0-0-0   0   Undetermined     Undetermined
 6   W   PrimeTime Prodigies   0-0-0  0-0-0   0   Undetermined     Undetermined
 7   W   Do it to them         0-0-0  0-0-0   0   Undetermined     Undetermined
 8   W   88boyz11              0-0-0  0-0-0   0   Undetermined     Undetermined
-9   S   SlickBears 🎗          0-0-0  0-0-0   0   Undetermined     Undetermined
+9   S   SlickBears 🎗         0-0-0  0-0-0   0   Undetermined     Undetermined
 10  S   bLuE BaLLeRs          0-0-0  0-0-0   0   Undetermined     Undetermined
 11  S   TexasTimeshifts       0-0-0  0-0-0   0   Undetermined     Undetermined
 12  S   Loud and Stroud       0-0-0  0-0-0   0   Undetermined     Undetermined
-13  E   Muad'Dib 🎗            0-0-0  0-0-0   0   Undetermined     Undetermined
+13  E   Muad'Dib 🎗           0-0-0  0-0-0   0   Undetermined     Undetermined
 14  E   Vick2times            0-0-0  0-0-0   0   Undetermined     Undetermined
 15  E   Pete Weber Bowling C  0-0-0  0-0-0   0   Undetermined     Undetermined
 16  E   Fields love irvings   0-0-0  0-0-0   0   Undetermined     Undetermined
