@@ -4,23 +4,23 @@
 
   <div class="overlay">
     <pre>
-ID  Dv  Team                        W-L-T  DvWLT  Pts  Division Status  Playoff Status
-1   N   CeeDees TDs 🏆              0-0-0  0-0-0   0   Undetermined     Undetermined
-2   N   The Comeback Kid            0-0-0  0-0-0   0   Undetermined     Undetermined
-3   N   Brute Force Attack          0-0-0  0-0-0   0   Undetermined     Undetermined
-4   N   Bay Area Party Supp         0-0-0  0-0-0   0   Undetermined     Undetermined
-5   W   The People's Champ 🎗        0-0-0  0-0-0   0   Undetermined     Undetermined
-6   W   PrimeTime Prodigies         0-0-0  0-0-0   0   Undetermined     Undetermined
-7   W   Do it to them               0-0-0  0-0-0   0   Undetermined     Undetermined
-8   W   88boyz11                    0-0-0  0-0-0   0   Undetermined     Undetermined
-9   S   SlickBears 🎗               0-0-0  0-0-0   0   Undetermined     Undetermined
-10  S   bLuE BaLLeRs                0-0-0  0-0-0   0   Undetermined     Undetermined
-11  S   TexasTimeshifts             0-0-0  0-0-0   0   Undetermined     Undetermined
-12  S   Loud and Stroud             0-0-0  0-0-0   0   Undetermined     Undetermined
-13  E   Muad'Dib 🎗                 0-0-0  0-0-0   0   Undetermined     Undetermined
-14  E   Vick2times                  0-0-0  0-0-0   0   Undetermined     Undetermined
-15  E   Pete Weber Bowling C        0-0-0  0-0-0   0   Undetermined     Undetermined
-16  E   Fields love irvings         0-0-0  0-0-0   0   Undetermined     Undetermined
+ID  Dv  Team                  W-L-T  DvWLT  Pts  Division Status  Playoff Status
+1   N   CeeDees TDs 🏆        0-0-0  0-0-0   0   Undetermined     Undetermined
+2   N   The Comeback Kid      0-0-0  0-0-0   0   Undetermined     Undetermined
+3   N   Brute Force Attack    0-0-0  0-0-0   0   Undetermined     Undetermined
+4   N   Bay Area Party Supp   0-0-0  0-0-0   0   Undetermined     Undetermined
+5   W   The People's Champ 🎗  0-0-0  0-0-0   0   Undetermined     Undetermined
+6   W   PrimeTime Prodigies   0-0-0  0-0-0   0   Undetermined     Undetermined
+7   W   Do it to them         0-0-0  0-0-0   0   Undetermined     Undetermined
+8   W   88boyz11              0-0-0  0-0-0   0   Undetermined     Undetermined
+9   S   SlickBears 🎗          0-0-0  0-0-0   0   Undetermined     Undetermined
+10  S   bLuE BaLLeRs          0-0-0  0-0-0   0   Undetermined     Undetermined
+11  S   TexasTimeshifts       0-0-0  0-0-0   0   Undetermined     Undetermined
+12  S   Loud and Stroud       0-0-0  0-0-0   0   Undetermined     Undetermined
+13  E   Muad'Dib 🎗            0-0-0  0-0-0   0   Undetermined     Undetermined
+14  E   Vick2times            0-0-0  0-0-0   0   Undetermined     Undetermined
+15  E   Pete Weber Bowling C  0-0-0  0-0-0   0   Undetermined     Undetermined
+16  E   Fields love irvings   0-0-0  0-0-0   0   Undetermined     Undetermined
     </pre>
   </div>
 </div>
@@ -39,10 +39,10 @@ ID  Dv  Team                        W-L-T  DvWLT  Pts  Division Status  Playoff 
   height: auto;
 }
 
-/* Title centered at the top of the image */
+/* Title: keep inline, bigger font */
 .image-wrapper .title {
   position: absolute;
-  top: 5px;
+  top: 8px;
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
@@ -50,17 +50,18 @@ ID  Dv  Team                        W-L-T  DvWLT  Pts  Division Status  Playoff 
   color: black;
   font-weight: bold;
   background: none;
-  font-size: clamp(1.5rem, 3vw, 2rem); /* bigger font */
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  white-space: nowrap;   /* Prevents wrapping */
 }
 
-/* Overlay panel */
+/* Overlay panel: move up from bottom */
 .overlay {
   position: absolute;
   left: 50%;
-  bottom: 10px;
+  top: 30%;   /* <-- was bottom before, now push it higher */
   transform: translateX(-50%);
   width: min(95%, 860px);
-  max-height: 45%;
+  max-height: 55%;
   overflow: auto;
   padding: 0.5rem 0.75rem;
   background: rgba(0,0,0,0.45);
@@ -69,7 +70,7 @@ ID  Dv  Team                        W-L-T  DvWLT  Pts  Division Status  Playoff 
   -webkit-overflow-scrolling: touch;
 }
 
-/* Preformatted text: no wrapping; allow horizontal scroll */
+/* Table formatting */
 .overlay pre {
   margin: 0;
   color: #fff;
@@ -80,8 +81,7 @@ ID  Dv  Team                        W-L-T  DvWLT  Pts  Division Status  Playoff 
 
 @media (max-width: 480px) {
   .overlay { 
-    max-height: 55%;
-    bottom: 6px;
+    top: 25%;       /* On small screens, start table even higher */
     width: 96%;
   }
   .overlay pre { 
