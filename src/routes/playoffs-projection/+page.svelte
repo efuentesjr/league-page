@@ -90,7 +90,7 @@
 .overlay table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;    /* compact text */
+  font-size: 0.90rem;    /* compact text */
   line-height: 1rem;     /* tighter rows */
 }
 .overlay th,
