@@ -4,23 +4,33 @@
 
   <div class="overlay">
     <pre>
-ID  Dv  Team                  W-L-T  DvWLT  Pts  Division Status  Playoff Status
-1   N   CeeDees TDs🏆         0-0-0  0-0-0   0   Undetermined     Undetermined
-2   N   The Comeback Kid      0-0-0  0-0-0   0   Undetermined     Undetermined
-3   N   Brute Force Attack    0-0-0  0-0-0   0   Undetermined     Undetermined
-4   N   Bay Area Party Supp   0-0-0  0-0-0   0   Undetermined     Undetermined
-5   W   The People's Champ 🎗 0-0-0  0-0-0   0   Undetermined     Undetermined
-6   W   PrimeTime Prodigies   0-0-0  0-0-0   0   Undetermined     Undetermined
-7   W   Do it to them         0-0-0  0-0-0   0   Undetermined     Undetermined
-8   W   88boyz11              0-0-0  0-0-0   0   Undetermined     Undetermined
-9   S   SlickBears 🎗         0-0-0  0-0-0   0   Undetermined     Undetermined
-10  S   bLuE BaLLeRs          0-0-0  0-0-0   0   Undetermined     Undetermined
-11  S   TexasTimeshifts       0-0-0  0-0-0   0   Undetermined     Undetermined
-12  S   Loud and Stroud       0-0-0  0-0-0   0   Undetermined     Undetermined
-13  E   Muad'Dib 🎗           0-0-0  0-0-0   0   Undetermined     Undetermined
-14  E   Vick2times            0-0-0  0-0-0   0   Undetermined     Undetermined
-15  E   Pete Weber Bowling C  0-0-0  0-0-0   0   Undetermined     Undetermined
-16  E   Fields love irvings   0-0-0  0-0-0   0   Undetermined     Undetermined
+                  PlayoffComputer Analysis MFFL
+Dv	TEAM 				        W-L-T Pts DivSTATUS   PlaySTATUS 	mIn	 Targets  gIn 	DivTgts
+4 	Brute Force 		    0-0-0  0   C:24.7% 	C:41.8% T:17.2%  5 	 8.0-8.0  10 	9.0-11.0
+4 	Comeback Kid 		    0-0-0  0   C:24.8% 	C:41.7% T:17.4%  5 	 8.0-8.0  10 	9.0-11.0
+1 	Muad'Dib 🎗			    0-0-0  0   C:24.8% 	C:41.7% T:17.2%  5 	 8.0-8.0  11 	9.0-11.0
+3 	SlickBears 🎗		    0-0-0  0   C:25.2% 	C:42.1% T:17.0%  5 	 8.0-8.0  9  	9.0-11.0
+2 	People's Champ🎗	  0-0-0  0   C:25.1% 	C:42.1% T:17.2%  5 	 8.0-8.0  10 	9.0-11.0
+1 	Pete Weber Bowl Clu 0-0-0  0   C:25.0% 	C:41.8% T:17.1%  5 	 8.0-8.0  11 	9.0-11.0
+1 	Fields love irving 	0-0-0  0   C:25.0% 	C:42.0% T:17.2%  5 	 8.0-8.0  10 	9.0-11.0
+3 	bLuE BaLLeRs 		    0-0-0  0   C:24.9% 	C:41.9% T:17.3%  5 	 8.0-8.0  11 	9.0-11.0
+2 	88boyz11 			      0-0-0  0   C:25.1% 	C:42.1% T:17.1%  5 	 8.0-8.0  11 	9.0-11.0
+2 	PrimeTime Prodigies	0-0-0  0   C:25.0% 	C:42.0% T:17.0%  5 	 8.0-8.0  11 	9.0-11.0
+3 	TexasTimeshifts 	  0-0-0  0   C:24.9% 	C:42.0% T:17.2%  5 	 8.0-8.0  11 	9.0-11.0
+3 	Loud and Stroud 	  0-0-0  0   C:24.8% 	C:41.7% T:17.1%  5 	 8.0-8.0  10 	9.0-11.0
+4 	Bay Area Party  	  0-0-0  0   C:25.3% 	C:42.1% T:17.2%  5 	 8.0-8.0  11 	9.0-11.0
+1 	Vick2times 			    0-0-0  0   C:25.0% 	C:42.2% T:17.1%  5 	 8.0-8.0  10 	9.0-11.0
+4 	CeeDees TDs 🏆		  0-0-0  0   C:25.0% 	C:41.9% T:17.2%  5 	 8.0-8.0  11 	9.0-11.0
+2 	Do it to them 		  0-0-0  0   C:24.6% 	C:41.7% T:17.4%  5 	 8.0-8.0  11 	9.0-11.0
+
+LEGEND:
+Status C=Clinch % 
+T=% that will end up in a tiebreak not resolved yet
+mIn=Wins needed for any chance
+Target=Projected Wins needed 
+gIn=Wins that should guarantee a spot (if any then Controls Own Destiny)
+Due to many remaining games the analysis incorporated some randomization methods. The accuracy of status,
+odds, targets, and 'paths' will depend on the depth of analysis as well as the number of remaining games.
     </pre>
   </div>
 </div>
@@ -91,4 +101,3 @@ ID  Dv  Team                  W-L-T  DvWLT  Pts  Division Status  Playoff Status
   }
 }
 </style>
-
