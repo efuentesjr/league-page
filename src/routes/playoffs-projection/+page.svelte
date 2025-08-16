@@ -1,8 +1,8 @@
 <div class="image-wrapper">
   <img src="/playoffs-projection/Stadium2.jpg" alt="Stadium2" />
-  <h2 class="title">Playoff AI Analysis</h2>
+  <h2 class="title">Playoff Computer Analysis MFFL</h2>
 
-  <!-- Centered overlayed table -->
+  <!-- Overlay: table + legend together -->
   <div class="overlay">
     <table>
       <thead>
@@ -38,11 +38,25 @@
         <tr><td>W</td><td><a href="#">Do it to them</a></td><td>0-0-0</td><td>0</td><td>C:24.6%</td><td>C:41.7% T:17.4%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
       </tbody>
     </table>
+
+    <!-- Legend directly below table, INSIDE overlay -->
+    <div class="legend">
+      <strong>LEGEND:</strong><br />
+      Status C = Clinch %<br />
+      T = % that will end up in a tiebreak not resolved yet<br />
+      mIn = Wins needed for any chance<br />
+      Target = Projected Wins needed<br />
+      gIn = Wins that should guarantee a spot (if any then Controls Own Destiny)<br /><br />
+      <em>
+        Due to many remaining games the analysis incorporated some randomization methods. 
+        The accuracy of status, odds, targets, and 'paths' will depend on the depth of analysis 
+        as well as the number of remaining games.
+      </em>
+    </div>
   </div>
 </div>
 
 <style>
-/* Wrapper + banner */
 .image-wrapper {
   position: relative;
   max-width: 900px;
@@ -51,78 +65,61 @@
 .image-wrapper img {
   display: block;
   width: 100%;
-  height: auto;
   border-radius: 8px;
 }
-
-/* Title: inline, bold, larger */
-.image-wrapper .title {
+.title {
   position: absolute;
   top: 8px;
   left: 50%;
   transform: translateX(-50%);
-  margin: 0;
-  padding: 0.25rem 0.5rem;
-  color: black;
-  font-weight: 900;
+  font-weight: bold;
   font-size: clamp(1.6rem, 3.6vw, 2.2rem);
-  background: none;
-  white-space: nowrap;   /* keep on one line */
+  margin: 0;
 }
-
-/* Centered overlay */
 .overlay {
   position: absolute;
-  top: 50%;              /* center vertically */
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: min(97%, 880px);
-  max-height: 60%;
+  max-height: 70%;
   overflow: auto;
   padding: 0.25rem 0.5rem;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.4);
   border-radius: 6px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.25);
-  -webkit-overflow-scrolling: touch;
 }
-
-/* Tighter table layout */
 .overlay table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.90rem;    /* compact text */
-  line-height: 1rem;     /* tighter rows */
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
-.overlay th,
-.overlay td {
-  padding: 2px 4px;      /* tighter padding */
-  white-space: nowrap;   /* keep columns compact */
+.overlay th, .overlay td {
+  padding: 2px 4px;
   text-align: center;
+  white-space: nowrap;
 }
-.overlay th { 
-  font-weight: 800; 
-  color: #fff; 
-  background: rgba(0,0,0,0.6); 
+.overlay th {
+  background: rgba(0,0,0,0.6);
+  color: white;
 }
 .overlay td {
-  color: #eee;
+  color: white;
   border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 .overlay td:first-child,
 .overlay td:nth-child(2) { text-align: left; }
-
-/* Link styling */
-.overlay a {
-  color: #4da6ff;
-  text-decoration: none;
-  font-weight: 800;
-}
+.overlay a { color: #4da6ff; font-weight: bold; text-decoration: none; }
 .overlay a:hover { text-decoration: underline; }
 
-/* Phone tweaks */
-@media (max-width: 480px) {
-  .overlay { width: 96%; max-height: 62%; }
-  .overlay table { font-size: 0.68rem; line-height: 0.9rem; }
-  .overlay th, .overlay td { padding: 1px 2px; }
+/* Legend inside JPG, plain white text */
+.legend {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  line-height: 1rem;
+  color: white;
+  text-align: left;
 }
+.legend strong { color: #ffd966; }
+.legend em { color: #ddd; font-size: 0.65rem; }
 </style>
