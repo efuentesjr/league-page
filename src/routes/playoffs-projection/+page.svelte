@@ -1,5 +1,5 @@
 <div class="image-wrapper">
-  <img src="/playoffs-projection/Stadium1.jpg" alt="Stadium1" />
+  <img src="/playoffs-projection/Stadium.jpg" alt="Stadium" />
   <h1 class="title">Playoffs Projections</h1>
 
   <div class="overlay">
