@@ -1,6 +1,6 @@
 <div class="image-wrapper">
   <img src="/playoffs-projection/Stadium2.jpg" alt="Stadium2" />
-  <h2 class="title">Playoff Computer Analysis MFFL</h2>
+  <h2 class="title">Playoffs AI Analysis</h2>
 
   <!-- TABLE overlay (scrolls) -->
   <div class="overlay table-overlay">
