@@ -75,6 +75,9 @@
   font-weight: bold;
   font-size: clamp(1.6rem, 3.6vw, 2.2rem);
   margin: 0;
+  white-space: nowrap; /* ✅ prevents wrapping */
+  color: white;        /* ensure contrast */
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.8); /* readability */
 }
 .overlay {
   position: absolute;
