@@ -52,7 +52,7 @@
         </tr>
       </thead>
       <tbody>
-          <tr><td>N</td><td><a href="/team/brute-force">Brute Force</a></td><td>0-0-0</td><td>0</td><td>C:24.7%</td><td>C:41.8% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
+          <tr><td>N</td><td><a href="/team/brute-force">Brute Force Attack</a></td><td>0-0-0</td><td>0</td><td>C:24.7%</td><td>C:41.8% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
           <tr><td>N</td><td><a href="/team/comeback-kid">Comeback Kid</a></td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.4%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
           <tr><td>E</td><td><a href="/team/muaddib">Muad'Dib 🎗</a></td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
           <tr><td>S</td><td><a href="/team/slickbears">SlickBears 🎗</a></td><td>0-0-0</td><td>0</td><td>C:25.2%</td><td>C:42.1% T:17.0%</td><td>5</td><td>8.0-8.0</td><td>9</td><td>9.0-11.0</td></tr>
