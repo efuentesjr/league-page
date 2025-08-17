@@ -75,9 +75,9 @@
   font-weight: bold;
   font-size: clamp(1.6rem, 3.6vw, 2.2rem);
   margin: 0;
-  white-space: nowrap; /* ✅ prevents wrapping */
-  color: white;        /* ensure contrast */
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.8); /* readability */
+  white-space: nowrap;                /* keep inline */
+  color: white;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
 }
 .overlay {
   position: absolute;
@@ -126,3 +126,33 @@
 .legend strong { color: #ffd966; }
 .legend em { color: #ddd; font-size: 0.65rem; }
 </style>
+
+<script>
+/* Sort table rows: by DV (N, E, W, S order) then by DivSTATUS high → low */
+document.addEventListener('DOMContentLoaded', () => {
+  const tbody = document.querySelector('.overlay table tbody');
+  if (!tbody) return;
+
+  const dvOrder = ['N', 'E', 'W', 'S']; // desired DV order
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  const getDivStatus = (text) => {
+    // expects something like "C:24.7%"
+    const match = text.match(/:\s*([\d.]+)%/);
+    return match ? parseFloat(match[1]) : -Infinity;
+  };
+
+  rows.sort((a, b) => {
+    const dvA = a.cells[0].textContent.trim();
+    const dvB = b.cells[0].textContent.trim();
+    const dvCmp = dvOrder.indexOf(dvA) - dvOrder.indexOf(dvB);
+    if (dvCmp !== 0) return dvCmp;
+
+    const dsA = getDivStatus(a.cells[4].textContent);
+    const dsB = getDivStatus(b.cells[4].textContent);
+    return dsB - dsA; // high to low
+  });
+
+  rows.forEach(r => tbody.appendChild(r));
+});
+</script>
