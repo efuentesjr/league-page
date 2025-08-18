@@ -5,6 +5,14 @@ import { dynasty } from './utils/helper';
     const today = new Date();
     const resources = [
         {
+            name: "FantasyCalc Trade Calculator",
+            url: "https://www.fantasycalc.com/trade-calculator",
+            icon: "calculate",
+            premium: false,
+            separator: false,
+            dynastyOnly: false,
+        },        
+        {
             name: "FTN Fantasy",
             url: "https://www.ftnfantasy.com/nfl",
             icon: "insights",
@@ -88,14 +96,6 @@ import { dynasty } from './utils/helper';
             icon: "assessment",
             premium: false,
             separator: true,
-        },
-        {
-            name: "FantasyCalc Trade Calculator",
-            url: "https://www.fantasycalc.com/trade-calculator",
-            icon: "calculate",
-            premium: false,
-            separator: false,
-            dynastyOnly: false,
         },
     ];
 </script>
