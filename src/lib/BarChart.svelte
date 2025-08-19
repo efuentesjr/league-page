@@ -11,6 +11,17 @@
         "--barChartFour",
         "--barChartFive",
         "--barChartSix",
+	    "--barChartSix",
+	    "--barChartSeven",
+	    "--barChartEight",
+	    "--barChartNine",
+	    "--barChartTen",
+	    "--barChartEleven",
+	    "--barChartTwelve",
+	    "--barChartThirteen",
+	    "--barChartFourteen",
+	    "--barChartFifteen",
+	    "--barChartSixteen",
     ];
 
     // note that due to changig to horizontal, yMin and yMax are now used as xMin and xMax
