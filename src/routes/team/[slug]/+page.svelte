@@ -3,7 +3,16 @@
 
   let title = data?.title ?? 'Team';
   let img = data?.img ?? '';
-  let logoSrc = data?.logoUrl ?? '';   // 👈 logo from API, empty if not provided
+  let logoSrc = data?.logoUrl ?? '';   // if empty, we’ll show initials instead
+
+  // Derive initials from the title, e.g., "Brute Force" -> "BF"
+  const initials = (title || '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(w => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
 
   let imgError = false;
   function onErr() {
@@ -20,6 +29,7 @@
     <img src={img} alt="Team graphic" on:error={onErr} />
 
     {#if logoSrc}
+      <!-- Real logo from API -->
       <img
         class="team-badge"
         src={logoSrc}
@@ -27,6 +37,11 @@
         on:error={() => (logoSrc = '')}
         referrerpolicy="no-referrer"
       />
+    {:else}
+      <!-- Initials fallback badge -->
+      <div class="team-badge badge-fallback" aria-label="Team logo placeholder">
+        {initials}
+      </div>
     {/if}
   </div>
 {:else}
@@ -53,7 +68,7 @@
   }
 
   .image-wrap {
-    position: relative;  /* 👈 makes overlay possible */
+    position: relative;  /* anchor the overlay */
     max-width: 980px;
     margin: 0 auto;
     border-radius: 10px;
@@ -66,7 +81,7 @@
     height: auto;
   }
 
-  /* top-right logo overlay */
+  /* Top-right overlay badge (shared size/pos) */
   .team-badge {
     position: absolute;
     top: 10px;
@@ -74,12 +89,27 @@
     width: 60px;
     height: 60px;
     border-radius: 12px;
+    z-index: 2;
+    box-shadow: 0 4px 12px rgba(0,0,0,.25);
+    border: 1px solid rgba(0,0,0,.15);
+  }
+
+  /* Image logo */
+  .team-badge:not(.badge-fallback) {
     object-fit: contain;
     background: #fff;
-    border: 1px solid rgba(0,0,0,.15);
-    box-shadow: 0 4px 12px rgba(0,0,0,.25);
     padding: 4px;
-    z-index: 2;
+  }
+
+  /* Initials fallback */
+  .badge-fallback {
+    display: grid;
+    place-items: center;
+    background: #111;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: .5px;
   }
 
   .placeholder {
