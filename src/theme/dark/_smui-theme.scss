@@ -89,20 +89,9 @@
   --barChartEleven:   linear-gradient(90deg, #E31837, #FFB81C); /* Chiefs: Red → Gold */
   --barChartTwelve:   linear-gradient(90deg, #002244, #69BE28); /* Seahawks: Navy → Action Green */
   --barChartThirteen: linear-gradient(90deg, #000000, #A5ACAF); /* Raiders: Black → Silver */
-  --barChartFourteen: linear-gradient(90deg, #0073CF, #FFC20E); /* Chargers: Powder Blue → Gold */
+  --barChartFourteen: linear-gradient(90deg, #0073CF, #FFC20E); /* Chargers: Powder Blue → Sunshine Gold */
   --barChartFifteen:  linear-gradient(90deg, #0B2265, #A71930); /* Giants: Blue → Red */
   --barChartSixteen:  linear-gradient(90deg, #002244, #C60C30); /* Patriots: Navy → Red */
-}
-
-/* Primary↔Secondary blends (soft “fade” look) */
---barChartNine:     #40586f;  /* Navy + Silver   */
---barChartTen:      #d04a27;  /* Red + Gold      */
---barChartEleven:   #c59428;  /* Gold + Navy     */
---barChartTwelve:   #4a645d;  /* Green + Silver  */
---barChartThirteen: #7a4aa8;  /* Purple + Gold   */
---barChartFourteen: #7f868a;  /* Darker Silver   */
---barChartFifteen:  #4d7aa6;  /* Royal + Silver  */
---barChartSixteen:  #3c8a86;  /* Teal + Silver   */
 
   // Comparisson bar colors
   --compBarOne: #446a88;
