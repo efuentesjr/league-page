@@ -1,5 +1,5 @@
 <script>
-  import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers, gotoManager, round } from "./utils/helperFunctions/universalFunctions";
+	import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers, gotoManager, round } from "./utils/helperFunctions/universalFunctions";
 
   export let leagueTeamManagers, stat, label, xMin, xMax, secondStat, managerID, rosterID, color, year;
 
@@ -23,18 +23,18 @@
     left: 80px;
   }
 
-  .teamAvatar {
+	.teamAvatar {
     position: absolute;
     left: 20px;
     top: 0;
     bottom: 0;
     height: 40px;
     margin: auto;
-    border-radius: 50%;
-    border: 2px solid; /* gradient ring via border-image inline */
+		border-radius: 50%;
+		border: 2px solid;
     z-index: 14;
     background-color: #fff;
-  }
+	}
 
   .statBars {
     display: flex;
@@ -62,10 +62,6 @@
     height: 1.8em;
     border-radius: 0 0.9em 0.9em 0;
     z-index: 10;
-
-    /* Make gradients render correctly */
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
   }
 
   .secondBar {
@@ -97,6 +93,7 @@
 
   @media (max-width: 600px) {
     .barParent {
+      /* margin-bottom: -10px; */
       height: 57px;
     }
     .managerName {
@@ -129,18 +126,16 @@
 </style>
 
 <div class="barParent">
-  <!-- Gradient ring via border-image; add explicit slice -->
   <img
     alt="team avatar"
-    on:click={() => gotoManager({ year, leagueTeamManagers, managerID, rosterID })}
-    style="border: 2px solid transparent; border-image: var({color}) 1; border-image-slice: 1; background-color: #fff;"
+    on:click={() => gotoManager({year, leagueTeamManagers, managerID, rosterID})}
+    style="border-color: var({color});"
     class="teamAvatar clickable"
     src="{user ? `https://sleepercdn.com/avatars/thumbs/${user.avatar}` : getAvatarFromTeamManagers(leagueTeamManagers, rosterID, year)}"
   />
-
   <span
     class="managerName clickable"
-    on:click={() => gotoManager({ year, leagueTeamManagers, managerID, rosterID })}
+    on:click={() => gotoManager({year, leagueTeamManagers, managerID, rosterID})}
   >
     {#if user}
       {user.display_name}
@@ -148,29 +143,26 @@
       {getTeamNameFromTeamManagers(leagueTeamManagers, rosterID, year)}
     {/if}
   </span>
-
   <div class="vCenter">
     <div class="statBars">
       <div class="leftSpacer" />
       <div class="bars">
-        <!-- Primary bar: use background-image so gradients work -->
+        <!-- ONLY CHANGE: background instead of background-color -->
         <div
-          class="bar{!secondStat ? '' : ' opacity'}"
-          style="background-image: var({color}); width: {(stat - xMin) / (xMax - xMin == 0 ? 1 : (xMax - xMin)) * 100}%;"
+          class="bar{!secondStat  ? '' : ' opacity'}"
+          style="background: var({color}); width: {(stat - xMin) / (xMax - xMin == 0 ? 1 : (xMax - xMin)) * 100}%;"
         >
           {#if !secondStat}
             <span class="barLabel">{stat}{label}</span>
           {/if}
         </div>
-
         {#if secondStat}
-          <!-- Secondary bar: also gradient-capable -->
           <div
             class="bar secondBar"
-            style="background-image: var({color}); width: {(secondStat - xMin) / (xMax - xMin == 0 ? 1 : (xMax - xMin)) * 100}%;"
+            style="background: var({color}); width: {(secondStat - xMin) / (xMax - xMin == 0 ? 1 : (xMax - xMin)) * 100}%;"
           >
             <span class="barLabel">
-              {secondStat}&nbsp;&nbsp;of&nbsp;&nbsp;{stat}&nbsp;&nbsp;({round(secondStat / stat * 100)}%)
+              {secondStat}&nbsp;&nbsp;of&nbsp;&nbsp;{stat}&nbsp;&nbsp;({round(secondStat/stat*100)}%)
             </span>
           </div>
         {/if}
