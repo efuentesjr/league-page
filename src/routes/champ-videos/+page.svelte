@@ -5,8 +5,16 @@
   const WATCH = `https://youtu.be/${YT_ID}`;
 </script>
 
-<div class="wrap">
-  <h2>🎬 Championship Videos 🎬</h2>
+<h1 class="title">🎬 Championship Videos 🎬</h1>
+
+<style>
+  .title {
+    font-size: 1.5rem;   /* smaller than default h1 */
+    font-weight: 600;    /* bold but not oversized */
+    text-align: center;
+    margin: 1rem 0;
+  }
+</style>
 
   <!-- Responsive 16:9 container -->
   <div class="player">
