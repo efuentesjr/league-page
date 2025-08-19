@@ -1,13 +1,14 @@
 <script>
   export let data;
-  let { title, img, logoUrl } = data;   // 👈 expect a logoUrl from API
+  // Expecting these from your load function
+  let { title, img, logoUrl } = data;
 
   let imgError = false;
   function onErr() {
     imgError = true;
   }
 
-  // If the API didn’t return logoUrl, this keeps us safe
+  // Logo source (will be empty until your API provides it)
   let logoSrc = logoUrl ?? '';
 </script>
 
@@ -18,6 +19,16 @@
 {#if !imgError}
   <div class="image-wrap">
     <img src={img} alt="Team graphic" on:error={onErr} />
+
+    {#if logoSrc}
+      <img
+        class="team-badge"
+        src={logoSrc}
+        alt={`${title} logo`}
+        on:error={() => (logoSrc = '')}
+        referrerpolicy="no-referrer"
+      />
+    {/if}
   </div>
 {:else}
   <div class="placeholder">
@@ -43,6 +54,7 @@
   }
 
   .image-wrap {
+    position: relative;            /* ⬅️ anchor the badge */
     max-width: 980px;
     margin: 0 auto;
     border-radius: 10px;
@@ -55,29 +67,18 @@
     height: auto;
   }
 
-  .placeholder {
-    max-width: 720px;
-    margin: 1rem auto;
-    padding: 1rem;
-    border: 1px dashed #cbd5e1;
-    border-radius: 10px;
-    background: #f8fafc;
-    color: #334155;
+  /* 🎯 Top-right logo overlay (only shows if logoSrc is provided) */
+  .team-badge {
+    position: absolute;
+    top: clamp(8px, 2.5vw, 20px);
+    right: clamp(8px, 3vw, 24px);
+    width: clamp(44px, 12vw, 84px);
+    height: clamp(44px, 12vw, 84px);
+    border-radius: 14px;
+    object-fit: contain;
+    background: #fff;                          /* helps dark logos */
+    border: 1px solid rgba(0,0,0,.15);
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
+    padding: 6px;
+    z-index: 2;
   }
-  .placeholder code {
-    background: #0b1220;
-    color: #e5e7eb;
-    padding: 0 .25rem;
-    border-radius: 4px;
-  }
-
-  :global(html.dark) .placeholder {
-    background: #0b0b0c;
-    border-color: #1f2937;
-    color: #e5e7eb;
-  }
-  :global(html.dark) .placeholder code {
-    background: #111827;
-    color: #f3f4f6;
-  }
-</style>
