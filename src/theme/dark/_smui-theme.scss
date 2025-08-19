@@ -75,12 +75,26 @@
   --rivalryBack: #333;
 
   // Chart bar colors
---barChartOne: #002244;  /* Deep Navy (Cowboys/Patriots style) */
---barChartTwo: #C60C30;  /* Bold Red (Chiefs/49ers style) */
---barChartThree: #FFB612; /* Gold/Yellow (Packers/Steelers style) */
---barChartFour: #203731;  /* Dark Green (Jets/Packers style) */
---barChartFive: #4F2683;  /* Purple (Vikings/Ravens style) */
---barChartSix: #A5ACAF;   /* Silver/Grey (Raiders/Lions style) */
+/* --- Power Rankings: NFL-inspired palette (16) --- */
+/* Primaries */
+--barChartOne:      #002244;  /* Deep Navy  */
+--barChartTwo:      #C60C30;  /* Bold Red   */
+--barChartThree:    #FFB612;  /* Gold       */
+--barChartFour:     #203731;  /* Dark Green */
+--barChartFive:     #4F2683;  /* Purple     */
+--barChartSix:      #A5ACAF;  /* Silver     */
+--barChartSeven:    #0B5C99;  /* Royal Blue */
+--barChartEight:    #006778;  /* Teal       */
+
+/* Primary↔Secondary blends (soft “fade” look) */
+--barChartNine:     #40586f;  /* Navy + Silver   */
+--barChartTen:      #d04a27;  /* Red + Gold      */
+--barChartEleven:   #c59428;  /* Gold + Navy     */
+--barChartTwelve:   #4a645d;  /* Green + Silver  */
+--barChartThirteen: #7a4aa8;  /* Purple + Gold   */
+--barChartFourteen: #7f868a;  /* Darker Silver   */
+--barChartFifteen:  #4d7aa6;  /* Royal + Silver  */
+--barChartSixteen:  #3c8a86;  /* Teal + Silver   */
 
   // Comparisson bar colors
   --compBarOne: #446a88;
