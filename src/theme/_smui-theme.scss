@@ -75,12 +75,23 @@
   --rivalryBack: #f8f8f8;
 
   // Chart bar colors
-  --barChartOne: #7fc4f5;
-  --barChartTwo: #5bcff7;
-  --barChartThree: #38daf0;
-  --barChartFour: #2fe2e0;
-  --barChartFive: #4fe9c9;
-  --barChartSix: #79edad;
+/* --- Bar chart gradients (NFL-inspired, 16 unique) --- */
+--barChartOne:      linear-gradient(90deg, #002244, #A5ACAF); /* Cowboys: Navy → Silver */
+--barChartTwo:      linear-gradient(90deg, #5A1414, #FFB612); /* Washington: Burgundy → Gold */
+--barChartThree:    linear-gradient(90deg, #0B162A, #DC4405); /* Bears: Navy → Orange */
+--barChartFour:     linear-gradient(90deg, #DC4405, #0B162A); /* Bears Inverted: Orange → Navy */
+--barChartFive:     linear-gradient(90deg, #203731, #FFB612); /* Packers: Green → Gold */
+--barChartSix:      linear-gradient(90deg, #4F2683, #FFC62F); /* Vikings: Purple → Yellow */
+--barChartSeven:    linear-gradient(90deg, #AA0000, #B3995D); /* 49ers: Red → Gold */
+--barChartEight:    linear-gradient(90deg, #008E97, #FC4C02); /* Dolphins: Aqua → Orange */
+--barChartNine:     linear-gradient(90deg, #241773, #D0B240); /* Ravens: Purple → Metallic Gold */
+--barChartTen:      linear-gradient(90deg, #125740, #C0C0C0); /* Jets: Green → Silver */
+--barChartEleven:   linear-gradient(90deg, #E31837, #FFB81C); /* Chiefs: Red → Gold */
+--barChartTwelve:   linear-gradient(90deg, #002244, #69BE28); /* Seahawks: Navy → Action Green */
+--barChartThirteen: linear-gradient(90deg, #000000, #A5ACAF); /* Raiders: Black → Silver */
+--barChartFourteen: linear-gradient(90deg, #0073CF, #FFC20E); /* Chargers: Powder Blue → Sunshine Gold */
+--barChartFifteen:  linear-gradient(90deg, #0B2265, #A71930); /* Giants: Blue → Red */
+--barChartSixteen:  linear-gradient(90deg, #002244, #C60C30); /* Patriots: Navy → Red */
 
   // Comparisson bar colors
   --compBarOne: #7fc4f5;
