@@ -11,7 +11,6 @@
         "--barChartFour",
         "--barChartFive",
         "--barChartSix",
-	    "--barChartSix",
 	    "--barChartSeven",
 	    "--barChartEight",
 	    "--barChartNine",
