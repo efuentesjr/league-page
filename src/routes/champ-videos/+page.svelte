@@ -7,7 +7,6 @@
 
 <div class="wrap">
   <h2>🎬 Championship Videos 🎬</h2>
-</div>
 
   <!-- Responsive 16:9 container -->
   <div class="player">
