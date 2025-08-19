@@ -37,7 +37,7 @@ export const tabs = [
         dest: '/rivalry',
     },
     {
-        icon: 'clapperboard',
+        icon: 'movie',
         label: 'Championship Videos',
         dest: '/champ-videos',
     },
