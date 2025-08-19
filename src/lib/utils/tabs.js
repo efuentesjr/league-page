@@ -37,6 +37,11 @@ export const tabs = [
         dest: '/rivalry',
     },
     {
+        icon: 'film',
+        label: 'Championship Videos',
+        dest: '/champ-videos',
+    },
+    {
         icon: 'article',
         label: 'Blog',
         dest: '/blog',
@@ -75,10 +80,5 @@ export const tabs = [
         icon: 'sports_football',
         label: 'Go to Sleeper',
          dest: `https://sleeper.app/leagues/${leagueID}`,
-    },
-    {
-        icon: 'construction',
-        label: 'Under Construction',
-        dest: '/under-construction',
     },
 ];
