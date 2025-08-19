@@ -1,11 +1,14 @@
 <script>
   export let data;
-  let { title, img } = data;
+  let { title, img, logoUrl } = data;   // 👈 expect a logoUrl from API
 
   let imgError = false;
   function onErr() {
     imgError = true;
   }
+
+  // If the API didn’t return logoUrl, this keeps us safe
+  let logoSrc = logoUrl ?? '';
 </script>
 
 <a class="back" href="/playoffs-projection">← Back to Playoffs</a>
