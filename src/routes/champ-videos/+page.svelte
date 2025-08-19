@@ -6,7 +6,7 @@
 </script>
 
 <div class="wrap">
-  <h1>🚧 Under Construction 🚧</h1>
+  <h1>🎬 Championship Videos 🎬</h1>
 
   <!-- Responsive 16:9 container -->
   <div class="player">
