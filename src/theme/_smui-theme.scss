@@ -76,9 +76,9 @@
 
   // Chart bar colors
 /* --- Bar chart gradients (NFL-inspired, 16 unique) --- */
---barChartOne:      linear-gradient(90deg, #002244, #A5ACAF); /* Cowboys: Navy → Silver */
---barChartTwo:      linear-gradient(90deg, #5A1414, #FFB612); /* Washington: Burgundy → Gold */
---barChartThree:    linear-gradient(90deg, #0B162A, #DC4405); /* Bears: Navy → Orange */
+--barChartOne:      linear-gradient(90deg, #002244, #A5ACAF, #002244,); /* Cowboys: Navy → Silver */
+--barChartTwo:      linear-gradient(90deg, #5A1414, #FFB612, #5A1414,); /* Washington: Burgundy → Gold */
+--barChartThree:    linear-gradient(90deg, #0B162A, #DC4405, #0B162A); /* Bears: Navy → Orange */
 --barChartFour:     linear-gradient(90deg, #DC4405, #0B162A); /* Bears Inverted: Orange → Navy */
 --barChartFive:     linear-gradient(90deg, #203731, #FFB612); /* Packers: Green → Gold */
 --barChartSix:      linear-gradient(90deg, #4F2683, #FFC62F); /* Vikings: Purple → Yellow */
