@@ -1,9 +1,10 @@
 <script>
-  // Add your video IDs here
+  // List your local videos here (paths are from /static)
   const VIDEOS = [
-    { id: "oijBbsTajKs", title: "Championship Video 1" },
-    { id: "aglTvcZTmXo",   title: "Championship Video 2" },
-    { id: "hdFKFDcJfBk",   title: "Championship Video 3" }
+    { file: "/videos/2022-Perfectly-Balanced.mp4", title: "2022 Perfectly Balanced" },
+    // add more as needed:
+    // { file: "/videos/2023-Championship.mp4", title: "2023 Championship" },
+    // { file: "/videos/2024-Championship.mp4", title: "2024 Championship" },
   ];
 </script>
 
@@ -11,19 +12,13 @@
   <h1 class="title">🎬 Championship Videos 🎬</h1>
 
   {#each VIDEOS as v}
-    <div class="player">
-      <iframe
-        src={`https://www.youtube.com/embed/${v.id}`}
-        title={v.title}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
-      ></iframe>
-    </div>
-
-    <a class="fallback" href={`https://youtu.be/${v.id}`} target="_blank" rel="noopener noreferrer">
-      Open {v.title} on YouTube
-    </a>
+    <figure class="player">
+      <video controls playsinline preload="metadata">
+        <source src={v.file} type="video/mp4" />
+        Sorry, your browser doesn’t support the video tag.
+      </video>
+      <figcaption>{v.title}</figcaption>
+    </figure>
   {/each}
 </div>
 
@@ -37,41 +32,28 @@
   }
 
   .title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    text-align: center;
-    margin: 1rem 0 2rem;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    margin: 0 0 1.25rem;
   }
 
   .player {
-    aspect-ratio: 16 / 9;
     max-width: 960px;
-    margin: 0 auto 1rem;
-    border-radius: 14px;
-    overflow: hidden;
+    margin: 0 auto 1.5rem;
+  }
+
+  /* keep it responsive; use aspect-ratio if supported */
+  .player video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0,0,0,.35);
     background: #000;
   }
 
-  .player iframe {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .fallback {
-    display: inline-block;
-    margin-bottom: 2rem;
-    padding: .6rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    color: #fff;
-    background: #cc0000;
-    box-shadow: 0 4px 12px rgba(0,0,0,.25);
-  }
-  .fallback:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(0,0,0,.3);
+  .player figcaption {
+    margin-top: 0.5rem;
+    opacity: 0.9;
   }
 </style>
-
