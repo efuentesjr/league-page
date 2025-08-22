@@ -1,10 +1,9 @@
 <script>
-  // List your local videos here (paths are from /static)
+  // Local championship video sources (served from /static/videos)
   const VIDEOS = [
-    { file: "/videos/2022-Perfectly-Balanced.mp4", title: "2022 Perfectly Balanced" },
-    // add more as needed:
-    // { file: "/videos/2023-Championship.mp4", title: "2023 Championship" },
-    // { file: "/videos/2024-Championship.mp4", title: "2024 Championship" },
+    { file: "/videos/2022-Perfectly-Balanced-web.mp4", title: "I Am Inevitable", poster: "/videos/2022-Perfectly-Balanced-poster.jpg" },
+    { file: "/videos/2023-Comeback-Kid-web.mp4",       title: "The Rise of The Comeback Kid",       poster: "/videos/2023-Comeback-Kid-poster.jpg" },
+    { file: "/videos/2024-Cee-Dees-TDs-web.mp4",       title: "The Dynasty Begins",       poster: "/videos/2024-Cee-Dees-TDs-poster.jpg" }
   ];
 </script>
 
@@ -12,12 +11,12 @@
   <h1 class="title">🎬 Championship Videos 🎬</h1>
 
   {#each VIDEOS as v}
-    <figure class="player">
-      <video controls playsinline preload="metadata">
+    <figure class="card">
+      <video controls playsinline preload="metadata" poster={v.poster}>
         <source src={v.file} type="video/mp4" />
         Sorry, your browser doesn’t support the video tag.
       </video>
-      <figcaption>{v.title}</figcaption>
+      <figcaption class="caption">{v.title}</figcaption>
     </figure>
   {/each}
 </div>
@@ -25,35 +24,36 @@
 <style>
   .wrap {
     max-width: 1100px;
-    margin: 2rem auto;
-    padding: 0 1rem 3rem;
-    text-align: center;
+    margin: 2rem auto 3rem;
+    padding: 0 1rem;
     color: var(--g000);
   }
 
   .title {
-    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-    font-weight: 700;
+    text-align: center;
     margin: 0 0 1.25rem;
+    font-weight: 700;
+    font-size: clamp(1.25rem, 2.4vw, 1.75rem);
   }
 
-  .player {
+  .card {
     max-width: 960px;
-    margin: 0 auto 1.5rem;
+    margin: 0.75rem auto 1.75rem;
   }
 
-  /* keep it responsive; use aspect-ratio if supported */
-  .player video {
+  .card video {
     width: 100%;
     height: auto;
     display: block;
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.35);
     background: #000;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
   }
 
-  .player figcaption {
-    margin-top: 0.5rem;
-    opacity: 0.9;
+  .caption {
+    text-align: center;
+    margin-top: .5rem;
+    opacity: .9;
+    font-size: .95rem;
   }
 </style>
