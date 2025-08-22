@@ -1,9 +1,9 @@
 <script>
-  // Local hosted championship videos
+  // YouTube championship videos
   const VIDEOS = [
-    { src: "/videos/2022-Perfectly-Balanced-web.mp4", title: "2022 Perfectly Balanced | I Am Inevitable"},
-    { src: "/videos/2023-Comeback-Kid-web.mp4", title: "2023 The Rise of The Comeback Kid" },
-    { src: "/videos/2024-Cee-Dees-TDs-web.mp4", title: "2024 Cee Dees TDs | The Dynasty Begins" }
+    { id: "oijBbsTajKs", title: "2022 Perfectly Balanced | I Am Inevitable" },
+    { id: "aglTvcZTmXo", title: "2023 The Rise of The Comeback Kid" },
+    { id: "hdFKFDcJfBk", title: "2024 Cee Dees TDs | The Dynasty Begins" }
   ];
 </script>
 
@@ -12,10 +12,13 @@
 
   {#each VIDEOS as v}
     <div class="player">
-      <video controls preload="metadata" width="100%" poster="/team/path.jpg">
-        <source src={v.src} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      <iframe
+        src={`https://www.youtube.com/embed/${v.id}`}
+        title={v.title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
       <p class="caption">{v.title}</p>
     </div>
   {/each}
@@ -46,10 +49,11 @@
     background: #000;
   }
 
-  .player video {
+  .player iframe {
     width: 100%;
     height: 100%;
     display: block;
+    border: none;
   }
 
   .caption {
