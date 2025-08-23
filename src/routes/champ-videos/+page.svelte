@@ -1,8 +1,8 @@
 <script>
   const VIDEOS = [
-    { id: "oijBbsTajKs", title: "2022 Perfectly Balanced | I Am Inevitable", poster: "" },
+    { id: "oijBbsTajKs", title: "2024 Cee Dees TDs - The Dynasty Begins", poster: "" },
     { id: "aglTvcZTmXo", title: "2023 The Rise of The Comeback Kid",          poster: "" },
-    { id: "hdFKFDcJfBk", title: "2024 Cee Dees TDs | The Dynasty Begins",     poster: "" }
+    { id: "hdFKFDcJfBk", title: "2022 Perfectly Balanced - I Am Inevitable",     poster: "" }
   ];
 
   let playing = new Set();
