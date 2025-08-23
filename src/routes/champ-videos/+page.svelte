@@ -1,21 +1,15 @@
 <script>
-  // YouTube championship videos
-  // Optional: provide your own poster path; otherwise we'll use YT's thumbnail.
   const VIDEOS = [
     { id: "oijBbsTajKs", title: "2022 Perfectly Balanced | I Am Inevitable", poster: "" },
     { id: "aglTvcZTmXo", title: "2023 The Rise of The Comeback Kid",          poster: "" },
     { id: "hdFKFDcJfBk", title: "2024 Cee Dees TDs | The Dynasty Begins",     poster: "" }
   ];
 
-  // Track which videos are actively playing (iframe shown)
   let playing = new Set();
-
-  const ytThumb = (id) =>
-    // Try maxresdefault; if YT doesn’t have it, it will serve a fallback.
-    `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+  const ytThumb = (id) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
 
   function play(id) {
-    playing = new Set(playing); // ensure reactivity
+    playing = new Set(playing);
     playing.add(id);
   }
 </script>
@@ -26,7 +20,6 @@
   {#each VIDEOS as v}
     <div class="player">
       {#if playing.has(v.id)}
-        <!-- Actual YouTube iframe once user clicks -->
         <iframe
           src={`https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`}
           title={v.title}
@@ -35,12 +28,17 @@
           allowfullscreen
         ></iframe>
       {:else}
-        <!-- Poster (custom or YT thumbnail) with play button -->
-        <button class="thumb" style={`background-image:url('${v.poster || ytThumb(v.id)}')`} on:click={() => play(v.id)} aria-label={`Play ${v.title}`}>
+        <!-- Poster with title overlay -->
+        <button
+          class="thumb"
+          style={`background-image:url('${v.poster || ytThumb(v.id)}')`}
+          on:click={() => play(v.id)}
+          aria-label={`Play ${v.title}`}
+        >
+          <div class="overlay-title">{v.title}</div>
           <span class="play-icon">▶</span>
         </button>
       {/if}
-      <p class="caption">{v.title}</p>
     </div>
   {/each}
 </div>
@@ -63,7 +61,7 @@
   .player {
     aspect-ratio: 16 / 9;
     max-width: 960px;
-    margin: 0 auto 1.25rem;
+    margin: 0 auto 1.5rem;
     border-radius: 14px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,.35);
@@ -71,7 +69,6 @@
     position: relative;
   }
 
-  /* Poster */
   .thumb {
     display: block;
     width: 100%;
@@ -83,7 +80,20 @@
     position: relative;
   }
 
-  /* Play button */
+  .overlay-title {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.5);
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+  }
+
   .play-icon {
     position: absolute;
     inset: 0;
@@ -98,23 +108,13 @@
     box-shadow: 0 6px 18px rgba(0,0,0,.4);
     transition: transform .12s ease, background .12s ease;
   }
+
   .thumb:hover .play-icon { transform: scale(1.06); background: rgba(0,0,0,0.7); }
 
-  /* Iframe fills player */
   iframe {
     width: 100%;
     height: 100%;
     display: block;
     border: 0;
-  }
-
-  .caption {
-    margin: 0.5rem 0 1.5rem;
-    font-size: 1rem;
-    color: var(--g111);
-  }
-
-  @media (max-width: 520px) {
-    .play-icon { width: 64px; height: 64px; line-height: 64px; font-size: 28px; }
   }
 </style>
