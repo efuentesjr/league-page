@@ -1,11 +1,15 @@
 <script>
-  import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers, gotoManager, round } from "./utils/helperFunctions/universalFunctions";
+  import {
+    getAvatarFromTeamManagers,
+    getTeamNameFromTeamManagers,
+    gotoManager,
+    round
+  } from "./utils/helperFunctions/universalFunctions";
 
   export let leagueTeamManagers, stat, label, xMin, xMax, secondStat, managerID, rosterID, color, year;
 
   $: user = managerID ? leagueTeamManagers.users[managerID] : null;
 
-  // width percentage helper (unchanged logic)
   const pct = (val) => {
     const span = (xMax - xMin) === 0 ? 1 : (xMax - xMin);
     return Math.max(0, Math.min(100, ((val - xMin) / span) * 100));
@@ -63,55 +67,53 @@
     position: relative;
   }
 
-  /* ===== 3D ANGLED BAR STYLE =====
-     - squared edges (no border-radius)
-     - skewed block with top & side faces
-     - label is unskewed so it stays readable
-  */
+  /* ===== Angled, squared 3D block ===== */
   .bar,
   .secondBar {
     position: relative;
     height: 1.8em;
-    border-radius: 0;                 /* squared edges */
-    transform: skewX(-12deg);         /* the angle */
+    border-radius: 0;                     /* squared edges */
+    transform: skewX(-12deg);             /* the angle */
+    outline: 1px solid rgba(255,255,255,0.08); /* separation from page bg */
     box-shadow:
-      6px 6px 12px rgba(0,0,0,0.35),  /* depth */
-      inset -3px -3px 6px rgba(255,255,255,0.12), /* highlight */
-      inset 3px 3px 6px rgba(0,0,0,0.30);         /* inner shade */
+      6px 6px 14px var(--barEdgeShadow, rgba(0,0,0,.45)),     /* depth to page */
+      inset 3px 3px 7px var(--barInnerShade, rgba(0,0,0,.35)),/* inner shade */
+      inset -3px -3px 7px var(--barTopHighlight, rgba(255,255,255,.22)); /* edge light */
     z-index: 10;
     overflow: visible;
+    /* gentle light sweep + your fill */
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.12), rgba(255,255,255,0) 35%),
+      var(--barFill, transparent);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
   }
 
-  /* top face */
+  /* top face highlight */
   .bar::before,
   .secondBar::before {
     content: "";
     position: absolute;
-    left: 0;
-    right: 0;
-    top: -8px;
-    height: 8px;
-    transform: skewX(12deg); /* counter the parent skew so the face sits flat */
-    background: rgba(255,255,255,0.10);  /* subtle highlight strip */
+    left: 0; right: 0;
+    top: -8px; height: 8px;
+    transform: skewX(12deg); /* counter the parent skew */
+    background: var(--barTopHighlight, rgba(255,255,255,0.18));
     pointer-events: none;
   }
 
-  /* side face (at the right edge) */
+  /* right side face */
   .bar::after,
   .secondBar::after {
     content: "";
     position: absolute;
-    top: 0;
-    right: -10px;    /* “thickness” of the side */
-    width: 10px;
-    height: 100%;
-    transform: skewY(-15deg);         /* gives that blocky side look */
-    background: rgba(0,0,0,0.28);     /* subtle darker side */
-    filter: saturate(0.9) brightness(0.9);
+    top: 0; right: -10px;
+    width: 10px; height: 100%;
+    transform: skewY(-15deg);
+    background: rgba(0,0,0,0.35);
     pointer-events: none;
   }
 
-  /* “unskew” the content (text) so it isn't slanted */
+  /* unskew content so text is readable */
   .barInner {
     transform: skewX(12deg);
     height: 100%;
@@ -124,11 +126,10 @@
     vertical-align: text-top;
     margin-left: 40px;
     font-weight: 600;
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+    color: var(--barText, #fff);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
   }
 
-  /* stacked second stat bar sits on top */
   .secondBar {
     position: absolute;
     top: 0;
@@ -176,10 +177,10 @@
     <div class="statBars">
       <div class="leftSpacer" />
       <div class="bars">
-        <!-- MAIN BAR (skewed, 3D) -->
+        <!-- MAIN BAR -->
         <div
           class="bar{!secondStat ? '' : ' opacity'}"
-          style="background: var({color}); width: {pct(stat)}%;"
+          style="--barFill: var({color}); background: var(--barFill); width: {pct(stat)}%;"
         >
           <div class="barInner">
             {#if !secondStat}
@@ -188,11 +189,11 @@
           </div>
         </div>
 
-        <!-- OPTIONAL SECOND BAR (stacked overlay, also skewed) -->
+        <!-- OPTIONAL SECOND BAR (overlay) -->
         {#if secondStat}
           <div
             class="bar secondBar"
-            style="background: var({color}); width: {pct(secondStat)}%;"
+            style="--barFill: var({color}); background: var(--barFill); width: {pct(secondStat)}%;"
           >
             <div class="barInner">
               <span class="barLabel">
