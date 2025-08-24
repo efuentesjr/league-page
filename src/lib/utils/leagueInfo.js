@@ -8,7 +8,7 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 /*   STEP 2   */
 export const homepageText = `
   <div style="text-align: center;">
-    <p style="font-size: 18px;">Are you ready for some FOOTBALL!!!!</p>
+    <p style="font-size: 18px;"></p>
     <p style="font-size: 18px;"></p>
     <p style="font-size: 18px;"></p>
 </div>
