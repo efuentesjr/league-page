@@ -1,5 +1,7 @@
+{
   "name": "league-page",
   "version": "2.5.1",
+  "private": true,
   "homepage": "https://github.com/nmelhado/league-page",
   "repository": {
     "type": "git",
@@ -11,22 +13,10 @@
     "url": "http://www.nmelhado.com/"
   },
   "contributors": [
-    {
-      "name": "Shane Tjong-Akiet",
-      "url": "https://github.com/shanetj"
-    },
-    {
-      "name": "Scottie Garcia",
-      "url": "https://github.com/scottiegarcia"
-    },
-    {
-      "name": "DOLO",
-      "url": "https://github.com/1600dolo"
-    },
-    {
-      "name": "OldNewsBlues-2",
-      "url": "https://github.com/OldNewsBlues-2"
-    }
+    { "name": "Shane Tjong-Akiet", "url": "https://github.com/shanetj" },
+    { "name": "Scottie Garcia", "url": "https://github.com/scottiegarcia" },
+    { "name": "DOLO", "url": "https://github.com/1600dolo" },
+    { "name": "OldNewsBlues-2", "url": "https://github.com/OldNewsBlues-2" }
   ],
   "funding": {
     "type": "buy_me_a_coffee",
@@ -38,7 +28,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=v20.0.0",
+    "node": "22.x",
     "npm": ">=6.0.0"
   },
   "scripts": {
@@ -75,9 +65,8 @@
     "@smui/tab": "^8.0.0-beta.3",
     "@smui/tab-bar": "^8.0.0-beta.3",
     "@smui/textfield": "^8.0.0-beta.3",
-    "@sveltejs/adapter-node": "^5.2.12",
-    "@sveltejs/adapter-vercel": "^5.5.3",
-    "@sveltejs/kit": "^2.16.1",
+    "@sveltejs/adapter-vercel": "next",
+    "@sveltejs/kit": "^2.37.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
@@ -85,7 +74,7 @@
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
     "smui-theme": "^8.0.0-beta.3",
-    "svelte": "^5.19.2"
+    "svelte": "^5.19.2",
+    "vite": "^5.4.10"
   }
 }
-
