@@ -37,10 +37,8 @@
     "url": "https://github.com/nmelhado/league-page/issues",
     "email": "n.melhado@gmail.com"
   },
-  "license": "MIT",
-    "engines": {
-    "node": "18.x",
-    "npm": ">=6.0.0"
+  "engines": {
+    "node": "22.x"
   },
   "scripts": {
     "dev": "vite dev",
