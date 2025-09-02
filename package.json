@@ -1,31 +1,6 @@
 {
   "name": "league-page",
   "version": "2.5.1",
-  "homepage": "https://github.com/nmelhado/league-page",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nmelhado/league-page.git"
-  },
-  "author": {
-    "name": "Nicholas Melhado",
-    "email": "n.melhado@gmail.com",
-    "url": "http://www.nmelhado.com/"
-  },
-  "contributors": [
-    { "name": "Shane Tjong-Akiet", "url": "https://github.com/shanetj" },
-    { "name": "Scottie Garcia", "url": "https://github.com/scottiegarcia" },
-    { "name": "DOLO", "url": "https://github.com/1600dolo" },
-    { "name": "OldNewsBlues-2", "url": "https://github.com/OldNewsBlues-2" }
-  ],
-  "funding": {
-    "type": "buy_me_a_coffee",
-    "url": "https://www.buymeacoffee.com/nmelhado"
-  },
-  "bugs": {
-    "url": "https://github.com/nmelhado/league-page/issues",
-    "email": "n.melhado@gmail.com"
-  },
-  "license": "MIT",
   "engines": {
     "node": "22.x"
   },
@@ -33,7 +8,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "build-docker": "DOCKER_BUILD=true vite build --verbose",
-    "docker-build": "docker build . -t $USER/league-page:latest",
+    "docker-build": "npm run docker-build && docker run -p 3000:3000 $USER/league-page:latest",
     "docker-run": "npm run docker-build && docker run -p 3000:3000 $USER/league-page:latest",
     "preview": "vite preview",
     "prepare": "npm run smui-theme-light && npm run smui-theme-dark",
@@ -63,7 +38,6 @@
     "@smui/tab": "^8.0.0-beta.3",
     "@smui/tab-bar": "^8.0.0-beta.3",
     "@smui/textfield": "^8.0.0-beta.3",
-    "@sveltejs/adapter-node": "^5.2.12",
     "@sveltejs/adapter-vercel": "next",
     "@sveltejs/kit": "^2.16.1",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
