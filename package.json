@@ -1,14 +1,50 @@
-{
+		 {
   "name": "league-page",
-  "version": "2.5.1",
+  "version": "2.5.0",
+  "homepage": "https://github.com/nmelhado/league-page",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nmelhado/league-page.git"
+  },
+  "author": {
+    "name": "Nicholas Melhado",
+    "email": "n.melhado@gmail.com",
+    "url": "http://www.nmelhado.com/"
+  },
+  "contributors": [
+    {
+      "name": "Shane Tjong-Akiet",
+      "url": "https://github.com/shanetj"
+    },
+    {
+      "name": "Scottie Garcia",
+      "url": "https://github.com/scottiegarcia"
+    },
+    {
+      "name": "DOLO",
+      "url": "https://github.com/1600dolo"
+    },
+    {
+      "name": "OldNewsBlues-2",
+      "url": "https://github.com/OldNewsBlues-2"
+    }
+  ],
+  "funding": {
+    "type": "buy_me_a_coffee",
+    "url": "https://www.buymeacoffee.com/nmelhado"
+  },
+  "bugs": {
+    "url": "https://github.com/nmelhado/league-page/issues",
+    "email": "n.melhado@gmail.com"
+  },
   "engines": {
-    "node": "22.x"
+    "node": "18.x",
   },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
     "build-docker": "DOCKER_BUILD=true vite build --verbose",
-    "docker-build": "npm run docker-build && docker run -p 3000:3000 $USER/league-page:latest",
+    "docker-build": "docker build . -t $USER/league-page:latest",
     "docker-run": "npm run docker-build && docker run -p 3000:3000 $USER/league-page:latest",
     "preview": "vite preview",
     "prepare": "npm run smui-theme-light && npm run smui-theme-dark",
@@ -17,36 +53,37 @@
     "lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
     "format": "prettier --write --plugin-search-dir=. ."
   },
+  "devDependencies": {
+    "@sveltejs/adapter-node": "^1.2.3",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-svelte3": "^3.2.1",
+    "prettier": "~2.2.1",
+    "prettier-plugin-svelte": "^2.2.0",
+    "smui-theme": "6.0.0-beta.13",
+    "vite": "^4.0.0"
+  },
   "type": "module",
   "dependencies": {
-    "@vercel/analytics": "^1.4.1",
-    "contentful": "^10.6.7",
-    "contentful-management": "^10.46.4",
-    "cookie": "^0.7.0",
-    "fast-xml-parser": "^4.2.5",
-    "fuzzyjs": "^5.0.1"
-  },
-  "devDependencies": {
-    "@smui/button": "^8.0.0-beta.3",
-    "@smui/data-table": "^8.0.0-beta.3",
-    "@smui/dialog": "^8.0.0-beta.3",
-    "@smui/drawer": "^8.0.0-beta.3",
-    "@smui/icon-button": "^8.0.0-beta.3",
-    "@smui/linear-progress": "^8.0.0-beta.3",
-    "@smui/list": "^8.0.0-beta.3",
-    "@smui/paper": "^8.0.0-beta.3",
-    "@smui/tab": "^8.0.0-beta.3",
-    "@smui/tab-bar": "^8.0.0-beta.3",
-    "@smui/textfield": "^8.0.0-beta.3",
+    "@smui/button": "6.0.0-beta.13",
+    "@smui/data-table": "6.0.0-beta.13",
+    "@smui/dialog": "6.0.0-beta.13",
+    "@smui/drawer": "6.0.0-beta.13",
+    "@smui/icon-button": "6.0.0-beta.13",
+    "@smui/linear-progress": "6.0.0-beta.13",
+    "@smui/list": "6.0.0-beta.13",
+    "@smui/paper": "6.0.0-beta.13",
+    "@smui/tab": "6.0.0-beta.13",
+    "@smui/tab-bar": "6.0.0-beta.13",
+    "@smui/textfield": "6.0.0-beta.13",
     "@sveltejs/adapter-vercel": "next",
-    "@sveltejs/kit": "^2.16.1",
-    "@sveltejs/vite-plugin-svelte": "^5.0.3",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-svelte": "^2.46.1",
-    "prettier": "^3.4.2",
-    "prettier-plugin-svelte": "^3.3.3",
-    "smui-theme": "^8.0.0-beta.3",
-    "svelte": "^5.19.2"
+    "@sveltejs/kit": "^1.15.2",
+    "contentful": "^9.1.34",
+    "contentful-management": "^10.12.0",
+    "cookie": "^0.4.1",
+    "fast-xml-parser": "^4.2.5",
+    "fuzzyjs": "^5.0.1",
+    "svelte": "^3.50.1",
+    "yargs": "^17.0.0"
   }
 }
