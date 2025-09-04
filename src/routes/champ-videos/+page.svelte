@@ -78,7 +78,7 @@
 
   .player {
     aspect-ratio: 16 / 9;
-    max-width: 960px;
+    max-width: 100%;
     margin: 0 auto 1.5rem;
     border-radius: 0;
     overflow: hidden;
