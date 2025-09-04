@@ -71,9 +71,9 @@
   }
 
   .title {
-    font-size: 2.0rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .player {
