@@ -1,24 +1,23 @@
 <script>
-  // ⬇️ Replace src/poster with your real Cloudflare R2 public URLs
-  // Example format: https://pub-XXXXXXXX.r2.dev/2024-Cee-Dees-TDs-web.mp4
+  // Cloudflare R2 public URLs (leave these as your real links)
   const VIDEOS = [
     {
       key: '2024',
       title: '2024 Cee Dees TDs - The Dynasty Begins',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2024-Cee-Dees-TDs-web.mp4',
-      poster: 'static/videos/2024-Cee-Dees-TDs-poster.jpg' // optional
+      poster: '/videos/2024-Cee-Dees-TDs-poster.jpg' // <- served from /static/videos
     },
     {
       key: '2023',
       title: '2023 The Rise of The Comeback Kid',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2023-Comeback-Kid-web.mp4',
-      poster: 'static/videos/2023-Comeback-Kid-poster.jpg' // optional
+      poster: '/videos/2023-Comeback-Kid-poster.jpg'
     },
     {
       key: '2022',
       title: '2022 Perfectly Balanced - I Am Inevitable',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2022-Perfectly-Balanced-web.mp4',
-      poster: 'static/videos/2022-Perfectly-Balanced-poster.jpg' // optional
+      poster: '/videos/2022-Perfectly-Balanced-poster.jpg'
     }
   ];
 
@@ -33,10 +32,8 @@
     queueMicrotask(() => {
       const vid = playRefs.get(key);
       if (vid) {
-        // show controls and play
         vid.controls = true;
         const p = vid.play?.();
-        // some browsers return a promise; ignore errors from autoplay policies
         if (p && typeof p.catch === 'function') p.catch(() => {});
       }
     });
