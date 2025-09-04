@@ -1,23 +1,23 @@
 <script>
-  // Use absolute URLs for assets under `static/` → they’re served from the site root.
+  // Replace with your real Cloudflare R2 public URLs
   const VIDEOS = [
     {
       key: '2024',
       title: '2024 Cee Dees TDs - The Dynasty Begins',
-      src:    'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2024-Cee-Dees-TDs-web.mp4',
-      poster: '/videos/2024-Cee-Dees-TDs-poster.jpg'
+      src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2024-Cee-Dees-TDs-web.mp4',
+      poster: '/static/videos/2024-Cee-Dees-TDs-poster.jpg'
     },
     {
       key: '2023',
       title: '2023 The Rise of The Comeback Kid',
-      src:    'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2023-Comeback-Kid-web.mp4',
-      poster: '/videos/2023-Comeback-Kid-poster.jpg'
+      src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2023-Comeback-Kid-web.mp4',
+      poster: '/static/videos/2023-Comeback-Kid-poster.jpg'
     },
     {
       key: '2022',
       title: '2022 Perfectly Balanced - I Am Inevitable',
-      src:    'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2022-Perfectly-Balanced-web.mp4',
-      poster: '/videos/2022-Perfectly-Balanced-poster.jpg'
+      src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2022-Perfectly-Balanced-web.mp4',
+      poster: '/static/videos/2022-Perfectly-Balanced-poster.jpg'
     }
   ];
 
@@ -28,14 +28,6 @@
     next.add(key);
     playing = next;
   }
-
-  // Nudge playback after user gesture; browsers will allow it
-  function tryPlay(e) {
-    const v = e.currentTarget;
-    v.controls = true;
-    const p = v.play?.();
-    if (p && typeof p.catch === 'function') p.catch(() => {});
-  }
 </script>
 
 <div class="wrap">
@@ -45,17 +37,16 @@
     <div class="player">
       {#if playing.has(v.key)}
         <video
+          controls
           playsinline
           preload="metadata"
           poster={v.poster || ''}
-          autoplay
-          on:canplay={tryPlay}
-          on:loadeddata={tryPlay}
         >
           <source src={v.src} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       {:else}
+        <!-- Poster with title overlay + play button -->
         <button
           class="thumb"
           style={`background-image:url('${v.poster || ''}')`}
@@ -72,57 +63,59 @@
 
 <style>
   .wrap {
-    max-width: 100%;
-    margin: 0 auto 3rem;
-    padding: 0;
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1rem 3rem;
     text-align: center;
     color: var(--g000);
   }
 
-  /* Restored earlier title sizing */
   .title {
     font-size: 1.6rem;
     font-weight: 700;
-    margin: 2rem 0;
+    margin-bottom: 2rem;
   }
 
-  /* Full-width, squared edges */
   .player {
     aspect-ratio: 16 / 9;
-    width: 100%;
-    margin: 0 0 1.5rem;
-    max-width: 960px
-    border-radius: 0;     /* squared corners */
+    max-width: 960px;
+    margin: 0 auto 1.5rem;
+    border-radius: 14px;
     overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
     background: #000;
     position: relative;
-    box-shadow: none;     /* no shadow, edge-to-edge look */
   }
 
   .player video {
     width: 100%;
-    height: 800px;
+    height: 100%;
     display: block;
     border: 0;
     background: #000;
-    object-fit: cover;
   }
 
-    /* Posters fill container by default */
+  /* Posters fill container by default (keeps mobile/app look) */
   .thumb {
+    display: block;
     width: 100%;
     height: 100%;
+    border: 0;
+    cursor: pointer;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    position: relative;
   }
-    /* Desktop tweak: reduce poster scaling */
+
+  /* Desktop tweak: scale posters down to fit nicely */
   @media (min-width: 1024px) {
-  .thumb {
-    background-size: contain;  /* shrink inside player box */
-    background-color: #000;    /* fill gaps with black */
+    .thumb {
+      background-size: contain;   /* shrink inside player box */
+      background-color: #000;     /* letterbox gaps */
+    }
   }
-  }
+
   .overlay-title {
     position: absolute;
     bottom: 12px;
