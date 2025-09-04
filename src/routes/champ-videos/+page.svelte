@@ -22,19 +22,21 @@
   ];
 
   let playing = new Set();
-  const playRefs = new Map(); // key -> <video> element
 
   function start(key) {
+    // flip this card to “playing” state
     playing = new Set(playing);
     playing.add(key);
-    queueMicrotask(() => {
-      const vid = playRefs.get(key);
-      if (vid) {
-        vid.controls = true;
-        const p = vid.play?.();
-        if (p && typeof p.catch === 'function') p.catch(() => {});
-      }
-    });
+  }
+
+  // Try to play as soon as the video can start. This is after a user click,
+  // so browsers should allow play with sound.
+  function tryPlay(e) {
+    const v = e.currentTarget;
+    // show controls for the user
+    v.controls = true;
+    const p = v.play?.();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
   }
 </script>
 
@@ -45,10 +47,12 @@
     <div class="player">
       {#if playing.has(v.key)}
         <video
-          bind:this={(el) => playRefs.set(v.key, el)}
           playsinline
           preload="metadata"
           poster={v.poster || ''}
+          autoplay
+          on:canplay={tryPlay}
+          on:loadeddata={tryPlay}
         >
           <source src={v.src} type="video/mp4" />
           Your browser does not support the video tag.
@@ -84,7 +88,7 @@
     font-weight: 700;
     padding: 1rem;
     margin-bottom: 2rem;
-    border-radius: 6px;
+    border-radius: 0;            /* squared edges on the banner too (adjust if you want rounded) */
     text-transform: uppercase;
     box-shadow: 0 4px 12px rgba(0,0,0,.25);
   }
@@ -93,7 +97,7 @@
     aspect-ratio: 16 / 9;
     width: 100%;
     margin: 0 0 1.5rem;
-    border-radius: 0;
+    border-radius: 0;            /* no rounded corners */
     overflow: hidden;
     box-shadow: none;
     background: #000;
@@ -150,8 +154,8 @@
     place-items: center;
   }
 
-  .thumb:hover .play-icon { 
-    transform: scale(1.06); 
-    background: rgba(0,0,0,0.7); 
+  .thumb:hover .play-icon {
+    transform: scale(1.06);
+    background: rgba(0,0,0,0.7);
   }
 </style>
