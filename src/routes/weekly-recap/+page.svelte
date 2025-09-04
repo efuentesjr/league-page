@@ -7,18 +7,6 @@
       src:  'https://pub-XXXXXXXX.r2.dev/recap-week-01.mp4',
       poster: 'https://pub-XXXXXXXX.r2.dev/posters/recap-week-01.jpg'
     },
-    {
-      key: 'wk2',
-      title: 'Week 2 Recap — Shootouts & Heartbreakers',
-      src:  'https://pub-XXXXXXXX.r2.dev/recap-week-02.mp4',
-      poster: 'https://pub-XXXXXXXX.r2.dev/posters/recap-week-02.jpg'
-    },
-    {
-      key: 'wk3',
-      title: 'Week 3 Recap — Power Shift at the Top',
-      src:  'https://pub-XXXXXXXX.r2.dev/recap-week-03.mp4',
-      poster: 'https://pub-XXXXXXXX.r2.dev/posters/recap-week-03.jpg'
-    }
   ];
 
   let playing = new Set();
