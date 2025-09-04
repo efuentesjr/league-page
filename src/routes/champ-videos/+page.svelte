@@ -108,17 +108,21 @@
     object-fit: cover;
   }
 
+    /* Posters fill container by default */
   .thumb {
-    display: block;
     width: 100%;
     height: 100%;
-    border: 0;
-    cursor: pointer;
     background-size: cover;
     background-position: center;
-    position: relative;
+    background-repeat: no-repeat;
   }
-
+    /* Desktop tweak: reduce poster scaling */
+  @media (min-width: 1024px) {
+  .thumb {
+    background-size: contain;  /* shrink inside player box */
+    background-color: #000;    /* fill gaps with black */
+  }
+  }
   .overlay-title {
     position: absolute;
     bottom: 12px;
