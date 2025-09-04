@@ -1,16 +1,45 @@
 <script>
+  // ⬇️ Replace src/poster with your real Cloudflare R2 public URLs
+  // Example format: https://pub-XXXXXXXX.r2.dev/2024-Cee-Dees-TDs-web.mp4
   const VIDEOS = [
-    { id: "oijBbsTajKs", title: "2024 Cee Dees TDs - The Dynasty Begins", poster: "" },
-    { id: "aglTvcZTmXo", title: "2023 The Rise of The Comeback Kid",          poster: "" },
-    { id: "hdFKFDcJfBk", title: "2022 Perfectly Balanced - I Am Inevitable",     poster: "" }
+    {
+      key: '2024',
+      title: '2024 Cee Dees TDs - The Dynasty Begins',
+      src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2024-Cee-Dees-TDs-web.mp4',
+      poster: 'https://pub-XXXXXXXX.r2.dev/posters/2024.jpg' // optional
+    },
+    {
+      key: '2023',
+      title: '2023 The Rise of The Comeback Kid',
+      src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2023-Comeback-Kid-web.mp4',
+      poster: 'https://pub-XXXXXXXX.r2.dev/posters/2023.jpg' // optional
+    },
+    {
+      key: '2022',
+      title: '2022 Perfectly Balanced - I Am Inevitable',
+      src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2022-Perfectly-Balanced-web.mp4',
+      poster: 'https://pub-XXXXXXXX.r2.dev/posters/2022.jpg' // optional
+    }
   ];
 
+  // track which cards are “playing”
   let playing = new Set();
-  const ytThumb = (id) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+  const playRefs = new Map(); // key -> <video> element
 
-  function play(id) {
+  function start(key) {
     playing = new Set(playing);
-    playing.add(id);
+    playing.add(key);
+    // wait a tick for the <video> to mount, then play
+    queueMicrotask(() => {
+      const vid = playRefs.get(key);
+      if (vid) {
+        // show controls and play
+        vid.controls = true;
+        const p = vid.play?.();
+        // some browsers return a promise; ignore errors from autoplay policies
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      }
+    });
   }
 </script>
 
@@ -19,20 +48,23 @@
 
   {#each VIDEOS as v}
     <div class="player">
-      {#if playing.has(v.id)}
-        <iframe
-          src={`https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`}
-          title={v.title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
-        ></iframe>
+      {#if playing.has(v.key)}
+        <!-- Cloudflare R2 video -->
+        <video
+          bind:this={(el) => playRefs.set(v.key, el)}
+          playsinline
+          preload="metadata"
+          poster={v.poster || ''}
+        >
+          <source src={v.src} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       {:else}
-        <!-- Poster with title overlay -->
+        <!-- Poster with title overlay + play button -->
         <button
           class="thumb"
-          style={`background-image:url('${v.poster || ytThumb(v.id)}')`}
-          on:click={() => play(v.id)}
+          style={`background-image:url('${v.poster || ''}')`}
+          on:click={() => start(v.key)}
           aria-label={`Play ${v.title}`}
         >
           <div class="overlay-title">{v.title}</div>
@@ -67,6 +99,14 @@
     box-shadow: 0 10px 30px rgba(0,0,0,.35);
     background: #000;
     position: relative;
+  }
+
+  .player video, .player iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+    background: #000;
   }
 
   .thumb {
@@ -107,14 +147,9 @@
     font-size: 36px;
     box-shadow: 0 6px 18px rgba(0,0,0,.4);
     transition: transform .12s ease, background .12s ease;
+    display: grid;
+    place-items: center;
   }
 
   .thumb:hover .play-icon { transform: scale(1.06); background: rgba(0,0,0,0.7); }
-
-  iframe {
-    width: 100%;
-    height: 100%;
-    display: block;
-    border: 0;
-  }
 </style>
