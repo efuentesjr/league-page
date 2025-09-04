@@ -12,56 +12,54 @@
 	let display;
 	let el, width, height, left, top;
 
-	const sizeSubMenu = (w) => {
-		top = el?.getBoundingClientRect() ? el?.getBoundingClientRect().top  : 0;
-		const bottom = el?.getBoundingClientRect() ? el?.getBoundingClientRect().bottom  : 0;
-
+	const sizeSubMenu = () => {
+		const rect = el?.getBoundingClientRect?.();
+		if (!rect) {
+			top = left = width = height = 0;
+			return;
+		}
+		top = rect.top || 0;
+		const bottom = rect.bottom || 0;
 		height = bottom - top + 1;
 
-		left = el?.getBoundingClientRect() ? el?.getBoundingClientRect().left  : 0;
-		const right = el?.getBoundingClientRect() ? el?.getBoundingClientRect().right  : 0;
-
+		left = rect.left || 0;
+		const right = rect.right || 0;
 		width = right - left;
-	}
+	};
 
 	let innerWidth;
-
-	$: sizeSubMenu(innerWidth);
+	$: sizeSubMenu();
 
 	const open = (close = false) => {
-		if(close) {
+		if (close) {
 			setTimeout(() => {
 				active = activeTab;
-			}, 500)
+			}, 500);
 		} else {
 			activeTab = active;
 		}
 		display = !display;
-	}
+	};
 
 	const subGoto = (dest) => {
 		open(false);
 		goto(dest);
+	};
+
+	let tabChildren = [];
+	for (const t of tabs) {
+		if (t.nest) tabChildren = t.children;
 	}
-
-	let tabChildren = []
-
-	for(const tab of tabs) {
-		if(tab.nest) {
-			tabChildren = tab.children;
-		}
-	}
-
 </script>
 
 <svelte:window bind:innerWidth={innerWidth} />
 
 <style>
-    :global(.navBar) {
+	:global(.navBar) {
 		display: inline-flex;
 		position: relative;
-    	justify-content: center;
-    }
+		justify-content: center;
+	}
 
 	:global(.navBar .material-icons) {
 		font-size: 1.8em;
@@ -106,40 +104,59 @@
 	}
 </style>
 
-<div class="overlay" style="display: {display ? "block" : "none"};" on:click={() => open(true)} />
+<div
+	class="overlay"
+	style="display: {display ? 'block' : 'none'};"
+	on:click={() => open(true)}
+/>
 
 <div class="parent">
-	<TabBar class="navBar" {tabs} let:tab bind:active>
-		{#if tab.nest}
-			<div bind:this={el}>
+	<!-- Bind active to keep your current behavior -->
+	<TabBar class="navBar" bind:active>
+		{#each tabs as t}
+			{#if t.nest}
+				<div bind:this={el}>
+					<Tab on:click={() => open(display)} minWidth>
+						<Icon class="material-icons">{t.icon}</Icon>
+						<Label>{t.label}</Label>
+					</Tab>
+				</div>
+			{:else}
 				<Tab
-					{tab}
-					on:click={() => open(display)}
+					class="{t.label == 'Blog' && !enableBlog ? 'dontDisplay' : ''}"
+					on:touchstart={() => preloadData(t.dest)}
+					on:mouseover={() => preloadData(t.dest)}
+					on:click={() => goto(t.dest)}
 					minWidth
 				>
-					<Icon class="material-icons">{tab.icon}</Icon>
-					<Label>{tab.label}</Label>
+					<Icon class="material-icons">{t.icon}</Icon>
+					<Label>{t.label}</Label>
 				</Tab>
-			</div>
-		{:else}
-			<Tab
-				class="{tab.label == 'Blog' && !enableBlog ? 'dontDisplay' : ''}"
-				{tab}
-				on:touchstart={() => preloadData(tab.dest)}
-				on:mouseover={() => preloadData(tab.dest)}
-				on:click={() => goto(tab.dest)}
-				minWidth
-			>
-				<Icon class="material-icons">{tab.icon}</Icon>
-				<Label>{tab.label}</Label>
-			</Tab>
-		{/if}
+			{/if}
+		{/each}
 	</TabBar>
-	<div class="subMenu" style="max-height: {display ? 49 * tabChildren.length - 1 - (managers.length ? 0 : 48) : 0}px; width: {width}px; top: {height}px; left: {left}px; box-shadow: 0 0 {display ? "3px" : "0"} 0 #00316b; border: {display ? "1px" : "0"} solid #00316b; border-top: none;">
+
+	<div
+		class="subMenu"
+		style="
+			max-height: {display ? 49 * tabChildren.length - 1 - (managers.length ? 0 : 48) : 0}px;
+			width: {width}px;
+			top: {height}px;
+			left: {left}px;
+			box-shadow: 0 0 {display ? '3px' : '0'} 0 #00316b;
+			border: {display ? '1px' : '0'} solid #00316b;
+			border-top: none;
+		"
+	>
 		<List>
 			{#each tabChildren as subTab, ix}
 				{#if subTab.label == 'Managers'}
-					<Item class="{managers.length ? '' : 'dontDisplay'}" on:SMUI:action={() => subGoto(subTab.dest)} on:touchstart={() => preloadData(subTab.dest)} on:mouseover={() => preloadData(subTab.dest)}>
+					<Item
+						class="{managers.length ? '' : 'dontDisplay'}"
+						on:SMUI:action={() => subGoto(subTab.dest)}
+						on:touchstart={() => preloadData(subTab.dest)}
+						on:mouseover={() => preloadData(subTab.dest)}
+					>
 						<Graphic class="material-icons">{subTab.icon}</Graphic>
 						<Text class="subText">{subTab.label}</Text>
 					</Item>
@@ -147,7 +164,15 @@
 						<Separator />
 					{/if}
 				{:else}
-					<Item on:SMUI:action={() => subGoto(subTab.dest)} on:touchstart={() => {if(subTab.label != 'Go to Sleeper') preloadData(subTab.dest)}} on:mouseover={() => {if(subTab.label != 'Go to Sleeper') preloadData(subTab.dest)}}>
+					<Item
+						on:SMUI:action={() => subGoto(subTab.dest)}
+						on:touchstart={() => {
+							if (subTab.label != 'Go to Sleeper') preloadData(subTab.dest);
+						}}
+						on:mouseover={() => {
+							if (subTab.label != 'Go to Sleeper') preloadData(subTab.dest);
+						}}
+					>
 						<Graphic class="material-icons">{subTab.icon}</Graphic>
 						<Text class="subText">{subTab.label}</Text>
 					</Item>
