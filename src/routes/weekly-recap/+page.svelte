@@ -1,24 +1,18 @@
 <script>
-  // Weekly recap items — mix YouTube and Cloudflare R2 freely.
-  // - For YouTube, set { ytId: "VIDEO_ID", title, poster? }
-  // - For R2/local MP4, set { src: "https://...mp4", title, poster? }
+  // Weekly recap videos hosted on Cloudflare R2
   const RECAPS = [
-    // Example: Cloudflare R2 (replace with your public R2 URLs)
     {
       key: 'wk1',
       title: 'Week 1 Recap — Statement Wins & Surprise Lows',
       src:  'https://pub-XXXXXXXX.r2.dev/recap-week-01.mp4',
       poster: 'https://pub-XXXXXXXX.r2.dev/posters/recap-week-01.jpg'
     },
-    // Example: YouTube fallback (optional)
     {
       key: 'wk2',
       title: 'Week 2 Recap — Shootouts & Heartbreakers',
-      ytId: 'oijBbsTajKs',
-      // Optional custom poster; otherwise we’ll auto-pull from YouTube
-      // poster: 'https://your-cdn/posters/recap-week-02.jpg'
+      src:  'https://pub-XXXXXXXX.r2.dev/recap-week-02.mp4',
+      poster: 'https://pub-XXXXXXXX.r2.dev/posters/recap-week-02.jpg'
     },
-    // Another R2 example
     {
       key: 'wk3',
       title: 'Week 3 Recap — Power Shift at the Top',
@@ -27,14 +21,9 @@
     }
   ];
 
-  // Which card is “playing” (key set)
   let playing = new Set();
 
-  // Build a YT thumbnail if none provided
-  const ytThumb = (id) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-
   function start(key) {
-    // toggle card into “playing” state
     playing = new Set(playing);
     playing.add(key);
   }
@@ -52,33 +41,20 @@
 
       <div class="player">
         {#if playing.has(v.key)}
-          {#if v.src}
-            <!-- Cloudflare R2 / MP4 -->
-            <video
-              playsinline
-              controls
-              autoplay
-              preload="metadata"
-              poster={v.poster || ''}
-            >
-              <source src={v.src} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          {:else if v.ytId}
-            <!-- YouTube -->
-            <iframe
-              src={`https://www.youtube.com/embed/${v.ytId}?autoplay=1&rel=0`}
-              title={v.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen
-            ></iframe>
-          {/if}
+          <video
+            playsinline
+            controls
+            autoplay
+            preload="metadata"
+            poster={v.poster || ''}
+          >
+            <source src={v.src} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         {:else}
-          <!-- Poster with title overlay + play button -->
           <button
             class="thumb"
-            style={`background-image:url('${v.poster || (v.ytId ? ytThumb(v.ytId) : '')}')`}
+            style={`background-image:url('${v.poster || ''}')`}
             on:click={() => start(v.key)}
             aria-label={`Play ${v.title}`}
           >
@@ -114,8 +90,7 @@
 
   .card {
     margin: 0 auto 1.75rem;
-    /* squared edges by request */
-    border-radius: 0;
+    border-radius: 0; /* squared edges */
     background: var(--fff);
     box-shadow: 0 8px 28px rgba(0,0,0,.16);
   }
@@ -130,16 +105,13 @@
   }
 
   .player {
-    /* Full-bleed video area with squared corners */
     width: 100%;
     aspect-ratio: 16 / 9;
     background: #000;
     overflow: hidden;
   }
 
-  /* Fill container; square corners (no border-radius) */
-  .player video,
-  .player iframe {
+  .player video {
     width: 100%;
     height: 100%;
     display: block;
@@ -147,7 +119,6 @@
     background: #000;
   }
 
-  /* Poster (click-to-play) */
   .thumb {
     display: block;
     width: 100%;
@@ -160,20 +131,12 @@
     position: relative;
   }
 
-  /* Desktop: keep posters from “overfilling” and looking oversized */
-  @media (min-width: 1024px) {
-    .thumb {
-      background-size: contain;   /* show entire poster nicely */
-      background-color: #000;     /* letterbox fill */
-    }
-  }
-
   .overlay-title {
     position: absolute;
     bottom: 12px;
     left: 12px;
     right: 12px;
-    font-size: .95rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #fff;
     text-shadow: 0 2px 8px rgba(0,0,0,0.8);
@@ -198,14 +161,6 @@
     display: grid;
     place-items: center;
   }
-  .thumb:hover .play-icon {
-    transform: scale(1.06);
-    background: rgba(0,0,0,0.7);
-  }
 
-  /* Tighten card on very small screens */
-  @media (max-width: 480px) {
-    .card-title { font-size: .95rem; }
-    .overlay-title { font-size: .9rem; }
-  }
+  .thumb:hover .play-icon { transform: scale(1.06); background: rgba(0,0,0,0.7); }
 </style>
