@@ -80,7 +80,7 @@
     aspect-ratio: 16 / 9;
     max-width: 960px;
     margin: 0 auto 1.5rem;
-    border-radius: 14px;
+    border-radius: 0;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,.35);
     background: #000;
