@@ -38,7 +38,7 @@
     "email": "n.melhado@gmail.com"
   },
   "engines": {
-    "node": ">=18.0.0 <22.0.0",
+    "node": ">=20.0.0",
     "npm": ">=6.0.0"
   },
   "scripts": {
