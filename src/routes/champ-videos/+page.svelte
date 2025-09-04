@@ -71,8 +71,8 @@
   }
 
   .title {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 3.6rem;
+    font-weight: 800;
     margin-bottom: 2rem;
   }
 
@@ -82,7 +82,7 @@
     margin: 0 auto 1.5rem;
     border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    box-shadow: none;
     background: #000;
     position: relative;
   }
