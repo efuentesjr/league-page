@@ -62,7 +62,7 @@
     "prettier": "~2.2.1",
     "prettier-plugin-svelte": "^2.2.0",
     "smui-theme": "6.0.0-beta.13",
-    "vite": "^4.0.0"
+    "vite": "^6.0.7"
   },
   "type": "module",
   "dependencies": {
