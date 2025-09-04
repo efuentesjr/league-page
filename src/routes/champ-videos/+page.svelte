@@ -1,55 +1,51 @@
 <script>
-  import { tick } from 'svelte';
-
-  // Cloudflare R2 public URLs
+  // Replace with your Cloudflare R2 public URLs
   const VIDEOS = [
     {
       key: '2024',
       title: '2024 Cee Dees TDs - The Dynasty Begins',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2024-Cee-Dees-TDs-web.mp4',
-      poster: '/videos/2024-Cee-Dees-TDs-poster.jpg'
+      poster: 'static/videos/2024-Cee-Dees-TDs-poster.jpg'
     },
     {
       key: '2023',
       title: '2023 The Rise of The Comeback Kid',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2023-Comeback-Kid-web.mp4',
-      poster: '/videos/2023-Comeback-Kid-poster.jpg'
+      poster: 'static/videos/2023-Comeback-Kid-poster.jpg'
     },
     {
       key: '2022',
       title: '2022 Perfectly Balanced - I Am Inevitable',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2022-Perfectly-Balanced-web.mp4',
-      poster: '/videos/2022-Perfectly-Balanced-poster.jpg'
+      poster: 'static/videos/2022-Perfectly-Balanced-poster.jpg'
     }
   ];
 
   let playing = new Set();
+  const playRefs = new Map(); // key -> <video> element
 
-  async function start(key) {
-    // flip to “playing” so the <video> renders
+  function start(key) {
     playing = new Set(playing);
     playing.add(key);
-
-    // wait for DOM to update, then play the new <video>
-    await tick();
-    const el = document.getElementById(`vid-${key}`);
-    if (el) {
-      el.controls = true;
-      const p = el.play?.();
-      if (p && typeof p.catch === 'function') p.catch(() => {});
-    }
+    queueMicrotask(() => {
+      const vid = playRefs.get(key);
+      if (vid) {
+        vid.controls = true;
+        const p = vid.play?.();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      }
+    });
   }
 </script>
 
 <div class="wrap">
-  <h1 class="title">🎬 Championship Videos 🎬</h1>
+  <h1 class="banner">🎬 Championship Videos 🎬</h1>
 
   {#each VIDEOS as v}
     <div class="player">
       {#if playing.has(v.key)}
-        <!-- Cloudflare R2 video -->
         <video
-          id={`vid-${v.key}`}
+          bind:this={(el) => playRefs.set(v.key, el)}
           playsinline
           preload="metadata"
           poster={v.poster || ''}
@@ -58,7 +54,6 @@
           Your browser does not support the video tag.
         </video>
       {:else}
-        <!-- Poster with title overlay + play button -->
         <button
           class="thumb"
           style={`background-image:url('${v.poster || ''}')`}
@@ -75,31 +70,37 @@
 
 <style>
   .wrap {
-    max-width: 1100px;
-    margin: 2rem auto;
-    padding: 0 1rem 3rem;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 0 3rem;
     text-align: center;
     color: var(--g000);
   }
 
-  .title {
-    font-size: 1.6rem;
+  .banner {
+    background: maroon;
+    color: #fff;
+    font-size: 2rem;
     font-weight: 700;
+    padding: 1rem;
     margin-bottom: 2rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(0,0,0,.25);
   }
 
   .player {
     aspect-ratio: 16 / 9;
-    max-width: 960px;
-    margin: 0 auto 1.5rem;
-    border-radius: 14px;
+    width: 100%;
+    margin: 0 0 1.5rem;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    box-shadow: none;
     background: #000;
     position: relative;
   }
 
-  .player video, .player iframe {
+  .player video {
     width: 100%;
     height: 100%;
     display: block;
@@ -149,5 +150,8 @@
     place-items: center;
   }
 
-  .thumb:hover .play-icon { transform: scale(1.06); background: rgba(0,0,0,0.7); }
+  .thumb:hover .play-icon { 
+    transform: scale(1.06); 
+    background: rgba(0,0,0,0.7); 
+  }
 </style>
