@@ -91,6 +91,7 @@
     aspect-ratio: 16 / 9;
     width: 100%;
     margin: 0 0 1.5rem;
+    max-width: 960px
     border-radius: 0;     /* squared corners */
     overflow: hidden;
     background: #000;
@@ -100,7 +101,7 @@
 
   .player video {
     width: 100%;
-    height: 100%;
+    height: 800px;
     display: block;
     border: 0;
     background: #000;
