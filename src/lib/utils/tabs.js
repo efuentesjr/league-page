@@ -7,11 +7,23 @@ export const tabs = [
         dest: '/',
         key: 'home',					
     },
+	{
+  		icon: 'smart_display',
+  		label: 'Weekly Recap',
+  		dest: '/weekly-recap',
+		key: 'weekly-recap',
+	},
     {
         icon: 'sports',
         label: 'Matchups',
         dest: '/matchups',
         key: 'matchups',						
+    },
+	{
+        icon: 'leaderboard',
+        label: 'Standings',
+        dest: '/standings',
+		key: 'standings',
     },
     {
         icon: 'swap_horiz',
@@ -19,13 +31,7 @@ export const tabs = [
         dest: '/transactions',
         key: 'transactions',
     },
-    {
-        icon: 'view_comfy',
-        label: 'Drafts',
-        dest: '/drafts',
-        key: 'drafts',
-    },
-    {
+	{
         icon: 'storage',
         label: 'Rosters',
         dest: '/rosters',
@@ -49,6 +55,12 @@ export const tabs = [
         dest: '/champ-videos',
 		key: 'champ-videos',
     },
+	{
+        icon: 'view_comfy',
+        label: 'Drafts',
+        dest: '/drafts',
+        key: 'drafts',
+    },
     {
         icon: 'article',
         label: 'Blog',
@@ -71,12 +83,6 @@ export const tabs = [
         label: 'Playoff Projections',
         dest: '/playoffs-projection',
 		key: 'playoffs-projection',
-    },
-    {
-        icon: 'leaderboard',
-        label: 'Standings',
-        dest: '/standings',
-		key: 'standings',
     },
     {
         icon: 'history_edu',
