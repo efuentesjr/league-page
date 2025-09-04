@@ -1,11 +1,13 @@
 <script>
-  // Cloudflare R2 public URLs (leave these as your real links)
+  import { tick } from 'svelte';
+
+  // Cloudflare R2 public URLs
   const VIDEOS = [
     {
       key: '2024',
       title: '2024 Cee Dees TDs - The Dynasty Begins',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2024-Cee-Dees-TDs-web.mp4',
-      poster: '/videos/2024-Cee-Dees-TDs-poster.jpg' // <- served from /static/videos
+      poster: '/videos/2024-Cee-Dees-TDs-poster.jpg'
     },
     {
       key: '2023',
@@ -21,22 +23,21 @@
     }
   ];
 
-  // track which cards are “playing”
   let playing = new Set();
-  const playRefs = new Map(); // key -> <video> element
 
-  function start(key) {
+  async function start(key) {
+    // flip to “playing” so the <video> renders
     playing = new Set(playing);
     playing.add(key);
-    // wait a tick for the <video> to mount, then play
-    queueMicrotask(() => {
-      const vid = playRefs.get(key);
-      if (vid) {
-        vid.controls = true;
-        const p = vid.play?.();
-        if (p && typeof p.catch === 'function') p.catch(() => {});
-      }
-    });
+
+    // wait for DOM to update, then play the new <video>
+    await tick();
+    const el = document.getElementById(`vid-${key}`);
+    if (el) {
+      el.controls = true;
+      const p = el.play?.();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    }
   }
 </script>
 
@@ -48,7 +49,7 @@
       {#if playing.has(v.key)}
         <!-- Cloudflare R2 video -->
         <video
-          bind:this={(el) => playRefs.set(v.key, el)}
+          id={`vid-${v.key}`}
           playsinline
           preload="metadata"
           poster={v.poster || ''}
