@@ -465,6 +465,7 @@ const digestBracket = ({bracket, playoffRecords, playoffRounds, matchupDifferent
 		const {sPR, mD, pSD} =  processMatchups({matchupWeek, seasonPointsRecord, record: playoffRecords, startWeek, matchupDifferentials, year})
 
 		postSeasonData = meshPostSeasonData(postSeasonData, pSD);
+
 		seasonPointsRecord = sPR;
 		matchupDifferentials = mD;
 	}
