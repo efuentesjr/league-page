@@ -3,8 +3,8 @@
   const RECAPS = [
     {
       key: 'wk1',
-      title: 'Week 1 Recap — Statement Wins & Surprise Lows',
-      src:  'https://pub-XXXXXXXX.r2.dev/recap-week-01.mp4',
+      title: 'Season Intro — Statement Wins & Surprise Lows',
+      src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/MFL%202025%20Intro.mp4',
       poster: 'https://pub-XXXXXXXX.r2.dev/posters/recap-week-01.jpg'
     },
   ];
