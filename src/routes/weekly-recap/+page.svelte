@@ -4,7 +4,7 @@
     {
       key: 'wk1',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/MFL%202025%20Intro.mp4',
-      poster: 'https://pub-XXXXXXXX.r2.dev/posters/recap-week-01.jpg'
+      poster: '/videos/LOGO1.jpg'
     },
   ];
 
