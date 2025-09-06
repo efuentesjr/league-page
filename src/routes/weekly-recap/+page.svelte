@@ -3,7 +3,6 @@
   const RECAPS = [
     {
       key: 'wk1',
-      title: 'Season Intro — Statement Wins & Surprise Lows',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/MFL%202025%20Intro.mp4',
       poster: 'https://pub-XXXXXXXX.r2.dev/posters/recap-week-01.jpg'
     },
@@ -18,8 +17,8 @@
 </script>
 
 <div class="wrap">
-  <h1 class="title">Weekly Recap</h1>
-  <p class="subtitle">Fast highlights, big swings, and who’s hot/not this week.</p>
+  <h1 class="title">Season Intro</h1>
+  <p class="subtitle"></p>
 
   {#each RECAPS as v}
     <section class="card">
