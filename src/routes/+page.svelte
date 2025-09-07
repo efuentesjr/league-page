@@ -235,7 +235,7 @@
 		</video>
 
 		{#if muted}
-			<button class="sound-toggle" on:click={unmute} aria-label="Unmute video">
+			<button class="sound-toggle" onclick={unmute} aria-label="Unmute video">
 				🔊 Unmute
 			</button>
 		{/if}
