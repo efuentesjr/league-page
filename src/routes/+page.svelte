@@ -199,6 +199,7 @@
 			playsinline
 			preload="metadata"
 			poster={HERO_VIDEO.poster}
+			controls	<!-- gives user mute/ unmute toggle -->
 		>
 			<source src={HERO_VIDEO.src} type="video/mp4" />
 			Your browser does not support the video tag.
