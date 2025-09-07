@@ -38,12 +38,6 @@ export const tabs = [
 		      key: 'managers',
     },
     {
-  	    	icon: 'smart_display',
-  		    label: 'Weekly Recap',
-  		    dest: '/weekly-recap',
-		      key: 'weekly-recap',
-	   },
-    {
         icon: 'local_fire_department',
         label: 'Rivalry',
         dest: '/rivalry',
@@ -77,19 +71,19 @@ export const tabs = [
         icon: 'trending_up',
         label: 'Playoff Projections',
         dest: '/playoffs-projection',
-		      key: 'playoffs-projection',
+		key: 'playoffs-projection',
     },
     {
         icon: 'history_edu',
         label: 'Constitution',
         dest: '/constitution',
-	       	key: 'constitution',
+	    key: 'constitution',
     },
     {
         icon: 'lightbulb',
         label: 'Resources',
         dest: '/resources',
-	       	key: 'resources',
+	    key: 'resources',
     },
     {
         icon: 'sports_football',
