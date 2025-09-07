@@ -32,6 +32,17 @@
 	if (typeof window !== 'undefined') {
 		prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	}
+
+	// Sound toggle state
+	let videoEl;
+	let isMuted = true;
+
+	function toggleSound() {
+		if (videoEl) {
+			videoEl.muted = !videoEl.muted;
+			isMuted = videoEl.muted;
+		}
+	}
 </script>
 
 <style>
@@ -58,6 +69,25 @@
 		height: 100%;
 		display: block;
 		object-fit: cover;         /* fill without letterboxing */
+	}
+
+	/* 🔊 Sound toggle button */
+	.sound-toggle {
+		position: absolute;
+		bottom: 15px;
+		right: 15px;
+		background: rgba(0,0,0,0.6);
+		color: #fff;
+		border: none;
+		border-radius: 6px;
+		padding: 6px 12px;
+		cursor: pointer;
+		font-size: 0.9rem;
+		z-index: 2;
+		transition: background 0.2s ease;
+	}
+	.sound-toggle:hover {
+		background: rgba(0,0,0,0.8);
 	}
 
 	/* ===== Existing layout ===== */
@@ -194,21 +224,25 @@
 	{#if !prefersReducedMotion}
 		<video
 			autoplay
-			muted
 			loop
 			playsinline
 			preload="metadata"
 			poster={HERO_VIDEO.poster}
-			controls	<!-- gives user mute/ unmute toggle -->
+			muted
+			bind:this={videoEl}
 		>
 			<source src={HERO_VIDEO.src} type="video/mp4" />
 			Your browser does not support the video tag.
 		</video>
+		<button class="sound-toggle" on:click={toggleSound}>
+			{isMuted ? 'Unmute 🔊' : 'Mute 🔇'}
+		</button>
 	{:else}
 		<img src={HERO_VIDEO.poster} alt="Season intro" />
 	{/if}
 </div>
 
+<!-- ===== Rest of Home Layout ===== -->
 <div id="home">
 	<div id="main">
 		<div class="text">
