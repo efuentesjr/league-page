@@ -106,7 +106,7 @@
 		flex-grow: 1;
 		min-width: 320px;
 		margin: 0 auto;
-		padding: 40px 0;
+		padding: 10px 0;
 	}
 
 	.text {
