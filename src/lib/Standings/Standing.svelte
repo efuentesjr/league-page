@@ -15,7 +15,7 @@
 		border-radius: 50%;
 		height: 40px;
 		margin-right: 15px;
-		border: 0.25px solid #777;
+		border: 0.25px solid #775;
 	}
 
     :global(.contrastRow) {
