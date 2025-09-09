@@ -20,6 +20,32 @@
 	const podiumsData = getAwards();
 	const leagueTeamManagersData = getLeagueTeamManagers();
 
+// ✅ Hero video (Cloudflare R2)
+const HERO_VIDEO = {
+	src: '',
+	poster: ''
+};
+
+// Accessibility: detect reduced motion (avoid SSR window access)
+let prefersReducedMotion = false;
+onMount(() => {
+	prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+});
+
+// Sound toggle state
+let muted = true;
+let heroEl;
+
+function unmute() {
+	muted = false;
+	if (heroEl) {
+		heroEl.muted = false;
+		// If browser paused video when toggling, resume
+		const p = heroEl.play?.();
+		if (p && typeof p.catch === 'function') p.catch(() => {});
+	}
+}
+</script>
 
 <style>
 	:global(html, body) {
