@@ -22,8 +22,8 @@
 
 	// ✅ Hero video (Cloudflare R2)
 	const HERO_VIDEO = {
-		src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/MFL%202025%20Intro.mp4',
-		poster: '/videos/LOGO1.jpg'
+		src: '',
+		poster: ''
 	};
 
 	// Accessibility: detect reduced motion (avoid SSR window access)
