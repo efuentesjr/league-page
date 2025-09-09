@@ -1,18 +1,12 @@
-<script>
-	import { Standings } from '$lib/components'
+import { getLeagueStandings, getLeagueTeamManagers } from '$lib/utils/helper';
 
-	export let data;
-	const {standingsData, leagueTeamManagersData} = data;
-</script>
+export async function load() {
 
-<style>
-	.holder {
-		position: relative;
-		z-index: 1;
-		text-align: center;
-	}
-</style>
+    const standingsData = getLeagueStandings();
+    const leagueTeamManagersData = getLeagueTeamManagers();
 
-<div class="holder">
-	<Standings {standingsData} {leagueTeamManagersData} />
-</div>
+    return {
+        standingsData,
+        leagueTeamManagersData,
+    };
+}
