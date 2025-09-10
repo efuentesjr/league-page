@@ -20,49 +20,50 @@
 	const podiumsData = getAwards();
 	const leagueTeamManagersData = getLeagueTeamManagers();
 
-// ✅ Hero video (Cloudflare R2)
-const HERO_VIDEO = {
-	src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/MFFL%20WK.mp4',
-	poster: ''
-};
+	// ✅ Hero video (Cloudflare R2)
+	const HERO_VIDEO = {
+		src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/MFFL%20WK.mp4',
+		poster: 'static/videos/LOGO1.jpg'
+	};
 
-// Accessibility: detect reduced motion (avoid SSR window access)
-let prefersReducedMotion = false;
-onMount(() => {
-	prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-});
+	// Accessibility: detect reduced motion (avoid SSR window access)
+	let prefersReducedMotion = false;
+	onMount(() => {
+		prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+	});
 
-// Sound toggle state
-let muted = true;
-let heroEl;
+	// --- Minimal controls: Mute/Unmute + reference to video element ---
+	let heroEl;
+	let muted = true; // start muted for autoplay
 
-function unmute() {
-	muted = false;
-	if (heroEl) {
-		heroEl.muted = false;
-		// If browser paused video when toggling, resume
-		const p = heroEl.play?.();
-		if (p && typeof p.catch === 'function') p.catch(() => {});
+	function toggleMute() {
+		muted = !muted;
+		if (heroEl) {
+			heroEl.muted = muted;
+			// if unmuted and autoplay paused it, try to play
+			if (!muted && heroEl.paused) {
+				const p = heroEl.play?.();
+				if (p?.catch) p.catch(() => {});
+			}
+		}
 	}
-}
 </script>
 
 <style>
 	:global(html, body) {
-		/* prevent horizontal scrollbars from full-bleed hero */
 		overflow-x: hidden;
 	}
 
 	/* ===== Hero video (full-bleed banner) ===== */
 	.hero-video {
 		position: relative;
-		width: 100vw;               /* stretch edge-to-edge */
-		aspect-ratio: 16 / 9;       /* cinematic ratio; swap for fixed height if you prefer */
+		width: 100vw;
+		aspect-ratio: 16 / 9;
 		background: #000;
 		overflow: hidden;
 		left: 50%;
 		right: 50%;
-		margin-left: -50vw;         /* break out of centered container */
+		margin-left: -50vw;
 		margin-right: -50vw;
 	}
 
@@ -71,27 +72,33 @@ function unmute() {
 		width: 100%;
 		height: 100%;
 		display: block;
-		object-fit: cover;          /* fill without letterboxing */
+		object-fit: cover;
 	}
 
-	/* Unmute button */
-	.sound-toggle {
+	/* Controls: minimal buttons */
+	.controls {
 		position: absolute;
-		right: 14px;
-		bottom: 14px;
+		right: 12px;
+		bottom: 12px;
+		display: flex;
+		gap: 8px;
 		z-index: 2;
+	}
+
+	.ctrl-btn {
 		border: 0;
 		border-radius: 8px;
-		padding: 10px 12px;
-		background: rgba(0, 0, 0, 0.55);
+		padding: 8px 10px;
+		background: rgba(0,0,0,0.55);
 		color: #fff;
 		font-weight: 600;
 		font-size: 0.9rem;
 		cursor: pointer;
 		backdrop-filter: blur(2px);
 		transition: transform 120ms ease, background 120ms ease;
+		text-decoration: none; /* for <a> */
 	}
-	.sound-toggle:hover { transform: translateY(-1px); background: rgba(0,0,0,0.7); }
+	.ctrl-btn:hover { transform: translateY(-1px); background: rgba(0,0,0,0.7); }
 
 	/* ===== Existing layout ===== */
 	#home {
@@ -134,19 +141,11 @@ function unmute() {
 			width: 100%;
 			box-shadow: none;
 		}
-		#home {
-			flex-wrap: wrap;
-		}
+		#home { flex-wrap: wrap; }
 	}
 
-	.transactions {
-		display: block;
-		width: 95%;
-		margin: 10px auto;
-	}
-
+	.transactions { display: block; width: 95%; margin: 10px auto; }
 	.center { text-align: center; }
-
 	h6 { text-align: center; }
 
 	.homeBanner {
@@ -195,11 +194,11 @@ function unmute() {
 
 	h4 {
 		text-align: center;
-		font-size: 2em; /* Bigger font */
-		font-weight: bold; /* Make it bold */
-		font-family: 'Arial', sans-serif; /* Change font */
-		color: #0047ab; /* Dark blue */
-		text-transform: uppercase; /* Make text uppercase */
+		font-size: 2em;
+		font-weight: bold;
+		font-family: 'Arial', sans-serif;
+		color: #0047ab;
+		text-transform: uppercase;
 	}
 
 	.label {
@@ -218,7 +217,7 @@ function unmute() {
 	}
 </style>
 
-<!-- ===== Hero video block (autoplaying intro, with Unmute) ===== -->
+<!-- ===== Hero video block (autoplaying intro with Mute/Unmute + Expand) ===== -->
 <div class="hero-video">
 	{#if !prefersReducedMotion}
 		<video
@@ -234,11 +233,22 @@ function unmute() {
 			Your browser does not support the video tag.
 		</video>
 
-		{#if muted}
-			<button class="sound-toggle" onclick={unmute} aria-label="Unmute video">
-				🔊 Unmute
+		<!-- Minimal controls -->
+		<div class="controls">
+			<button class="ctrl-btn" on:click={toggleMute} aria-label="Toggle sound">
+				{#if muted}🔊 Unmute{:/if}{#if !muted}🔇 Mute{/if}
 			</button>
-		{/if}
+			<a
+				class="ctrl-btn"
+				href={HERO_VIDEO.src}
+				target="_blank"
+				rel="noopener"
+				aria-label="Open video in Cloudflare"
+				title="Open video in Cloudflare"
+			>
+				⤢ Expand
+			</a>
+		</div>
 	{:else}
 		<img src={HERO_VIDEO.poster} alt="Season intro" />
 	{/if}
@@ -248,9 +258,7 @@ function unmute() {
 	<div id="main">
 		<div class="text">
 			<h4>{leagueName}</h4>
-			<!-- homepageText contains the intro text for your league, this gets edited in /src/lib/utils/leagueInfo.js -->
 			{@html homepageText }
-			<!-- Most recent Blog Post (if enabled) -->
 			{#if enableBlog}
 				<HomePost />
 			{/if}
@@ -288,7 +296,7 @@ function unmute() {
 					<h4>{podiums[0].year} Fantasy Champ</h4>
 					<div
 						id="champ"
-						onclick={() => {
+						on:click={() => {
 							if (managers.length)
 								gotoManager({
 									year: podiums[0].year,
@@ -306,7 +314,7 @@ function unmute() {
 					</div>
 					<span
 						class="label"
-						onclick={() =>
+						on:click={() =>
 							gotoManager({
 								year: podiums[0].year,
 								leagueTeamManagers,
