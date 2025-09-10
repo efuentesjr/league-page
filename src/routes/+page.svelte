@@ -12,7 +12,10 @@
 		waitForAll
 	} from '$lib/utils/helper';
 	import { Transactions, PowerRankings, HomePost } from '$lib/components';
-	import { getAvatarFromTeamManagers, getTeamFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
+	import {
+		getAvatarFromTeamManagers,
+		getTeamFromTeamManagers
+	} from '$lib/utils/helperFunctions/universalFunctions';
 	import { onMount } from 'svelte';
 
 	// Data loads
@@ -29,7 +32,8 @@
 	// Accessibility: detect reduced motion (avoid SSR window access)
 	let prefersReducedMotion = false;
 	onMount(() => {
-		prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+		prefersReducedMotion =
+			window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 	});
 
 	// --- Minimal controls: Mute/Unmute + reference to video element ---
@@ -89,7 +93,7 @@
 		border: 0;
 		border-radius: 8px;
 		padding: 8px 10px;
-		background: rgba(0,0,0,0.55);
+		background: rgba(0, 0, 0, 0.55);
 		color: #fff;
 		font-weight: 600;
 		font-size: 0.9rem;
@@ -98,7 +102,10 @@
 		transition: transform 120ms ease, background 120ms ease;
 		text-decoration: none; /* for <a> */
 	}
-	.ctrl-btn:hover { transform: translateY(-1px); background: rgba(0,0,0,0.7); }
+	.ctrl-btn:hover {
+		transform: translateY(-1px);
+		background: rgba(0, 0, 0, 0.7);
+	}
 
 	/* ===== Existing layout ===== */
 	#home {
@@ -141,12 +148,22 @@
 			width: 100%;
 			box-shadow: none;
 		}
-		#home { flex-wrap: wrap; }
+		#home {
+			flex-wrap: wrap;
+		}
 	}
 
-	.transactions { display: block; width: 95%; margin: 10px auto; }
-	.center { text-align: center; }
-	h6 { text-align: center; }
+	.transactions {
+		display: block;
+		width: 95%;
+		margin: 10px auto;
+	}
+	.center {
+		text-align: center;
+	}
+	h6 {
+		text-align: center;
+	}
 
 	.homeBanner {
 		background-color: var(--blueOne);
@@ -236,7 +253,7 @@
 		<!-- Minimal controls -->
 		<div class="controls">
 			<button class="ctrl-btn" on:click={toggleMute} aria-label="Toggle sound">
-				{#if muted}🔊 Unmute{:/if}{#if !muted}🔇 Mute{/if}
+				{#if muted}🔊 Unmute{:else}🔇 Mute{/if}
 			</button>
 			<a
 				class="ctrl-btn"
@@ -320,7 +337,11 @@
 								leagueTeamManagers,
 								rosterID: parseInt(podiums[0].champion)
 							})}
-						>{getTeamFromTeamManagers(leagueTeamManagers, podiums[0].champion, podiums[0].year).name}</span
+						>{getTeamFromTeamManagers(
+							leagueTeamManagers,
+							podiums[0].champion,
+							podiums[0].year
+						).name}</span
 					>
 				{:else}
 					<p class="center">No former champs.</p>
