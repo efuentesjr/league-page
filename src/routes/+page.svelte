@@ -22,7 +22,7 @@
 
 // ✅ Hero video (Cloudflare R2)
 const HERO_VIDEO = {
-	src: '',
+	src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/MFFL%20WK.mp4',
 	poster: ''
 };
 
