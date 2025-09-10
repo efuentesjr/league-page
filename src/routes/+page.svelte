@@ -35,22 +35,6 @@
 		prefersReducedMotion =
 			window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 	});
-
-	// --- Minimal controls: Mute/Unmute + reference to video element ---
-	let heroEl;
-	let muted = true; // start muted for autoplay
-
-	function toggleMute() {
-		muted = !muted;
-		if (heroEl) {
-			heroEl.muted = muted;
-			// if unmuted and autoplay paused it, try to play
-			if (!muted && heroEl.paused) {
-				const p = heroEl.play?.();
-				if (p?.catch) p.catch(() => {});
-			}
-		}
-	}
 </script>
 
 <style>
@@ -62,7 +46,7 @@
 	.hero-video {
 		position: relative;
 		width: 100vw;
-		aspect-ratio: 16 / 9;
+		aspect-ratio: 16 / 9; /* or set a fixed height if you prefer */
 		background: #000;
 		overflow: hidden;
 		left: 50%;
@@ -77,34 +61,6 @@
 		height: 100%;
 		display: block;
 		object-fit: cover;
-	}
-
-	/* Controls: minimal buttons */
-	.controls {
-		position: absolute;
-		right: 12px;
-		bottom: 12px;
-		display: flex;
-		gap: 8px;
-		z-index: 2;
-	}
-
-	.ctrl-btn {
-		border: 0;
-		border-radius: 8px;
-		padding: 8px 10px;
-		background: rgba(0, 0, 0, 0.55);
-		color: #fff;
-		font-weight: 600;
-		font-size: 0.9rem;
-		cursor: pointer;
-		backdrop-filter: blur(2px);
-		transition: transform 120ms ease, background 120ms ease;
-		text-decoration: none; /* for <a> */
-	}
-	.ctrl-btn:hover {
-		transform: translateY(-1px);
-		background: rgba(0, 0, 0, 0.7);
 	}
 
 	/* ===== Existing layout ===== */
@@ -148,22 +104,12 @@
 			width: 100%;
 			box-shadow: none;
 		}
-		#home {
-			flex-wrap: wrap;
-		}
+		#home { flex-wrap: wrap; }
 	}
 
-	.transactions {
-		display: block;
-		width: 95%;
-		margin: 10px auto;
-	}
-	.center {
-		text-align: center;
-	}
-	h6 {
-		text-align: center;
-	}
+	.transactions { display: block; width: 95%; margin: 10px auto; }
+	.center { text-align: center; }
+	h6 { text-align: center; }
 
 	.homeBanner {
 		background-color: var(--blueOne);
@@ -234,38 +180,23 @@
 	}
 </style>
 
-<!-- ===== Hero video block (autoplaying intro with Mute/Unmute + Expand) ===== -->
+<!-- ===== Hero video block (native controls only) ===== -->
 <div class="hero-video">
 	{#if !prefersReducedMotion}
 		<video
-			bind:this={heroEl}
 			autoplay
-			{muted}
+			muted
 			loop
 			playsinline
+			controls
 			preload="metadata"
 			poster={HERO_VIDEO.poster}
+			src={HERO_VIDEO.src}
 		>
+			<!-- Fallback if a specific source tag is preferred -->
 			<source src={HERO_VIDEO.src} type="video/mp4" />
 			Your browser does not support the video tag.
 		</video>
-
-		<!-- Minimal controls -->
-		<div class="controls">
-			<button class="ctrl-btn" on:click={toggleMute} aria-label="Toggle sound">
-				{#if muted}🔊 Unmute{:else}🔇 Mute{/if}
-			</button>
-			<a
-				class="ctrl-btn"
-				href={HERO_VIDEO.src}
-				target="_blank"
-				rel="noopener"
-				aria-label="Open video in Cloudflare"
-				title="Open video in Cloudflare"
-			>
-				⤢ Expand
-			</a>
-		</div>
 	{:else}
 		<img src={HERO_VIDEO.poster} alt="Season intro" />
 	{/if}
