@@ -1,8 +1,7 @@
 <script>
   import { PUBLIC_PROJECTIONS_URL } from '$env/static/public';
   console.log("Projections URL:", PUBLIC_PROJECTIONS_URL);
-</script>
-<script>
+
 	import LinearProgress from '@smui/linear-progress';
 	import {
 		getNflState,
