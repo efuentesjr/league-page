@@ -1,7 +1,9 @@
 <script>
   import { onMount } from "svelte";
+  export let data;
+  const { projections, sourceUrl, error } = data;
 
-  // Sort by DV (N, E, W, S) then by DivSTATUS (high → low)
+  // Sort by division (N, E, W, S) then by DivSTATUS (high → low)
   onMount(() => {
     const tbody = document.querySelector(".overlay table tbody");
     if (!tbody) return;
@@ -10,7 +12,6 @@
     const rows = Array.from(tbody.querySelectorAll("tr"));
 
     const getDivStatus = (text) => {
-      // expects like "C:24.7%"
       const match = text.match(/:\s*([\d.]+)%/);
       return match ? parseFloat(match[1]) : -Infinity;
     };
@@ -23,7 +24,7 @@
 
       const dsA = getDivStatus(a.cells[4].textContent);
       const dsB = getDivStatus(b.cells[4].textContent);
-      return dsB - dsA; // high → low
+      return dsB - dsA;
     });
 
     rows.forEach((r) => tbody.appendChild(r));
@@ -34,8 +35,11 @@
   <img src="/playoffs-projection/Stadium2.jpg" alt="Stadium2" />
   <h2 class="title">Playoffs AI Analysis</h2>
 
-  <!-- Overlay: table + legend together -->
   <div class="overlay">
+    {#if error}
+      <p class="text-red-500">Error loading projections: {error}</p>
+    {/if}
+
     <table>
       <thead>
         <tr>
@@ -52,26 +56,25 @@
         </tr>
       </thead>
       <tbody>
-          <tr><td>N</td><td><a href="/team/brute-force-attack">Brute Force Attack</a></td><td>0-0-0</td><td>0</td><td>C:24.7%</td><td>C:41.8% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
-          <tr><td>N</td><td><a href="/team/comeback-kid">Comeback Kid</a></td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.4%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
-          <tr><td>E</td><td><a href="/team/muad-dib">Muad'Dib 🎗</a></td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
-          <tr><td>S</td><td><a href="/team/slickbears">SlickBears 🎗</a></td><td>0-0-0</td><td>0</td><td>C:25.2%</td><td>C:42.1% T:17.0%</td><td>5</td><td>8.0-8.0</td><td>9</td><td>9.0-11.0</td></tr>
-          <tr><td>W</td><td><a href="/team/peoples-champ">People's Champ 🎗</a></td><td>0-0-0</td><td>0</td><td>C:25.1%</td><td>C:42.1% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
-          <tr><td>E</td><td><a href="/team/pete-weber-bowl-club">Pete Weber Bowl Club</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:41.8% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
-          <tr><td>E</td><td><a href="/team/fields-love-irving-pitts">Fields love irving pitts</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:42.0% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
-          <tr><td>S</td><td><a href="/team/blue-ballers">bLuE BaLLeRs</a></td><td>0-0-0</td><td>0</td><td>C:24.9%</td><td>C:41.9% T:17.3%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
-          <tr><td>W</td><td><a href="/team/88boyz11">88boyz11</a></td><td>0-0-0</td><td>0</td><td>C:25.1%</td><td>C:42.1% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
-          <tr><td>W</td><td><a href="/team/primetime-prodigies">PrimeTime Prodigies</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:42.0% T:17.0%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
-          <tr><td>S</td><td><a href="/team/texastimeshifts">TexasTimeshifts</a></td><td>0-0-0</td><td>0</td><td>C:24.9%</td><td>C:42.0% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
-          <tr><td>S</td><td><a href="/team/loud-and-stroud">Loud and Stroud</a></td><td>0-0-0</td><td>0</td><td>C:24.8%</td><td>C:41.7% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
-          <tr><td>N</td><td><a href="/team/bay-area-party-supplies">Bay Area Party Supplies</a></td><td>0-0-0</td><td>0</td><td>C:25.3%</td><td>C:42.1% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
-          <tr><td>E</td><td><a href="/team/vick2times">Vick2times</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:42.2% T:17.1%</td><td>5</td><td>8.0-8.0</td><td>10</td><td>9.0-11.0</td></tr>
-          <tr><td>N</td><td><a href="/team/ceedees-tds">CeeDees TDs 🏆</a></td><td>0-0-0</td><td>0</td><td>C:25.0%</td><td>C:41.9% T:17.2%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
-          <tr><td>W</td><td><a href="/team/do-it-to-them">Do it to them</a></td><td>0-0-0</td><td>0</td><td>C:24.6%</td><td>C:41.7% T:17.4%</td><td>5</td><td>8.0-8.0</td><td>11</td><td>9.0-11.0</td></tr>
-    </tbody>
+        {#each projections as t (t.teamId || t.teamName)}
+          <tr>
+            <td>{t.division}</td>
+            <td>
+              <a href={`/team/${t.teamId}`}>{t.teamName}</a>
+            </td>
+            <td>{t.wins}-{t.losses}{#if t.ties && t.ties>0}-{t.ties}{/if}</td>
+            <td>{t.points ?? 0}</td>
+            <td>{t.divStatus ?? ""}</td>
+            <td>{t.playStatus ?? ""}</td>
+            <td>{t.min ?? ""}</td>
+            <td>{t.targets ?? ""}</td>
+            <td>{t.gIn ?? ""}</td>
+            <td>{t.divTgts ?? ""}</td>
+          </tr>
+        {/each}
+      </tbody>
     </table>
 
-    <!-- Legend directly below table, INSIDE overlay -->
     <div class="legend">
       <strong>LEGEND:</strong><br />
       Status C = Clinch %<br />
@@ -107,7 +110,7 @@
   font-weight: bold;
   font-size: clamp(1.6rem, 3.6vw, 2.2rem);
   margin: 0;
-  white-space: nowrap; /* keep inline */
+  white-space: nowrap;
   color: white;
   text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
 }
@@ -146,8 +149,6 @@
 .overlay td:nth-child(2) { text-align: left; }
 .overlay a { color: #4da6ff; font-weight: bold; text-decoration: none; }
 .overlay a:hover { text-decoration: underline; }
-
-/* Legend inside JPG, plain white text */
 .legend {
   margin-top: 0.5rem;
   font-size: 0.7rem;
