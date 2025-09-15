@@ -1,12 +1,11 @@
 <script>
   import { onMount } from "svelte";
 
-  // server loader provides this (from +page.server.js)
+  // data from +page.server.js
   export let data;
   const { projections, sourceUrl, error } = data;
 
-  // ----- Optional: your Sleeper join (can keep or remove) -----
-  // If you’re not using the Sleeper helpers yet, you can comment this block out.
+  // ----- OPTIONAL Sleeper join (kept, but we’ll also render a fallback) -----
   import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
   import { managers } from "$lib/utils/leagueInfo";
 
@@ -16,14 +15,15 @@
   let usersById = {};
   let rows = [];
 
+  // map: slug -> ownerId (based on your managers config)
   const slugToOwnerId = {};
   if (Array.isArray(managers)) {
     for (const m of managers) {
       if (m?.slug && m?.managerID) slugToOwnerId[m.slug] = m.managerID;
     }
   }
-  const avatarUrl = (avatarId) =>
-    avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
+
+  const avatarUrl = (avatarId) => (avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "");
 
   function findRosterEntryByOwner(ownerId) {
     for (const rid of Object.keys(rosterMap)) {
@@ -40,54 +40,57 @@
     return null;
   }
 
+  // Build rows from projections + (if available) Sleeper live data
   function buildRows() {
-    rows = projections.map((p) => {
-      const slug = p.slug || p.teamId || p.teamSlug || "";
-      const ownerId = slugToOwnerId[slug];
+    // Start with a direct mapping from projections so we always render something
+    rows = projections.map((p) => ({
+      ...p,
+      slug: p.slug || p.teamId || p.teamSlug || "",
+      name: p.teamName || p.slug || "",
+      logoUrl: "",
+      href: p.slug ? `/team/${p.slug}` : "#"
+    }));
 
-      let displayName = slug;
-      let logo = "";
-      let href = slug ? `/team/${slug}` : "#";
+    // If we have Sleeper data, enrich names/logos
+    if (Object.keys(slugToOwnerId).length && Object.keys(usersById).length) {
+      rows = rows.map((r) => {
+        const ownerId = slugToOwnerId[r.slug];
+        let name = r.name;
+        let logo = r.logoUrl;
 
-      if (ownerId && usersById[ownerId]) {
-        const user = usersById[ownerId];
-        displayName = user.display_name || user.user_name || displayName;
-        logo = avatarUrl(user.avatar) || logo;
-      }
+        if (ownerId && usersById[ownerId]) {
+          const user = usersById[ownerId];
+          name = user.display_name || user.user_name || name;
+          logo = avatarUrl(user.avatar) || logo;
+        }
 
-      const rosterEntry = ownerId ? findRosterEntryByOwner(ownerId) : null;
-      if (rosterEntry?.team) {
-        displayName =
-          rosterEntry.team.displayName ||
-          rosterEntry.team.teamName ||
-          displayName;
-        logo =
-          rosterEntry.team.logoUrl ||
-          rosterEntry.team.avatarUrl ||
-          logo;
-      }
+        const rosterEntry = ownerId ? findRosterEntryByOwner(ownerId) : null;
+        if (rosterEntry?.team) {
+          name = rosterEntry.team.displayName || rosterEntry.team.teamName || name;
+          logo = rosterEntry.team.logoUrl || rosterEntry.team.avatarUrl || logo;
+        }
 
-      return { ...p, slug, name: displayName, logoUrl: logo, href };
-    });
+        return { ...r, name, logoUrl: logo };
+      });
+    }
   }
 
   onMount(async () => {
     try {
+      // load Sleeper data (same pipeline the standings page uses)
       ltm = await getLeagueTeamManagers();
       currentYear = ltm?.currentSeason ?? null;
-      rosterMap = (ltm?.teamManagersMap && currentYear)
-        ? (ltm.teamManagersMap[currentYear] || {})
-        : {};
+      rosterMap = (ltm?.teamManagersMap && currentYear) ? (ltm.teamManagersMap[currentYear] || {}) : {};
       usersById = ltm?.users || {};
     } catch (e) {
-      console.error("getLeagueTeamManagers failed:", e);
+      console.warn("getLeagueTeamManagers failed:", e);
       ltm = null; rosterMap = {}; usersById = {};
     } finally {
       buildRows();
     }
   });
 
-  // keep your visual sort after paint
+  // Keep your original visual sort after paint
   onMount(() => {
     const tbody = document.querySelector(".overlay table tbody");
     if (!tbody) return;
@@ -99,25 +102,25 @@
     };
 
     const sortRows = () => {
-      const rowsEls = Array.from(tbody.querySelectorAll("tr"));
-      rowsEls.sort((a, b) => {
-        const dvA = a.cells[0].textContent.trim();
-        const dvB = b.cells[0].textContent.trim();
+      const els = Array.from(tbody.querySelectorAll("tr"));
+      els.sort((a, b) => {
+        const dvA = a.cells[0]?.textContent.trim() || "";
+        const dvB = b.cells[0]?.textContent.trim() || "";
         const dvCmp = dvOrder.indexOf(dvA) - dvOrder.indexOf(dvB);
         if (dvCmp !== 0) return dvCmp;
-        const dsA = getDivStatus(a.cells[4].textContent);
-        const dsB = getDivStatus(b.cells[4].textContent);
+        const dsA = getDivStatus(a.cells[4]?.textContent || "");
+        const dsB = getDivStatus(b.cells[4]?.textContent || "");
         return dsB - dsA;
       });
-      rowsEls.forEach((r) => tbody.appendChild(r));
+      els.forEach((r) => tbody.appendChild(r));
     };
 
     setTimeout(sortRows, 0);
   });
 </script>
 
+<!-- No background image; simple dark container -->
 <div class="image-wrapper">
-  <img src="/playoffs-projection/Stadium2.jpg" alt="Stadium2" />
   <h2 class="title">Playoffs AI Analysis</h2>
 
   <div class="overlay">
@@ -125,10 +128,12 @@
       <p class="text-red-500">Error loading projections: {error}</p>
     {/if}
 
-    <!-- Debug: shows the exact URL being used -->
+    <!-- DEBUG: keep for now -->
     <div class="mb-2 text-xs opacity-70">
-      Source: {data?.sourceUrl}
+      <div><b>Source:</b> {data?.sourceUrl}</div>
+      <div><b>Loaded rows:</b> {rows?.length ?? 0}</div>
     </div>
+    <pre class="debug-json">{JSON.stringify(projections, null, 2)}</pre>
 
     <table>
       <thead>
@@ -152,7 +157,7 @@
             <td class="teamcell">
               <a href={r.href}>
                 {#if r.logoUrl}<img class="logo" src={r.logoUrl} alt={r.name} loading="lazy" />{/if}
-                {r.name}
+                {r.name || r.slug}
               </a>
             </td>
             <td>{r.wins}-{r.losses}{#if r.ties && r.ties>0}-{r.ties}{/if}</td>
@@ -185,20 +190,20 @@
 </div>
 
 <style>
-.image-wrapper { position: relative; max-width: 900px; margin: 0.5rem auto; }
-.image-wrapper img { display: block; width: 100%; border-radius: 8px; }
-.title { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); font-weight: bold; font-size: clamp(1.6rem, 3.6vw, 2.2rem); margin: 0; white-space: nowrap; color: white; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); }
-.overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(97%, 880px); max-height: 70%; overflow: auto; padding: 0.25rem 0.5rem; background: rgba(0,0,0,0.4); border-radius: 6px; }
-.overlay table { width: 100%; border-collapse: collapse; font-size: 0.75rem; line-height: 1rem; }
-.overlay th, .overlay td { padding: 2px 4px; text-align: center; white-space: nowrap; }
-.overlay th { background: rgba(0,0,0,0.6); color: white; }
+.image-wrapper { position: relative; max-width: 980px; margin: 1rem auto; background: #111; padding: 1rem 0 2rem; border-radius: 10px; }
+.title { text-align: center; font-weight: 800; font-size: clamp(1.6rem, 3.6vw, 2.2rem); color: #fff; margin: 0 0 0.5rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); }
+.overlay { width: min(97%, 920px); margin: 0 auto; max-height: 70vh; overflow: auto; padding: 0.5rem; background: rgba(0,0,0,0.35); border-radius: 8px; }
+.overlay table { width: 100%; border-collapse: collapse; font-size: 0.8rem; line-height: 1.1rem; }
+.overlay th, .overlay td { padding: 4px 6px; text-align: center; white-space: nowrap; }
+.overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
 .overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
 .overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
-.overlay a { color: #4da6ff; font-weight: bold; text-decoration: none; }
+.overlay a { color: #4da6ff; font-weight: 600; text-decoration: none; }
 .overlay a:hover { text-decoration: underline; }
 .teamcell { display:flex; align-items:center; gap:6px; }
 .logo { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; vertical-align: middle; }
-.legend { margin-top: 0.5rem; font-size: 0.7rem; line-height: 1rem; color: white; text-align: left; }
+.legend { margin-top: 0.6rem; font-size: 0.75rem; line-height: 1.05rem; color: white; text-align: left; }
 .legend strong { color: #ffd966; }
-.legend em { color: #ddd; font-size: 0.65rem; }
+.legend em { color: #ddd; font-size: 0.7rem; }
+.debug-json { font-size: 0.65rem; max-height: 160px; overflow: auto; color: #eaeaea; background: rgba(0,0,0,0.35); padding: 6px; border-radius: 6px; margin: 0 0 8px; }
 </style>
