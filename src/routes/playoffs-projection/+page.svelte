@@ -2,7 +2,6 @@
   // Data injected by +page.server.js (R2 JSON fetch)
   export let data;
 
-  // Be tolerant if server doesn't send all fields yet
   const {
     projections = [],
     error = null,
@@ -11,10 +10,10 @@
     sourceUrl = null
   } = data ?? {};
 
-  // Live name + avatar from Sleeper (same pipeline as Standings)
+  // Live Sleeper name + avatar (same pipeline as Standings)
   import { TeamLabel } from '$lib/components';
 
-  // --- helpers ---
+  // ---- helpers ----
   // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
   function parsePlayStatus(s) {
     if (!s) return { c: -Infinity, t: -Infinity };
@@ -25,11 +24,8 @@
 
   function humanTime(iso) {
     if (!iso) return '';
-    try {
-      return new Date(iso).toLocaleString();
-    } catch {
-      return iso;
-    }
+    try { return new Date(iso).toLocaleString(); }
+    catch { return iso; }
   }
 
   let rows = [];
@@ -52,13 +48,12 @@
         divTgts: p.divTgts ?? ''
       }));
 
-    // Sort by PlaySTATUS: Clinch % desc, then Tiebreak % desc
+    // Sort by PlaySTATUS: Clinch % desc, then T% desc
     rows.sort((a, b) => {
       const A = parsePlayStatus(a.playStatus);
       const B = parsePlayStatus(b.playStatus);
       if (B.c !== A.c) return B.c - A.c;
       if (B.t !== A.t) return B.t - A.t;
-      // stable fallback
       return (a.slug || '').localeCompare(b.slug || '');
     });
   }
@@ -69,7 +64,6 @@
 <div class="wrap">
   <h2 class="title">Playoffs AI Analysis</h2>
 
-  <!-- Optional little meta row -->
   {#if sourceUrl || lastModified || fetchedAt}
     <div class="meta">
       {#if sourceUrl}
@@ -106,12 +100,10 @@
         {#each rows as r (r.slug)}
           <tr>
             <td>{r.division}</td>
-
-            <!-- TeamLabel pulls live Sleeper name + avatar. DEBUG is ON. -->
             <td class="teamcell">
-              <TeamLabel slug={r.slug} href={`/team/${r.slug}`} size={24} debug />
+              <!-- TeamLabel shows the same live name/avatar as Standings -->
+              <TeamLabel slug={r.slug} href={`/team/${r.slug}`} size={24} />
             </td>
-
             <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
             <td>{r.points ?? 0}</td>
             <td>{r.divStatus ?? ''}</td>
@@ -170,5 +162,5 @@
 .overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
 .overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
 .overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
-.teamcell { display: flex; align-items: center; }
+.teamcell { display:flex; align-items:center; }
 </style>
