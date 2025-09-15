@@ -1,43 +1,41 @@
 <script>
   import { onMount } from "svelte";
 
-  // Data from +page.server.js (R2 JSON already fetched server-side)
+  // From +page.server.js (R2 fetch, no CORS issues)
   export let data;
   const { projections, error } = data;
 
-  // Same helpers your Standings page uses
+  // Sleeper helpers (same as Standings)
   import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
   import { managers } from "$lib/utils/leagueInfo";
 
+  // State
   let ltm = null;
   let currentYear = null;
-  let rosterMap = {};
-  let usersById = {};
+  let rosterMap = {};   // roster_id -> { team, managers }
+  let usersById = {};   // user_id -> user
   let rows = [];
 
-  // --- Maps from your config so we can render good names immediately ---
-  const slugToOwnerId = {};
-  const managersBySlug = new Map();
-  if (Array.isArray(managers)) {
-    for (const m of managers) {
-      if (m?.slug) managersBySlug.set(m.slug, m);         // m.name for nicer label
-      if (m?.slug && m?.managerID) slugToOwnerId[m.slug] = m.managerID;
-    }
-  }
+  // -------- helpers ----------
+  const slugify = (s = "") =>
+    s.toString().trim().toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
 
   const avatarUrl = (avatarId) =>
     avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
 
-  function findRosterEntryByOwner(ownerId) {
-    for (const rid of Object.keys(rosterMap)) {
-      const entry = rosterMap[rid];
-      if (entry?.managers?.some((m) => m?.user_id === ownerId || m?.managerID === ownerId)) return entry;
-      if (entry?.team?.owner_id === ownerId || entry?.team?.managerID === ownerId) return entry;
-    }
-    return null;
+  function primaryOwnerId(entry) {
+    // try managers[0].user_id, then team.owner_id, then team.managerID
+    return (
+      entry?.managers?.[0]?.user_id ??
+      entry?.team?.owner_id ??
+      entry?.team?.managerID ??
+      null
+    );
   }
 
-  // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
+  // Parse "C:41.8% T:17.2%" -> { c:41.8, t:17.2 }
   function parsePlayStatus(s) {
     if (!s) return { c: -Infinity, t: -Infinity };
     const c = Number((s.match(/C:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
@@ -45,83 +43,144 @@
     return { c, t };
   }
 
-  // Build final rows:
-  // A) start with ALL teams from managers[] so everyone shows
-  // B) merge projection fields by slug (if present)
-  // C) label with manager.name immediately; then upgrade with live Sleeper data
-  // D) sort by PlaySTATUS (C% desc, T% desc)
-  function buildRows() {
+  // Build a single display row given: slug, ownerId, projection patch
+  function composeRow({ slug, ownerId, proj = {} }) {
+    // projection fields with defaults
+    const r = {
+      slug,
+      division: proj.division ?? "",
+      wins: proj.wins ?? 0,
+      losses: proj.losses ?? 0,
+      ties: proj.ties ?? 0,
+      points: proj.points ?? 0,
+      divStatus: proj.divStatus ?? "",
+      playStatus: proj.playStatus ?? "",
+      min: proj.min ?? "",
+      targets: proj.targets ?? "",
+      gIn: proj.gIn ?? "",
+      divTgts: proj.divTgts ?? "",
+      name: proj.teamName || slug || "",
+      logoUrl: "",
+      href: slug ? `/team/${slug}` : "#"
+    };
+
+    // enrich from managers config (immediate nice label)
+    if (slug && Array.isArray(managers)) {
+      const m = managers.find((x) => x?.slug === slug);
+      if (m?.name) r.name = m.name;
+      if (!ownerId && m?.managerID) ownerId = m.managerID;
+    }
+
+    // enrich from Sleeper users
+    if (ownerId && usersById[ownerId]) {
+      const u = usersById[ownerId];
+      r.name = u.display_name || u.user_name || r.name;
+      r.logoUrl = avatarUrl(u.avatar) || r.logoUrl;
+    }
+
+    // enrich from roster entry team object (nicer teamName/logo)
+    const re = findRosterEntryByOwner(ownerId);
+    if (re?.team) {
+      r.name = re.team.displayName || re.team.teamName || r.name;
+      r.logoUrl = re.team.logoUrl || re.team.avatarUrl || r.logoUrl;
+    }
+
+    // if we still have no slug but we have a name, make a safe href-less row
+    if (!r.slug && r.name) {
+      r.href = "#";
+    }
+
+    return r;
+  }
+
+  function findRosterEntryByOwner(ownerId) {
+    for (const rid of Object.keys(rosterMap)) {
+      const entry = rosterMap[rid];
+      if (!entry) continue;
+      const pm = primaryOwnerId(entry);
+      if (pm && pm === ownerId) return entry;
+    }
+    return null;
+  }
+
+  // ------- builders --------
+
+  // Build rows from current rosters (best source of truth for "everyone")
+  function buildFromRosters() {
     const projBySlug = new Map(
       (projections || []).filter(p => p?.slug).map(p => [p.slug, p])
     );
 
-    rows = (Array.isArray(managers) ? managers : []).map((m) => {
-      const slug = m.slug;
-      const p = projBySlug.get(slug) || {};
+    const result = [];
+    const usedSlugs = new Set();
 
-      // Projection fields (default blanks/zeros if missing)
-      const division  = p.division ?? "";
-      const wins      = p.wins ?? 0;
-      const losses    = p.losses ?? 0;
-      const ties      = p.ties ?? 0;
-      const points    = p.points ?? 0;
-      const divStatus = p.divStatus ?? "";
-      const playStatus= p.playStatus ?? "";
-      const min       = p.min ?? "";
-      const targets   = p.targets ?? "";
-      const gIn       = p.gIn ?? "";
-      const divTgts   = p.divTgts ?? "";
+    // 1) every roster in the current season
+    for (const rid of Object.keys(rosterMap)) {
+      const entry = rosterMap[rid];
+      const ownerId = primaryOwnerId(entry);
+      const user = ownerId ? usersById[ownerId] : null;
 
-      // Name/logo now (fast): manager-config name, fallback slug
-      let name = managersBySlug.get(slug)?.name || slug;
-      let logoUrl = "";
-      const href = slug ? `/team/${slug}` : "#";
-
-      // Upgrade with live Sleeper data if available
-      const ownerId = slugToOwnerId[slug];
-      if (ownerId && usersById[ownerId]) {
-        const u = usersById[ownerId];
-        name = u.display_name || u.user_name || name;
-        logoUrl = avatarUrl(u.avatar) || logoUrl;
+      // try to find slug in managers by managerID
+      let slug = null;
+      if (Array.isArray(managers) && ownerId) {
+        const m = managers.find((x) => x?.managerID === ownerId);
+        slug = m?.slug ?? null;
       }
-      const re = ownerId ? findRosterEntryByOwner(ownerId) : null;
-      if (re?.team) {
-        name = re.team.displayName || re.team.teamName || name;
-        logoUrl = re.team.logoUrl || re.team.avatarUrl || logoUrl;
-      }
+      // fallback: slugify the user's display_name (still renders even w/o link)
+      if (!slug && user) slug = slugify(user.display_name || user.user_name || "");
 
-      return {
-        slug, division, wins, losses, ties, points,
-        divStatus, playStatus, min, targets, gIn, divTgts,
-        name, logoUrl, href
-      };
-    });
+      const proj = slug ? (projBySlug.get(slug) || {}) : {};
+      result.push(composeRow({ slug, ownerId, proj }));
+      if (slug) usedSlugs.add(slug);
+    }
 
-    // Sort by PlaySTATUS: C% desc, then T% desc
-    rows.sort((a, b) => {
+    // 2) any leftover projections that didn't match a roster (e.g., off-season)
+    for (const proj of projections || []) {
+      if (!proj?.slug || usedSlugs.has(proj.slug)) continue;
+      result.push(composeRow({ slug: proj.slug, ownerId: null, proj }));
+    }
+
+    return sortRows(result);
+  }
+
+  // Fallback: build from projections only (used before rosters are loaded)
+  function buildFromProjectionsOnly() {
+    const result = (projections || [])
+      .filter((p) => p?.slug)
+      .map((p) => composeRow({ slug: p.slug, ownerId: null, proj: p }));
+    return sortRows(result);
+  }
+
+  function sortRows(arr) {
+    // Sort by PlaySTATUS -> C% desc, then T% desc
+    arr.sort((a, b) => {
       const A = parsePlayStatus(a.playStatus);
       const B = parsePlayStatus(b.playStatus);
       if (B.c !== A.c) return B.c - A.c;
       if (B.t !== A.t) return B.t - A.t;
       return (a.name || "").localeCompare(b.name || "");
     });
+    return arr;
   }
 
-  // Build once immediately (so you see data even before Sleeper returns)
-  buildRows();
+  // Initial render: projections (so page is never empty)
+  rows = buildFromProjectionsOnly();
 
-  // Then fetch Sleeper live data and rebuild to upgrade names/avatars
+  // After mount: pull Sleeper data and rebuild from rosters
   onMount(async () => {
     try {
       ltm = await getLeagueTeamManagers();
       currentYear = ltm?.currentSeason ?? null;
-      rosterMap = (ltm?.teamManagersMap && currentYear) ? (ltm.teamManagersMap[currentYear] || {}) : {};
+      rosterMap =
+        (ltm?.teamManagersMap && currentYear && ltm.teamManagersMap[currentYear]) || {};
       usersById = ltm?.users || {};
     } catch (e) {
       console.warn("getLeagueTeamManagers failed:", e);
-      ltm = null; rosterMap = {}; usersById = {};
+      rosterMap = {};
+      usersById = {};
     } finally {
-      buildRows(); // upgrade rows with live names/avatars
+      // if we have rosters, switch to roster-based render (shows ALL teams)
+      rows = Object.keys(rosterMap).length ? buildFromRosters() : buildFromProjectionsOnly();
     }
   });
 </script>
@@ -150,14 +209,19 @@
         </tr>
       </thead>
       <tbody>
-        {#each rows as r (r.slug)}
+        {#each rows as r, i (r.slug || i)}
           <tr>
             <td>{r.division}</td>
             <td class="teamcell">
-              <a href={r.href}>
+              {#if r.href && r.href !== "#"}
+                <a href={r.href}>
+                  {#if r.logoUrl}<img class="logo" src={r.logoUrl} alt={r.name} loading="lazy" />{/if}
+                  {r.name}
+                </a>
+              {:else}
                 {#if r.logoUrl}<img class="logo" src={r.logoUrl} alt={r.name} loading="lazy" />{/if}
-                {r.name}
-              </a>
+                <span>{r.name}</span>
+              {/if}
             </td>
             <td>{r.wins}-{r.losses}{#if r.ties && r.ties>0}-{r.ties}{/if}</td>
             <td>{r.points ?? 0}</td>
