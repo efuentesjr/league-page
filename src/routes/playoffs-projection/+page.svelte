@@ -1,24 +1,20 @@
 <script>
   import { onMount } from "svelte";
 
-  // Your helpers (from your snippet & existing site)
+  // Uses your helpers exactly where you said they live
   import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
-  import { managers } from "$lib/utils/leagueInfo"; // local config list you already use elsewhere
+  import { managers } from "$lib/utils/leagueInfo";
 
   export let data;
   const { projections, sourceUrl, error } = data;
 
-  // runtime data from Sleeper
-  let ltm = null;                  // full object from getLeagueTeamManagers()
+  let ltm = null;            // full object from getLeagueTeamManagers()
   let currentYear = null;
-  let rosterMap = {};              // roster_id -> { team, managers }
-  let usersById = {};              // user_id -> user
+  let rosterMap = {};        // roster_id -> { team, managers }
+  let usersById = {};        // user_id -> user
+  let rows = [];             // merged rows for the table
 
-  // resolved rows for table (projections + live name/logo/link)
-  let rows = [];
-
-  // Build a fast slug -> Sleeper user_id map from your local managers config
-  // Assumes your managers[] has { managerID, slug } entries (common in your codebase).
+  // Build slug -> Sleeper owner mapping from your local managers config
   const slugToOwnerId = {};
   if (Array.isArray(managers)) {
     for (const m of managers) {
@@ -26,21 +22,17 @@
     }
   }
 
-  // helper: Sleeper avatar id -> URL
   const avatarUrl = (avatarId) =>
     avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
 
-  // Try to find the roster entry for a given ownerId
   function findRosterEntryByOwner(ownerId) {
     for (const rid of Object.keys(rosterMap)) {
       const entry = rosterMap[rid];
-      // entry.managers is usually an array; try to match user_id or owner_id fields
       if (entry?.managers && Array.isArray(entry.managers)) {
         if (entry.managers.some((m) => m?.user_id === ownerId || m?.managerID === ownerId)) {
           return entry;
         }
       }
-      // sometimes team has owner info:
       if (entry?.team?.owner_id === ownerId || entry?.team?.managerID === ownerId) {
         return entry;
       }
@@ -48,10 +40,9 @@
     return null;
   }
 
-  // Build rows = projections joined with live team data
   function buildRows() {
     rows = projections.map((p) => {
-      const slug = p.slug || p.teamId || p.teamSlug || ""; // tolerate a few keys; prefer "slug"
+      const slug = p.slug || p.teamId || p.teamSlug || "";
       const ownerId = slugToOwnerId[slug];
 
       let displayName = slug;
@@ -60,15 +51,12 @@
 
       if (ownerId && usersById[ownerId]) {
         const user = usersById[ownerId];
-        // Prefer your custom display_name (you set it in processUsers)
         displayName = user.display_name || user.user_name || displayName;
         logo = avatarUrl(user.avatar) || logo;
       }
 
-      // If we can find a roster entry, prefer any richer team name/logo it carries
       const rosterEntry = ownerId ? findRosterEntryByOwner(ownerId) : null;
       if (rosterEntry?.team) {
-        // try common fields your getTeamData() might provide
         displayName =
           rosterEntry.team.displayName ||
           rosterEntry.team.teamName ||
@@ -89,7 +77,6 @@
     });
   }
 
-  // Load Sleeper-linked data once page mounts
   onMount(async () => {
     try {
       ltm = await getLeagueTeamManagers();
@@ -105,11 +92,10 @@
       usersById = {};
     } finally {
       buildRows();
-      // If projections were to change dynamically, you could rebuild here again.
     }
   });
 
-  // Keep your visual sort (N,E,W,S then by DivSTATUS descending) after DOM paints
+  // Keep your original visual sort (N,E,W,S then DivSTATUS desc) after paint
   onMount(() => {
     const tbody = document.querySelector(".overlay table tbody");
     if (!tbody) return;
@@ -134,7 +120,6 @@
       rowsEls.forEach((r) => tbody.appendChild(r));
     };
 
-    // allow initial render then sort
     setTimeout(sortRows, 0);
   });
 </script>
