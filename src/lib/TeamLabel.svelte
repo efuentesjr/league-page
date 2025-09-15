@@ -4,19 +4,32 @@
   import { managers } from "$lib/utils/leagueInfo";
 
   export let slug = "";      // site team slug (e.g., "do-it-to-them")
-  export let href = "";      // optional link to the team page
+  export let href = "";      // optional team link
   export let size = 26;      // avatar size in px
-  export let debug = false;  // <<< turn on logging
+  export let debug = false;  // turn on to log diagnostics
 
   let name = slug;           // fallback until Sleeper data loads
   let logoUrl = "";          // will be filled from roster/team or user
+  let matchedBy = "none";    // for debugging
 
   // ---------- helpers ----------
   const asId = (v) => (v == null ? null : String(v));
   const sleeperAvatar = (avatarId) =>
     avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
 
-  // Try all common logo fields your app might be using
+  // Match your site's slug style: lowercase, diacritics removed, spaces/punct → "-"
+  function mkSlug(str) {
+    return (str || "")
+      .toString()
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/&/g, " and ")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .replace(/-{2,}/g, "-");
+  }
+
   function pickLogo(team = {}) {
     return (
       team.logoUrl ||
@@ -77,7 +90,32 @@
     return null;
   }
 
-  // Managers config record for this slug
+  function findRosterEntryBySlug(map = {}, usersById = {}, wantedSlug) {
+    for (const rid of Object.keys(map)) {
+      const entry = map[rid];
+      if (!entry) continue;
+
+      const t = entry.team || {};
+      const teamCandidates = [
+        t.displayName,
+        t.teamName
+      ].filter(Boolean);
+
+      // also try owner's user display names
+      for (const m of entry.managers || []) {
+        const uid = asId(m?.user_id || m?.managerID);
+        if (uid && usersById[uid]) {
+          teamCandidates.push(usersById[uid].display_name, usersById[uid].user_name);
+        }
+      }
+
+      const slugs = teamCandidates.filter(Boolean).map(mkSlug);
+      if (slugs.includes(wantedSlug)) return entry;
+    }
+    return null;
+  }
+
+  // Managers config record for this slug (may be missing/mismatched)
   const mgr = Array.isArray(managers) ? managers.find((m) => m?.slug === slug) : null;
   if (mgr?.name) name = mgr.name;
   const ownerId = asId(mgr?.managerID);
@@ -89,37 +127,62 @@
       const currentSeason = ltm?.currentSeason;
       const teamManagersMap = ltm?.teamManagersMap?.[currentSeason] || {};
 
-      // 1) Prefer roster team metadata (custom team logo + display name)
-      const re = findRosterEntryByOwner(teamManagersMap, ownerId);
-      const teamObj = re?.team || null;
+      let re = null;
+      let teamObj = null;
 
+      // Path A: exact owner match from managers[] (if provided)
+      if (ownerId) {
+        re = findRosterEntryByOwner(teamManagersMap, ownerId);
+        if (re) {
+          matchedBy = "ownerId";
+          teamObj = re.team || {};
+        }
+      }
+
+      // Path B: slugify roster names and match to our page slug
+      if (!re) {
+        re = findRosterEntryBySlug(teamManagersMap, usersById, slug);
+        if (re) {
+          matchedBy = "slugified-name";
+          teamObj = re.team || {};
+        }
+      }
+
+      // Use team name/logo from roster
       if (teamObj) {
-        let candidateLogo = pickLogo(teamObj);
-        if (!candidateLogo) candidateLogo = huntLogoUrl(teamObj);
+        let candidateLogo = pickLogo(teamObj) || huntLogoUrl(teamObj);
         if (candidateLogo) logoUrl = candidateLogo;
 
         const candidateName = pickName(teamObj, {}, name);
         if (candidateName) name = candidateName;
       }
 
-      // 2) Fallback to Sleeper user avatar/display name
-      const u = ownerId ? usersById[ownerId] : null;
-      if (u) {
-        if (!logoUrl) logoUrl = sleeperAvatar(u.avatar);
-        if (!name) name = pickName({}, u, slug);
+      // Fallback: user avatar/name
+      // Prefer the first manager on the roster entry; else fallback to mapped ownerId
+      let user = null;
+      const firstMgrId = re?.managers?.[0] ? asId(re.managers[0].user_id || re.managers[0].managerID) : null;
+      if (firstMgrId && usersById[firstMgrId]) {
+        user = usersById[firstMgrId];
+      } else if (ownerId && usersById[ownerId]) {
+        user = usersById[ownerId];
+      }
+
+      if (user) {
+        if (!logoUrl) logoUrl = sleeperAvatar(user.avatar);
+        if (!name) name = pickName({}, user, slug);
       }
 
       if (debug) {
         console.log("[TeamLabel]", {
           slug,
           ownerId,
+          matchedBy,
           gotUsers: Object.keys(usersById).length,
-          hasUser: !!(ownerId && usersById[ownerId]),
           rosterFound: !!re,
           teamKeys: teamObj ? Object.keys(teamObj) : [],
           chosenLogo: logoUrl,
           chosenName: name,
-          userAvatarId: ownerId && usersById[ownerId] ? usersById[ownerId].avatar : null
+          userAvatarId: user?.avatar ?? null
         });
       }
     } catch (err) {
