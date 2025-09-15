@@ -1,28 +1,10 @@
 <script>
-  import { onMount } from "svelte";
-
-  // From +page.server.js (R2 fetch, no CORS)
+  // R2 data injected by +page.server.js (already avoids CORS)
   export let data;
   const { projections, error } = data;
 
-  // Same helpers your Standings page uses
-  import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
-  import { managers } from "$lib/utils/leagueInfo";
-
-  // state
-  let usersById = {};
-  let rows = [];
-
-  // slug -> ownerId from your managers config
-  const slugToOwnerId = {};
-  if (Array.isArray(managers)) {
-    for (const m of managers) {
-      if (m?.slug && m?.managerID) slugToOwnerId[m.slug] = m.managerID;
-    }
-  }
-
-  const avatarUrl = (avatarId) =>
-    avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
+  // Live team identity (name + avatar) from the same pipeline as Standings
+  import { TeamLabel } from '$lib/components';
 
   // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
   function parsePlayStatus(s) {
@@ -32,67 +14,38 @@
     return { c, t };
   }
 
+  let rows = [];
+
   function buildRows() {
     rows = (projections || [])
-      .filter(p => p?.slug)
-      .map(p => {
-        const slug = p.slug;
+      .filter((p) => p?.slug)
+      .map((p) => ({
+        slug: p.slug,
+        division: p.division ?? "",
+        wins: p.wins ?? 0,
+        losses: p.losses ?? 0,
+        ties: p.ties ?? 0,
+        points: p.points ?? 0,
+        divStatus: p.divStatus ?? "",
+        playStatus: p.playStatus ?? "",
+        min: p.min ?? "",
+        targets: p.targets ?? "",
+        gIn: p.gIn ?? "",
+        divTgts: p.divTgts ?? ""
+      }));
 
-        // base row from JSON
-        let name = slug;
-        let logoUrl = "";
-        const href = `/team/${slug}`;
-
-        // enrich name/avatar from Sleeper (if we can map slug -> owner)
-        const ownerId = slugToOwnerId[slug];
-        if (ownerId && usersById[ownerId]) {
-          const u = usersById[ownerId];
-          name = u.display_name || u.user_name || name;
-          logoUrl = avatarUrl(u.avatar) || logoUrl;
-        }
-
-        return {
-          slug,
-          division: p.division ?? "",
-          wins: p.wins ?? 0,
-          losses: p.losses ?? 0,
-          ties: p.ties ?? 0,
-          points: p.points ?? 0,
-          divStatus: p.divStatus ?? "",
-          playStatus: p.playStatus ?? "",
-          min: p.min ?? "",
-          targets: p.targets ?? "",
-          gIn: p.gIn ?? "",
-          divTgts: p.divTgts ?? "",
-          name, logoUrl, href
-        };
-      });
-
-    // sort by PlaySTATUS: C% desc, then T% desc
+    // Sort by PlaySTATUS: first by C% desc, then by T% desc
     rows.sort((a, b) => {
       const A = parsePlayStatus(a.playStatus);
       const B = parsePlayStatus(b.playStatus);
       if (B.c !== A.c) return B.c - A.c;
       if (B.t !== A.t) return B.t - A.t;
-      return (a.name || "").localeCompare(b.name || "");
+      // stable fallback
+      return (a.slug || "").localeCompare(b.slug || "");
     });
   }
 
-  // initial build (JSON only, renders instantly)
   buildRows();
-
-  // upgrade names/avatars from Sleeper once mounted
-  onMount(async () => {
-    try {
-      const ltm = await getLeagueTeamManagers();
-      usersById = ltm?.users || {};
-    } catch (e) {
-      console.warn("getLeagueTeamManagers failed:", e);
-      usersById = {};
-    } finally {
-      buildRows(); // rebuild to apply live names/avatars
-    }
-  });
 </script>
 
 <div class="wrap">
@@ -123,12 +76,10 @@
           <tr>
             <td>{r.division}</td>
             <td class="teamcell">
-              <a href={r.href}>
-                {#if r.logoUrl}<img class="logo" src={r.logoUrl} alt={r.name} loading="lazy" />{/if}
-                {r.name}
-              </a>
+              <!-- Live name + avatar (piggy-backs Sleeper like Standings) -->
+              <TeamLabel slug={r.slug} href={`/team/${r.slug}`} />
             </td>
-            <td>{r.wins}-{r.losses}{#if r.ties && r.ties>0}-{r.ties}{/if}</td>
+            <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
             <td>{r.points ?? 0}</td>
             <td>{r.divStatus ?? ""}</td>
             <td>{r.playStatus ?? ""}</td>
@@ -174,8 +125,5 @@
 .overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
 .overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
 .overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
-.overlay a { color: #4da6ff; font-weight: 600; text-decoration: none; }
-.overlay a:hover { text-decoration: underline; }
-.teamcell { display:flex; align-items:center; gap:6px; }
-.logo { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; vertical-align: middle; }
+.teamcell { display: flex; align-items: center; }
 </style>
