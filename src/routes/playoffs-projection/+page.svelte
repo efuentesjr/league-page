@@ -1,11 +1,11 @@
 <script>
   import { onMount } from "svelte";
 
-  // data from +page.server.js (already fetching from R2 server-side)
+  // Data from +page.server.js (R2 JSON already fetched server-side)
   export let data;
   const { projections, error } = data;
 
-  // Sleeper helpers (same ones your Standings page uses)
+  // Same helpers your Standings page uses
   import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
   import { managers } from "$lib/utils/leagueInfo";
 
@@ -15,10 +15,12 @@
   let usersById = {};
   let rows = [];
 
-  // Map slug -> ownerId from your managers config (if present)
+  // --- Maps from your config so we can render good names immediately ---
   const slugToOwnerId = {};
+  const managersBySlug = new Map();
   if (Array.isArray(managers)) {
     for (const m of managers) {
+      if (m?.slug) managersBySlug.set(m.slug, m);         // m.name for nicer label
       if (m?.slug && m?.managerID) slugToOwnerId[m.slug] = m.managerID;
     }
   }
@@ -29,14 +31,8 @@
   function findRosterEntryByOwner(ownerId) {
     for (const rid of Object.keys(rosterMap)) {
       const entry = rosterMap[rid];
-      if (entry?.managers && Array.isArray(entry.managers)) {
-        if (entry.managers.some((m) => m?.user_id === ownerId || m?.managerID === ownerId)) {
-          return entry;
-        }
-      }
-      if (entry?.team?.owner_id === ownerId || entry?.team?.managerID === ownerId) {
-        return entry;
-      }
+      if (entry?.managers?.some((m) => m?.user_id === ownerId || m?.managerID === ownerId)) return entry;
+      if (entry?.team?.owner_id === ownerId || entry?.team?.managerID === ownerId) return entry;
     }
     return null;
   }
@@ -50,86 +46,58 @@
   }
 
   // Build final rows:
-  // 1) start with projections so we always render immediately
-  // 2) enrich with Sleeper names/logos
-  // 3) add any teams missing from projections (from managers/Sleeper)
-  // 4) sort by PlaySTATUS (C% desc, T% desc)
+  // A) start with ALL teams from managers[] so everyone shows
+  // B) merge projection fields by slug (if present)
+  // C) label with manager.name immediately; then upgrade with live Sleeper data
+  // D) sort by PlaySTATUS (C% desc, T% desc)
   function buildRows() {
-    // index projections by slug for quick lookup
     const projBySlug = new Map(
       (projections || []).filter(p => p?.slug).map(p => [p.slug, p])
     );
 
-    // 1) start with projections
-    rows = (projections || [])
-      .filter(p => p?.slug)
-      .map((p) => ({
-        slug: p.slug,
-        division: p.division ?? "",
-        wins: p.wins ?? 0,
-        losses: p.losses ?? 0,
-        ties: p.ties ?? 0,
-        points: p.points ?? 0,
-        divStatus: p.divStatus ?? "",
-        playStatus: p.playStatus ?? "",
-        min: p.min ?? "",
-        targets: p.targets ?? "",
-        gIn: p.gIn ?? "",
-        divTgts: p.divTgts ?? "",
-        name: p.slug,            // will be replaced by Sleeper if available
-        logoUrl: "",
-        href: p.slug ? `/team/${p.slug}` : "#"
-      }));
+    rows = (Array.isArray(managers) ? managers : []).map((m) => {
+      const slug = m.slug;
+      const p = projBySlug.get(slug) || {};
 
-    // 2) enrich existing rows with Sleeper names/avatars when available
-    rows = rows.map((r) => {
-      const ownerId = slugToOwnerId[r.slug];
+      // Projection fields (default blanks/zeros if missing)
+      const division  = p.division ?? "";
+      const wins      = p.wins ?? 0;
+      const losses    = p.losses ?? 0;
+      const ties      = p.ties ?? 0;
+      const points    = p.points ?? 0;
+      const divStatus = p.divStatus ?? "";
+      const playStatus= p.playStatus ?? "";
+      const min       = p.min ?? "";
+      const targets   = p.targets ?? "";
+      const gIn       = p.gIn ?? "";
+      const divTgts   = p.divTgts ?? "";
+
+      // Name/logo now (fast): manager-config name, fallback slug
+      let name = managersBySlug.get(slug)?.name || slug;
+      let logoUrl = "";
+      const href = slug ? `/team/${slug}` : "#";
+
+      // Upgrade with live Sleeper data if available
+      const ownerId = slugToOwnerId[slug];
       if (ownerId && usersById[ownerId]) {
         const u = usersById[ownerId];
-        r.name = u.display_name || u.user_name || r.name;
-        r.logoUrl = avatarUrl(u.avatar) || r.logoUrl;
+        name = u.display_name || u.user_name || name;
+        logoUrl = avatarUrl(u.avatar) || logoUrl;
       }
       const re = ownerId ? findRosterEntryByOwner(ownerId) : null;
       if (re?.team) {
-        r.name = re.team.displayName || re.team.teamName || r.name;
-        r.logoUrl = re.team.logoUrl || re.team.avatarUrl || r.logoUrl;
+        name = re.team.displayName || re.team.teamName || name;
+        logoUrl = re.team.logoUrl || re.team.avatarUrl || logoUrl;
       }
-      return r;
+
+      return {
+        slug, division, wins, losses, ties, points,
+        divStatus, playStatus, min, targets, gIn, divTgts,
+        name, logoUrl, href
+      };
     });
 
-    // 3) add any teams missing from projections (from managers list)
-    const seen = new Set(rows.map(r => r.slug));
-    if (Array.isArray(managers)) {
-      for (const m of managers) {
-        const slug = m?.slug;
-        if (!slug || seen.has(slug)) continue;
-
-        // empty projections row, enriched by Sleeper if possible
-        let name = slug;
-        let logoUrl = "";
-        const href = `/team/${slug}`;
-        const ownerId = slugToOwnerId[slug];
-
-        if (ownerId && usersById[ownerId]) {
-          const u = usersById[ownerId];
-          name = u.display_name || u.user_name || name;
-          logoUrl = avatarUrl(u.avatar) || logoUrl;
-        }
-        const re = ownerId ? findRosterEntryByOwner(ownerId) : null;
-        if (re?.team) {
-          name = re.team.displayName || re.team.teamName || name;
-          logoUrl = re.team.logoUrl || re.team.avatarUrl || logoUrl;
-        }
-
-        rows.push({
-          slug, division: "", wins: 0, losses: 0, ties: 0, points: 0,
-          divStatus: "", playStatus: "", min: "", targets: "", gIn: "", divTgts: "",
-          name, logoUrl, href
-        });
-      }
-    }
-
-    // 4) sort by PlaySTATUS → C% desc, then T% desc
+    // Sort by PlaySTATUS: C% desc, then T% desc
     rows.sort((a, b) => {
       const A = parsePlayStatus(a.playStatus);
       const B = parsePlayStatus(b.playStatus);
@@ -139,23 +107,21 @@
     });
   }
 
-  // Build immediately (so projections show even before Sleeper returns)
+  // Build once immediately (so you see data even before Sleeper returns)
   buildRows();
 
-  // Then load Sleeper & rebuild to enrich / add missing teams
+  // Then fetch Sleeper live data and rebuild to upgrade names/avatars
   onMount(async () => {
     try {
       ltm = await getLeagueTeamManagers();
       currentYear = ltm?.currentSeason ?? null;
-      rosterMap = (ltm?.teamManagersMap && currentYear)
-        ? (ltm.teamManagersMap[currentYear] || {})
-        : {};
+      rosterMap = (ltm?.teamManagersMap && currentYear) ? (ltm.teamManagersMap[currentYear] || {}) : {};
       usersById = ltm?.users || {};
     } catch (e) {
       console.warn("getLeagueTeamManagers failed:", e);
       ltm = null; rosterMap = {}; usersById = {};
     } finally {
-      buildRows();
+      buildRows(); // upgrade rows with live names/avatars
     }
   });
 </script>
@@ -190,7 +156,7 @@
             <td class="teamcell">
               <a href={r.href}>
                 {#if r.logoUrl}<img class="logo" src={r.logoUrl} alt={r.name} loading="lazy" />{/if}
-                {r.name || r.slug}
+                {r.name}
               </a>
             </td>
             <td>{r.wins}-{r.losses}{#if r.ties && r.ties>0}-{r.ties}{/if}</td>
