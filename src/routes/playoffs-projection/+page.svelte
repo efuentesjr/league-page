@@ -1,27 +1,27 @@
 <script>
   import { onMount } from "svelte";
 
-  // Uses your helpers exactly where you said they live
-  import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
-  import { managers } from "$lib/utils/leagueInfo";
-
+  // server loader provides this (from +page.server.js)
   export let data;
   const { projections, sourceUrl, error } = data;
 
-  let ltm = null;            // full object from getLeagueTeamManagers()
-  let currentYear = null;
-  let rosterMap = {};        // roster_id -> { team, managers }
-  let usersById = {};        // user_id -> user
-  let rows = [];             // merged rows for the table
+  // ----- Optional: your Sleeper join (can keep or remove) -----
+  // If you’re not using the Sleeper helpers yet, you can comment this block out.
+  import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
+  import { managers } from "$lib/utils/leagueInfo";
 
-  // Build slug -> Sleeper owner mapping from your local managers config
+  let ltm = null;
+  let currentYear = null;
+  let rosterMap = {};
+  let usersById = {};
+  let rows = [];
+
   const slugToOwnerId = {};
   if (Array.isArray(managers)) {
     for (const m of managers) {
       if (m?.slug && m?.managerID) slugToOwnerId[m.slug] = m.managerID;
     }
   }
-
   const avatarUrl = (avatarId) =>
     avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
 
@@ -67,13 +67,7 @@
           logo;
       }
 
-      return {
-        ...p,
-        slug,
-        name: displayName,
-        logoUrl: logo,
-        href
-      };
+      return { ...p, slug, name: displayName, logoUrl: logo, href };
     });
   }
 
@@ -87,15 +81,13 @@
       usersById = ltm?.users || {};
     } catch (e) {
       console.error("getLeagueTeamManagers failed:", e);
-      ltm = null;
-      rosterMap = {};
-      usersById = {};
+      ltm = null; rosterMap = {}; usersById = {};
     } finally {
       buildRows();
     }
   });
 
-  // Keep your original visual sort (N,E,W,S then DivSTATUS desc) after paint
+  // keep your visual sort after paint
   onMount(() => {
     const tbody = document.querySelector(".overlay table tbody");
     if (!tbody) return;
@@ -132,6 +124,11 @@
     {#if error}
       <p class="text-red-500">Error loading projections: {error}</p>
     {/if}
+
+    <!-- Debug: shows the exact URL being used -->
+    <div class="mb-2 text-xs opacity-70">
+      Source: {data?.sourceUrl}
+    </div>
 
     <table>
       <thead>
@@ -171,21 +168,7 @@
       </tbody>
     </table>
 
-<div class="overlay">
-  {#if error}
-    <p class="text-red-500">Error loading projections: {error}</p>
-  {/if}
-
-  <!-- 👇 Add this here -->
-  <div class="mb-2 text-xs opacity-70">
-    Source: {data?.sourceUrl}
-  </div>
-
-  <table>
-    <thead>
-      ...
-
-<div class="legend">
+    <div class="legend">
       <strong>LEGEND:</strong><br />
       Status C = Clinch %<br />
       T = % that will end up in a tiebreak not resolved yet<br />
