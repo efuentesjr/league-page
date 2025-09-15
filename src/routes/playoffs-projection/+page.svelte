@@ -1,11 +1,9 @@
 <script>
   import { onMount } from "svelte";
 
-  // data from +page.server.js
   export let data;
   const { projections, sourceUrl, error } = data;
 
-  // ----- OPTIONAL Sleeper join (kept, but we’ll also render a fallback) -----
   import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
   import { managers } from "$lib/utils/leagueInfo";
 
@@ -15,7 +13,6 @@
   let usersById = {};
   let rows = [];
 
-  // map: slug -> ownerId (based on your managers config)
   const slugToOwnerId = {};
   if (Array.isArray(managers)) {
     for (const m of managers) {
@@ -23,15 +20,14 @@
     }
   }
 
-  const avatarUrl = (avatarId) => (avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "");
+  const avatarUrl = (avatarId) =>
+    avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
 
   function findRosterEntryByOwner(ownerId) {
     for (const rid of Object.keys(rosterMap)) {
       const entry = rosterMap[rid];
-      if (entry?.managers && Array.isArray(entry.managers)) {
-        if (entry.managers.some((m) => m?.user_id === ownerId || m?.managerID === ownerId)) {
-          return entry;
-        }
+      if (entry?.managers?.some((m) => m?.user_id === ownerId || m?.managerID === ownerId)) {
+        return entry;
       }
       if (entry?.team?.owner_id === ownerId || entry?.team?.managerID === ownerId) {
         return entry;
@@ -40,18 +36,15 @@
     return null;
   }
 
-  // Build rows from projections + (if available) Sleeper live data
   function buildRows() {
-    // Start with a direct mapping from projections so we always render something
     rows = projections.map((p) => ({
       ...p,
-      slug: p.slug || p.teamId || p.teamSlug || "",
-      name: p.teamName || p.slug || "",
+      slug: p.slug,
+      name: p.slug,
       logoUrl: "",
       href: p.slug ? `/team/${p.slug}` : "#"
     }));
 
-    // If we have Sleeper data, enrich names/logos
     if (Object.keys(slugToOwnerId).length && Object.keys(usersById).length) {
       rows = rows.map((r) => {
         const ownerId = slugToOwnerId[r.slug];
@@ -77,7 +70,6 @@
 
   onMount(async () => {
     try {
-      // load Sleeper data (same pipeline the standings page uses)
       ltm = await getLeagueTeamManagers();
       currentYear = ltm?.currentSeason ?? null;
       rosterMap = (ltm?.teamManagersMap && currentYear) ? (ltm.teamManagersMap[currentYear] || {}) : {};
@@ -90,7 +82,6 @@
     }
   });
 
-  // Keep your original visual sort after paint
   onMount(() => {
     const tbody = document.querySelector(".overlay table tbody");
     if (!tbody) return;
@@ -119,7 +110,6 @@
   });
 </script>
 
-<!-- No background image; simple dark container -->
 <div class="image-wrapper">
   <h2 class="title">Playoffs AI Analysis</h2>
 
@@ -128,12 +118,10 @@
       <p class="text-red-500">Error loading projections: {error}</p>
     {/if}
 
-    <!-- DEBUG: keep for now -->
     <div class="mb-2 text-xs opacity-70">
       <div><b>Source:</b> {data?.sourceUrl}</div>
       <div><b>Loaded rows:</b> {rows?.length ?? 0}</div>
     </div>
-    <pre class="debug-json">{JSON.stringify(projections, null, 2)}</pre>
 
     <table>
       <thead>
@@ -172,20 +160,6 @@
         {/each}
       </tbody>
     </table>
-
-    <div class="legend">
-      <strong>LEGEND:</strong><br />
-      Status C = Clinch %<br />
-      T = % that will end up in a tiebreak not resolved yet<br />
-      mIn = Wins needed for any chance<br />
-      Target = Projected Wins needed<br />
-      gIn = Wins that should guarantee a spot (if any then Controls Own Destiny)<br /><br />
-      <em>
-        Due to many remaining games the analysis incorporated some randomization methods. 
-        The accuracy of status, odds, targets, and 'paths' will depend on the depth of analysis 
-        as well as the number of remaining games.
-      </em>
-    </div>
   </div>
 </div>
 
@@ -202,8 +176,4 @@
 .overlay a:hover { text-decoration: underline; }
 .teamcell { display:flex; align-items:center; gap:6px; }
 .logo { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; vertical-align: middle; }
-.legend { margin-top: 0.6rem; font-size: 0.75rem; line-height: 1.05rem; color: white; text-align: left; }
-.legend strong { color: #ffd966; }
-.legend em { color: #ddd; font-size: 0.7rem; }
-.debug-json { font-size: 0.65rem; max-height: 160px; overflow: auto; color: #eaeaea; background: rgba(0,0,0,0.35); padding: 6px; border-radius: 6px; margin: 0 0 8px; }
 </style>
