@@ -10,7 +10,6 @@ export async function load({ fetch }) {
     if (!res.ok) {
       return { projections: [], sourceUrl: url, error: `Fetch failed: ${res.status}` };
     }
-
     const projections = await res.json();
     return { projections, sourceUrl: url, error: null };
   } catch (e) {
