@@ -3,20 +3,20 @@
   import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
   import { managers } from "$lib/utils/leagueInfo";
 
-  export let slug = "";              // site team slug (e.g. "do-it-to-them")
-  export let href = "";              // optional team link
-  export let size = 26;              // avatar size (px)
-  export let debug = false;          // <- turn on to log diagnostics
+  export let slug = "";      // site team slug (e.g., "do-it-to-them")
+  export let href = "";      // optional link to the team page
+  export let size = 26;      // avatar size in px
+  export let debug = false;  // <<< turn on logging
 
-  let name = slug;                   // immediate fallback
-  let logoUrl = "";                  // will be filled from roster or user
+  let name = slug;           // fallback until Sleeper data loads
+  let logoUrl = "";          // will be filled from roster/team or user
 
-  // ----- helpers -----
+  // ---------- helpers ----------
   const asId = (v) => (v == null ? null : String(v));
   const sleeperAvatar = (avatarId) =>
     avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
 
-  // Try all likely team-logo fields
+  // Try all common logo fields your app might be using
   function pickLogo(team = {}) {
     return (
       team.logoUrl ||
@@ -28,7 +28,7 @@
     );
   }
 
-  // If no obvious logo field, hunt for any URL-looking string in the team object
+  // If no obvious field exists, scan for any image-like URL in the team object
   function huntLogoUrl(obj) {
     try {
       const seen = new Set();
@@ -40,7 +40,9 @@
         for (const k of Object.keys(cur)) {
           const v = cur[k];
           if (typeof v === "string") {
-            if (/^https?:\/\//i.test(v) && /\.(png|jpg|jpeg|webp|gif)(\?|$)/i.test(v)) return v;
+            if (/^https?:\/\//i.test(v) && /\.(png|jpg|jpeg|webp|gif)(\?|$)/i.test(v)) {
+              return v;
+            }
           } else if (typeof v === "object") {
             stack.push(v);
           }
@@ -75,19 +77,19 @@
     return null;
   }
 
-  // Manager mapping for this slug (from your config)
+  // Managers config record for this slug
   const mgr = Array.isArray(managers) ? managers.find((m) => m?.slug === slug) : null;
   if (mgr?.name) name = mgr.name;
   const ownerId = asId(mgr?.managerID);
 
   onMount(async () => {
     try {
-      const ltm = await getLeagueTeamManagers(); // same pipeline as Standings
+      const ltm = await getLeagueTeamManagers(); // same data path as Standings
       const usersById = ltm?.users || {};
       const currentSeason = ltm?.currentSeason;
       const teamManagersMap = ltm?.teamManagersMap?.[currentSeason] || {};
 
-      // 1) Prefer roster/team metadata (name + custom team logo)
+      // 1) Prefer roster team metadata (custom team logo + display name)
       const re = findRosterEntryByOwner(teamManagersMap, ownerId);
       const teamObj = re?.team || null;
 
@@ -100,7 +102,7 @@
         if (candidateName) name = candidateName;
       }
 
-      // 2) Fall back to Sleeper user avatar/name
+      // 2) Fallback to Sleeper user avatar/display name
       const u = ownerId ? usersById[ownerId] : null;
       if (u) {
         if (!logoUrl) logoUrl = sleeperAvatar(u.avatar);
@@ -108,7 +110,6 @@
       }
 
       if (debug) {
-        // Emit a concise diagnostic for this slug
         console.log("[TeamLabel]", {
           slug,
           ownerId,
@@ -123,7 +124,6 @@
       }
     } catch (err) {
       if (debug) console.warn("TeamLabel: failed to enrich from Sleeper", { slug, err });
-      // keep fallbacks
     }
   });
 </script>
