@@ -1,12 +1,12 @@
 <script>
-  // R2 data injected by +page.server.js (already avoids CORS)
+  // Data from +page.server.js (R2 fetch)
   export let data;
   const { projections, error } = data;
 
-  // Live team identity (name + avatar) from the same pipeline as Standings
+  // Live Sleeper team identity (same as Standings)
   import { TeamLabel } from '$lib/components';
 
-  // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
+  // Parse "C:41.8% T:17.2%" -> { c, t }
   function parsePlayStatus(s) {
     if (!s) return { c: -Infinity, t: -Infinity };
     const c = Number((s.match(/C:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
@@ -34,13 +34,12 @@
         divTgts: p.divTgts ?? ""
       }));
 
-    // Sort by PlaySTATUS: first by C% desc, then by T% desc
+    // Sort by PlaySTATUS: C% desc, then T% desc
     rows.sort((a, b) => {
       const A = parsePlayStatus(a.playStatus);
       const B = parsePlayStatus(b.playStatus);
       if (B.c !== A.c) return B.c - A.c;
       if (B.t !== A.t) return B.t - A.t;
-      // stable fallback
       return (a.slug || "").localeCompare(b.slug || "");
     });
   }
@@ -75,10 +74,12 @@
         {#each rows as r (r.slug)}
           <tr>
             <td>{r.division}</td>
+
+            <!-- DEBUG ON: will log one line per team to the browser console -->
             <td class="teamcell">
-              <!-- Live name + avatar (piggy-backs Sleeper like Standings) -->
-              <TeamLabel slug={r.slug} href={`/team/${r.slug}`} />
+              <TeamLabel slug={r.slug} href={`/team/${r.slug}`} size={24} debug />
             </td>
+
             <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
             <td>{r.points ?? 0}</td>
             <td>{r.divStatus ?? ""}</td>
@@ -125,5 +126,5 @@
 .overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
 .overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
 .overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
-.teamcell { display: flex; align-items: center; }
+.teamcell { display:flex; align-items:center; }
 </style>
