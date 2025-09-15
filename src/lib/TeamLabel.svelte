@@ -10,14 +10,14 @@
 
   let name = slug;           // fallback until Sleeper data loads
   let logoUrl = "";          // will be filled from roster/team or user
-  let matchedBy = "none";    // for debugging
+  let matchedBy = "none";    // for debug: ownerId | slugified-name | user-slug | none
 
   // ---------- helpers ----------
   const asId = (v) => (v == null ? null : String(v));
   const sleeperAvatar = (avatarId) =>
     avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
 
-  // Match your site's slug style: lowercase, diacritics removed, spaces/punct → "-"
+  // Normalizes strings similar to your site slugs
   function mkSlug(str) {
     return (str || "")
       .toString()
@@ -101,7 +101,7 @@
         t.teamName
       ].filter(Boolean);
 
-      // also try owner's user display names
+      // also try owner/user names
       for (const m of entry.managers || []) {
         const uid = asId(m?.user_id || m?.managerID);
         if (uid && usersById[uid]) {
@@ -122,10 +122,11 @@
 
   onMount(async () => {
     try {
-      const ltm = await getLeagueTeamManagers(); // same data path as Standings
+      const ltm = await getLeagueTeamManagers(); // same feed as Standings
       const usersById = ltm?.users || {};
       const currentSeason = ltm?.currentSeason;
       const teamManagersMap = ltm?.teamManagersMap?.[currentSeason] || {};
+      const gotRosters = Object.keys(teamManagersMap).length;
 
       let re = null;
       let teamObj = null;
@@ -139,7 +140,7 @@
         }
       }
 
-      // Path B: slugify roster names and match to our page slug
+      // Path B: slugify roster/team names and match to our page slug
       if (!re) {
         re = findRosterEntryBySlug(teamManagersMap, usersById, slug);
         if (re) {
@@ -157,19 +158,29 @@
         if (candidateName) name = candidateName;
       }
 
-      // Fallback: user avatar/name
-      // Prefer the first manager on the roster entry; else fallback to mapped ownerId
-      let user = null;
-      const firstMgrId = re?.managers?.[0] ? asId(re.managers[0].user_id || re.managers[0].managerID) : null;
-      if (firstMgrId && usersById[firstMgrId]) {
-        user = usersById[firstMgrId];
-      } else if (ownerId && usersById[ownerId]) {
-        user = usersById[ownerId];
+      // Path C: as a last resort, match slug to ANY user display_name/user_name
+      if (!logoUrl) {
+        let matchedUser = null;
+        for (const uid of Object.keys(usersById)) {
+          const u = usersById[uid];
+          const uSlugs = [u.display_name, u.user_name].filter(Boolean).map(mkSlug);
+          if (uSlugs.includes(slug)) { matchedUser = u; break; }
+        }
+        if (matchedUser) {
+          matchedBy = matchedBy === "none" ? "user-slug" : matchedBy + "+user-slug";
+          logoUrl = sleeperAvatar(matchedUser.avatar) || logoUrl;
+          if (!name) name = pickName({}, matchedUser, slug);
+        }
       }
 
-      if (user) {
-        if (!logoUrl) logoUrl = sleeperAvatar(user.avatar);
-        if (!name) name = pickName({}, user, slug);
+      // Fallback to the first manager on the roster (if any) for a name/avatar
+      if (!logoUrl && re?.managers?.length) {
+        const firstMgrId = asId(re.managers[0].user_id || re.managers[0].managerID);
+        const u = firstMgrId ? usersById[firstMgrId] : null;
+        if (u) {
+          if (!logoUrl) logoUrl = sleeperAvatar(u.avatar);
+          if (!name) name = pickName({}, u, slug);
+        }
       }
 
       if (debug) {
@@ -178,11 +189,11 @@
           ownerId,
           matchedBy,
           gotUsers: Object.keys(usersById).length,
+          gotRosters,
           rosterFound: !!re,
           teamKeys: teamObj ? Object.keys(teamObj) : [],
           chosenLogo: logoUrl,
-          chosenName: name,
-          userAvatarId: user?.avatar ?? null
+          chosenName: name
         });
       }
     } catch (err) {
