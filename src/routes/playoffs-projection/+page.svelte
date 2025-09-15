@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
 
   export let data;
-  const { projections, sourceUrl, error } = data;
+  const { projections, error } = data;
 
   import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
   import { managers } from "$lib/utils/leagueInfo";
@@ -96,7 +96,7 @@
       const els = Array.from(tbody.querySelectorAll("tr"));
       els.sort((a, b) => {
         const dvA = a.cells[0]?.textContent.trim() || "";
-        const dvB = b.cells[0]?.textContent.trim() || "";
+        const dvB = a.cells[0]?.textContent.trim() || "";
         const dvCmp = dvOrder.indexOf(dvA) - dvOrder.indexOf(dvB);
         if (dvCmp !== 0) return dvCmp;
         const dsA = getDivStatus(a.cells[4]?.textContent || "");
@@ -117,11 +117,6 @@
     {#if error}
       <p class="text-red-500">Error loading projections: {error}</p>
     {/if}
-
-    <div class="mb-2 text-xs opacity-70">
-      <div><b>Source:</b> {data?.sourceUrl}</div>
-      <div><b>Loaded rows:</b> {rows?.length ?? 0}</div>
-    </div>
 
     <table>
       <thead>
