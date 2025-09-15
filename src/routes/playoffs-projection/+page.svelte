@@ -171,7 +171,21 @@
       </tbody>
     </table>
 
-    <div class="legend">
+<div class="overlay">
+  {#if error}
+    <p class="text-red-500">Error loading projections: {error}</p>
+  {/if}
+
+  <!-- 👇 Add this here -->
+  <div class="mb-2 text-xs opacity-70">
+    Source: {data?.sourceUrl}
+  </div>
+
+  <table>
+    <thead>
+      ...
+
+<div class="legend">
       <strong>LEGEND:</strong><br />
       Status C = Clinch %<br />
       T = % that will end up in a tiebreak not resolved yet<br />
