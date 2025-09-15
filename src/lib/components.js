@@ -19,8 +19,8 @@ import FullPost from './BlogPosts/FullPost.svelte';
 import Posts from './BlogPosts/Posts.svelte';
 import Standings from './Standings/index.svelte';
 
-// NEW: live Sleeper-name/logo label for teams (used on Playoffs page too)
-import TeamLabel from './components/TeamLabel.svelte';
+// NEW: live Sleeper-name/logo label for teams
+import TeamLabel from './TeamLabel.svelte';
 
 export {
   Nav,
