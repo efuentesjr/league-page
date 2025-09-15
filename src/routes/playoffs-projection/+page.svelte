@@ -1,9 +1,11 @@
 <script>
   import { onMount } from "svelte";
 
+  // data from +page.server.js
   export let data;
   const { projections, error } = data;
 
+  // your existing helpers (same ones used by standings)
   import { getLeagueTeamManagers } from "$lib/utils/helperFunctions/leagueTeamManagers";
   import { managers } from "$lib/utils/leagueInfo";
 
@@ -13,6 +15,7 @@
   let usersById = {};
   let rows = [];
 
+  // Map slug -> ownerId from your managers config
   const slugToOwnerId = {};
   if (Array.isArray(managers)) {
     for (const m of managers) {
@@ -26,8 +29,10 @@
   function findRosterEntryByOwner(ownerId) {
     for (const rid of Object.keys(rosterMap)) {
       const entry = rosterMap[rid];
-      if (entry?.managers?.some((m) => m?.user_id === ownerId || m?.managerID === ownerId)) {
-        return entry;
+      if (entry?.managers && Array.isArray(entry.managers)) {
+        if (entry.managers.some((m) => m?.user_id === ownerId || m?.managerID === ownerId)) {
+          return entry;
+        }
       }
       if (entry?.team?.owner_id === ownerId || entry?.team?.managerID === ownerId) {
         return entry;
@@ -36,43 +41,95 @@
     return null;
   }
 
-  function buildRows() {
-    rows = projections.map((p) => ({
-      ...p,
-      slug: p.slug,
-      name: p.slug,
-      logoUrl: "",
-      href: p.slug ? `/team/${p.slug}` : "#"
-    }));
-
-    if (Object.keys(slugToOwnerId).length && Object.keys(usersById).length) {
-      rows = rows.map((r) => {
-        const ownerId = slugToOwnerId[r.slug];
-        let name = r.name;
-        let logo = r.logoUrl;
-
-        if (ownerId && usersById[ownerId]) {
-          const user = usersById[ownerId];
-          name = user.display_name || user.user_name || name;
-          logo = avatarUrl(user.avatar) || logo;
-        }
-
-        const rosterEntry = ownerId ? findRosterEntryByOwner(ownerId) : null;
-        if (rosterEntry?.team) {
-          name = rosterEntry.team.displayName || rosterEntry.team.teamName || name;
-          logo = rosterEntry.team.logoUrl || rosterEntry.team.avatarUrl || logo;
-        }
-
-        return { ...r, name, logoUrl: logo };
-      });
-    }
+  // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
+  function parsePlayStatus(s) {
+    if (!s) return { c: -Infinity, t: -Infinity };
+    const c = Number((s.match(/C:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
+    const t = Number((s.match(/T:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
+    return { c, t };
   }
 
+  // Build the final table rows:
+  // start from Sleeper teams (so all appear) + overlay projections by slug
+  function buildRows() {
+    // index projections for quick lookup
+    const projBySlug = new Map(
+      (projections || [])
+        .filter((p) => p?.slug)
+        .map((p) => [p.slug, p])
+    );
+
+    // base list = all known teams from managers[]
+    rows = (Array.isArray(managers) ? managers : []).map((m) => {
+      const slug = m.slug;
+      const p = projBySlug.get(slug) || {};
+
+      // projection fields (defaults if missing)
+      const division  = p.division ?? "";
+      const wins      = p.wins ?? 0;
+      const losses    = p.losses ?? 0;
+      const ties      = p.ties ?? 0;
+      const points    = p.points ?? 0;
+      const divStatus = p.divStatus ?? "";
+      const playStatus= p.playStatus ?? "";
+      const min       = p.min ?? "";
+      const targets   = p.targets ?? "";
+      const gIn       = p.gIn ?? "";
+      const divTgts   = p.divTgts ?? "";
+
+      // derive name/logo from Sleeper
+      let name = slug;
+      let logoUrl = "";
+      const href = slug ? `/team/${slug}` : "#";
+
+      const ownerId = slugToOwnerId[slug];
+      if (ownerId && usersById[ownerId]) {
+        const u = usersById[ownerId];
+        name = u.display_name || u.user_name || name;
+        logoUrl = avatarUrl(u.avatar) || logoUrl;
+      }
+      const re = ownerId ? findRosterEntryByOwner(ownerId) : null;
+      if (re?.team) {
+        name = re.team.displayName || re.team.teamName || name;
+        logoUrl = re.team.logoUrl || re.team.avatarUrl || logoUrl;
+      }
+
+      return {
+        slug, division, wins, losses, ties, points,
+        divStatus, playStatus, min, targets, gIn, divTgts,
+        name, logoUrl, href
+      };
+    });
+
+    // If managers[] wasn't available for some reason, fall back to just projections
+    if (!rows.length && projections?.length) {
+      rows = projections.map((p) => ({
+        slug: p.slug, division: p.division ?? "", wins: p.wins ?? 0, losses: p.losses ?? 0,
+        ties: p.ties ?? 0, points: p.points ?? 0, divStatus: p.divStatus ?? "",
+        playStatus: p.playStatus ?? "", min: p.min ?? "", targets: p.targets ?? "",
+        gIn: p.gIn ?? "", divTgts: p.divTgts ?? "", name: p.slug, logoUrl: "",
+        href: p.slug ? `/team/${p.slug}` : "#"
+      }));
+    }
+
+    // Sort by PlaySTATUS → C% desc, then T% desc
+    rows.sort((a, b) => {
+      const A = parsePlayStatus(a.playStatus);
+      const B = parsePlayStatus(b.playStatus);
+      if (B.c !== A.c) return B.c - A.c;
+      if (B.t !== A.t) return B.t - A.t;
+      return (a.name || "").localeCompare(b.name || "");
+    });
+  }
+
+  // load Sleeper data once page mounts, then build rows
   onMount(async () => {
     try {
       ltm = await getLeagueTeamManagers();
       currentYear = ltm?.currentSeason ?? null;
-      rosterMap = (ltm?.teamManagersMap && currentYear) ? (ltm.teamManagersMap[currentYear] || {}) : {};
+      rosterMap = (ltm?.teamManagersMap && currentYear)
+        ? (ltm.teamManagersMap[currentYear] || {})
+        : {};
       usersById = ltm?.users || {};
     } catch (e) {
       console.warn("getLeagueTeamManagers failed:", e);
@@ -81,36 +138,9 @@
       buildRows();
     }
   });
-
-  onMount(() => {
-    const tbody = document.querySelector(".overlay table tbody");
-    if (!tbody) return;
-
-    const dvOrder = ["N", "E", "W", "S"];
-    const getDivStatus = (text) => {
-      const match = text.match(/:\s*([\d.]+)%/);
-      return match ? parseFloat(match[1]) : -Infinity;
-    };
-
-    const sortRows = () => {
-      const els = Array.from(tbody.querySelectorAll("tr"));
-      els.sort((a, b) => {
-        const dvA = a.cells[0]?.textContent.trim() || "";
-        const dvB = a.cells[0]?.textContent.trim() || "";
-        const dvCmp = dvOrder.indexOf(dvA) - dvOrder.indexOf(dvB);
-        if (dvCmp !== 0) return dvCmp;
-        const dsA = getDivStatus(a.cells[4]?.textContent || "");
-        const dsB = getDivStatus(b.cells[4]?.textContent || "");
-        return dsB - dsA;
-      });
-      els.forEach((r) => tbody.appendChild(r));
-    };
-
-    setTimeout(sortRows, 0);
-  });
 </script>
 
-<div class="image-wrapper">
+<div class="wrap">
   <h2 class="title">Playoffs AI Analysis</h2>
 
   <div class="overlay">
@@ -159,14 +189,55 @@
 </div>
 
 <style>
-.image-wrapper { position: relative; max-width: 980px; margin: 1rem auto; background: #111; padding: 1rem 0 2rem; border-radius: 10px; }
-.title { text-align: center; font-weight: 800; font-size: clamp(1.6rem, 3.6vw, 2.2rem); color: #fff; margin: 0 0 0.5rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); }
-.overlay { width: min(97%, 920px); margin: 0 auto; max-height: 70vh; overflow: auto; padding: 0.5rem; background: rgba(0,0,0,0.35); border-radius: 8px; }
-.overlay table { width: 100%; border-collapse: collapse; font-size: 0.8rem; line-height: 1.1rem; }
-.overlay th, .overlay td { padding: 4px 6px; text-align: center; white-space: nowrap; }
-.overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
-.overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
-.overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
+.wrap {
+  position: relative;
+  max-width: 980px;
+  margin: 1rem auto;
+  background: #111;
+  padding: 1rem 0 2rem;
+  border-radius: 10px;
+}
+.title {
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+  color: #fff;
+  margin: 0 0 0.5rem;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+.overlay {
+  width: min(97%, 920px);
+  margin: 0 auto;
+  max-height: 70vh;
+  overflow: auto;
+  padding: 0.5rem;
+  background: rgba(0,0,0,0.35);
+  border-radius: 8px;
+}
+.overlay table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  line-height: 1.1rem;
+}
+.overlay th, .overlay td {
+  padding: 4px 6px;
+  text-align: center;
+  white-space: nowrap;
+}
+.overlay th {
+  background: rgba(0,0,0,0.55);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.overlay td {
+  color: white;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.overlay td:first-child,
+.overlay td:nth-child(2) { text-align: left; }
 .overlay a { color: #4da6ff; font-weight: 600; text-decoration: none; }
 .overlay a:hover { text-decoration: underline; }
 .teamcell { display:flex; align-items:center; gap:6px; }
