@@ -57,17 +57,11 @@
 <div class="wrap">
   <h2 class="title">Playoffs AI Analysis</h2>
 
-  {#if sourceUrl || lastModified || fetchedAt}
-    <div class="meta">
-      {#if sourceUrl}
-        <span class="src">Source: <a href={sourceUrl} target="_blank" rel="noopener">{sourceUrl}</a></span>
-      {/if}
-      {#if lastModified || fetchedAt}
-        <span class="dot">•</span>
-        <span class="updated">Updated: {humanTime(lastModified || fetchedAt)}</span>
-      {/if}
-    </div>
-  {/if}
+  {#if lastModified || fetchedAt}
+  <div class="meta">
+    <span class="updated">Updated: {humanTime(lastModified || fetchedAt)}</span>
+  </div>
+{/if}
 
   <div class="overlay">
     {#if error}
