@@ -29,7 +29,7 @@ export const managers = [
     "roster": 1,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
     "managerID": "844760551790858240",           // <-- add Sleeper user_id
     "slug": "brute-force-attack",                // <-- add site/team slug
-    "name": "Eddie Fuentes Jr |Commish",
+    "name": "Eddie Fuentes Jr",
     "location": "Manor TX", // (optional)
     "bio": "Da Bears! Bears Down! 🐻⬇️",
     "photo": "/managers/EFJ.jpg", // square ratio recommended (no larger than 500x500)
@@ -52,7 +52,7 @@ export const managers = [
     "roster": 2,
     "managerID": "791852794729598976",
     "slug": "comeback-kid",
-    "name": "Joshua Romero |Co-Commish",
+    "name": "Joshua Romero",
     "location": "Manor TX",
     "bio": "Go with your gut when it comes to trades, starting or sitting players, Because it could elevate your team. Stay confident in your team no matter the situation",
     "photo": "/managers/JR.jpg",
@@ -75,7 +75,7 @@ export const managers = [
     "roster": 13,
     "managerID": "110121045876686848",
     "slug": "bay-area-party-supplies",
-    "name": "Joaquin Puente   |  Co-Commish",
+    "name": "Joaquin Puente",
     "location": "San Francisco CA",
     "bio": "Loading...",
     "photo": "/managers/JP.jpg",
