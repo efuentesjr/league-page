@@ -27,6 +27,8 @@ https://github.com/nmelhado/league-page/blob/master/TRAINING_WHEELS.md#ii-adding
 export const managers = [
   {
     "roster": 1,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
+    "managerID": "844760551790858240",           // <-- add Sleeper user_id
+    "slug": "brute-force-attack",                // <-- add site/team slug
     "name": "Eddie Fuentes Jr |Commish",
     "location": "Manor TX", // (optional)
     "bio": "Da Bears! Bears Down! 🐻⬇️",
@@ -257,7 +259,7 @@ export const managers = [
   },
   {
     "roster": 12,
-    "managerID": "1199099864982507520",
+    "managerID": "953418569209995264",
     "slug": "loud-and-stroud",
     "name": "Isaiah Ivarra",
     "location": "Manor TX",
