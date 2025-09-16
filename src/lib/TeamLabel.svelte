@@ -8,16 +8,15 @@
   export let size = 26;      // avatar size in px
   export let debug = false;  // turn on to log diagnostics
 
-  let name = slug;           // fallback until Sleeper data loads
-  let logoUrl = "";          // will be filled from roster/team or user
-  let matchedBy = "none";    // for debug: ownerId | slugified-name | user-slug | none
+  let name = slug;           // we will try to replace this with the roster's team name
+  let logoUrl = "";          // try roster/team logo first; fall back to user avatar
+  let matchedBy = "none";    // debug info
 
   // ---------- helpers ----------
   const asId = (v) => (v == null ? null : String(v));
   const sleeperAvatar = (avatarId) =>
     avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
 
-  // Normalizes strings similar to your site slugs
   function mkSlug(str) {
     return (str || "")
       .toString()
@@ -41,7 +40,6 @@
     );
   }
 
-  // If no obvious field exists, scan for any image-like URL in the team object
   function huntLogoUrl(obj) {
     try {
       const seen = new Set();
@@ -96,12 +94,8 @@
       if (!entry) continue;
 
       const t = entry.team || {};
-      const teamCandidates = [
-        t.displayName,
-        t.teamName
-      ].filter(Boolean);
+      const teamCandidates = [t.displayName, t.teamName].filter(Boolean);
 
-      // also try owner/user names
       for (const m of entry.managers || []) {
         const uid = asId(m?.user_id || m?.managerID);
         if (uid && usersById[uid]) {
@@ -115,14 +109,16 @@
     return null;
   }
 
-  // Managers config record for this slug (may be missing/mismatched)
+  // Managers config for this slug (IF you added slug + managerID there)
   const mgr = Array.isArray(managers) ? managers.find((m) => m?.slug === slug) : null;
-  if (mgr?.name) name = mgr.name;
-  const ownerId = asId(mgr?.managerID);
+  // DO NOT set name = mgr.name here (that caused manager names to show in the Team column)
+  const forcedOwnerId = asId(mgr?.managerID);
+  // optional friendly fallback team name if you decide to add it in leagueInfo
+  const configuredTeamName = mgr?.teamName ?? null;
 
   onMount(async () => {
     try {
-      const ltm = await getLeagueTeamManagers(); // same feed as Standings
+      const ltm = await getLeagueTeamManagers();
       const usersById = ltm?.users || {};
       const currentSeason = ltm?.currentSeason;
       const teamManagersMap = ltm?.teamManagersMap?.[currentSeason] || {};
@@ -131,9 +127,9 @@
       let re = null;
       let teamObj = null;
 
-      // Path A: exact owner match from managers[] (if provided)
-      if (ownerId) {
-        re = findRosterEntryByOwner(teamManagersMap, ownerId);
+      // Path A: exact owner match from managers[] (if you configured managerID for this slug)
+      if (forcedOwnerId) {
+        re = findRosterEntryByOwner(teamManagersMap, forcedOwnerId);
         if (re) {
           matchedBy = "ownerId";
           teamObj = re.team || {};
@@ -149,17 +145,17 @@
         }
       }
 
-      // Use team name/logo from roster
+      // Prefer roster team logo/name
       if (teamObj) {
-        let candidateLogo = pickLogo(teamObj) || huntLogoUrl(teamObj);
+        const candidateLogo = pickLogo(teamObj) || huntLogoUrl(teamObj);
         if (candidateLogo) logoUrl = candidateLogo;
 
         const candidateName = pickName(teamObj, {}, name);
         if (candidateName) name = candidateName;
       }
 
-      // Path C: as a last resort, match slug to ANY user display_name/user_name
-      if (!logoUrl) {
+      // Path C: match slug to ANY user display_name/user_name
+      if (!logoUrl || !name || name === slug) {
         let matchedUser = null;
         for (const uid of Object.keys(usersById)) {
           const u = usersById[uid];
@@ -168,27 +164,29 @@
         }
         if (matchedUser) {
           matchedBy = matchedBy === "none" ? "user-slug" : matchedBy + "+user-slug";
-          logoUrl = sleeperAvatar(matchedUser.avatar) || logoUrl;
-          if (!name) name = pickName({}, matchedUser, slug);
+          if (!logoUrl) logoUrl = sleeperAvatar(matchedUser.avatar);
+          if (!name || name === slug) name = pickName({}, matchedUser, name || slug);
         }
       }
 
-      // Fallback to the first manager on the roster (if any) for a name/avatar
-      if (!logoUrl && re?.managers?.length) {
-        const firstMgrId = asId(re.managers[0].user_id || re.managers[0].managerID);
-        const u = firstMgrId ? usersById[firstMgrId] : null;
-        if (u) {
-          if (!logoUrl) logoUrl = sleeperAvatar(u.avatar);
-          if (!name) name = pickName({}, u, slug);
-        }
+      // FINAL FORCED FALLBACKS:
+      // If you configured managerID but still don't have a logo, use the user's avatar
+      if (!logoUrl && forcedOwnerId && usersById[forcedOwnerId]) {
+        logoUrl = sleeperAvatar(usersById[forcedOwnerId].avatar);
+        matchedBy = matchedBy === "none" ? "forced-managerID" : matchedBy + "+forced-managerID";
+      }
+
+      // If we still don't have a decent name, prefer configured teamName (if you add it), else prettify slug
+      if (!name || name === slug) {
+        const maybeUser = forcedOwnerId ? usersById[forcedOwnerId] : null;
+        name = configuredTeamName || pickName({}, maybeUser, slug.replace(/-/g, " "));
       }
 
       if (debug) {
         console.log("[TeamLabel]", {
           slug,
-          ownerId,
+          forcedOwnerId,
           matchedBy,
-          gotUsers: Object.keys(usersById).length,
           gotRosters,
           rosterFound: !!re,
           teamKeys: teamObj ? Object.keys(teamObj) : [],
@@ -217,11 +215,6 @@
 <style>
 .teamlabel { display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#4da6ff; font-weight:600; }
 .teamlabel:hover { text-decoration:underline; }
-.avatar {
-  width: var(--sz, 26px);
-  height: var(--sz, 26px);
-  border-radius: 50%;
-  object-fit: cover;
-}
+.avatar { width: var(--sz, 26px); height: var(--sz, 26px); border-radius: 50%; object-fit: cover; }
 .name { line-height: 1; }
 </style>
