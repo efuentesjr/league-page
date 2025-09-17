@@ -27,7 +27,6 @@ https://github.com/nmelhado/league-page/blob/master/TRAINING_WHEELS.md#ii-adding
 export const managers = [
   {
     "roster": 1,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
-    "slug": "brute-force-attack",                // <-- add site/team slug
     "name": "Eddie Fuentes Jr",
     "location": "Manor TX", // (optional)
     "bio": "Da Bears! Bears Down! 🐻⬇️",
@@ -49,7 +48,6 @@ export const managers = [
   },
   {
     "roster": 2,
-    "slug": "comeback-kid",
     "name": "Joshua Romero",
     "location": "Manor TX",
     "bio": "Go with your gut when it comes to trades, starting or sitting players, Because it could elevate your team. Stay confident in your team no matter the situation",
@@ -71,7 +69,6 @@ export const managers = [
   },
   {
     "roster": 13,
-    "slug": "bay-area-party-supplies",
     "name": "Joaquin Puente",
     "location": "San Francisco CA",
     "bio": "Loading...",
@@ -93,7 +90,6 @@ export const managers = [
   },
   {
     "roster": 4,
-    "slug": "slickbears",
     "name": "Trey Fuentes",
     "tookOver": 2020,
     "location": "Pflugerville TX",
@@ -116,7 +112,6 @@ export const managers = [
   },
   {
     "roster": 8,
-    "slug": "blue-ballers",
     "name": "Ray Rodriguez",
     "tookOver": 2020,
     "location": "Manor TX",
@@ -140,7 +135,6 @@ export const managers = [
   {
     "roster": 6,
     "managerID": "850894566360997888",
-    "slug": "pete-weber-bowl-club",
     "name": "John Diaz-Decaro",
     "location": "Los Angeles, CA",
     "bio": "I am inevitable",
@@ -163,7 +157,6 @@ export const managers = [
   {
     "roster": 5,
     "managerID": "849793148648546304",
-    "slug": "peoples-champ",
     "name": "Gerardo Calles",
     "location": "Austin TX",
     "bio": "The People's 2X Champ is ready for any and all challengers.",
@@ -186,7 +179,6 @@ export const managers = [
   {
     "roster": 9,
     "managerID": "851283708244766720",
-    "slug": "88boyz11",
     "name": "Mario Abundis",
     "location": "Hutto TX",
     "bio": "Waiting for Jerry to make his final move.",
@@ -209,7 +201,6 @@ export const managers = [
   {
     "roster": 3,
     "managerID": "846592470551732224",
-    "slug": "chosen-one",
     "name": "Jordan Fristoe",
     "location": "Pflugerville TX",
     "bio": "Win baby win",
