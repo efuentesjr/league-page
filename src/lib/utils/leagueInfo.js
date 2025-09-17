@@ -27,7 +27,6 @@ https://github.com/nmelhado/league-page/blob/master/TRAINING_WHEELS.md#ii-adding
 export const managers = [
   {
     "roster": 1,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
-    "managerID": "844760551790858240",           // <-- add Sleeper user_id
     "slug": "brute-force-attack",                // <-- add site/team slug
     "name": "Eddie Fuentes Jr",
     "location": "Manor TX", // (optional)
@@ -50,7 +49,6 @@ export const managers = [
   },
   {
     "roster": 2,
-    "managerID": "791852794729598976",
     "slug": "comeback-kid",
     "name": "Joshua Romero",
     "location": "Manor TX",
@@ -73,7 +71,6 @@ export const managers = [
   },
   {
     "roster": 13,
-    "managerID": "110121045876686848",
     "slug": "bay-area-party-supplies",
     "name": "Joaquin Puente",
     "location": "San Francisco CA",
@@ -96,7 +93,6 @@ export const managers = [
   },
   {
     "roster": 4,
-    "managerID": "731626118116925440",
     "slug": "slickbears",
     "name": "Trey Fuentes",
     "tookOver": 2020,
@@ -120,7 +116,6 @@ export const managers = [
   },
   {
     "roster": 8,
-    "managerID": "851243503987032064",
     "slug": "blue-ballers",
     "name": "Ray Rodriguez",
     "tookOver": 2020,
