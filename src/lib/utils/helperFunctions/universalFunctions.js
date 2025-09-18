@@ -226,4 +226,176 @@ export const getManagers = (roster) => {
   return managers;
 };
 
-ex
+export const getTeamData = (users, ownerID) => {
+  const user = users ? users[ownerID] : null;
+  if (user) {
+    return {
+      avatar: (user.metadata && user.metadata.avatar) ? user.metadata.avatar : ('https://sleepercdn.com/avatars/thumbs/' + user.avatar),
+      name: (user.metadata && user.metadata.team_name) ? user.metadata.team_name : user.display_name
+    };
+  }
+  return {
+    avatar: FALLBACK_AVATAR,
+    name: 'Unknown Team',
+  };
+};
+
+/* --------------------- avatar & name (hardened) -------------------- */
+
+export const getAvatarFromTeamManagers = (teamManagers, rosterID, year) => {
+  const entry = getRosterEntry(teamManagers, rosterID, year);
+  if (!entry) return QUESTION;
+
+  const ownerId = getPrimaryOwnerId(entry);
+  const user = ownerId && teamManagers && teamManagers.users ? teamManagers.users[ownerId] : null;
+
+  // prefer entry.team.avatar, then user's metadata/avatar, then fallback
+  if (entry.team && entry.team.avatar) return entry.team.avatar;
+  if (user && user.metadata && user.metadata.avatar) return user.metadata.avatar;
+  if (user && user.avatar) return 'https://sleepercdn.com/avatars/thumbs/' + user.avatar;
+  return QUESTION;
+};
+
+export const getTeamNameFromTeamManagers = (teamManagers, rosterID, year) => {
+  if (!teamManagers) return '';
+  const entry = getRosterEntry(teamManagers, rosterID, year);
+  if (!entry) return '';
+
+  const cur = Number(teamManagers.currentSeason);
+  const y = normalizeSeason(teamManagers, year);
+  const isHistorical = (y != null && y < cur);
+
+  const ownerId = getPrimaryOwnerId(entry);
+  const user = ownerId && teamManagers && teamManagers.users ? teamManagers.users[ownerId] : null;
+
+  const nameFromMap = (entry.team && entry.team.name ? entry.team.name : '').trim();
+  const nameFromUser = (user && user.metadata && user.metadata.team_name ? user.metadata.team_name : '').trim();
+  const ownerDisplay = (user && user.display_name ? user.display_name : '').trim();
+
+  if (isHistorical) {
+    return nameFromMap || nameFromUser || ownerDisplay || 'Unknown Team';
+  }
+  if (nameFromUser && cleanFlat(nameFromMap) === cleanFlat(ownerDisplay)) {
+    return nameFromUser;
+  }
+  return nameFromMap || nameFromUser || ownerDisplay || 'Unknown Team';
+};
+
+export const renderManagerNames = (teamManagers, rosterID, year) => {
+  const entry = getRosterEntry(teamManagers, rosterID, year);
+  if (!entry || !entry.managers || !Array.isArray(entry.managers)) return "";
+  let managersString = "";
+  for (let i = 0; i < entry.managers.length; i++) {
+    const managerID = entry.managers[i];
+    const manager = (teamManagers && teamManagers.users) ? teamManagers.users[managerID] : null;
+    if (manager) {
+      if (managersString != "") managersString += ", ";
+      managersString += manager.display_name;
+    }
+  }
+  return managersString;
+};
+
+export const getTeamFromTeamManagers = (teamManagers, rosterID, year) => {
+  const entry = getRosterEntry(teamManagers, rosterID, year);
+  if (!entry) return { name: 'Unknown Team', avatar: FALLBACK_AVATAR };
+
+  const ownerId = getPrimaryOwnerId(entry);
+  const user = ownerId && teamManagers && teamManagers.users ? teamManagers.users[ownerId] : null;
+
+  const nameFromMap = (entry.team && entry.team.name ? entry.team.name : '').trim();
+  const nameFromUser = (user && user.metadata && user.metadata.team_name ? user.metadata.team_name : '').trim();
+  const ownerDisplay = (user && user.display_name ? user.display_name : '').trim();
+
+  let name = nameFromMap || nameFromUser || ownerDisplay || 'Unknown Team';
+  if (nameFromUser && cleanFlat(nameFromMap) === cleanFlat(ownerDisplay)) {
+    name = nameFromUser;
+  }
+
+  let avatar = FALLBACK_AVATAR;
+  if (entry.team && entry.team.avatar) avatar = entry.team.avatar;
+  else if (user && user.metadata && user.metadata.avatar) avatar = user.metadata.avatar;
+  else if (user && user.avatar) avatar = 'https://sleepercdn.com/avatars/thumbs/' + user.avatar;
+
+  // preserve other fields from entry.team if present
+  const baseTeam = entry.team ? entry.team : {};
+  const result = {};
+  for (const k in baseTeam) result[k] = baseTeam[k];
+  result.name = name;
+  result.avatar = avatar;
+  return result;
+};
+
+export const getNestedTeamNamesFromTeamManagers = (teamManagers, year, rosterID) => {
+  const originalTeam = getTeamFromTeamManagers(teamManagers, rosterID, year);
+  const currentTeam  = getTeamFromTeamManagers(teamManagers, rosterID, teamManagers ? teamManagers.currentSeason : null);
+  const originalName = originalTeam && originalTeam.name ? originalTeam.name : '';
+  const currentName  = currentTeam && currentTeam.name ? currentTeam.name : '';
+  if (cleanName(originalName) != cleanName(currentName)) {
+    return originalName + '<div class="curOwner">(' + currentName + ')</div>';
+  }
+  return originalName;
+};
+
+/* --------------------- activity & lookups by ids ------------------- */
+
+export const getDatesActive = (teamManagers, managerID) => {
+  if (!managerID) return;
+  const datesActive = {start: null, end: null};
+  const years = Object.keys(teamManagers.teamManagersMap || {}).sort((a, b) => b - a);
+  for (let yi = 0; yi < years.length; yi++) {
+    const year = years[yi];
+    const yearMap = teamManagers.teamManagersMap[year] || {};
+    for (const rosterID in yearMap) {
+      const entry = yearMap[rosterID];
+      const mgrs = entry && entry.managers ? entry.managers : [];
+      if (mgrs.indexOf(managerID) > -1) {
+        datesActive.start = year;
+        if (!datesActive.end) datesActive.end = year;
+        break;
+      }
+    }
+  }
+  if (datesActive.end == teamManagers.currentSeason) {
+    datesActive.end = null;
+  }
+  return datesActive;
+};
+
+export const getRosterIDFromManagerID = (teamManagers, managerID) => {
+  if (!managerID) return null;
+  const years = Object.keys(teamManagers.teamManagersMap || {}).sort((a, b) => b - a);
+  for (let yi = 0; yi < years.length; yi++) {
+    const year = years[yi];
+    const yearMap = teamManagers.teamManagersMap[year] || {};
+    for (const rosterID in yearMap) {
+      const entry = yearMap[rosterID];
+      const mgrs = entry && entry.managers ? entry.managers : [];
+      if (mgrs.indexOf(managerID) > -1) {
+        return {rosterID, year};
+      }
+    }
+  }
+  return null;
+};
+
+export const getRosterIDFromManagerIDAndYear = (teamManagers, managerID, year) => {
+  if (!managerID || !year) return null;
+  const map = getYearMap(teamManagers, year);
+  if (!map) return null;
+  for (const rosterID in map) {
+    const entry = map[rosterID];
+    const mgrs = entry && entry.managers ? entry.managers : [];
+    if (mgrs.indexOf(managerID) > -1) {
+      return rosterID;
+    }
+  }
+  return null;
+};
+
+export const checkIfManagerReceivedAward = (teamManagers, awardRosterID, year, managerID) => {
+  if (!managerID) return false;
+  const entry = getRosterEntry(teamManagers, awardRosterID, year);
+  const mgrs = entry && entry.managers ? entry.managers : [];
+  return mgrs.indexOf(managerID) > -1;
+};
