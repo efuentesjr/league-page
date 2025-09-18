@@ -116,26 +116,44 @@
     {#each draftRow as draftCol, col}
         {#if !previous || draftCol}
             <Cell class="draftCell{draftCol ? ' changedHands' : ''}{previous ? ` prev${players[draftCol.player].pos}` : ''}">
-                <span class="draftPos{previous ? "Prev" : ""}">
-                    {#if draftType == "auction" && previous}
-                        ${draftCol.amount}
-                    {:else if draftType == "snake" && !reversalRound}
-                        {row}.{row % 2 == 0 ? draftRow.length - col : col + 1}{draftCol?.newOwner ? ` ${getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}` : ''}
-                    {:else if draftType == "snake" && reversalRound}
-                        {#if (row < reversalRound && row % 2 == 0) || (row >= reversalRound && row % 2 == 1)}
-                            {row}.{draftRow.length - col}
-                        {:else}
-                            {row}.{col + 1}
-                        {/if}
-                        {draftCol?.newOwner ? ` ${getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}` : ''}
-                    {:else}
-                        {#if !reversalRound || row < reversalRound}
-                            {row}.{col+1}{draftCol?.newOwner ? ` ${getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}` : ''}
-                        {:else}
-                            {row}.{draftRow.length - col}{draftCol?.newOwner ? ` ${getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)}` : ''}
-                        {/if}
-                    {/if}
-                </span>
+				<span class="draftPos{previous ? 'Prev' : ''}">
+  					{#if draftType == "auction" && previous}
+    					${draftCol.amount}
+  					{:else if draftType == "snake" && !reversalRound}
+    				{row}.{row % 2 == 0 ? draftRow.length - col : col + 1}
+    				{#if draftCol?.newOwner}
+      				{' '}{previous
+        				? getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)
+        : getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner)
+      }
+    {/if}
+  {:else if draftType == "snake" && reversalRound}
+    {#if (row < reversalRound && row % 2 == 0) || (row >= reversalRound && row % 2 == 1)}
+      {row}.{draftRow.length - col}
+    {:else}
+      {row}.{col + 1}
+    {/if}
+    {#if draftCol?.newOwner}
+      {' '}{previous
+        ? getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)
+        : getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner)
+      }
+    {/if}
+  {:else}
+    {#if !reversalRound || row < reversalRound}
+      {row}.{col + 1}
+    {:else}
+      {row}.{draftRow.length - col}
+    {/if}
+    {#if draftCol?.newOwner}
+      {' '}{previous
+        ? getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner, year)
+        : getTeamNameFromTeamManagers(leagueTeamManagers, draftCol.newOwner)
+      }
+    {/if}
+  {/if}
+</span>
+
                 {#if draftCol && !previous}
                     <div class="newOwner">{getTeamNameFromTeamManagers(leagueTeamManagers, draftCol)}</div>
                 {/if}
