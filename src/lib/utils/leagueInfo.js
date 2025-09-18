@@ -237,7 +237,7 @@ export const managers = [
   {
     "roster": 11,
     "managerID": "851923896448942080",
-    "slug": "texastimeshifts",
+    "slug": "texas-timeshifts",
     "name": "Adrian Abundis",
     "location": "Austin TX",
     "bio": "We are here to build a legacy of success and championships",
