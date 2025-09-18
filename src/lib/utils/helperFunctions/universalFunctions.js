@@ -222,45 +222,44 @@ export const getAvatarFromTeamManagers = (teamManagers, rosterID, year) => {
 export const getTeamNameFromTeamManagers = (teamManagers, rosterID, year) => {
   if (!teamManagers) return '';
 
-  // Normalize year
-  if (!year || year > teamManagers.currentSeason) {
-    year = teamManagers.currentSeason;
-  }
+  // Normalize year to a valid season number
+  const curSeason = Number(teamManagers.currentSeason);
+  let y = year == null ? curSeason : Number(year);
+  if (!Number.isFinite(y) || y > curSeason) y = curSeason;
 
-  // Your maps can be keyed by "3" or 3 — try both
-  const ridStr = String(rosterID);
+  // Normalize roster key: your maps sometimes key by "3" and sometimes 3
   const ridNum = Number(rosterID);
+  const ridStr = String(rosterID);
 
-  const yearMap = teamManagers.teamManagersMap?.[year];
+  // Get the map for that season (try numeric and string year keys)
+  const yearMap =
+    teamManagers.teamManagersMap?.[y] ??
+    teamManagers.teamManagersMap?.[String(y)];
   if (!yearMap) return '';
 
-  const entry = yearMap[ridStr] ?? yearMap[ridNum];
+  // Try both roster key types
+  const entry = yearMap[ridNum] ?? yearMap[ridStr];
   if (!entry) return '';
 
-  // Name recorded in your map for that season (historical-safe)
+  // Name recorded in your season map (what Playoff Projections uses)
   const nameFromMap = (entry.team?.name || '').trim();
 
-  // Primary owner (first manager id)
+  // Primary owner (first manager id) to query user fallback
   const ownerId =
     (Array.isArray(entry.managers) && entry.managers.length ? entry.managers[0] : null) ??
     entry.owner_id ??
     entry.managerID;
 
-  // Pull live user/team info from Sleeper user map
+  // Pull from Sleeper user list as a fallback
   const user = ownerId ? teamManagers.users?.[ownerId] : null;
-  const nameFromUser = (user?.metadata?.team_name || '').trim(); // current "Team Name"
-  const ownerDisplayName = (user?.display_name || '').trim();     // fallback
+  const nameFromUser = (user?.metadata?.team_name || '').trim(); // current "Team Name" set by manager
+  const ownerDisplayName = (user?.display_name || '').trim();     // last-resort fallback
 
-  const isHistorical = Number(year) < Number(teamManagers.currentSeason);
+  // Prefer the SEASON MAP name first (to mirror Playoff Projections everywhere),
+  // then fall back to the user's current team name, then the owner display name.
+  return nameFromMap || nameFromUser || ownerDisplayName || 'Unknown Team';
+};
 
-  // Historical: prefer recorded name → current team name → owner name
-  // Current:    prefer current team name → recorded name → owner name
-  if (isHistorical) {
-    return nameFromMap || nameFromUser || ownerDisplayName || 'Unknown Team';
-  } else {
-    return nameFromUser || nameFromMap || ownerDisplayName || 'Unknown Team';
-  }
-}
 
 
 export const renderManagerNames = (teamManagers, rosterID, year) => {
