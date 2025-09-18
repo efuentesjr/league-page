@@ -10,7 +10,7 @@ import TransactionsPage from './Transactions/TransactionsPage.svelte';
 import MatchupsAndBrackets from './Matchups/MatchupsAndBrackets.svelte';
 import Pagination from './Pagination.svelte';
 import Drafts from './Drafts/index.svelte';
-import Records from './Records/index.asvelte';
+import Records from './Records/index.svelte';
 import Manager from './Managers/Manager.svelte';
 import AllManagers from './Managers/AllManagers.svelte';
 import PowerRankings from './PowerRankings/index.svelte';
