@@ -220,11 +220,48 @@ export const getAvatarFromTeamManagers = (teamManagers, rosterID, year) => {
 }
 
 export const getTeamNameFromTeamManagers = (teamManagers, rosterID, year) => {
-    if(!year || year > teamManagers.currentSeason) {
-        year = teamManagers.currentSeason;
-    }
-    return teamManagers.teamManagersMap[year][rosterID].team.name;
+  if (!teamManagers) return '';
+
+  // Normalize year
+  if (!year || year > teamManagers.currentSeason) {
+    year = teamManagers.currentSeason;
+  }
+
+  // Your maps can be keyed by "3" or 3 — try both
+  const ridStr = String(rosterID);
+  const ridNum = Number(rosterID);
+
+  const yearMap = teamManagers.teamManagersMap?.[year];
+  if (!yearMap) return '';
+
+  const entry = yearMap[ridStr] ?? yearMap[ridNum];
+  if (!entry) return '';
+
+  // Name recorded in your map for that season (historical-safe)
+  const nameFromMap = (entry.team?.name || '').trim();
+
+  // Primary owner (first manager id)
+  const ownerId =
+    (Array.isArray(entry.managers) && entry.managers.length ? entry.managers[0] : null) ??
+    entry.owner_id ??
+    entry.managerID;
+
+  // Pull live user/team info from Sleeper user map
+  const user = ownerId ? teamManagers.users?.[ownerId] : null;
+  const nameFromUser = (user?.metadata?.team_name || '').trim(); // current "Team Name"
+  const ownerDisplayName = (user?.display_name || '').trim();     // fallback
+
+  const isHistorical = Number(year) < Number(teamManagers.currentSeason);
+
+  // Historical: prefer recorded name → current team name → owner name
+  // Current:    prefer current team name → recorded name → owner name
+  if (isHistorical) {
+    return nameFromMap || nameFromUser || ownerDisplayName || 'Unknown Team';
+  } else {
+    return nameFromUser || nameFromMap || ownerDisplayName || 'Unknown Team';
+  }
 }
+
 
 export const renderManagerNames = (teamManagers, rosterID, year) => {
     if(!year || year > teamManagers.currentSeason) {
