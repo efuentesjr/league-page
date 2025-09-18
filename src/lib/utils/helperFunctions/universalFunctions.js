@@ -219,46 +219,61 @@ export const getAvatarFromTeamManagers = (teamManagers, rosterID, year) => {
     return roster.team?.avatar;
 }
 
-export const getTeamNameFromTeamManagers = (teamManagers, rosterID, year) => {
-  if (!teamManagers) return '';
+export const getTeamFromTeamManagers = (teamManagers, rosterID, year) => {
+  // Safe defaults
+  const FALLBACK_AVATAR = 'https://sleepercdn.com/images/v2/icons/player_default.webp';
+  const EMPTY_TEAM = { name: 'Unknown Team', avatar: FALLBACK_AVATAR };
 
-  // Normalize year to a valid season number
+  if (!teamManagers) return EMPTY_TEAM;
+
+  // Normalize year to a valid season
   const curSeason = Number(teamManagers.currentSeason);
   let y = year == null ? curSeason : Number(year);
   if (!Number.isFinite(y) || y > curSeason) y = curSeason;
 
-  // Normalize roster key: your maps sometimes key by "3" and sometimes 3
+  // Normalize roster key (your maps may use "12" or 12)
   const ridNum = Number(rosterID);
   const ridStr = String(rosterID);
 
-  // Get the map for that season (try numeric and string year keys)
+  // Pull the season map (handle numeric or string year keys)
   const yearMap =
     teamManagers.teamManagersMap?.[y] ??
     teamManagers.teamManagersMap?.[String(y)];
-  if (!yearMap) return '';
+  if (!yearMap) return EMPTY_TEAM;
 
-  // Try both roster key types
+  // Find the roster entry using both key types
   const entry = yearMap[ridNum] ?? yearMap[ridStr];
-  if (!entry) return '';
+  if (!entry) return EMPTY_TEAM;
 
-  // Name recorded in your season map (what Playoff Projections uses)
-  const nameFromMap = (entry.team?.name || '').trim();
-
-  // Primary owner (first manager id) to query user fallback
+  // Primary owner to look up user metadata
   const ownerId =
     (Array.isArray(entry.managers) && entry.managers.length ? entry.managers[0] : null) ??
     entry.owner_id ??
     entry.managerID;
-
-  // Pull from Sleeper user list as a fallback
   const user = ownerId ? teamManagers.users?.[ownerId] : null;
-  const nameFromUser = (user?.metadata?.team_name || '').trim(); // current "Team Name" set by manager
-  const ownerDisplayName = (user?.display_name || '').trim();     // last-resort fallback
 
-  // Prefer the SEASON MAP name first (to mirror Playoff Projections everywhere),
-  // then fall back to the user's current team name, then the owner display name.
-  return nameFromMap || nameFromUser || ownerDisplayName || 'Unknown Team';
+  // Sources of "team name"
+  const nameFromMap = (entry.team?.name || '').trim();               // what your season map stored
+  const nameFromUser = (user?.metadata?.team_name || '').trim();     // current Sleeper "Team Name"
+  const ownerDisplay = (user?.display_name || '').trim();            // last-resort fallback
+
+  // If the map stored the owner display name (common for a stale build), prefer the actual team_name.
+  const clean = (s) => (s || '').toLowerCase().replace(/\s+/g, '');
+  let name = nameFromMap || nameFromUser || ownerDisplay || 'Unknown Team';
+  if (nameFromUser && clean(nameFromMap) === clean(ownerDisplay)) {
+    name = nameFromUser;
+  }
+
+  // Choose an avatar: prefer what’s in the map, then user metadata/avatar, then fallback
+  const avatar =
+    entry.team?.avatar ||
+    (user?.metadata?.avatar ? user.metadata.avatar
+     : (user?.avatar ? `https://sleepercdn.com/avatars/thumbs/${user.avatar}` : FALLBACK_AVATAR));
+
+  // Return the full team object but with the corrected name
+  return { ...(entry.team || {}), name, avatar };
 };
+
 
 
 
