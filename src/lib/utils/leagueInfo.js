@@ -192,7 +192,7 @@ export const managers = [
     "roster": 9,
     "managerID": "851283708244766720",
     "slug": "team-88boyz11",
-    "name": "Mario Abundis",
+    "name": "88boyz11",
     "location": "Hutto TX",
     "bio": "Waiting for Jerry to make his final move.",
     "photo": "/managers/MA.jpg",
