@@ -191,7 +191,7 @@ export const managers = [
   {
     "roster": 9,
     "managerID": "851283708244766720",
-    "slug": "88boyz11",
+    "slug": "team-88boyz11",
     "name": "Mario Abundis",
     "location": "Hutto TX",
     "bio": "Waiting for Jerry to make his final move.",
