@@ -10,7 +10,7 @@ import TransactionsPage from './Transactions/TransactionsPage.svelte';
 import MatchupsAndBrackets from './Matchups/MatchupsAndBrackets.svelte';
 import Pagination from './Pagination.svelte';
 import Drafts from './Drafts/index.svelte';
-import Records from './Records/index.svelte';
+import Records from './Records/index.asvelte';
 import Manager from './Managers/Manager.svelte';
 import AllManagers from './Managers/AllManagers.svelte';
 import PowerRankings from './PowerRankings/index.svelte';
@@ -19,25 +19,29 @@ import FullPost from './BlogPosts/FullPost.svelte';
 import Posts from './BlogPosts/Posts.svelte';
 import Standings from './Standings/index.svelte';
 
+// NEW: live Sleeper-name/logo label for teams
+import TeamLabel from './TeamLabel.svelte';
+
 export {
-    Nav,
-    Footer,
-    Awards,
-    Rosters,
-    Rivalry,
-    Transactions,
-    TransactionsPage,
-    News,
-    Resources,
-    MatchupsAndBrackets,
-    Pagination,
-    Drafts,
-    Records,
-    Manager,
-    AllManagers,
-    PowerRankings,
-    HomePost,
-    Posts,
-    FullPost,
-    Standings,
+  Nav,
+  Footer,
+  Awards,
+  Rosters,
+  Rivalry,
+  Transactions,
+  TransactionsPage,
+  News,
+  Resources,
+  MatchupsAndBrackets,
+  Pagination,
+  Drafts,
+  Records,
+  Manager,
+  AllManagers,
+  PowerRankings,
+  HomePost,
+  Posts,
+  FullPost,
+  Standings,
+  TeamLabel,
 };
