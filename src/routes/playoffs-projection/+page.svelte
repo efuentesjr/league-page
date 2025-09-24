@@ -20,36 +20,12 @@
   const prettifySlug = (s = '') =>
     s.replace(/-/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase());
   const s = v => (typeof v === 'string' ? v.trim() : '');
-  const n = v => {
-    const x = Number(v);
-    return Number.isFinite(x) ? x : null;
-  };
+  const n = v => { const x = Number(v); return Number.isFinite(x) ? x : null; };
 
   // Slug -> managerID (from your config)
   const slugToOwner = new Map(
     (Array.isArray(managers) ? managers : []).map(m => [m.slug, String(m.managerID ?? '')])
   );
-
-  // --- IMAGE PATH / ORB SAFETY ---
-  // Put any local logo files in: static/logos/<filename>.jpg
-  const LOGO_BASE = '/logos';
-
-  function normalizeLogo(u) {
-    const x = s(u);
-    if (!x) return '';
-    if (/^https?:\/\//i.test(x) || x.startsWith('data:')) return x; // absolute stays absolute
-    // treat bare filenames like "12738.jpg" as /logos/12738.jpg
-    return `${LOGO_BASE}/${x.replace(/^\/+/, '')}`.replace(/\/{2,}/g, '/');
-  }
-  // Proxy remote images through app to avoid ORB/CORS issues
-  const proxied = (u) => (u ? `/api/img?u=${encodeURIComponent(u)}` : '');
-
-  // Sleeper avatar fallback
-  function fallbackSleeperAvatar(slug) {
-    const owner = slugToOwner.get(slug);
-    const avatarId = owner && ltm?.users?.[owner]?.avatar;
-    return avatarId ? proxied(`https://sleepercdn.com/avatars/thumbs/${avatarId}`) : '';
-  }
 
   // ---------- live Sleeper data ----------
   let ltm = null;                // { currentSeason, teamManagersMap, users }
@@ -112,23 +88,34 @@
     return s(m?.logoUrl ?? m?.teamLogo ?? m?.avatarUrl);
   };
 
+  // Proxy remote images through app to avoid ORB/CORS issues
+  const proxied = (u) => (u ? `/api/img?u=${encodeURIComponent(u)}` : '');
+
+  // Sleeper avatar fallback (stable + proper headers)
+  function fallbackSleeperAvatar(slug) {
+    const owner = slugToOwner.get(slug);
+    const avatarId = owner && ltm?.users?.[owner]?.avatar;
+    return avatarId ? proxied(`https://sleepercdn.com/avatars/thumbs/${avatarId}`) : '';
+  }
+
   // Final resolvers used in the markup
   const labelFor = (slug) => {
     const live = teamFromSleeperBySlug(slug);
     return s(live?.name) || labelFromConfig(slug);
   };
+
+  // IMPORTANT: avoid bare filenames like "12738.jpg" (cause ORB if missing)
   const logoFor = (slug) => {
     const live = teamFromSleeperBySlug(slug);
-    const raw = s(live?.logo) || rawLogoFromConfig(slug);
+    const liveLogo = s(live?.logo);
+    if (liveLogo) return proxied(liveLogo);
 
-    if (!raw) return fallbackSleeperAvatar(slug);
+    // Only allow config logo if it's an absolute URL; otherwise use Sleeper avatar
+    const cfg = rawLogoFromConfig(slug);
+    if (/^https?:\/\//i.test(cfg)) return proxied(cfg);
 
-    // Remote → proxy; Local filename → normalize; data: stays as is
-    if (/^https?:\/\//i.test(raw)) return proxied(raw);
-    if (raw.startsWith('data:')) return raw;
-
-    const local = normalizeLogo(raw);
-    return local || fallbackSleeperAvatar(slug);
+    // Anything else (bare file names, relative paths) -> use Sleeper avatar
+    return fallbackSleeperAvatar(slug);
   };
 
   // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
