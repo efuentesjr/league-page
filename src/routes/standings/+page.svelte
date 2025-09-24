@@ -1,30 +1,15 @@
 <script>
   import { onMount } from 'svelte';
-
-  // Keep whatever props it already expects:
-  export let standingsData;
-  export let leagueTeamManagersData; // may be undefined/empty — that’s fine
-
-  onMount(() => {
-    console.group('[diag] <Standings> initial props');
-    console.log('standingsData:',
-      Array.isArray(standingsData) ? `length=${standingsData.length}` : typeof standingsData);
-    console.log('leagueTeamManagersData:',
-      Array.isArray(leagueTeamManagersData) ? `length=${leagueTeamManagersData.length}` : typeof leagueTeamManagersData);
-    console.groupEnd();
-
-  import { onMount } from 'svelte';
   import { Standings } from '$lib/components';
 
   export let data;
 
-  // Locals to hold the resolved values
+  // Hold resolved values from loader (they were Promises)
   let standingsResolved = null;
-  let ltmResolved = null; // leagueTeamManagersData resolved
+  let ltmResolved = null; // leagueTeamManagersData
 
   onMount(async () => {
     try {
-      // In case they are already plain values, Promise.resolve() is harmless
       const [s, ltm] = await Promise.all([
         Promise.resolve(data?.standingsData),
         Promise.resolve(data?.leagueTeamManagersData)
@@ -33,7 +18,7 @@
       standingsResolved = s;
       ltmResolved = ltm;
 
-      // --- Diagnostic table (same as before, but now using resolved data) ---
+      // Diagnostic: see the actual rows
       const list = Array.isArray(ltmResolved) ? ltmResolved : [];
       if (!list.length) {
         console.warn('[diag] standings page: leagueTeamManagersData is empty after resolve');
