@@ -1,5 +1,19 @@
 <script>
   import { onMount } from 'svelte';
+
+  // Keep whatever props it already expects:
+  export let standingsData;
+  export let leagueTeamManagersData; // may be undefined/empty — that’s fine
+
+  onMount(() => {
+    console.group('[diag] <Standings> initial props');
+    console.log('standingsData:',
+      Array.isArray(standingsData) ? `length=${standingsData.length}` : typeof standingsData);
+    console.log('leagueTeamManagersData:',
+      Array.isArray(leagueTeamManagersData) ? `length=${leagueTeamManagersData.length}` : typeof leagueTeamManagersData);
+    console.groupEnd();
+
+  import { onMount } from 'svelte';
   import { Standings } from '$lib/components';
 
   export let data;
