@@ -10,9 +10,9 @@
     sourceUrl = null
   } = data ?? {};
 
-  // Local config (slug + managerID, optional teamName/logo)
+  // Local config (slug + managerID, optional teamName)
   import { managers } from '$lib/utils/leagueInfo';
-  // Live Sleeper map (cached after first call)
+  // Live Sleeper map (cached via store after first call)
   import { getLeagueTeamManagers } from '$lib/utils/helperFunctions/leagueTeamManagers';
   import { onMount } from 'svelte';
 
@@ -22,14 +22,14 @@
   const s = v => (typeof v === 'string' ? v.trim() : '');
   const n = v => { const x = Number(v); return Number.isFinite(x) ? x : null; };
 
-  // Slug -> managerID (from your config)
+  // Slug -> managerID (from your config; stable)
   const slugToOwner = new Map(
     (Array.isArray(managers) ? managers : []).map(m => [m.slug, String(m.managerID ?? '')])
   );
 
   // ---------- live Sleeper data ----------
-  let ltm = null;                // { currentSeason, teamManagersMap, users }
-  let ownerToRoster = new Map(); // managerID -> roster_id for current season
+  let ltm = null;                  // { currentSeason, teamManagersMap, users }
+  let ownerToRoster = new Map();   // managerID -> roster_id for current season
 
   onMount(async () => {
     try {
@@ -43,19 +43,28 @@
         if (owner) map.set(owner, n(rid));
       }
       ownerToRoster = map;
+
+      // Dev hint: expand if you need to inspect what's resolved
+      console.groupCollapsed('[playoffs-projection] LTM ready');
+      console.log('season:', season, 'owners:', ownerToRoster.size);
+      console.groupEnd();
     } catch (e) {
-      console.warn('[playoffs-projection] failed to load Sleeper LTM; using config fallbacks', e);
+      console.warn('[playoffs-projection] failed to load Sleeper LTM (names will use config)', e);
     }
   });
 
   function teamFromSleeperBySlug(slug) {
+    if (!ltm) return null;
     const owner = slugToOwner.get(slug);
-    if (!ltm || !owner) return null;
+    if (!owner) return null;
+
     const rid = ownerToRoster.get(owner);
     if (!rid) return null;
+
     const season = ltm.currentSeason;
     const entry = ltm.teamManagersMap?.[season]?.[rid];
     if (!entry) return null;
+
     const team = entry.team || {};
     const user = ltm.users?.[owner] || {};
     const name =
@@ -63,14 +72,13 @@
       s(team.teamName) ||
       s(team?.metadata?.team_name) ||
       s(user?.metadata?.team_name) || '';
+
     const managerName = s(user.display_name || user.user_name || '');
-    const logo =
-      s(team.logoUrl) ||
-      s(team.avatarUrl) ||
-      s(team.teamAvatar) ||
-      s(team.logo) ||
-      s(team.avatar) ||
-      '';
+
+    // Only use Sleeper AVATAR for logo (robust headers; avoids ORB)
+    const avatarId = s(user.avatar);
+    const logo = avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : '';
+
     return {
       rid,
       name: name || managerName || prettifySlug(slug),
@@ -83,20 +91,6 @@
     const m = (Array.isArray(managers) ? managers : []).find(x => x.slug === slug);
     return s(m?.teamName ?? m?.team_name) || prettifySlug(slug);
   };
-  const rawLogoFromConfig = (slug) => {
-    const m = (Array.isArray(managers) ? managers : []).find(x => x.slug === slug);
-    return s(m?.logoUrl ?? m?.teamLogo ?? m?.avatarUrl);
-  };
-
-  // Proxy remote images through app to avoid ORB/CORS issues
-  const proxied = (u) => (u ? `/api/img?u=${encodeURIComponent(u)}` : '');
-
-  // Sleeper avatar fallback (stable + proper headers)
-  function fallbackSleeperAvatar(slug) {
-    const owner = slugToOwner.get(slug);
-    const avatarId = owner && ltm?.users?.[owner]?.avatar;
-    return avatarId ? proxied(`https://sleepercdn.com/avatars/thumbs/${avatarId}`) : '';
-  }
 
   // Final resolvers used in the markup
   const labelFor = (slug) => {
@@ -104,18 +98,10 @@
     return s(live?.name) || labelFromConfig(slug);
   };
 
-  // IMPORTANT: avoid bare filenames like "12738.jpg" (cause ORB if missing)
+  // IMPORTANT: logos are ONLY Sleeper avatars to avoid ORB from bad local filenames/CDN headers
   const logoFor = (slug) => {
     const live = teamFromSleeperBySlug(slug);
-    const liveLogo = s(live?.logo);
-    if (liveLogo) return proxied(liveLogo);
-
-    // Only allow config logo if it's an absolute URL; otherwise use Sleeper avatar
-    const cfg = rawLogoFromConfig(slug);
-    if (/^https?:\/\//i.test(cfg)) return proxied(cfg);
-
-    // Anything else (bare file names, relative paths) -> use Sleeper avatar
-    return fallbackSleeperAvatar(slug);
+    return s(live?.logo) || '';
   };
 
   // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
