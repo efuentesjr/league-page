@@ -13,13 +13,11 @@
   const sleeperAvatar = (avatarId) =>
     avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : "";
 
-  function prettifySlug(s = "") {
-    const text = s.replace(/-/g, " ").replace(/\s+/g, " ").trim();
-    return text.replace(/\b\w/g, (c) => c.toUpperCase());
-  }
+  const prettifySlug = (s = "") =>
+    s.replace(/-/g, " ").replace(/\s+/g, " ").trim().replace(/\b\w/g, c => c.toUpperCase());
 
-  function mkSlug(str) {
-    return (str || "")
+  const mkSlug = (str) =>
+    (str || "")
       .toString()
       .normalize("NFKD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -28,18 +26,9 @@
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "")
       .replace(/-{2,}/g, "-");
-  }
 
-  function pickTeamLogo(team = {}) {
-    return (
-      team.logoUrl ||
-      team.avatarUrl ||
-      team.teamAvatar ||
-      team.logo ||
-      team.avatar ||
-      ""
-    );
-  }
+  const pickTeamLogo = (team = {}) =>
+    team.logoUrl || team.avatarUrl || team.teamAvatar || team.logo || team.avatar || "";
 
   function huntLogoUrl(obj) {
     try {
@@ -52,9 +41,7 @@
         for (const k of Object.keys(cur)) {
           const v = cur[k];
           if (typeof v === "string") {
-            if (/^https?:\/\//i.test(v) && /\.(png|jpg|jpeg|webp|gif)(\?|$)/i.test(v)) {
-              return v;
-            }
+            if (/^https?:\/\//i.test(v) && /\.(png|jpg|jpeg|webp|gif)(\?|$)/i.test(v)) return v;
           } else if (typeof v === "object") {
             stack.push(v);
           }
@@ -64,6 +51,7 @@
     return "";
   }
 
+  // Find roster by owner (managerID)
   function findRosterEntryByOwner(map = {}, ownerId) {
     if (!ownerId) return null;
     const target = asId(ownerId);
@@ -79,80 +67,142 @@
     return null;
   }
 
+  // Prefer matching slugs to *team* names first; only then consider manager names
   function findRosterEntryBySlug(map = {}, usersById = {}, wantedSlug) {
+    if (!wantedSlug) return null;
+
+    const byTeamName = [];
+    const byManagerName = [];
+
     for (const rid of Object.keys(map)) {
       const entry = map[rid];
       if (!entry) continue;
       const t = entry.team || {};
-      const teamCandidates = [t.displayName, t.teamName].filter(Boolean);
 
+      const teamCandidates = [t.displayName, t.teamName, t.name, t?.metadata?.team_name].filter(Boolean);
+      const teamSlugs = teamCandidates.map(mkSlug);
+      if (teamSlugs.includes(wantedSlug)) byTeamName.push(entry);
+
+      // Manager candidates (secondary)
       for (const m of entry.managers || []) {
         const uid = asId(m?.user_id || m?.managerID);
-        if (uid && usersById[uid]) {
-          teamCandidates.push(usersById[uid].display_name, usersById[uid].user_name);
-        }
+        const u = uid && usersById[uid] ? usersById[uid] : null;
+        const managerCandidates = [
+          u?.display_name,
+          u?.user_name,
+          m?.display_name,
+          m?.user_name,
+          m?.name
+        ].filter(Boolean);
+        const managerSlugs = managerCandidates.map(mkSlug);
+        if (managerSlugs.includes(wantedSlug)) byManagerName.push(entry);
       }
-
-      const slugs = teamCandidates.filter(Boolean).map(mkSlug);
-      if (slugs.includes(wantedSlug)) return entry;
     }
-    return null;
+
+    return byTeamName[0] || byManagerName[0] || null;
   }
 
-  // Managers config for this slug (if you added it)
+  // Scan an object for plausible team-name fields (avoids manager names)
+  function huntTeamName(obj, managerBlacklist = new Set()) {
+    const keysRegex = /(team.?name|display.?name|nickname|franchise|club)/i;
+    try {
+      const seen = new Set();
+      const stack = [obj];
+      while (stack.length) {
+        const cur = stack.pop();
+        if (!cur || typeof cur !== "object" || seen.has(cur)) continue;
+        seen.add(cur);
+        for (const k of Object.keys(cur)) {
+          const v = cur[k];
+          if (typeof v === "string" && keysRegex.test(k)) {
+            const val = v.trim();
+            if (val.length >= 2 && !managerBlacklist.has(val)) return val;
+          } else if (typeof v === "object") {
+            stack.push(v);
+          }
+        }
+      }
+    } catch {}
+    return "";
+  }
+
+  // Managers config for this slug (if present)
   const mgr = Array.isArray(managers) ? managers.find((m) => m?.slug === slug) : null;
   const forcedOwnerId = asId(mgr?.managerID);
   const configuredTeamName = mgr?.teamName ?? null;
 
-  // Initial label: prefer configured teamName, else prettified slug
+  // Initial label: prefer configured teamName, else prettified slug (may equal a manager name)
   let name = configuredTeamName || prettifySlug(slug);
   let logoUrl = "";
   let matchedBy = "none";
 
   onMount(async () => {
     try {
-      const ltm = await getLeagueTeamManagers();
+      const ltm = await getLeagueTeamManagers(); // your unified source
       const usersById = ltm?.users || {};
       const currentSeason = ltm?.currentSeason;
       const teamManagersMap = ltm?.teamManagersMap?.[currentSeason] || {};
 
-      let re = null;
+      let entry = null;
       let teamObj = null;
 
       // A) Exact owner match via managers[].managerID
       if (forcedOwnerId) {
-        re = findRosterEntryByOwner(teamManagersMap, forcedOwnerId);
-        if (re) { matchedBy = "ownerId"; teamObj = re.team || {}; }
+        entry = findRosterEntryByOwner(teamManagersMap, forcedOwnerId);
+        if (entry) { matchedBy = "ownerId"; teamObj = entry.team || {}; }
       }
 
-      // B) Slug match against roster team names (or related)
-      if (!re) {
-        re = findRosterEntryBySlug(teamManagersMap, usersById, slug);
-        if (re) { matchedBy = "slugified-name"; teamObj = re.team || {}; }
+      // B) Slug match (prefer team names; manager names only if needed)
+      if (!entry) {
+        entry = findRosterEntryBySlug(teamManagersMap, usersById, mkSlug(slug));
+        if (entry) { matchedBy = matchedBy === "none" ? "slug" : matchedBy + "+slug"; teamObj = entry.team || {}; }
       }
 
-      // Prefer roster team name/logo
-      if (teamObj) {
-        const candidateLogo = pickTeamLogo(teamObj) || huntLogoUrl(teamObj);
-        if (candidateLogo) logoUrl = candidateLogo;
-
-        const tName = teamObj.displayName || teamObj.teamName;
-        if (tName) name = tName;
+      // Build a blacklist of manager names to avoid showing as the team
+      const managerBlacklist = new Set();
+      if (entry?.managers?.length) {
+        for (const m of entry.managers) {
+          const uid = asId(m?.user_id || m?.managerID);
+          const u = uid && usersById[uid] ? usersById[uid] : {};
+          [u.display_name, u.user_name, m?.display_name, m?.user_name, m?.name]
+            .filter(Boolean)
+            .forEach(n => managerBlacklist.add(n));
+          // Also blacklist prettified slug if it equals a manager label
+          managerBlacklist.add(prettifySlug(mkSlug(u?.display_name || u?.user_name || "")));
+        }
       }
 
-      // Avatar fallback: owner avatar via managerID
-      if (!logoUrl && forcedOwnerId && usersById[forcedOwnerId]) {
+      // Prefer a real roster team name
+      let derivedTeamName =
+        teamObj?.displayName ||
+        teamObj?.teamName ||
+        teamObj?.name ||
+        teamObj?.metadata?.team_name ||
+        "";
+
+      if (!derivedTeamName && entry) {
+        // Last-ditch: scan the whole entry for plausible team names (avoid manager names)
+        derivedTeamName = huntTeamName(entry, managerBlacklist);
+      }
+
+      if (derivedTeamName) name = derivedTeamName;
+
+      // Logo preference: roster logo, else any URL found, else owner avatar
+      const candidateLogo = pickTeamLogo(teamObj) || huntLogoUrl(teamObj) || huntLogoUrl(entry);
+      if (candidateLogo) {
+        logoUrl = candidateLogo;
+      } else if (forcedOwnerId && usersById[forcedOwnerId]) {
         logoUrl = sleeperAvatar(usersById[forcedOwnerId].avatar);
         matchedBy = matchedBy === "none" ? "forced-managerID" : matchedBy + "+forced-managerID";
       }
 
-      // Final name fallback (already set to configuredTeamName -> prettified slug)
+      // Final fallback if still empty
       if (!name) name = configuredTeamName || prettifySlug(slug);
 
       if (debug) {
         console.log("[TeamLabel]", {
           slug, forcedOwnerId, matchedBy,
-          rosterFound: !!re,
+          rosterFound: !!entry,
           chosenName: name,
           chosenLogo: logoUrl
         });
