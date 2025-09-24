@@ -10,98 +10,21 @@
     sourceUrl = null
   } = data ?? {};
 
-  // Local config (slug + managerID, optional teamName)
   import { managers } from '$lib/utils/leagueInfo';
-  // Live Sleeper map (cached via store after first call)
-  import { getLeagueTeamManagers } from '$lib/utils/helperFunctions/leagueTeamManagers';
-  import { onMount } from 'svelte';
+  import SleeperAvatar from '$lib/components/SleeperAvatar.svelte';
 
   // ---------- helpers ----------
-  const prettifySlug = (s = '') =>
-    s.replace(/-/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase());
-  const s = v => (typeof v === 'string' ? v.trim() : '');
-  const n = v => { const x = Number(v); return Number.isFinite(x) ? x : null; };
+  const s = (v) => (typeof v === 'string' ? v.trim() : '');
+  const prettifySlug = (str = '') =>
+    str.replace(/-/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, (c) => c.toUpperCase());
 
-  // Slug -> managerID (from your config; stable)
-  const slugToOwner = new Map(
-    (Array.isArray(managers) ? managers : []).map(m => [m.slug, String(m.managerID ?? '')])
-  );
+  // Build quick lookup by slug
+  const bySlug = new Map((Array.isArray(managers) ? managers : []).map((m) => [m.slug, m]));
 
-  // ---------- live Sleeper data ----------
-  let ltm = null;                  // { currentSeason, teamManagersMap, users }
-  let ownerToRoster = new Map();   // managerID -> roster_id for current season
-
-  onMount(async () => {
-    try {
-      ltm = await getLeagueTeamManagers();
-      const season = ltm?.currentSeason;
-      const bucket = ltm?.teamManagersMap?.[season] || {};
-      const map = new Map();
-      for (const rid of Object.keys(bucket)) {
-        const entry = bucket[rid];
-        const owner = s(entry?.team?.owner_id);
-        if (owner) map.set(owner, n(rid));
-      }
-      ownerToRoster = map;
-
-      // Dev hint: expand if you need to inspect what's resolved
-      console.groupCollapsed('[playoffs-projection] LTM ready');
-      console.log('season:', season, 'owners:', ownerToRoster.size);
-      console.groupEnd();
-    } catch (e) {
-      console.warn('[playoffs-projection] failed to load Sleeper LTM (names will use config)', e);
-    }
-  });
-
-  function teamFromSleeperBySlug(slug) {
-    if (!ltm) return null;
-    const owner = slugToOwner.get(slug);
-    if (!owner) return null;
-
-    const rid = ownerToRoster.get(owner);
-    if (!rid) return null;
-
-    const season = ltm.currentSeason;
-    const entry = ltm.teamManagersMap?.[season]?.[rid];
-    if (!entry) return null;
-
-    const team = entry.team || {};
-    const user = ltm.users?.[owner] || {};
-    const name =
-      s(team.displayName) ||
-      s(team.teamName) ||
-      s(team?.metadata?.team_name) ||
-      s(user?.metadata?.team_name) || '';
-
-    const managerName = s(user.display_name || user.user_name || '');
-
-    // Only use Sleeper AVATAR for logo (robust headers; avoids ORB)
-    const avatarId = s(user.avatar);
-    const logo = avatarId ? `https://sleepercdn.com/avatars/thumbs/${avatarId}` : '';
-
-    return {
-      rid,
-      name: name || managerName || prettifySlug(slug),
-      logo
-    };
-  }
-
-  // Fallbacks from local config if Sleeper lacks something
-  const labelFromConfig = (slug) => {
-    const m = (Array.isArray(managers) ? managers : []).find(x => x.slug === slug);
-    return s(m?.teamName ?? m?.team_name) || prettifySlug(slug);
-  };
-
-  // Final resolvers used in the markup
+  // Label (prefer configured teamName, else prettified slug)
   const labelFor = (slug) => {
-    const live = teamFromSleeperBySlug(slug);
-    return s(live?.name) || labelFromConfig(slug);
-  };
-
-  // IMPORTANT: logos are ONLY Sleeper avatars to avoid ORB from bad local filenames/CDN headers
-  const logoFor = (slug) => {
-    const live = teamFromSleeperBySlug(slug);
-    return s(live?.logo) || '';
+    const m = bySlug.get(slug);
+    return s(m?.teamName ?? m?.team_name) || prettifySlug(slug);
   };
 
   // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
@@ -118,7 +41,7 @@
     catch { return iso; }
   }
 
-  // Build + sort rows reactively (rebuilds if data changes)
+  // Build + sort rows reactively
   let rows = [];
   $: rows = (projections || [])
     .filter((p) => p?.slug)
@@ -183,17 +106,8 @@
               <td>{r.division}</td>
               <td class="teamcell">
                 <a class="teamlink" href={`/team/${r.slug}`}>
-                  {#if logoFor(r.slug)}
-                    <img
-                      class="avatar"
-                      src={logoFor(r.slug)}
-                      alt={labelFor(r.slug)}
-                      loading="lazy"
-                      referrerpolicy="no-referrer"
-                      crossorigin="anonymous"
-                      on:error={(e) => (e.currentTarget.style.display = 'none')}
-                    />
-                  {/if}
+                  <!-- Sleeper avatar auto-resolves from slug → managerID → users[owner].avatar -->
+                  <SleeperAvatar slug={r.slug} size={24} alt={labelFor(r.slug)} />
                   <span class="name">{labelFor(r.slug)}</span>
                 </a>
               </td>
@@ -256,7 +170,7 @@
 .overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
 .overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
 .overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
-.teamcell { display:flex; align-items:center; }
+.teamcell { display:flex; align-items:center; gap: 8px; }
 
 .teamlink {
   display: inline-flex;
@@ -268,11 +182,5 @@
 }
 .teamlink:hover { text-decoration: underline; }
 
-.avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  object-fit: cover;
-}
 .name { line-height: 1; }
 </style>
