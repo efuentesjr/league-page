@@ -10,14 +10,102 @@
     sourceUrl = null
   } = data ?? {};
 
-  // Import the component directly from src/lib/TeamLabel.svelte
-  import TeamLabel from '$lib/TeamLabel.svelte';
+  // Local config (slug + managerID, optional teamName/logo)
+  import { managers } from '$lib/utils/leagueInfo';
+  // Live Sleeper map (cached after first call)
+  import { getLeagueTeamManagers } from '$lib/utils/helperFunctions/leagueTeamManagers';
+  import { onMount } from 'svelte';
+
+  // --- helpers ---
+  const prettifySlug = (s = '') =>
+    s.replace(/-/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase());
+  const s = v => (typeof v === 'string' ? v.trim() : '');
+  const n = v => {
+    const x = Number(v);
+    return Number.isFinite(x) ? x : null;
+  };
+
+  // Build slug -> managerID from your config (stable)
+  const slugToOwner = new Map(
+    (Array.isArray(managers) ? managers : []).map(m => [m.slug, String(m.managerID ?? '')])
+  );
+
+  // Populated on mount from Sleeper
+  let ltm = null;                // { currentSeason, teamManagersMap, users }
+  let ownerToRoster = new Map(); // managerID -> roster_id for current season
+
+  onMount(async () => {
+    try {
+      ltm = await getLeagueTeamManagers();
+      const season = ltm?.currentSeason;
+      const bucket = ltm?.teamManagersMap?.[season] || {};
+      const map = new Map();
+      for (const rid of Object.keys(bucket)) {
+        const entry = bucket[rid];
+        const owner = s(entry?.team?.owner_id);
+        if (owner) map.set(owner, n(rid));
+      }
+      ownerToRoster = map;
+    } catch (e) {
+      console.warn('[playoffs-projection] failed to load Sleeper LTM; using config fallbacks', e);
+    }
+  });
+
+  function teamFromSleeperBySlug(slug) {
+    const owner = slugToOwner.get(slug);
+    if (!ltm || !owner) return null;
+    const rid = ownerToRoster.get(owner);
+    if (!rid) return null;
+    const season = ltm.currentSeason;
+    const entry = ltm.teamManagersMap?.[season]?.[rid];
+    if (!entry) return null;
+    const team = entry.team || {};
+    const user = ltm.users?.[owner] || {};
+    const name =
+      s(team.displayName) ||
+      s(team.teamName) ||
+      s(team?.metadata?.team_name) ||
+      s(user?.metadata?.team_name) || '';
+    const managerName = s(user.display_name || user.user_name || '');
+    const logo =
+      s(team.logoUrl) ||
+      s(team.avatarUrl) ||
+      s(team.teamAvatar) ||
+      s(team.logo) ||
+      s(team.avatar) ||
+      '';
+    return {
+      rid,
+      name: name || managerName || prettifySlug(slug),
+      logo
+    };
+  }
+
+  // Fallbacks from local config if Sleeper lacks something
+  const labelFromConfig = (slug) => {
+    const m = (Array.isArray(managers) ? managers : []).find(x => x.slug === slug);
+    return s(m?.teamName ?? m?.team_name) || prettifySlug(slug);
+  };
+  const logoFromConfig = (slug) => {
+    const m = (Array.isArray(managers) ? managers : []).find(x => x.slug === slug);
+    return s(m?.logoUrl ?? m?.teamLogo ?? m?.avatarUrl);
+  };
+
+  // Final resolvers used in the markup
+  const labelFor = (slug) => {
+    const live = teamFromSleeperBySlug(slug);
+    return s(live?.name) || labelFromConfig(slug);
+  };
+  const logoFor = (slug) => {
+    const live = teamFromSleeperBySlug(slug);
+    return s(live?.logo) || logoFromConfig(slug);
+  };
 
   // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
-  function parsePlayStatus(s) {
-    if (!s) return { c: -Infinity, t: -Infinity };
-    const c = Number((s.match(/C:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
-    const t = Number((s.match(/T:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
+  function parsePlayStatus(sv) {
+    if (!sv) return { c: -Infinity, t: -Infinity };
+    const c = Number((sv.match(/C:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
+    const t = Number((sv.match(/T:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
     return { c, t };
   }
 
@@ -61,7 +149,7 @@
   <div class="meta">
     <span class="updated">Updated: {humanTime(lastModified || fetchedAt)}</span>
   </div>
-{/if}
+  {/if}
 
   <div class="overlay">
     {#if error}
@@ -91,7 +179,12 @@
             <tr>
               <td>{r.division}</td>
               <td class="teamcell">
-                <TeamLabel slug={r.slug} href={`/team/${r.slug}`} size={24} />
+                <a class="teamlink" href={`/team/${r.slug}`}>
+                  {#if logoFor(r.slug)}
+                    <img class="avatar" src={logoFor(r.slug)} alt={labelFor(r.slug)} loading="lazy" />
+                  {/if}
+                  <span class="name">{labelFor(r.slug)}</span>
+                </a>
               </td>
               <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
               <td>{r.points ?? 0}</td>
@@ -153,4 +246,22 @@
 .overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
 .overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
 .teamcell { display:flex; align-items:center; }
+
+.teamlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #6fb4ff;
+  font-weight: 600;
+}
+.teamlink:hover { text-decoration: underline; }
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.name { line-height: 1; }
 </style>
