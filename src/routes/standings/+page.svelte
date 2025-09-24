@@ -1,8 +1,10 @@
 <script>
   import { onMount } from 'svelte';
+  import { Standings } from '$lib/components';
 
-  // Adjust the prop name if your page uses a different one
-  export let leagueTeamManagersData;
+  // This page gets everything via `data`
+  export let data;
+  const { standingsData, leagueTeamManagersData } = data;
 
   onMount(() => {
     const list = leagueTeamManagersData ?? [];
@@ -23,22 +25,16 @@
     console.table(rows);
     console.groupEnd();
   });
-
-
-	import { Standings } from '$lib/components'
-
-	export let data;
-	const {standingsData, leagueTeamManagersData} = data;
 </script>
 
 <style>
-	.holder {
-		position: relative;
-		z-index: 1;
-		text-align: center;
-	}
+  .holder {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
 </style>
 
 <div class="holder">
-	<Standings {standingsData} {leagueTeamManagersData} />
+  <Standings {standingsData} {leagueTeamManagersData} />
 </div>
