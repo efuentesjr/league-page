@@ -16,7 +16,7 @@
   import { getLeagueTeamManagers } from '$lib/utils/helperFunctions/leagueTeamManagers';
   import { onMount } from 'svelte';
 
-  // --- helpers ---
+  // ---------- helpers ----------
   const prettifySlug = (s = '') =>
     s.replace(/-/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase());
   const s = v => (typeof v === 'string' ? v.trim() : '');
@@ -25,12 +25,33 @@
     return Number.isFinite(x) ? x : null;
   };
 
-  // Build slug -> managerID from your config (stable)
+  // Slug -> managerID (from your config)
   const slugToOwner = new Map(
     (Array.isArray(managers) ? managers : []).map(m => [m.slug, String(m.managerID ?? '')])
   );
 
-  // Populated on mount from Sleeper
+  // --- IMAGE PATH / ORB SAFETY ---
+  // Put any local logo files in: static/logos/<filename>.jpg
+  const LOGO_BASE = '/logos';
+
+  function normalizeLogo(u) {
+    const x = s(u);
+    if (!x) return '';
+    if (/^https?:\/\//i.test(x) || x.startsWith('data:')) return x; // absolute stays absolute
+    // treat bare filenames like "12738.jpg" as /logos/12738.jpg
+    return `${LOGO_BASE}/${x.replace(/^\/+/, '')}`.replace(/\/{2,}/g, '/');
+  }
+  // Proxy remote images through app to avoid ORB/CORS issues
+  const proxied = (u) => (u ? `/api/img?u=${encodeURIComponent(u)}` : '');
+
+  // Sleeper avatar fallback
+  function fallbackSleeperAvatar(slug) {
+    const owner = slugToOwner.get(slug);
+    const avatarId = owner && ltm?.users?.[owner]?.avatar;
+    return avatarId ? proxied(`https://sleepercdn.com/avatars/thumbs/${avatarId}`) : '';
+  }
+
+  // ---------- live Sleeper data ----------
   let ltm = null;                // { currentSeason, teamManagersMap, users }
   let ownerToRoster = new Map(); // managerID -> roster_id for current season
 
@@ -86,7 +107,7 @@
     const m = (Array.isArray(managers) ? managers : []).find(x => x.slug === slug);
     return s(m?.teamName ?? m?.team_name) || prettifySlug(slug);
   };
-  const logoFromConfig = (slug) => {
+  const rawLogoFromConfig = (slug) => {
     const m = (Array.isArray(managers) ? managers : []).find(x => x.slug === slug);
     return s(m?.logoUrl ?? m?.teamLogo ?? m?.avatarUrl);
   };
@@ -98,7 +119,16 @@
   };
   const logoFor = (slug) => {
     const live = teamFromSleeperBySlug(slug);
-    return s(live?.logo) || logoFromConfig(slug);
+    const raw = s(live?.logo) || rawLogoFromConfig(slug);
+
+    if (!raw) return fallbackSleeperAvatar(slug);
+
+    // Remote → proxy; Local filename → normalize; data: stays as is
+    if (/^https?:\/\//i.test(raw)) return proxied(raw);
+    if (raw.startsWith('data:')) return raw;
+
+    const local = normalizeLogo(raw);
+    return local || fallbackSleeperAvatar(slug);
   };
 
   // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
@@ -181,7 +211,15 @@
               <td class="teamcell">
                 <a class="teamlink" href={`/team/${r.slug}`}>
                   {#if logoFor(r.slug)}
-                    <img class="avatar" src={logoFor(r.slug)} alt={labelFor(r.slug)} loading="lazy" />
+                    <img
+                      class="avatar"
+                      src={logoFor(r.slug)}
+                      alt={labelFor(r.slug)}
+                      loading="lazy"
+                      referrerpolicy="no-referrer"
+                      crossorigin="anonymous"
+                      on:error={(e) => (e.currentTarget.style.display = 'none')}
+                    />
                   {/if}
                   <span class="name">{labelFor(r.slug)}</span>
                 </a>
