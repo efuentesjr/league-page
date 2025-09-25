@@ -13,11 +13,11 @@ import { getLeagueData } from './leagueData';
  *   users: { [user_id]: processedUser }
  * }
  *
- * Also caches in teamManagersStore.
+ * @param {boolean} forceRefresh - when true, ignore store cache and fetch fresh
  */
-export const getLeagueTeamManagers = async () => {
+export const getLeagueTeamManagers = async (forceRefresh = false) => {
   const cached = get(teamManagersStore);
-  if (cached && cached.currentSeason) {
+  if (!forceRefresh && cached && cached.currentSeason) {
     return cached;
   }
 
@@ -50,9 +50,7 @@ export const getLeagueTeamManagers = async () => {
     const year = parseInt(leagueData.season);
     currentLeagueID = leagueData.previous_league_id;
 
-    if (!currentSeason) {
-      currentSeason = year;
-    }
+    if (!currentSeason) currentSeason = year;
 
     teamManagersMap[year] = {};
 
@@ -126,3 +124,6 @@ const processUsers = (rawUsers) => {
   }
   return finalUsers;
 };
+
+/** Explicit refresh helper for convenience */
+export const refreshLeagueTeamManagers = () => getLeagueTeamManagers(true);
