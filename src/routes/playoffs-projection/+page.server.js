@@ -5,7 +5,7 @@ import { env } from '$env/dynamic/public';
 // Map the short "team" labels in your JSON → site slugs from leagueInfo.js
 const slugMap = {
   'Bay Area Par': 'bay-area-party-supplies',
-  'CeeDees TDs': 'ceedees-tds',
+  'CeeDees TDs': 'ceedees-tDs',
   'Chosen one.': 'chosen-one',
   'The People’s': 'peoples-champ',
   'Pete Weber B': 'pete-weber-bowl-club',
