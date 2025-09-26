@@ -10,9 +10,8 @@ function prettifySlug(str = '') {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-// Normalize minimal fields we show on the page
+// Minimal normalization for projections rows
 function normalizeRow(r) {
-  // record "3-0-0" → wins/losses/ties
   let wins = 0, losses = 0, ties = 0;
   if (typeof r.record === 'string') {
     const [w, l, t] = r.record.split('-').map((n) => Number(n || 0));
@@ -21,16 +20,15 @@ function normalizeRow(r) {
     wins = r.wins ?? 0; losses = r.losses ?? 0; ties = r.ties ?? 0;
   }
 
-  const division = r.division ?? r.Dv ?? '';
-  const points   = Number(r.points ?? r.Pts ?? 0);
+  const division  = r.division ?? r.Dv ?? '';
+  const points    = Number(r.points ?? r.Pts ?? 0);
   const divStatus =
     r.divStatus ?? r.DivSTATUS ?? (r.status?.division ? `C:${r.status.division}` : '');
   const playStatus =
     r.playStatus ?? r.PlaySTATUS ??
-    [
-      r.status?.playoffs ? `C:${r.status.playoffs}` : '',
-      r.status?.title ? `T:${r.status.title}` : ''
-    ].filter(Boolean).join(' ');
+    [r.status?.playoffs ? `C:${r.status.playoffs}` : '', r.status?.title ? `T:${r.status.title}` : '']
+      .filter(Boolean)
+      .join(' ');
 
   return { slug: r.slug, division, wins, losses, ties, points, divStatus, playStatus };
 }
@@ -38,23 +36,26 @@ function normalizeRow(r) {
 export async function load({ params, fetch }) {
   const { slug } = params;
 
-  // Title from managers (teamName > name > prettified slug)
+  // Lookup manager config
   const m = Array.isArray(managers) ? managers.find((x) => x.slug === slug) : null;
-  const title =
-    (m?.teamName || m?.team_name || m?.name || '').trim() || prettifySlug(slug);
 
-  // Hero image you upload: static/team/<slug>.jpg
+  // TEAM title only (no manager fallback)
+  const teamTitle =
+    (m?.teamName || m?.team_name || '').trim() || prettifySlug(slug);
+
+  // Manager name exposed separately (optional render)
+  const managerName = (m?.name || '').trim();
+
+  // Hero image you upload to static/team/<slug>.jpg
   const img = `/team/${slug}.jpg`;
 
-  // Logo priority:
-  // 1) optional CDN via PUBLIC_TEAM_LOGO_BASE → <base>/<slug>.png
-  // 2) your local static/playoffs-projection/<slug>.png (client will fallback on <img on:error>)
+  // Logo: optional CDN via env, else your local static/playoffs-projection/<slug>.png
   const cdnBase = (env.PUBLIC_TEAM_LOGO_BASE || '').replace(/\/$/, '');
   const logoFromCdn = cdnBase ? `${cdnBase}/${slug}.png` : '';
   const logoFromStatic = `/playoffs-projection/${slug}.png`;
   const logoUrl = logoFromCdn || logoFromStatic || '';
 
-  // Pull this team’s row from the same projections URL
+  // Pull this team’s projections row from the same source as playoffs page
   const projectionsUrl = (env.PUBLIC_PROJECTIONS_URL || '').trim();
   let team = null;
 
@@ -68,15 +69,16 @@ export async function load({ params, fetch }) {
         team = hit ? normalizeRow(hit) : null;
       }
     } catch {
-      // no-op; show page without stats
+      // ignore fetch/parse errors; page will render without stats
     }
   }
 
-  // Where your per-team fallback avatars/logos live (you said you use this folder)
+  // Folder where your per-team images live
   const avatarBasePath = '/playoffs-projection';
 
   return {
-    title,
+    title: teamTitle,
+    managerName,
     img,
     logoUrl,
     team,
