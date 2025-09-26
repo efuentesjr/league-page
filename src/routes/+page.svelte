@@ -29,7 +29,7 @@
 	// ✅ Hero video (Cloudflare R2)
 	const HERO_VIDEO = {
 		src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/Wek(3).mp4',
-		poster: 'static/videos/LOGO1.jpg',
+		poster: '/videos/LOGO1.jpg',
 	};
 
 	// Accessibility: detect reduced motion
