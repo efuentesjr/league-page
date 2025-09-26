@@ -53,7 +53,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 6px;
+    bottom: 3px;
     text-align: center;
     white-space: break-spaces;
     line-height: 1.2em;
