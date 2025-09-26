@@ -2,26 +2,50 @@
   export let data = {};
 
   const title = data?.title ?? 'Team Name';
-  const logoUrl = data?.logoUrl ?? '';
   const division = data?.division ?? '';
+  const slug = data?.slug ?? '';              // IMPORTANT for PNG fallback
+  const primaryLogo = data?.logoUrl ?? '';    // Optional upstream logo
+
+  // Change this if your main tab’s PNGs live somewhere else:
+  const DEFAULT_AVATAR_BASE = '/playoffs-projection/avatars';
+
+  // Allow override from loader if you keep avatars elsewhere:
+  const avatarBasePath = data?.avatarBasePath ?? DEFAULT_AVATAR_BASE;
+
+  // Build a list of candidate image URLs to try in order
+  const candidates = [
+    ...(primaryLogo ? [primaryLogo] : []),
+    ...(slug ? [`${avatarBasePath}/${slug}.png`] : []),
+  ];
 
   const initials = (title || '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
+    .split(/\s+/).filter(Boolean).map(w => w[0]).slice(0,2).join('').toUpperCase();
+
+  let idx = 0;                 // which candidate we’re on
+  let currentSrc = candidates[0] || ''; 
+  let showFallback = !currentSrc; // if nothing to try, show initials immediately
+
+  function onLogoError() {
+    // try the next candidate if available
+    idx += 1;
+    if (idx < candidates.length) {
+      currentSrc = candidates[idx];
+    } else {
+      // no more candidates—swap to initials fallback
+      currentSrc = '';
+      showFallback = true;
+    }
+  }
 </script>
 
 <a class="back" href="/playoffs-projection">← Back to Playoffs</a>
 
 <header class="team-header">
   <div class="avatar-wrap" title={title}>
-    {#if logoUrl}
-      <img class="avatar" src={logoUrl} alt={`${title} logo`} />
+    {#if !showFallback && currentSrc}
+      <img class="avatar" src={currentSrc} alt={`${title} logo`} on:error={onLogoError} />
     {:else}
-      <div class="avatar avatar-fallback" aria-label={`${title} initials`}>{initials}</div>
+      <div class="avatar avatar-fallback" aria-label={`${title} initials`}>{initials || 'TT'}</div>
     {/if}
   </div>
 
@@ -70,11 +94,7 @@
     <div class="table-wrap">
       <table class="table">
         <thead>
-          <tr>
-            <th>Metric</th>
-            <th>Value</th>
-            <th>Notes</th>
-          </tr>
+          <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
         </thead>
         <tbody>
           <tr><td>Min Wins</td><td>—</td><td>—</td></tr>
@@ -98,186 +118,56 @@
     --shadow: 0 10px 30px hsl(0 0% 0% / 0.35);
   }
 
-  a.back{
-    display:inline-block;
-    margin: 10px 0 16px;
-    text-decoration:none;
-    color: var(--muted);
-  }
-  a.back:hover{ color: var(--text); }
+  a.back{ display:inline-block; margin:10px 0 16px; text-decoration:none; color:var(--muted); }
+  a.back:hover{ color:var(--text); }
 
-  .team-header{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    margin-bottom: 10px;
-  }
+  .team-header{ display:flex; align-items:center; gap:18px; margin-bottom:10px; }
 
-  /* Default (desktop/tablet) avatar size */
-  .avatar-wrap{
-    position: relative;
-    width: 120px;
-    height: 120px;
-    min-width: 120px;
-  }
+  .avatar-wrap{ position:relative; width:120px; height:120px; min-width:120px; }
   .avatar{
-    width: 100%;
-    height: 100%;
-    border-radius: 9999px;
-    object-fit: cover;
-    border: 3px solid var(--accent);
-    box-shadow: var(--shadow);
-    background: #111;
+    width:100%; height:100%; border-radius:9999px; object-fit:cover;
+    border:3px solid var(--accent); box-shadow:var(--shadow); background:#111;
   }
   .avatar-fallback{
-    display:grid;
-    place-items:center;
-    width: 100%;
-    height: 100%;
-    border-radius: 9999px;
+    display:grid; place-items:center; width:100%; height:100%; border-radius:9999px;
     background: linear-gradient(135deg, var(--accent-weak), transparent);
-    border: 3px solid var(--accent);
-    font-weight: 800;
-    font-size: 40px;
-    color: var(--text);
-    letter-spacing: 0.5px;
-    text-shadow: 0 1px 0 rgba(0,0,0,.6);
+    border:3px solid var(--accent);
+    font-weight:800; font-size:40px; color:var(--text); letter-spacing:.5px;
+    text-shadow:0 1px 0 rgba(0,0,0,.6);
   }
 
-  .title-block{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
-  .team-title{
-    font-size: clamp(26px, 4vw, 40px);
-    margin:0;
-    line-height: 1.05;
-  }
-  .subtle{
-    color: var(--muted);
-    font-size: 1rem;
+  .title-block{ display:flex; flex-direction:column; gap:8px; }
+  .team-title{ font-size: clamp(26px, 4vw, 40px); margin:0; line-height:1.05; }
+  .subtle{ color:var(--muted); font-size:1rem; }
+
+  @media (max-width:480px){
+    .team-header{ gap:14px; }
+    .avatar-wrap{ width:150px; height:150px; min-width:150px; }
+    .avatar-fallback{ font-size:50px; }
+    .team-title{ font-size: clamp(22px, 7vw, 34px); line-height:1.08; }
   }
 
-  /* Mobile tweaks: bigger avatar + slightly smaller title to balance */
-  @media (max-width: 480px){
-    .team-header{
-      gap:14px;
-    }
-    .avatar-wrap{
-      width: 150px;
-      height: 150px;
-      min-width: 150px;
-    }
-    .avatar-fallback{
-      font-size: 50px;
-    }
-    .team-title{
-      font-size: clamp(22px, 7vw, 34px);
-      line-height: 1.08;
-    }
-  }
+  .grid{ display:grid; grid-template-columns:1fr; gap:16px; }
+  @media (min-width:860px){ .grid{ grid-template-columns:1fr 1fr; } .span-2{ grid-column:span 2; } }
 
-  .grid{
-    display:grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  @media (min-width: 860px){
-    .grid{
-      grid-template-columns: 1fr 1fr;
-    }
-    .span-2{
-      grid-column: span 2;
-    }
-  }
+  .card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:16px; box-shadow:var(--shadow); }
+  .card h2{ margin:0 0 12px; font-size:1.1rem; letter-spacing:.2px; }
 
-  .card{
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: var(--shadow);
-  }
-  .card h2{
-    margin: 0 0 12px;
-    font-size: 1.1rem;
-    letter-spacing: .2px;
-  }
+  .kv{ display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; }
+  .kv > div{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px;
+             background:hsl(0 0% 100% / 0.03); border:1px solid var(--card-border); border-radius:12px; }
+  .kv span{ color:var(--muted); font-size:.95rem; }
+  .kv strong{ font-weight:700; }
 
-  .kv{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px 16px;
-  }
-  .kv > div{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding: 10px 12px;
-    background: hsl(0 0% 100% / 0.03);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-  }
-  .kv span{
-    color: var(--muted);
-    font-size: .95rem;
-  }
-  .kv strong{
-    font-weight: 700;
-  }
+  .bars{ display:flex; flex-direction:column; gap:12px; }
+  .bar{ display:grid; grid-template-columns:140px 1fr auto; align-items:center; gap:10px; }
+  .bar-label{ color:var(--muted); font-size:.95rem; }
+  .bar-track{ height:10px; border-radius:999px; background:hsl(0 0% 100% / 0.08); overflow:hidden; border:1px solid var(--card-border); }
+  .bar-fill{ height:100%; width:0%; background:linear-gradient(90deg, var(--accent), #60a5fa); }
+  .bar-value{ min-width:42px; text-align:right; font-variant-numeric: tabular-nums; }
 
-  .bars{
-    display:flex;
-    flex-direction:column;
-    gap: 12px;
-  }
-  .bar{
-    display:grid;
-    grid-template-columns: 140px 1fr auto;
-    align-items:center;
-    gap: 10px;
-  }
-  .bar-label{
-    color: var(--muted);
-    font-size: .95rem;
-  }
-  .bar-track{
-    height: 10px;
-    border-radius: 999px;
-    background: hsl(0 0% 100% / 0.08);
-    overflow:hidden;
-    border: 1px solid var(--card-border);
-  }
-  .bar-fill{
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--accent), #60a5fa);
-  }
-  .bar-value{
-    min-width: 42px;
-    text-align:right;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .table-wrap{
-    overflow:auto;
-    border-radius: 12px;
-    border: 1px solid var(--card-border);
-  }
-  table.table{
-    width: 100%;
-    border-collapse: collapse;
-    background: hsl(0 0% 100% / 0.02);
-  }
-  .table thead th{
-    text-align:left;
-    font-weight: 700;
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--card-border);
-  }
-  .table tbody td{
-    padding: 10px 12px;
-    border-top: 1px solid var(--card-border);
-  }
+  .table-wrap{ overflow:auto; border-radius:12px; border:1px solid var(--card-border); }
+  table.table{ width:100%; border-collapse:collapse; background:hsl(0 0% 100% / 0.02); }
+  .table thead th{ text-align:left; font-weight:700; padding:10px 12px; border-bottom:1px solid var(--card-border); }
+  .table tbody td{ padding:10px 12px; border-top:1px solid var(--card-border); }
 </style>
