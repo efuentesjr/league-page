@@ -1,140 +1,283 @@
 <script>
   export let data = {};
 
-  let title = data?.title ?? 'Team';
-  let img = data?.img ?? '';
-  let logoSrc = data?.logoUrl ?? '';   // if empty, we’ll show initials instead
+  const title = data?.title ?? 'Team Name';
+  const logoUrl = data?.logoUrl ?? '';
+  const division = data?.division ?? '';
 
-  // Derive initials from the title, e.g., "Brute Force" -> "BF"
   const initials = (title || '')
     .split(/\s+/)
     .filter(Boolean)
-    .map(w => w[0])
+    .map((w) => w[0])
     .slice(0, 2)
     .join('')
     .toUpperCase();
-
-  let imgError = false;
-  function onErr() {
-    imgError = true;
-  }
 </script>
 
 <a class="back" href="/playoffs-projection">← Back to Playoffs</a>
 
-<h1 class="team-title">{title}</h1>
-
-{#if !imgError && img}
-  <div class="image-wrap">
-    <img src={img} alt="Team graphic" on:error={onErr} />
-
-    {#if logoSrc}
-      <!-- Real logo from API -->
-      <img
-        class="team-badge"
-        src={logoSrc}
-        alt={`${title} logo`}
-        on:error={() => (logoSrc = '')}
-        referrerpolicy="no-referrer"
-      />
+<header class="team-header">
+  <div class="avatar-wrap" title={title}>
+    {#if logoUrl}
+      <img class="avatar" src={logoUrl} alt={`${title} logo`} />
     {:else}
-      <!-- Initials fallback badge -->
-      <div class="team-badge badge-fallback" aria-label="Team logo placeholder">
-        {initials}
-      </div>
+      <div class="avatar avatar-fallback" aria-label={`${title} initials`}>{initials}</div>
     {/if}
   </div>
-{:else}
-  <div class="placeholder">
-    <p><strong>Image not found.</strong></p>
-    <p>Upload your file to <code>static/team/path.jpg</code> and refresh.</p>
+
+  <div class="title-block">
+    <h1 class="team-title">{title}</h1>
+    {#if division}
+      <div class="subtle">Division: <strong>{division}</strong></div>
+    {/if}
   </div>
-{/if}
+</header>
+
+<main class="grid">
+  <section class="card">
+    <h2>Team Overview</h2>
+    <div class="kv">
+      <div><span>Record</span><strong>—</strong></div>
+      <div><span>Points For</span><strong>—</strong></div>
+      <div><span>Points Against</span><strong>—</strong></div>
+      <div><span>Strength of Schedule</span><strong>—</strong></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Playoff Odds</h2>
+    <div class="bars">
+      <div class="bar">
+        <div class="bar-label">Win Division</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 0%"></div></div>
+        <div class="bar-value">—</div>
+      </div>
+      <div class="bar">
+        <div class="bar-label">Make Playoffs</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 0%"></div></div>
+        <div class="bar-value">—</div>
+      </div>
+      <div class="bar">
+        <div class="bar-label">Win Championship</div>
+        <div class="bar-track"><div class="bar-fill" style="width: 0%"></div></div>
+        <div class="bar-value">—</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card span-2">
+    <h2>Projection Breakdown</h2>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Value</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Min Wins</td><td>—</td><td>—</td></tr>
+          <tr><td>Max Wins</td><td>—</td><td>—</td></tr>
+          <tr><td>Playoff Target Wins</td><td>—</td><td>Typical threshold</td></tr>
+          <tr><td>Division Target Wins</td><td>—</td><td>To secure division</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
 
 <style>
-  .back {
-    display: inline-block;
-    margin-top: .5rem;
-    color: #4da6ff;
-    text-decoration: none;
+  :global(:root){
+    --card-bg: hsl(0 0% 100% / 0.06);
+    --card-border: hsl(0 0% 100% / 0.12);
+    --muted: hsl(0 0% 100% / 0.65);
+    --text: #fff;
+    --accent: #3b82f6;
+    --accent-weak: hsl(217 91% 60% / 0.2);
+    --shadow: 0 10px 30px hsl(0 0% 0% / 0.35);
+  }
+
+  a.back{
+    display:inline-block;
+    margin: 10px 0 16px;
+    text-decoration:none;
+    color: var(--muted);
+  }
+  a.back:hover{ color: var(--text); }
+
+  .team-header{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-bottom: 10px;
+  }
+
+  /* Default (desktop/tablet) avatar size */
+  .avatar-wrap{
+    position: relative;
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+  }
+  .avatar{
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    object-fit: cover;
+    border: 3px solid var(--accent);
+    box-shadow: var(--shadow);
+    background: #111;
+  }
+  .avatar-fallback{
+    display:grid;
+    place-items:center;
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, var(--accent-weak), transparent);
+    border: 3px solid var(--accent);
+    font-weight: 800;
+    font-size: 40px;
+    color: var(--text);
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 0 rgba(0,0,0,.6);
+  }
+
+  .title-block{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .team-title{
+    font-size: clamp(26px, 4vw, 40px);
+    margin:0;
+    line-height: 1.05;
+  }
+  .subtle{
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  /* Mobile tweaks: bigger avatar + slightly smaller title to balance */
+  @media (max-width: 480px){
+    .team-header{
+      gap:14px;
+    }
+    .avatar-wrap{
+      width: 150px;
+      height: 150px;
+      min-width: 150px;
+    }
+    .avatar-fallback{
+      font-size: 50px;
+    }
+    .team-title{
+      font-size: clamp(22px, 7vw, 34px);
+      line-height: 1.08;
+    }
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 860px){
+    .grid{
+      grid-template-columns: 1fr 1fr;
+    }
+    .span-2{
+      grid-column: span 2;
+    }
+  }
+
+  .card{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+  .card h2{
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+    letter-spacing: .2px;
+  }
+
+  .kv{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+  }
+  .kv > div{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 10px 12px;
+    background: hsl(0 0% 100% / 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+  }
+  .kv span{
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  .kv strong{
     font-weight: 700;
   }
-  .back:hover { text-decoration: underline; }
 
-  .team-title {
-    margin: .75rem 0 .75rem;
-    font-weight: 900;
-    font-size: clamp(1.4rem, 3.2vw, 2.1rem);
+  .bars{
+    display:flex;
+    flex-direction:column;
+    gap: 12px;
+  }
+  .bar{
+    display:grid;
+    grid-template-columns: 140px 1fr auto;
+    align-items:center;
+    gap: 10px;
+  }
+  .bar-label{
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  .bar-track{
+    height: 10px;
+    border-radius: 999px;
+    background: hsl(0 0% 100% / 0.08);
+    overflow:hidden;
+    border: 1px solid var(--card-border);
+  }
+  .bar-fill{
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #60a5fa);
+  }
+  .bar-value{
+    min-width: 42px;
+    text-align:right;
+    font-variant-numeric: tabular-nums;
   }
 
-  .image-wrap {
-    position: relative;  /* anchor the overlay */
-    max-width: 980px;
-    margin: 0 auto;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 6px 24px rgba(0,0,0,.12);
-  }
-  .image-wrap img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  /* Top-right overlay badge (shared size/pos) */
-  .team-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 60px;
-    height: 60px;
+  .table-wrap{
+    overflow:auto;
     border-radius: 12px;
-    z-index: 2;
-    box-shadow: 0 4px 12px rgba(0,0,0,.25);
-    border: 1px solid rgba(0,0,0,.15);
+    border: 1px solid var(--card-border);
   }
-
-  /* Image logo */
-  .team-badge:not(.badge-fallback) {
-    object-fit: contain;
-    background: #fff;
-    padding: 4px;
+  table.table{
+    width: 100%;
+    border-collapse: collapse;
+    background: hsl(0 0% 100% / 0.02);
   }
-
-  /* Initials fallback */
-  .badge-fallback {
-    display: grid;
-    place-items: center;
-    background: #111;
-    color: #fff;
-    font-weight: 800;
-    font-size: 1rem;
-    letter-spacing: .5px;
+  .table thead th{
+    text-align:left;
+    font-weight: 700;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--card-border);
   }
-
-  .placeholder {
-    max-width: 720px;
-    margin: 1rem auto;
-    padding: 1rem;
-    border: 1px dashed #cbd5e1;
-    border-radius: 10px;
-    background: #f8fafc;
-    color: #334155;
-  }
-  .placeholder code {
-    background: #0b1220;
-    color: #e5e7eb;
-    padding: 0 .25rem;
-    border-radius: 4px;
-  }
-
-  :global(html.dark) .placeholder {
-    background: #0b0b0c;
-    border-color: #1f2937;
-    color: #e5e7eb;
-  }
-  :global(html.dark) .placeholder code {
-    background: #111827;
-    color: #f3f4f6;
+  .table tbody td{
+    padding: 10px 12px;
+    border-top: 1px solid var(--card-border);
   }
 </style>
