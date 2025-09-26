@@ -109,7 +109,7 @@
     left: 60%;
     top: 40%;
     transform: translate(-50%, -50%);
-    width: 70%;           /* tweak 50–75% as you like */
+    width: 75%;           /* tweak 50–75% as you like */
     height: auto;
     max-height: 72%;
     object-fit: contain;
