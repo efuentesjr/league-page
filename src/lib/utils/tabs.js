@@ -19,6 +19,12 @@ export const tabs = [
         dest: '/standings',
 		      key: 'standings',
     },
+	{
+        icon: 'trending_up',
+        label: 'Playoff Projections',
+        dest: '/playoffs-projection',
+		key: 'playoffs-projection',
+    },
     {
         icon: 'swap_horiz',
         label: 'Trades & Waivers',
