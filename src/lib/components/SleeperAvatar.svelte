@@ -1,34 +1,42 @@
 <script>
-  import { managers } from '$static/playoffs-projection';
+  import { managers } from '$lib/utils/leagueInfo';
 
   export let slug = '';
   export let size = 28;
   export let alt = 'avatar';
-  export let avatarFromStore = null; // users[managerID]?.avatar if you have it
+  // If you already fetch Sleeper users, pass their avatar id/url here
+  export let avatarFromStore = null;
 
   const mgr = (Array.isArray(managers) ? managers.find(m => m.slug === slug) : null) || {};
-  const FALLBACK_GLOBAL = '/images/mffl-avatar-fallback.png'; // optional global logo
-  const FALLBACK_BY_SLUG = slug ? `/playoffs-projection/${slug}.png` : null; // <- your folder
 
+  // Build a Sleeper avatar URL if given just an id
   function toAvatarUrl(v) {
     if (!v) return null;
     if (typeof v === 'string' && /^https?:\/\//i.test(v)) return v;
-    return `https://sleepercdn.com/avatars/thumbs/${v}`; // treat as Sleeper avatar id
+    return `https://sleepercdn.com/avatars/thumbs/${v}`;
   }
 
-  // Try in this order
+  // 1) Sleeper → 2) static/playoffs-projection/<slug>.* → 3) manager.photo → 4) global → 5) initials
+  const FALLBACK_GLOBAL = '/images/mffl-avatar-fallback.png'; // keep or remove if you don't want it
+  const exts = ['png', 'jpg', 'jpeg', 'webp', 'avif', 'gif', 'svg'];
+
+  // Build candidate URLs in priority order (no hardcoded extension)
   let attempts = [
-    toAvatarUrl(avatarFromStore), // Sleeper avatar (URL or id)
-    mgr.photo || null,            // your per-manager photo (if set)
-    FALLBACK_BY_SLUG,             // your slug PNG in static/playoffs-projection
-    FALLBACK_GLOBAL               // optional global fallback
+    toAvatarUrl(avatarFromStore),                                   // Sleeper avatar (URL or id)
+    ...exts.map(ext => `/playoffs-projection/${slug}.${ext}`),      // your uploaded files in static/
+    mgr.photo || null,                                              // manager.photo as last-resort local
+    FALLBACK_GLOBAL                                                 // optional global fallback
   ].filter(Boolean);
 
   let i = 0;
   $: src = attempts[i];
 
-  const initials = (mgr.name || slug || '?')
-    .split(/\s+/).map(s => s[0]?.toUpperCase()).slice(0,2).join('') || '?';
+  const initials =
+    (mgr.name || slug || '?')
+      .split(/\s+/)
+      .map(s => s[0]?.toUpperCase())
+      .slice(0, 2)
+      .join('') || '?';
 </script>
 
 {#if src}
@@ -42,9 +50,9 @@
     style="border-radius:50%; object-fit:cover;"
     on:error={() => {
       if (i < attempts.length - 1) {
-        i += 1; // try next candidate
+        i += 1; // try next candidate (cycles through all your static files/extensions)
       } else {
-        // swap to initials bubble
+        // everything failed → swap to initials bubble
         const node = document.createElement('div');
         node.setAttribute('aria-label', alt);
         node.setAttribute('style', `
