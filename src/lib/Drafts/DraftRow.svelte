@@ -109,9 +109,9 @@
     left: 50%;
     top: 44%;
     transform: translate(-50%, -50%);
-    width: 66%;           /* tweak 50–75% as you like */
+    width: 70%;           /* tweak 50–75% as you like */
     height: auto;
-    max-height: 70%;
+    max-height: 72%;
     object-fit: contain;
     opacity: 0.95;
     z-index: 1;
