@@ -89,18 +89,17 @@
     color: rgba(0, 0, 0, 0.87);
   }
 
-  /* === First-round mock image overlay === */
-  .mockDraftImg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 75%;
-    object-fit: cover;   /* or 'contain' if you prefer full image without cropping */
-    opacity: 0.85;       /* keep text readable on top */
-    z-index: 1;
-    pointer-events: none; /* clicks go to cell contents */
-    background: #000;    /* fallback behind transparent PNGs */
-  }
+.mockDraftImg {
+  position: relative;   /* no longer absolute */
+  display: block;
+  margin: 0 auto;       /* center horizontally */
+  max-width: 60%;       /* shrink image size */
+  max-height: 60%;      /* shrink vertically */
+  object-fit: contain;
+  opacity: 0.9;         /* still slightly faded */
+  z-index: 1;
+}
+
 
   /* Optional subtle gradient for text readability */
   .mockDraftShade {
@@ -117,15 +116,15 @@
     {#if !previous || draftCol}
       <Cell class="draftCell{draftCol ? ' changedHands' : ''}{previous ? ` prev${players[draftCol.player].pos}` : ''}">
         <!-- First-round mock draft overlay (Upcoming only) -->
-        {#if !previous && row === 1}
-          <img
-            class="mockDraftImg"
-            src={firstRoundImg(col)}
-            alt="Mock draft pick"
-            on:error={(e) => (e.currentTarget.style.display = 'none')}
-          />
-          <div class="mockDraftShade"></div>
-        {/if}
+          {#if !previous && row === 1}
+            <img
+              class="mockDraftImg"
+               src={firstRoundImg(col)}
+              alt="Mock draft pick"
+              on:error={(e) => (e.currentTarget.style.display = 'none')}
+            />
+          {/if}
+
 
         <span class="draftPos{previous ? 'Prev' : ''}">
           {#if draftType == "auction" && previous}
