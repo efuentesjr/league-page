@@ -94,7 +94,7 @@
     position: absolute;
     inset: 0;
     width: 100%;
-    height: 100%;
+    height: 75%;
     object-fit: cover;   /* or 'contain' if you prefer full image without cropping */
     opacity: 0.85;       /* keep text readable on top */
     z-index: 1;
