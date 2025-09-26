@@ -106,7 +106,7 @@
   /* === First-round mock image thumbnail === */
   .mockDraftImg {
     position: absolute;
-    left: 90%;
+    left: 70%;
     top: 40%;
     transform: translate(-50%, -50%);
     width: 70%;           /* tweak 50–75% as you like */
