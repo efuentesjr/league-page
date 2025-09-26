@@ -1,136 +1,62 @@
 <script>
-  import { onMount } from 'svelte';
   import { managers } from '$lib/utils/leagueInfo';
-  import { getLeagueTeamManagers } from '$lib/utils/helperFunctions/leagueTeamManagers';
 
-  /**
-   * Props:
-   *  - slug : team slug from your site (required)
-   *  - size : px (default 24)
-   *  - alt  : alt text (optional)
-   */
-  export let slug;
-  export let size = 24;
-  export let alt = '';
+  export let slug = '';
+  export let size = 28;
+  export let alt = 'avatar';
+  export let avatarFromStore = null; // users[managerID]?.avatar if you have it
 
-  // ---------------- helpers ----------------
-  const s = (v) => (typeof v === 'string' ? v.trim() : '');
-  const mkSlug = (str = '') =>
-    str
-      .toString()
-      .normalize('NFKD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/&/g, ' and ')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .replace(/-{2,}/g, '-');
+  const mgr = (Array.isArray(managers) ? managers.find(m => m.slug === slug) : null) || {};
+  const FALLBACK_GLOBAL = '/images/mffl-avatar-fallback.png'; // optional global logo
+  const FALLBACK_BY_SLUG = slug ? `/playoffs-projection/${slug}.png` : null; // <- your folder
 
-  // local filenames should live at /static/logos/<file>
-  const LOGO_BASE = '/logos';
-  const normalizeLocal = (u) => `${LOGO_BASE}/${String(u).replace(/^\/+/, '')}`.replace(/\/{2,}/g, '/');
+  function toAvatarUrl(v) {
+    if (!v) return null;
+    if (typeof v === 'string' && /^https?:\/\//i.test(v)) return v;
+    return `https://sleepercdn.com/avatars/thumbs/${v}`; // treat as Sleeper avatar id
+  }
 
-  const slugToOwner = new Map(
-    (Array.isArray(managers) ? managers : []).map((m) => [m.slug, String(m.managerID ?? '')])
-  );
+  // Try in this order
+  let attempts = [
+    toAvatarUrl(avatarFromStore), // Sleeper avatar (URL or id)
+    mgr.photo || null,            // your per-manager photo (if set)
+    FALLBACK_BY_SLUG,             // your slug PNG in static/playoffs-projection
+    FALLBACK_GLOBAL               // optional global fallback
+  ].filter(Boolean);
 
-  // component state
-  let src = '';
+  let i = 0;
+  $: src = attempts[i];
 
-  // Try to resolve an avatar URL from Sleeper for this slug
-  onMount(async () => {
-    try {
-      const ltm = await getLeagueTeamManagers();
-      const season = ltm?.currentSeason;
-      const bucket = ltm?.teamManagersMap?.[season] || {};
-      const users = ltm?.users || {};
-
-      // 1) Owner by config mapping
-      const ownerFromConfig = slugToOwner.get(slug);
-      if (ownerFromConfig) {
-        const u = users[ownerFromConfig];
-        const avatar = s(u?.avatar);
-        if (avatar) {
-          src = `https://sleepercdn.com/avatars/thumbs/${avatar}`;
-          return;
-        }
-      }
-
-      // 2) Find roster by team name matching the slug (displayName, teamName, metadata.team_name)
-      let ownerFromName = '';
-      for (const rid of Object.keys(bucket)) {
-        const entry = bucket[rid];
-        const t = entry?.team || {};
-        const candidates = [
-          s(t.displayName),
-          s(t.teamName),
-          s(t?.metadata?.team_name)
-        ].filter(Boolean);
-
-        const hit = candidates.some((c) => mkSlug(c) === mkSlug(slug));
-        if (hit) {
-          ownerFromName =
-            s(t.owner_id) ||
-            s(entry?.managers?.[0]?.user_id || entry?.managers?.[0]?.managerID);
-          if (ownerFromName) break;
-        }
-      }
-
-      if (ownerFromName) {
-        const u = users[ownerFromName];
-        const avatar = s(u?.avatar);
-        if (avatar) {
-          src = `https://sleepercdn.com/avatars/thumbs/${avatar}`;
-          return;
-        }
-      }
-
-      // 3) Fallback to your config logo (absolute URL, data:, /path, or bare filename)
-      const cfg = (Array.isArray(managers) ? managers : []).find((m) => m.slug === slug) || {};
-      const rawLogo = s(cfg.logoUrl ?? cfg.teamLogo ?? cfg.avatarUrl ?? '');
-      if (rawLogo) {
-        if (/^https?:\/\//i.test(rawLogo) || rawLogo.startsWith('data:') || rawLogo.startsWith('/')) {
-          src = rawLogo;
-        } else {
-          // treat bare filenames like "12738.jpg" as /static/logos/12738.jpg
-          src = normalizeLocal(rawLogo);
-        }
-        return;
-      }
-
-      // 4) Nothing else found -> leave src empty (no image)
-      src = '';
-    } catch {
-      // leave src empty on any error
-      src = '';
-    }
-  });
-
-  const hideOnError = (e) => {
-    // hide broken image so the row stays tidy
-    e.currentTarget.style.display = 'none';
-  };
+  const initials = (mgr.name || slug || '?')
+    .split(/\s+/).map(s => s[0]?.toUpperCase()).slice(0,2).join('') || '?';
 </script>
 
 {#if src}
   <img
-    class="sleeper-avatar"
     src={src}
-    alt={alt || slug}
+    alt={alt}
     width={size}
     height={size}
     loading="lazy"
     referrerpolicy="no-referrer"
-    crossorigin="anonymous"
-    on:error={hideOnError}
+    style="border-radius:50%; object-fit:cover;"
+    on:error={() => {
+      if (i < attempts.length - 1) {
+        i += 1; // try next candidate
+      } else {
+        // swap to initials bubble
+        const node = document.createElement('div');
+        node.setAttribute('aria-label', alt);
+        node.setAttribute('style', `
+          width:${size}px;height:${size}px;border-radius:50%;
+          display:inline-flex;align-items:center;justify-content:center;
+          background:#2b2f36;color:#cfd6e4;font-weight:700;
+          font-size:${Math.max(10, size*0.42)}px;
+        `);
+        node.textContent = initials;
+        const img = event.currentTarget;
+        img.replaceWith(node);
+      }
+    }}
   />
 {/if}
-
-<style>
-  .sleeper-avatar {
-    display: inline-block;
-    vertical-align: middle;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-</style>
