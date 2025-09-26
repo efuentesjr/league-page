@@ -1,10 +1,11 @@
-// +page.js
-export async function load({ params }) {
-  const slug = params.slug;
+// src/routes/team/[slug]/+page.js
+export async function load({ params, parent }) {
+  const parentData = await parent(); // keep upstream title/logo/etc.
   return {
-    slug,
-    title: 'Team Name Here',       // real name later
-    logoUrl: '',                   // optional primary URL if you have it
-    // avatarBasePath: '/team-avatars' // optional override if needed
+    ...parentData,
+    slug: params.slug,
+    // use the SAME folder where your main playoffs tab keeps the .png avatars
+    avatarBasePath: parentData?.avatarBasePath ?? '/playoffs-projection/avatars'
   };
 }
+
