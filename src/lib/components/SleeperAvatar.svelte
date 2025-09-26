@@ -1,5 +1,5 @@
 <script>
-  import { managers } from '$lib/utils/leagueInfo';
+  import { managers } from '$static/playoffs-projection';
 
   export let slug = '';
   export let size = 28;
