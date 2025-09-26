@@ -9,6 +9,16 @@
     const n = (colIndex + 1).toString().padStart(2, '0');
     return `/mockdraft/1.${n}.png`;
   };
+
+  // Avoid template strings inside the style attribute by using a helper
+  const playerBgStyle = (col) => {
+    const id = col.player;
+    if (!id) return '';
+    if (players[id]?.pos === 'DEF') {
+      return `background-image: url(https://sleepercdn.com/images/team_logos/nfl/${String(id).toLowerCase()}.png)`;
+    }
+    return `background-image: url(https://sleepercdn.com/content/nfl/players/thumb/${id}.jpg), url(https://sleepercdn.com/images/v2/icons/player_default.webp)`;
+  };
 </script>
 
 <style>
@@ -47,13 +57,13 @@
     text-align: center;
     white-space: break-spaces;
     line-height: 1.2em;
-    color: #fff;              /* was #444 */
+    color: #fff;              /* switched from #444 to white */
     font-weight: 600;
     text-shadow: 0 1px 2px rgba(0,0,0,.65);
     z-index: 2;
   }
 
-  /* Previous draft color classes (unchanged) */
+  /* Previous-draft color classes (unchanged) */
   :global(.prevQB) { background-color: var(--QBfade); }
   :global(.prevWR) { background-color: var(--WRfade); }
   :global(.prevRB) { background-color: var(--RBfade); }
@@ -99,7 +109,7 @@
     left: 50%;
     top: 44%;
     transform: translate(-50%, -50%);
-    width: 66%;          /* tweak 50–75% */
+    width: 66%;           /* tweak 50–75% as you like */
     height: auto;
     max-height: 70%;
     object-fit: contain;
@@ -113,7 +123,6 @@
   {#each draftRow as draftCol, col}
     {#if !previous || draftCol}
       <Cell class="draftCell{draftCol ? ' changedHands' : ''}{previous ? ` prev${players[draftCol.player].pos}` : ''}">
-        
         <!-- First-round mock draft overlay (Upcoming only) -->
         {#if !previous && row === 1}
           <img
@@ -169,5 +178,15 @@
         {#if previous}
           <div
             class="playerAvatar"
-            style="{players[draftCol.player].pos == 'DEF'
-              ? `background-image: url(https://sleepercdn.com/images/team_logos/nfl/${draftCol.player.toLowerCase()}_
+            style={playerBgStyle(draftCol)}
+          />
+          <br />
+          <div class="name">
+            {`${players[draftCol.player].fn} ${players[draftCol.player].ln}`}
+            {players[draftCol.player].pos == 'DEF' ? '' : ` (${players[draftCol.player].t})`}
+          </div>
+        {/if}
+      </Cell>
+    {/if}
+  {/each}
+</Row>
