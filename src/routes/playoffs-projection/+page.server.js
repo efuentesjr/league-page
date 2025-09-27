@@ -6,7 +6,7 @@ import { leagueID } from '$lib/utils/leagueInfo';
 // ------------- EXISTING: team label -> site slug -------------
 const slugMap = {
   'Bay Area Par': 'bay-area-party-supplies',
-  'CeeDees TDs': 'ceedees-tDs',
+  'CeeDees TDs': 'ceedees-tds',            // <-- fixed slug
   'Chosen one.': 'chosen-one',
   'The People’s': 'peoples-champ',
   'Pete Weber B': 'pete-weber-bowl-club',
@@ -23,14 +23,32 @@ const slugMap = {
   'Vick2times': 'vick2times'
 };
 
+// ------------- NEW: slug -> OWNER (manager) ID (strings) -------------
+// We'll translate these owner IDs to roster_ids in the next step.
+const slugToOwnerId = {
+  'bay-area-party-supplies': '110121045876686848',
+  'ceedees-tds':             '852068353894916096',
+  'chosen-one':              '846592470551732224',
+  'peoples-champ':           '849793148648546304',
+  'pete-weber-bowl-club':    '850894566360997888',
+  'los-loquitos':            '851154711770939392',
+  'blue-ballers':            '851243503987032064',
+  'texastimeshifts':         '851923896448942080',
+  'brute-force-attack':      '844760551790858240',
+  'comeback-kid':            '791852794729598976',
+  'slickbears':              '731626118116925440',
+  'team-88boyz11':           '851283708244766720',
+  'primetime-prodigies':     '851918795718131712',
+  'do-it-to-them':           '855631483610697728',
+  'loud-and-stroud':         '953418569209995264',
+  'vick2times':              '852025689220677632'
+};
+
 // ------------- OPTIONAL: slug -> roster_id for SoS -------------
-// Fill these with your Sleeper roster IDs (the numbers from leagueInfo managers).
-// If you leave this empty or incomplete, SoS will quietly skip for those teams.
+// (Leave empty for now; SoS will skip unless filled. We'll wire owner->roster in Step 2.)
 const slugToRosterId = {
-  // 'bay-area-party-supplies':  ?,  // e.g. roster 9
-  // 'ceedees-tds':            ?,  // NOTE: ensure this slug matches your route exactly
-  // 'chosen-one':             ?,
-  // 'peoples-champ':          ?,
+  // 'bay-area-party-supplies':  9,
+  // 'ceedees-tds':              12,
   // ...
 };
 
@@ -173,11 +191,11 @@ export async function load({ fetch, setHeaders }) {
     error = String(e);
   }
 
-  // Compute SoS (Past) and merge — completely optional, fail-soft
+  // Compute SoS (Past) and merge — optional, fail-soft
   try {
     const sos = await computeSoSPast(fetch);
     projections = projections.map((r) => {
-      const rosterId = slugToRosterId[r.slug];
+      const rosterId = slugToRosterId[r.slug]; // not wired yet; will replace using slugToOwnerId in Step 2
       const past = rosterId ? sos.past?.[rosterId] : null;
       return past
         ? { ...r, sos: { leagueAvgPPG: sos.leagueAvgPPG, past } }
