@@ -338,7 +338,7 @@ export const managers = [
     "favoriteTeam": "chi",
     "mode": "Rebuild",
     "rival": {
-      name: "Nessesary Roughness",
+      name: "Brute Force Attack",
       link: 0,
       image: "/managers/EF.jpg",
     },
