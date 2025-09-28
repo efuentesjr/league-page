@@ -1,80 +1,101 @@
-// src/routes/team/[slug]/+page.server.js
+export const prerender = false;
 import { env } from '$env/dynamic/public';
 
-// parse "C:80.0% T:3.7%" -> { c: 80, t: 3.7 }
-function parsePlayStatus(s = '') {
-  const c = Number((s.match(/C:\s*([\d.]+)%/i) || [])[1] || 0);
-  const t = Number((s.match(/T:\s*([\d.]+)%/i) || [])[1] || 0);
-  return { c, t };
-}
+// Keep this in sync with playoffs-projection/+page.server.js
+const slugMap = {
+  'Bay Area Par': 'bay-area-party-supplies',
+  'CeeDees TDs': 'ceedees-tDs',
+  'Chosen one.': 'chosen-one',
+  'The People’s': 'peoples-champ',
+  'Pete Weber B': 'pete-weber-bowl-club',
+  'Los Loquitos': 'los-loquitos',
+  'bLuE BaLLeRs': 'blue-ballers',
+  'TexasTimeshi': 'texastimeshifts',
+  'Brute Force': 'brute-force-attack',
+  'The Comeback': 'comeback-kid',
+  'SlickBears': 'slickbears',
+  '88boyz11': 'team-88boyz11',
+  'PrimeTime Pr': 'primetime-prodigies',
+  'Do it to the': 'do-it-to-them',
+  'Loud and Str': 'loud-and-stroud',
+  'Vick2times': 'vick2times'
+};
 
-export async function load({ params, fetch, setHeaders }) {
-  const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
-  if (!url) return { status: 500, error: 'Missing PUBLIC_PROJECTIONS_URL' };
+// Invert mapping: slug -> display label from the projections JSON
+const labelBySlug = Object.fromEntries(
+  Object.entries(slugMap).map(([label, slug]) => [slug, label])
+);
 
-  const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
-  if (!res.ok) return { status: res.status, error: `Fetch failed: ${res.status}` };
-
-  const raw = await res.json();
-  const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
-
-  // Find the matching team by slug (prefer r.slug if present; else map later in list page)
-  const bySlug = rows.find((r) => r.slug && String(r.slug) === params.slug);
-
-  // If your JSON doesn’t include r.slug, you can’t match here — instead,
-  // rely on the list page to embed slug into each row before you host it.
-  if (!bySlug) {
-    return { status: 404, error: `Team not found for slug "${params.slug}"` };
+const numFromPct = (v) => {
+  if (v == null) return null;
+  if (typeof v === 'number') return v;
+  if (typeof v === 'string') {
+    const n = parseFloat(v.replace('%', '').trim());
+    return Number.isFinite(n) ? n : null;
   }
+  return null;
+};
 
-  // Build the fields your +page.svelte expects
-  const title = bySlug.team || 'Team';
-  const division = String(bySlug.division ?? '');
-  const record = String(bySlug.record ?? '—');
-  const pointsFor = Number.isFinite(bySlug.points) ? bySlug.points : null;
-
-  // Bars: division/playoffs/title
-  const divPct = Number((bySlug.status?.division || '0').toString().replace('%','')) || 0;
-  const plyPct = Number((bySlug.status?.playoffs || '0').toString().replace('%','')) || 0;
-  const ttlPct = Number((bySlug.status?.title || '0').toString().replace('%','')) || 0;
-
-  // Targets
-  const divisionTargets = bySlug.divisionTargets || '';
-  const targets = bySlug.targets || '';
-  const [minWins] = (targets || '').split('-');
-  const [divMin, divMax] = (divisionTargets || '').split('-');
-
-  setHeaders({ 'cache-control': 'no-store' });
+function buildTeamData(row, slug) {
+  const status = row.status || {};
+  const targetsStr = String(row.targets ?? '');
+  const maxFromTargets = (() => {
+    const m = targetsStr.match(/(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)/);
+    return m ? Number(m[2]) : '—';
+  })();
 
   return {
-    title,
-    division,
-    slug: params.slug,
-    // optional custom logo path if you add one later:
-    logoUrl: null,
+    // what +page.svelte reads:
+    slug,
+    title: row.team ?? 'Team',
+    division: typeof row.division === 'string' ? row.division : String(row.division ?? ''),
 
-    // Overview
-    record,
-    pointsFor,
-    pointsAgainst: null,        // not in your JSON
-    sosText: bySlug.sos?.past?.index
-      ? (bySlug.sos.past.index > 1 ? 'Harder than avg' : 'Easier than avg')
-      : '—',
+    record: row.record ?? '—',
+    pointsFor: Number.isFinite(Number(row.points)) ? Number(row.points) : undefined,
+    // pointsAgainst is not in projections JSON → leave undefined so UI shows "—"
 
-    // Bars
-    bars: {
-      division: divPct,
-      playoffs: plyPct,
-      title: ttlPct
+    // odds as numbers (e.g., 42.7)
+    odds: {
+      division: numFromPct(status.division),
+      playoffs: numFromPct(status.playoffs),
+      title:    numFromPct(status.title)
     },
 
-    // Table details
-    minWins: minWins || '—',
-    maxWins: null,               // not provided
-    playoffTargetWins: targets || '—',
-    divisionTargetWins: divisionTargets || '—',
+    // projections
+    minWins: row.min ?? '—',
+    maxWins: maxFromTargets, // derived from "targets" upper bound if present
+    playoffTargetWins: row.targets ?? '—',
+    divisionTargetWins: row.divisionTargets ?? '—',
 
-    // avatar base (optional)
+    // optional avatar hints (UI will fallback to initials if not provided)
+    logoUrl: row.logoUrl ?? null,
     avatarBasePath: '/playoffs-projection/avatars'
   };
+}
+
+/** @type {import('./$types').PageServerLoad} */
+export async function load({ params, fetch, setHeaders }) {
+  const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
+  const slug = params.slug;
+  const label = labelBySlug[slug];
+
+  if (!url) return { title: 'Team', slug, error: 'Missing PUBLIC_PROJECTIONS_URL' };
+  if (!label) return { title: 'Team', slug, error: `Unknown team slug: ${slug}` };
+
+  try {
+    const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
+    if (!res.ok) return { title: label, slug, error: `Fetch failed: ${res.status}` };
+
+    const raw = await res.json();
+    const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
+    const row = rows.find((r) => r?.team === label);
+
+    if (!row) return { title: label, slug, error: 'Team not found in projections' };
+
+    const data = buildTeamData(row, slug);
+    setHeaders({ 'cache-control': 'no-store' });
+    return data; // consumed by +page.svelte via `export let data`
+  } catch (e) {
+    return { title: label, slug, error: String(e) };
+  }
 }
