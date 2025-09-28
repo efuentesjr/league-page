@@ -1,7 +1,8 @@
+// src/routes/team/[slug]/+page.server.js
 export const prerender = false;
 import { env } from '$env/dynamic/public';
 
-// Keep this in sync with playoffs-projection/+page.server.js
+// Keep this in sync with playoffs-projection loader
 const slugMap = {
   'Bay Area Par': 'bay-area-party-supplies',
   'CeeDees TDs': 'ceedees-tDs',
@@ -20,82 +21,147 @@ const slugMap = {
   'Loud and Str': 'loud-and-stroud',
   'Vick2times': 'vick2times'
 };
-
-// Invert mapping: slug -> display label from the projections JSON
 const labelBySlug = Object.fromEntries(
   Object.entries(slugMap).map(([label, slug]) => [slug, label])
 );
 
-const numFromPct = (v) => {
-  if (v == null) return null;
-  if (typeof v === 'number') return v;
-  if (typeof v === 'string') {
-    const n = parseFloat(v.replace('%', '').trim());
-    return Number.isFinite(n) ? n : null;
-  }
-  return null;
-};
+// Helpers to parse the JSON into the same shape we used on the table
+const toStatuses = (st = {}) => ({
+  divStatus: st.division ? `C:${st.division}` : '',
+  playStatus: [st.playoffs ? `C:${st.playoffs}` : '', st.title ? `T:${st.title}` : '']
+    .filter(Boolean)
+    .join(' ')
+});
 
-function buildTeamData(row, slug) {
-  const status = row.status || {};
-  const targetsStr = String(row.targets ?? '');
-  const maxFromTargets = (() => {
-    const m = targetsStr.match(/(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)/);
-    return m ? Number(m[2]) : '—';
-  })();
+function normalizeRow(r) {
+  // "3-0-0" -> numbers
+  let wins = 0, losses = 0, ties = 0;
+  if (typeof r.record === 'string') {
+    const [w, l, t] = r.record.split('-').map((n) => Number(n || 0));
+    wins = w ?? 0; losses = l ?? 0; ties = t ?? 0;
+  }
+  const { divStatus, playStatus } = toStatuses(r.status || {});
+  const slug = slugMap[r.team] || null;
 
   return {
-    // what +page.svelte reads:
     slug,
-    title: row.team ?? 'Team',
-    division: typeof row.division === 'string' ? row.division : String(row.division ?? ''),
-
-    record: row.record ?? '—',
-    pointsFor: Number.isFinite(Number(row.points)) ? Number(row.points) : undefined,
-    // pointsAgainst is not in projections JSON → leave undefined so UI shows "—"
-
-    // odds as numbers (e.g., 42.7)
-    odds: {
-      division: numFromPct(status.division),
-      playoffs: numFromPct(status.playoffs),
-      title:    numFromPct(status.title)
-    },
-
-    // projections
-    minWins: row.min ?? '—',
-    maxWins: maxFromTargets, // derived from "targets" upper bound if present
-    playoffTargetWins: row.targets ?? '—',
-    divisionTargetWins: row.divisionTargets ?? '—',
-
-    // optional avatar hints (UI will fallback to initials if not provided)
-    logoUrl: row.logoUrl ?? null,
-    avatarBasePath: '/playoffs-projection/avatars'
+    teamLabel: r.team || '',
+    division: r.division ?? '',
+    wins,
+    losses,
+    ties,
+    points: Number(r.points ?? 0),
+    divStatus,
+    playStatus,
+    min: r.min ?? '',
+    targets: r.targets ?? '',
+    gIn: r.gamesIn ?? '',
+    divTgts: r.divisionTargets ?? ''
   };
+}
+
+function normalize(rows = []) {
+  return rows.map(normalizeRow).filter((x) => !!x.slug);
+}
+
+// Extract numeric odds from "C:82.7% T:1.0%" etc.
+function parsePctFromTag(s, tag) {
+  if (!s) return 0;
+  const m = s.match(new RegExp(`${tag}:\\s*([\\d.]+)%`, 'i'));
+  return m ? Number(m[1]) : 0;
 }
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params, fetch, setHeaders }) {
-  const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
   const slug = params.slug;
-  const label = labelBySlug[slug];
+  const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
 
-  if (!url) return { title: 'Team', slug, error: 'Missing PUBLIC_PROJECTIONS_URL' };
-  if (!label) return { title: 'Team', slug, error: `Unknown team slug: ${slug}` };
+  // Always return something — never throw => no 404s from the loader
+  if (!url) {
+    return {
+      title: labelBySlug[slug] ?? slug,
+      slug,
+      division: '',
+      record: '—',
+      pointsFor: '—',
+      pointsAgainst: '—',
+      odds: { division: 0, playoffs: 0, title: 0 },
+      minWins: '—',
+      maxWins: '—',
+      playoffTargetWins: '—',
+      divisionTargetWins: '—',
+      avatarBasePath: '/playoffs-projection/avatars'
+    };
+  }
 
   try {
     const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
-    if (!res.ok) return { title: label, slug, error: `Fetch failed: ${res.status}` };
-
+    if (!res.ok) throw new Error(`fetch ${res.status}`);
     const raw = await res.json();
     const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
-    const row = rows.find((r) => r?.team === label);
+    const projections = normalize(rows);
 
-    if (!row) return { title: label, slug, error: 'Team not found in projections' };
+    const row = projections.find((r) => r.slug === slug);
+    if (!row) {
+      // Fallback shell if slug not in feed yet
+      setHeaders({ 'cache-control': 'no-store' });
+      return {
+        title: labelBySlug[slug] ?? slug,
+        slug,
+        division: '',
+        record: '—',
+        pointsFor: '—',
+        pointsAgainst: '—',
+        odds: { division: 0, playoffs: 0, title: 0 },
+        minWins: '—',
+        maxWins: '—',
+        playoffTargetWins: '—',
+        divisionTargetWins: '—',
+        avatarBasePath: '/playoffs-projection/avatars'
+      };
+    }
 
-    const data = buildTeamData(row, slug);
+    const record = `${row.wins}-${row.losses}${row.ties ? `-${row.ties}` : ''}`;
+    const odds = {
+      division: parsePctFromTag(row.divStatus, 'C'),
+      playoffs: parsePctFromTag(row.playStatus, 'C'),
+      title: parsePctFromTag(row.playStatus, 'T')
+    };
+
+    // If you want a "max wins", we don’t have it explicitly — leave '—'.
+    // Targets are ranges like "9.0-9.0" that we show as strings on the page.
     setHeaders({ 'cache-control': 'no-store' });
-    return data; // consumed by +page.svelte via `export let data`
-  } catch (e) {
-    return { title: label, slug, error: String(e) };
+    return {
+      title: row.teamLabel || labelBySlug[slug] || slug,
+      slug,
+      division: row.division || '',
+      record,
+      pointsFor: row.points,
+      pointsAgainst: undefined, // not in current feed
+      odds,
+      minWins: row.min ?? '—',
+      maxWins: '—',
+      playoffTargetWins: row.targets || '—',
+      divisionTargetWins: row.divTgts || '—',
+      avatarBasePath: '/playoffs-projection/avatars'
+      // If you later add SoS to the feed, you can add it here as data.sos
+    };
+  } catch {
+    // Fail-soft shell (still no 404)
+    setHeaders({ 'cache-control': 'no-store' });
+    return {
+      title: labelBySlug[slug] ?? slug,
+      slug,
+      division: '',
+      record: '—',
+      pointsFor: '—',
+      pointsAgainst: '—',
+      odds: { division: 0, playoffs: 0, title: 0 },
+      minWins: '—',
+      maxWins: '—',
+      playoffTargetWins: '—',
+      divisionTargetWins: '—',
+      avatarBasePath: '/playoffs-projection/avatars'
+    };
   }
 }
