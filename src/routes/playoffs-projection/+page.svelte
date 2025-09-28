@@ -100,28 +100,29 @@
             <th>DivTgts</th>
           </tr>
         </thead>
-        <tbody>
-          {#each rows as r (r.slug)}
-            <tr>
-              <td>{r.division}</td>
-              <td class="teamcell">
-                <a class="teamlink" href={`/team/${r.slug}`}>
-                  <!-- Sleeper avatar auto-resolves from slug → managerID → users[owner].avatar -->
-                  <SleeperAvatar slug={r.slug} size={24} alt={labelFor(r.slug)} />
-                  <span class="name">{labelFor(r.slug)}</span>
-                </a>
-              </td>
-              <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
-              <td>{r.points ?? 0}</td>
-              <td>{r.divStatus ?? ''}</td>
-              <td>{r.playStatus ?? ''}</td>
-              <td>{r.min ?? ''}</td>
-              <td>{r.targets ?? ''}</td>
-              <td>{r.gIn ?? ''}</td>
-              <td>{r.divTgts ?? ''}</td>
-            </tr>
-          {/each}
-        </tbody>
+<tbody>
+  {#each rows as r (r.slug)}
+    <tr>
+      <td>{r.division}</td>
+      <td class="teamcell">
+        <a class="teamlink" href={`/playoffs-projection/${r.slug}`}>
+          <!-- Sleeper avatar auto-resolves from slug → managerID → users[owner].avatar -->
+          <SleeperAvatar slug={r.slug} size={24} alt={labelFor(r.slug)} />
+          <span class="name">{labelFor(r.slug)}</span>
+        </a>
+      </td>
+      <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
+      <td>{r.points ?? 0}</td>
+      <td>{r.divStatus ?? ''}</td>
+      <td>{r.playStatus ?? ''}</td>
+      <td>{r.min ?? ''}</td>
+      <td>{r.targets ?? ''}</td>
+      <td>{r.gIn ?? ''}</td>
+      <td>{r.divTgts ?? ''}</td>
+    </tr>
+  {/each}
+</tbody>
+
       </table>
     {/if}
   </div>
