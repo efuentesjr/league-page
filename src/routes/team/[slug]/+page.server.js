@@ -1,11 +1,13 @@
 // src/routes/team/[slug]/+page.server.js
 export const prerender = false;
-import { env } from '$env/dynamic/public';
 
-// Keep this in sync with playoffs-projection loader
-const slugMap = {
+// Read the same JSON you committed to the repo
+import projectionsRaw from '$lib/data/projections-latest.json';
+
+// ----- MUST match the mapping used on /playoffs-projection -----
+const nameToSlug = {
   'Bay Area Par': 'bay-area-party-supplies',
-  'CeeDees TDs': 'ceedees-tDs',
+  'CeeDees TDs': 'ceedees-tds',         // <- note all lowercase here
   'Chosen one.': 'chosen-one',
   'The People’s': 'peoples-champ',
   'Pete Weber B': 'pete-weber-bowl-club',
@@ -21,147 +23,83 @@ const slugMap = {
   'Loud and Str': 'loud-and-stroud',
   'Vick2times': 'vick2times'
 };
-const labelBySlug = Object.fromEntries(
-  Object.entries(slugMap).map(([label, slug]) => [slug, label])
+
+// Build reverse map: slug -> display name
+const slugToName = Object.fromEntries(
+  Object.entries(nameToSlug).map(([name, slug]) => [slug, name])
 );
 
-// Helpers to parse the JSON into the same shape we used on the table
-const toStatuses = (st = {}) => ({
-  divStatus: st.division ? `C:${st.division}` : '',
-  playStatus: [st.playoffs ? `C:${st.playoffs}` : '', st.title ? `T:${st.title}` : '']
-    .filter(Boolean)
-    .join(' ')
-});
+// Helper: parse "42.7%" -> 42.7 (number)
+const pct = (s) => {
+  if (s == null) return null;
+  const n = Number(String(s).replace('%', '').trim());
+  return Number.isFinite(n) ? n : null;
+};
 
-function normalizeRow(r) {
-  // "3-0-0" -> numbers
-  let wins = 0, losses = 0, ties = 0;
-  if (typeof r.record === 'string') {
-    const [w, l, t] = r.record.split('-').map((n) => Number(n || 0));
-    wins = w ?? 0; losses = l ?? 0; ties = t ?? 0;
+// Find the JSON row for a given slug
+function findRowBySlug(slug) {
+  const teamName = slugToName[slug];
+  if (!teamName) return null;
+
+  const rows = Array.isArray(projectionsRaw)
+    ? projectionsRaw
+    : Array.isArray(projectionsRaw?.data)
+      ? projectionsRaw.data
+      : [];
+
+  return rows.find((r) => r?.team === teamName) || null;
+}
+
+// Normalize to what +page.svelte expects.
+// IMPORTANT: never throw/404—return safe placeholders instead.
+function toTeamData(slug, r) {
+  if (!r) {
+    return {
+      slug,
+      title: slug,
+      division: '',
+      record: '—',
+      pointsFor: null,
+      pointsAgainst: null,
+      odds: { division: null, playoffs: null, title: null },
+      minWins: '—',
+      maxWins: '—',
+      playoffTargetWins: '—',
+      divisionTargetWins: '—',
+      avatarBasePath: '/playoffs-projection/avatars'
+    };
   }
-  const { divStatus, playStatus } = toStatuses(r.status || {});
-  const slug = slugMap[r.team] || null;
+
+  const odds = r.status
+    ? {
+        division: pct(r.status.division),
+        playoffs: pct(r.status.playoffs),
+        title: pct(r.status.title)
+      }
+    : { division: null, playoffs: null, title: null };
 
   return {
     slug,
-    teamLabel: r.team || '',
-    division: r.division ?? '',
-    wins,
-    losses,
-    ties,
-    points: Number(r.points ?? 0),
-    divStatus,
-    playStatus,
-    min: r.min ?? '',
-    targets: r.targets ?? '',
-    gIn: r.gamesIn ?? '',
-    divTgts: r.divisionTargets ?? ''
+    title: r.team ?? slug,
+    division: String(r.division ?? ''),
+    record: r.record ?? '—',
+    pointsFor: Number(r.points ?? 0),
+    pointsAgainst: null, // not in your JSON; leave null/— in UI
+    odds,
+    minWins: r.min ?? '—',
+    maxWins: '—', // not in your JSON; leave as —
+    playoffTargetWins: r.targets ?? '—',
+    divisionTargetWins: r.divisionTargets ?? '—',
+    avatarBasePath: '/playoffs-projection/avatars'
   };
 }
 
-function normalize(rows = []) {
-  return rows.map(normalizeRow).filter((x) => !!x.slug);
-}
-
-// Extract numeric odds from "C:82.7% T:1.0%" etc.
-function parsePctFromTag(s, tag) {
-  if (!s) return 0;
-  const m = s.match(new RegExp(`${tag}:\\s*([\\d.]+)%`, 'i'));
-  return m ? Number(m[1]) : 0;
-}
-
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params, fetch, setHeaders }) {
+export async function load({ params, setHeaders }) {
   const slug = params.slug;
-  const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
+  const row = findRowBySlug(slug);
+  const data = toTeamData(slug, row);
 
-  // Always return something — never throw => no 404s from the loader
-  if (!url) {
-    return {
-      title: labelBySlug[slug] ?? slug,
-      slug,
-      division: '',
-      record: '—',
-      pointsFor: '—',
-      pointsAgainst: '—',
-      odds: { division: 0, playoffs: 0, title: 0 },
-      minWins: '—',
-      maxWins: '—',
-      playoffTargetWins: '—',
-      divisionTargetWins: '—',
-      avatarBasePath: '/playoffs-projection/avatars'
-    };
-  }
-
-  try {
-    const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
-    if (!res.ok) throw new Error(`fetch ${res.status}`);
-    const raw = await res.json();
-    const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
-    const projections = normalize(rows);
-
-    const row = projections.find((r) => r.slug === slug);
-    if (!row) {
-      // Fallback shell if slug not in feed yet
-      setHeaders({ 'cache-control': 'no-store' });
-      return {
-        title: labelBySlug[slug] ?? slug,
-        slug,
-        division: '',
-        record: '—',
-        pointsFor: '—',
-        pointsAgainst: '—',
-        odds: { division: 0, playoffs: 0, title: 0 },
-        minWins: '—',
-        maxWins: '—',
-        playoffTargetWins: '—',
-        divisionTargetWins: '—',
-        avatarBasePath: '/playoffs-projection/avatars'
-      };
-    }
-
-    const record = `${row.wins}-${row.losses}${row.ties ? `-${row.ties}` : ''}`;
-    const odds = {
-      division: parsePctFromTag(row.divStatus, 'C'),
-      playoffs: parsePctFromTag(row.playStatus, 'C'),
-      title: parsePctFromTag(row.playStatus, 'T')
-    };
-
-    // If you want a "max wins", we don’t have it explicitly — leave '—'.
-    // Targets are ranges like "9.0-9.0" that we show as strings on the page.
-    setHeaders({ 'cache-control': 'no-store' });
-    return {
-      title: row.teamLabel || labelBySlug[slug] || slug,
-      slug,
-      division: row.division || '',
-      record,
-      pointsFor: row.points,
-      pointsAgainst: undefined, // not in current feed
-      odds,
-      minWins: row.min ?? '—',
-      maxWins: '—',
-      playoffTargetWins: row.targets || '—',
-      divisionTargetWins: row.divTgts || '—',
-      avatarBasePath: '/playoffs-projection/avatars'
-      // If you later add SoS to the feed, you can add it here as data.sos
-    };
-  } catch {
-    // Fail-soft shell (still no 404)
-    setHeaders({ 'cache-control': 'no-store' });
-    return {
-      title: labelBySlug[slug] ?? slug,
-      slug,
-      division: '',
-      record: '—',
-      pointsFor: '—',
-      pointsAgainst: '—',
-      odds: { division: 0, playoffs: 0, title: 0 },
-      minWins: '—',
-      maxWins: '—',
-      playoffTargetWins: '—',
-      divisionTargetWins: '—',
-      avatarBasePath: '/playoffs-projection/avatars'
-    };
-  }
+  setHeaders({ 'cache-control': 'no-store' });
+  return data; // <- do NOT throw; this prevents 404s
 }
