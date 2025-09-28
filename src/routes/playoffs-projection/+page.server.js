@@ -6,7 +6,7 @@ import { leagueID } from '$lib/utils/leagueInfo';
 // ------------- EXISTING: team label -> site slug -------------
 const slugMap = {
   'Bay Area Par': 'bay-area-party-supplies',
-  'CeeDees TDs': 'ceedees-tds',            // <-- fixed slug
+  'CeeDees Tds': 'ceedees-tds',            // <-- fixed slug
   'Chosen one.': 'chosen-one',
   'The People’s': 'peoples-champ',
   'Pete Weber B': 'pete-weber-bowl-club',
