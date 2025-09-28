@@ -1,108 +1,80 @@
-// src/routes/playoffs-projection/[slug]/+page.server.js
-export const prerender = false;
+// src/routes/team/[slug]/+page.server.js
 import { env } from '$env/dynamic/public';
 
-// Map short team labels -> site slugs (same map you use in the list page)
-const slugMap = {
-  'Bay Area Par': 'bay-area-party-supplies',
-  'CeeDees TDs': 'ceedees-tDs',
-  'Chosen one.': 'chosen-one',
-  'The People’s': 'peoples-champ',
-  'Pete Weber B': 'pete-weber-bowl-club',
-  'Los Loquitos': 'los-loquitos',
-  'bLuE BaLLeRs': 'blue-ballers',
-  'TexasTimeshi': 'texastimeshifts',
-  'Brute Force': 'brute-force-attack',
-  'The Comeback': 'comeback-kid',
-  'SlickBears': 'slickbears',
-  '88boyz11': 'team-88boyz11',
-  'PrimeTime Pr': 'primetime-prodigies',
-  'Do it to the': 'do-it-to-them',
-  'Loud and Str': 'loud-and-stroud',
-  'Vick2times': 'vick2times'
-};
-
-const pctNum = (v) => Number(String(v ?? '').replace(/[^\d.]/g, '')) || 0;
-
-function normalizeRow(r) {
-  // record "3-0-0" → wins/losses/ties and string form
-  let wins = 0, losses = 0, ties = 0;
-  if (typeof r.record === 'string') {
-    const [w, l, t] = r.record.split('-').map((n) => Number(n || 0));
-    wins = w ?? 0; losses = l ?? 0; ties = t ?? 0;
-  }
-
-  const slug = slugMap[r.team] || null;
-
-  const [minWins, maxWins] =
-    String(r.targets ?? '')
-      .split('-')
-      .map((s) => s.trim())
-      .filter(Boolean);
-
-  return {
-    slug,
-    team: r.team,
-    division: r.division ?? '',
-    record: wins + '-' + losses + '-' + ties,
-    pointsFor: Number(r.points ?? 0),
-    odds: {
-      division: pctNum(r.status?.division),
-      playoffs: pctNum(r.status?.playoffs),
-      title: pctNum(r.status?.title)
-    },
-    minWins: minWins ?? null,
-    maxWins: maxWins ?? null,
-    playoffTargetWins: r.targets ?? null,
-    divisionTargetWins: r.divisionTargets ?? r.divTgts ?? null
-  };
+// parse "C:80.0% T:3.7%" -> { c: 80, t: 3.7 }
+function parsePlayStatus(s = '') {
+  const c = Number((s.match(/C:\s*([\d.]+)%/i) || [])[1] || 0);
+  const t = Number((s.match(/T:\s*([\d.]+)%/i) || [])[1] || 0);
+  return { c, t };
 }
 
-/** @type {import('./$types').PageServerLoad} */
 export async function load({ params, fetch, setHeaders }) {
   const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
-  if (!url) {
-    return {
-      title: params.slug,
-      slug: params.slug,
-      division: '',
-      record: '—',
-      pointsFor: null,
-      odds: {},
-      error: 'Missing PUBLIC_PROJECTIONS_URL'
-    };
+  if (!url) return { status: 500, error: 'Missing PUBLIC_PROJECTIONS_URL' };
+
+  const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
+  if (!res.ok) return { status: res.status, error: `Fetch failed: ${res.status}` };
+
+  const raw = await res.json();
+  const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
+
+  // Find the matching team by slug (prefer r.slug if present; else map later in list page)
+  const bySlug = rows.find((r) => r.slug && String(r.slug) === params.slug);
+
+  // If your JSON doesn’t include r.slug, you can’t match here — instead,
+  // rely on the list page to embed slug into each row before you host it.
+  if (!bySlug) {
+    return { status: 404, error: `Team not found for slug "${params.slug}"` };
   }
 
-  try {
-    const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
-    if (!res.ok) {
-      return { title: params.slug, slug: params.slug, error: `Fetch failed: ${res.status}` };
-    }
+  // Build the fields your +page.svelte expects
+  const title = bySlug.team || 'Team';
+  const division = String(bySlug.division ?? '');
+  const record = String(bySlug.record ?? '—');
+  const pointsFor = Number.isFinite(bySlug.points) ? bySlug.points : null;
 
-    const raw = await res.json();
-    const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
-    const normalized = rows.map(normalizeRow).filter((x) => !!x.slug);
-    const team = normalized.find((t) => t.slug === params.slug);
+  // Bars: division/playoffs/title
+  const divPct = Number((bySlug.status?.division || '0').toString().replace('%','')) || 0;
+  const plyPct = Number((bySlug.status?.playoffs || '0').toString().replace('%','')) || 0;
+  const ttlPct = Number((bySlug.status?.title || '0').toString().replace('%','')) || 0;
 
-    if (!team) {
-      return { title: params.slug, slug: params.slug, error: 'Team not found in projections' };
-    }
+  // Targets
+  const divisionTargets = bySlug.divisionTargets || '';
+  const targets = bySlug.targets || '';
+  const [minWins] = (targets || '').split('-');
+  const [divMin, divMax] = (divisionTargets || '').split('-');
 
-    setHeaders({ 'cache-control': 'no-store' });
-    return {
-      title: team.team,
-      slug: team.slug,
-      division: team.division,
-      record: team.record,
-      pointsFor: team.pointsFor,
-      // pointsAgainst can be added later when we wire SoS/PA
-      odds: team.odds,
-      minWins: team.minWins,
-      maxWins: team.maxWins,
-      playoffTargetWins: team.playoffTargetWins,
-      divisionTargetWins: team.divisionTargetWins
-    };
-  } catch (e) {
-    return { title: params.slug, slug: params.slug, error: String(e) };
-  }
+  setHeaders({ 'cache-control': 'no-store' });
+
+  return {
+    title,
+    division,
+    slug: params.slug,
+    // optional custom logo path if you add one later:
+    logoUrl: null,
+
+    // Overview
+    record,
+    pointsFor,
+    pointsAgainst: null,        // not in your JSON
+    sosText: bySlug.sos?.past?.index
+      ? (bySlug.sos.past.index > 1 ? 'Harder than avg' : 'Easier than avg')
+      : '—',
+
+    // Bars
+    bars: {
+      division: divPct,
+      playoffs: plyPct,
+      title: ttlPct
+    },
+
+    // Table details
+    minWins: minWins || '—',
+    maxWins: null,               // not provided
+    playoffTargetWins: targets || '—',
+    divisionTargetWins: divisionTargets || '—',
+
+    // avatar base (optional)
+    avatarBasePath: '/playoffs-projection/avatars'
+  };
 }
