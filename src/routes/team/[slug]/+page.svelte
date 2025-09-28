@@ -1,40 +1,43 @@
 <script>
   export let data = {};
 
-  const title = data?.title ?? 'Team Name';
+  const title = data?.title ?? 'Team';
   const division = data?.division ?? '';
-  const slug = data?.slug ?? '';              // IMPORTANT for PNG fallback
-  const primaryLogo = data?.logoUrl ?? '';    // Optional upstream logo
+  const slug = data?.slug ?? '';
+  const record = data?.record ?? '—';
+  const pointsFor = Number.isFinite(data?.pointsFor) ? data.pointsFor : '—';
+  const pointsAgainst = Number.isFinite(data?.pointsAgainst) ? data.pointsAgainst : '—'; // optional, may be '—'
 
-  // Change this if your main tab’s PNGs live somewhere else:
+  // odds (numbers like 42.7)
+  const pct = (n) => (Number.isFinite(n) ? n : 0);
+  const divPct = pct(data?.odds?.division);
+  const poPct  = pct(data?.odds?.playoffs);
+  const titPct = pct(data?.odds?.title);
+
+  // projections
+  const minWins  = data?.minWins ?? '—';
+  const maxWins  = data?.maxWins ?? '—';
+  const poTarget = data?.playoffTargetWins ?? '—';
+  const dvTarget = data?.divisionTargetWins ?? '—';
+
+  // avatar fallback
   const DEFAULT_AVATAR_BASE = '/playoffs-projection/avatars';
-
-  // Allow override from loader if you keep avatars elsewhere:
+  const primaryLogo = data?.logoUrl ?? '';
   const avatarBasePath = data?.avatarBasePath ?? DEFAULT_AVATAR_BASE;
-
-  // Build a list of candidate image URLs to try in order
   const candidates = [
     ...(primaryLogo ? [primaryLogo] : []),
     ...(slug ? [`${avatarBasePath}/${slug}.png`] : []),
   ];
+  const initials = (title || '').split(/\s+/).filter(Boolean).map(w => w[0]).slice(0,2).join('').toUpperCase();
 
-  const initials = (title || '')
-    .split(/\s+/).filter(Boolean).map(w => w[0]).slice(0,2).join('').toUpperCase();
-
-  let idx = 0;                 // which candidate we’re on
-  let currentSrc = candidates[0] || ''; 
-  let showFallback = !currentSrc; // if nothing to try, show initials immediately
+  let idx = 0;
+  let currentSrc = candidates[0] || '';
+  let showFallback = !currentSrc;
 
   function onLogoError() {
-    // try the next candidate if available
     idx += 1;
-    if (idx < candidates.length) {
-      currentSrc = candidates[idx];
-    } else {
-      // no more candidates—swap to initials fallback
-      currentSrc = '';
-      showFallback = true;
-    }
+    if (idx < candidates.length) currentSrc = candidates[idx];
+    else { currentSrc = ''; showFallback = true; }
   }
 </script>
 
@@ -51,9 +54,7 @@
 
   <div class="title-block">
     <h1 class="team-title">{title}</h1>
-    {#if division}
-      <div class="subtle">Division: <strong>{division}</strong></div>
-    {/if}
+    {#if division}<div class="subtle">Division: <strong>{division}</strong></div>{/if}
   </div>
 </header>
 
@@ -61,10 +62,10 @@
   <section class="card">
     <h2>Team Overview</h2>
     <div class="kv">
-      <div><span>Record</span><strong>—</strong></div>
-      <div><span>Points For</span><strong>—</strong></div>
-      <div><span>Points Against</span><strong>—</strong></div>
-      <div><span>Strength of Schedule</span><strong>—</strong></div>
+      <div><span>Record</span><strong>{record}</strong></div>
+      <div><span>Points For</span><strong>{pointsFor}</strong></div>
+      <div><span>Points Against</span><strong>{pointsAgainst}</strong></div>
+      <div><span>Strength of Schedule</span><strong>{data?.sos ? `${data.sos.past.index}x league avg` : '—'}</strong></div>
     </div>
   </section>
 
@@ -73,18 +74,18 @@
     <div class="bars">
       <div class="bar">
         <div class="bar-label">Win Division</div>
-        <div class="bar-track"><div class="bar-fill" style="width: 0%"></div></div>
-        <div class="bar-value">—</div>
+        <div class="bar-track"><div class="bar-fill" style={`width:${divPct}%`}></div></div>
+        <div class="bar-value">{divPct ? `${divPct.toFixed(1)}%` : '—'}</div>
       </div>
       <div class="bar">
         <div class="bar-label">Make Playoffs</div>
-        <div class="bar-track"><div class="bar-fill" style="width: 0%"></div></div>
-        <div class="bar-value">—</div>
+        <div class="bar-track"><div class="bar-fill" style={`width:${poPct}%`}></div></div>
+        <div class="bar-value">{poPct ? `${poPct.toFixed(1)}%` : '—'}</div>
       </div>
       <div class="bar">
         <div class="bar-label">Win Championship</div>
-        <div class="bar-track"><div class="bar-fill" style="width: 0%"></div></div>
-        <div class="bar-value">—</div>
+        <div class="bar-track"><div class="bar-fill" style={`width:${titPct}%`}></div></div>
+        <div class="bar-value">{titPct ? `${titPct.toFixed(1)}%` : '—'}</div>
       </div>
     </div>
   </section>
@@ -93,14 +94,12 @@
     <h2>Projection Breakdown</h2>
     <div class="table-wrap">
       <table class="table">
-        <thead>
-          <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
-        </thead>
+        <thead><tr><th>Metric</th><th>Value</th><th>Notes</th></tr></thead>
         <tbody>
-          <tr><td>Min Wins</td><td>—</td><td>—</td></tr>
-          <tr><td>Max Wins</td><td>—</td><td>—</td></tr>
-          <tr><td>Playoff Target Wins</td><td>—</td><td>Typical threshold</td></tr>
-          <tr><td>Division Target Wins</td><td>—</td><td>To secure division</td></tr>
+          <tr><td>Min Wins</td><td>{minWins}</td><td>—</td></tr>
+          <tr><td>Max Wins</td><td>{maxWins}</td><td>—</td></tr>
+          <tr><td>Playoff Target Wins</td><td>{poTarget}</td><td>Typical threshold</td></tr>
+          <tr><td>Division Target Wins</td><td>{dvTarget}</td><td>To secure division</td></tr>
         </tbody>
       </table>
     </div>
@@ -122,7 +121,6 @@
   a.back:hover{ color:var(--text); }
 
   .team-header{ display:flex; align-items:center; gap:18px; margin-bottom:10px; }
-
   .avatar-wrap{ position:relative; width:120px; height:120px; min-width:120px; }
   .avatar{
     width:100%; height:100%; border-radius:9999px; object-fit:cover;
@@ -163,7 +161,7 @@
   .bar{ display:grid; grid-template-columns:140px 1fr auto; align-items:center; gap:10px; }
   .bar-label{ color:var(--muted); font-size:.95rem; }
   .bar-track{ height:10px; border-radius:999px; background:hsl(0 0% 100% / 0.08); overflow:hidden; border:1px solid var(--card-border); }
-  .bar-fill{ height:100%; width:0%; background:linear-gradient(90deg, var(--accent), #60a5fa); }
+  .bar-fill{ height:100%; background:linear-gradient(90deg, var(--accent), #60a5fa); }
   .bar-value{ min-width:42px; text-align:right; font-variant-numeric: tabular-nums; }
 
   .table-wrap{ overflow:auto; border-radius:12px; border:1px solid var(--card-border); }
