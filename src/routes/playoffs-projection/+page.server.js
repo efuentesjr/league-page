@@ -1,10 +1,10 @@
 export const prerender = false;
 import { env } from '$env/dynamic/public';
 
-// --- duplicate the same slugMap you use on the main page ---
+// Team label (from your JSON) -> site slug
 const slugMap = {
   'Bay Area Par': 'bay-area-party-supplies',
-  'CeeDees TDs': 'ceedees-tds', // <-- fixed lowercase
+  'CeeDees TDs': 'ceedees-tds', // <-- lowercase "tds" (fix)
   'Chosen one.': 'chosen-one',
   'The People’s': 'peoples-champ',
   'Pete Weber B': 'pete-weber-bowl-club',
@@ -21,6 +21,7 @@ const slugMap = {
   'Vick2times': 'vick2times'
 };
 
+// turn { division:"42.7%", playoffs:"80.0%", title:"3.7%" } into the strings the UI expects
 const toStatuses = (st = {}) => ({
   divStatus: st.division ? `C:${st.division}` : '',
   playStatus: [st.playoffs ? `C:${st.playoffs}` : '', st.title ? `T:${st.title}` : '']
@@ -28,7 +29,9 @@ const toStatuses = (st = {}) => ({
     .join(' ')
 });
 
+// normalize one row from your JSON into what the Svelte table reads
 function normalizeRow(r) {
+  // record "3-0-0" → wins/losses/ties
   let wins = 0, losses = 0, ties = 0;
   if (typeof r.record === 'string') {
     const [w, l, t] = r.record.split('-').map((n) => Number(n || 0));
@@ -36,11 +39,10 @@ function normalizeRow(r) {
   }
 
   const { divStatus, playStatus } = toStatuses(r.status || {});
-  const slug = slugMap[r.team] || null;
+  const slug = slugMap[r.team] || null; // NOTE: rows without slug are filtered out
 
   return {
     slug,
-    title: r.team || '',
     division: r.division ?? '',
     wins,
     losses,
@@ -55,59 +57,30 @@ function normalizeRow(r) {
   };
 }
 
-export async function load({ params, fetch, setHeaders }) {
-  const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
-  const slug = params.slug;
+function normalize(rows = []) {
+  return rows.map(normalizeRow).filter((x) => !!x.slug);
+}
 
+/** @type {import('./$types').PageServerLoad} */
+export async function load({ fetch, setHeaders }) {
+  const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
   if (!url) {
-    return {
-      title: 'Team Not Found',
-      division: '',
-      slug,
-      avatarBasePath: '/playoffs-projection/avatars'
-    };
+    return { projections: [], sourceUrl: url, error: 'Missing PUBLIC_PROJECTIONS_URL' };
   }
 
   try {
     const res = await fetch(url, { cache: 'no-store', redirect: 'follow' });
-    const raw = await res.json();
-    const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
-    const normalized = rows.map(normalizeRow).filter(x => !!x.slug);
-
-    const team = normalized.find(r => r.slug === slug);
-
-    setHeaders({ 'cache-control': 'no-store' });
-
-    if (!team) {
-      return {
-        title: 'Team Not Found',
-        division: '',
-        slug,
-        avatarBasePath: '/playoffs-projection/avatars'
-      };
+    if (!res.ok) {
+      return { projections: [], sourceUrl: url, error: `Fetch failed: ${res.status}` };
     }
 
-    return {
-      // the fields your +page.svelte reads:
-      title: team.title,
-      division: team.division,
-      slug: team.slug,
-      // optional extras you can wire into the UI later:
-      record: `${team.wins}-${team.losses}${team.ties ? '-' + team.ties : ''}`,
-      pointsFor: team.points,
-      divStatus: team.divStatus,
-      playStatus: team.playStatus,
-      minWins: team.min,
-      targets: team.targets,
-      divTargets: team.divTgts,
-      avatarBasePath: '/playoffs-projection/avatars'
-    };
-  } catch (_e) {
-    return {
-      title: 'Team Not Found',
-      division: '',
-      slug,
-      avatarBasePath: '/playoffs-projection/avatars'
-    };
+    const raw = await res.json();
+    const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
+    const projections = normalize(rows);
+
+    setHeaders({ 'cache-control': 'no-store' });
+    return { projections, sourceUrl: url, error: null };
+  } catch (e) {
+    return { projections: [], sourceUrl: url, error: String(e) };
   }
 }
