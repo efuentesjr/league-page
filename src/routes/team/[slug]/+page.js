@@ -1,11 +1,10 @@
 // src/routes/team/[slug]/+page.js
-export async function load({ params, parent }) {
-  const parentData = await parent(); // keep upstream title/logo/etc.
-  return {
-    ...parentData,
-    slug: params.slug,
-    // use the SAME folder where your main playoffs tab keeps the .png avatars
-    avatarBasePath: parentData?.avatarBasePath ?? '/playoffs-projection/avatars'
-  };
-}
+// Pass through whatever +page.server.js returns.
+// (If you prefer, you can delete this file entirely.)
+export const ssr = true;
+export const csr = true;
 
+/** @type {import('./$types').PageLoad} */
+export async function load({ data }) {
+  return data; // <-- just forward server data, no fetching, no errors
+}
