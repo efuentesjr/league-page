@@ -1,13 +1,10 @@
 // src/routes/team/[slug]/+page.server.js
 export const prerender = false;
 
-// Read the same JSON you committed to the repo
-import projectionsRaw from '$lib/data/projections-latest.json';
-
-// ----- MUST match the mapping used on /playoffs-projection -----
+// ----- name -> slug (same names as in your JSON) -----
 const nameToSlug = {
   'Bay Area Par': 'bay-area-party-supplies',
-  'CeeDees TDs': 'ceedees-tds',         // <- note all lowercase here
+  'CeeDees TDs': 'ceedees-tds',      // all lowercase here
   'Chosen one.': 'chosen-one',
   'The People’s': 'peoples-champ',
   'Pete Weber B': 'pete-weber-bowl-club',
@@ -24,34 +21,19 @@ const nameToSlug = {
   'Vick2times': 'vick2times'
 };
 
-// Build reverse map: slug -> display name
+// Reverse map (slug -> name). We'll also allow case-insensitive lookups.
 const slugToName = Object.fromEntries(
   Object.entries(nameToSlug).map(([name, slug]) => [slug, name])
 );
 
-// Helper: parse "42.7%" -> 42.7 (number)
+// Parse "42.7%" -> 42.7
 const pct = (s) => {
   if (s == null) return null;
   const n = Number(String(s).replace('%', '').trim());
   return Number.isFinite(n) ? n : null;
 };
 
-// Find the JSON row for a given slug
-function findRowBySlug(slug) {
-  const teamName = slugToName[slug];
-  if (!teamName) return null;
-
-  const rows = Array.isArray(projectionsRaw)
-    ? projectionsRaw
-    : Array.isArray(projectionsRaw?.data)
-      ? projectionsRaw.data
-      : [];
-
-  return rows.find((r) => r?.team === teamName) || null;
-}
-
-// Normalize to what +page.svelte expects.
-// IMPORTANT: never throw/404—return safe placeholders instead.
+// Normalize a row from projections JSON into what +page.svelte expects
 function toTeamData(slug, r) {
   if (!r) {
     return {
@@ -84,10 +66,10 @@ function toTeamData(slug, r) {
     division: String(r.division ?? ''),
     record: r.record ?? '—',
     pointsFor: Number(r.points ?? 0),
-    pointsAgainst: null, // not in your JSON; leave null/— in UI
+    pointsAgainst: null, // not present in your JSON
     odds,
     minWins: r.min ?? '—',
-    maxWins: '—', // not in your JSON; leave as —
+    maxWins: '—', // not present in your JSON
     playoffTargetWins: r.targets ?? '—',
     divisionTargetWins: r.divisionTargets ?? '—',
     avatarBasePath: '/playoffs-projection/avatars'
@@ -95,11 +77,29 @@ function toTeamData(slug, r) {
 }
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params, setHeaders }) {
-  const slug = params.slug;
-  const row = findRowBySlug(slug);
-  const data = toTeamData(slug, row);
+export async function load({ params, fetch, setHeaders }) {
+  const slugParam = params.slug;
+  const slugLc = slugParam.toLowerCase();
+  const teamName =
+    slugToName[slugParam] ||
+    slugToName[slugLc] || // tolerate mixed-case slugs like "ceedees-tDs"
+    null;
+
+  // Fetch projections from the committed static file
+  let rows = [];
+  try {
+    const res = await fetch('/projections-latest.json', { cache: 'no-store' });
+    if (res.ok) {
+      const raw = await res.json();
+      rows = Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
+    }
+  } catch {
+    // fail-soft
+  }
+
+  const row = teamName ? rows.find((r) => r?.team === teamName) : null;
+  const data = toTeamData(slugParam, row);
 
   setHeaders({ 'cache-control': 'no-store' });
-  return data; // <- do NOT throw; this prevents 404s
+  return data; // never throw -> no 404
 }
