@@ -1,0 +1,178 @@
+[
+  {
+    "division": "N",
+    "team": "Bay Area Par",
+    "record": "3-0-0",
+    "points": 497,
+    "status": { "division": "42.7%", "playoffs": "80.0%", "title": "3.7%" },
+    "min": 7,
+    "targets": "9.0-9.0",
+    "gamesIn": 10,
+    "divisionTargets": "11.0-13.0"
+  },
+  {
+    "division": "N",
+    "team": "CeeDees TDs",
+    "record": "3-0-0",
+    "points": 529,
+    "status": { "division": "42.7%", "playoffs": "82.7%", "title": "1.0%" },
+    "min": 7,
+    "targets": "9.0-9.0",
+    "gamesIn": 11,
+    "divisionTargets": "11.0-13.0"
+  },
+  {
+    "division": "E",
+    "team": "Chosen one.",
+    "record": "2-1-0",
+    "points": 425,
+    "status": { "division": "31.4%", "playoffs": "54.9%", "title": "11.3%" },
+    "min": 7,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "W",
+    "team": "The People’s",
+    "record": "2-1-0",
+    "points": 534,
+    "status": { "division": "46.7%", "playoffs": "67.7%", "title": "1.4%" },
+    "min": 5,
+    "targets": "9.0-9.0",
+    "gamesIn": 11,
+    "divisionTargets": "10.0-11.0"
+  },
+  {
+    "division": "E",
+    "team": "Pete Weber B",
+    "record": "2-1-0",
+    "points": 388,
+    "status": { "division": "30.8%", "playoffs": "52.3%", "title": "12.9%" },
+    "min": 7,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "E",
+    "team": "Los Loquitos",
+    "record": "2-1-0",
+    "points": 394,
+    "status": { "division": "32.1%", "playoffs": "53.3%", "title": "12.2%" },
+    "min": 7,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "S",
+    "team": "bLuE BaLLeRs",
+    "record": "2-1-0",
+    "points": 406,
+    "status": { "division": "37.2%", "playoffs": "56.3%", "title": "10.5%" },
+    "min": 6,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "S",
+    "team": "TexasTimeshi",
+    "record": "2-1-0",
+    "points": 341,
+    "status": { "division": "36.4%", "playoffs": "53.7%", "title": "11.9%" },
+    "min": 6,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "N",
+    "team": "Brute Force",
+    "record": "1-2-0",
+    "points": 344,
+    "status": { "division": "7.2%", "playoffs": "30.4%", "title": "14.5%" },
+    "min": 7,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "12.0-13.0"
+  },
+  {
+    "division": "N",
+    "team": "The Comeback",
+    "record": "1-2-0",
+    "points": 342,
+    "status": { "division": "7.1%", "playoffs": "30.1%", "title": "14.7%" },
+    "min": 7,
+    "targets": "9.0-10.0",
+    "gamesIn": 11,
+    "divisionTargets": "12.0-13.0"
+  },
+  {
+    "division": "S",
+    "team": "SlickBears",
+    "record": "1-2-0",
+    "points": 410,
+    "status": { "division": "19.4%", "playoffs": "35.2%", "title": "11.2%" },
+    "min": 6,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "W",
+    "team": "88boyz11",
+    "record": "1-2-0",
+    "points": 297,
+    "status": { "division": "17.9%", "playoffs": "32.4%", "title": "8.9%" },
+    "min": 7,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "W",
+    "team": "PrimeTime Pr",
+    "record": "1-2-0",
+    "points": 380,
+    "status": { "division": "17.7%", "playoffs": "32.3%", "title": "12.8%" },
+    "min": 7,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "W",
+    "team": "Do it to the",
+    "record": "1-2-0",
+    "points": 326,
+    "status": { "division": "17.5%", "playoffs": "32.2%", "title": "13.0%" },
+    "min": 7,
+    "targets": "9.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "S",
+    "team": "Loud and Str",
+    "record": "0-3-0",
+    "points": 304,
+    "status": { "division": "6.8%", "playoffs": "16.1%", "title": "7.0%" },
+    "min": 7,
+    "targets": "9.0-10.0",
+    "gamesIn": 11,
+    "divisionTargets": "11.0-12.0"
+  },
+  {
+    "division": "E",
+    "team": "Vick2times",
+    "record": "0-3-0",
+    "points": 293,
+    "status": { "division": "5.5%", "playoffs": "15.8%", "title": "6.1%" },
+    "min": 7,
+    "targets": "10.0-10.0",
+    "gamesIn": 12,
+    "divisionTargets": "11.0-12.0"
+  }
+]
