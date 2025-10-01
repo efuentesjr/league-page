@@ -3,16 +3,22 @@
   const RECAPS = [
     {
       key: 'wk1',
-      src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/0929.mp4' + '?v=' + Date.now(),
+      src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/0929.mp4',
       poster: '/videos/LOGO1.jpg'
     }
   ];
+
+  // ⬇️ Add a cache-buster so Cloudflare doesn't serve a stale object
+  const RECAPS_WITH_CACHEBUST = RECAPS.map(v => ({
+    ...v,
+    src: v.src + (v.src.includes('?') ? '&' : '?') + 'v=' + Date.now()
+  }));
 </script>
 
 <div class="wrap">
   <h1 class="title">Season Intro</h1>
 
-  {#each RECAPS as v}
+  {#each RECAPS_WITH_CACHEBUST as v}
     <section class="card">
       <div class="player">
         <video
