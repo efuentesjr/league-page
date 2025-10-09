@@ -34,7 +34,7 @@
   const odds = [
     { label: 'Division', value: pctNumber(team.status?.division) },
     { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
-    { label: 'Tie',    value: pctNumber(team.status?.tie) }
+    { label: 'Tie',      value: pctNumber(team.status?.tie) }
   ];
 </script>
 
@@ -206,9 +206,7 @@
        style="color:#00baff;text-decoration:none;border-bottom:1px solid rgba(0,186,255,.35);padding-bottom:2px;">
       ← Back to Playoff Projections
     </a>
-    {#if data.source}
-      <span style="opacity:.55;font-size:.9rem;margin-left:12px;">(source: {data.source})</span>
-    {/if}
+    <!-- Source removed from UI -->
   </div>
 
   <div class="team-header">
@@ -222,7 +220,7 @@
       </div>
       <div class="team-info">
         <h1>{team.team}</h1>
-        <p>Slug: <strong>{slug}</strong></p>
+        <!-- Slug removed from UI -->
       </div>
     </div>
 
