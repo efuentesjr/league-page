@@ -1,25 +1,53 @@
-import { error } from '@sveltejs/kit';
 import { PUBLIC_PROJECTIONS_URL } from '$env/static/public';
 
 const slugFrom = (s) =>
-  s.toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 export const load = async ({ params, fetch }) => {
   const { slug } = params;
+  const url = PUBLIC_PROJECTIONS_URL;
 
-  const res = await fetch(PUBLIC_PROJECTIONS_URL);
-  if (!res.ok) throw error(500, 'Failed to load projections JSON');
+  // If the env var didn’t make it into this build/page, show it plainly.
+  if (!url) {
+    return {
+      slug,
+      debug: {
+        havePublicEnv: false,
+        message: 'PUBLIC_PROJECTIONS_URL is undefined in this route.'
+      }
+    };
+  }
 
-  const all = await res.json();
-  const team = all.find((t) => slugFrom(t.team) === slug);
-  if (!team) throw error(404, 'Team not found in projections');
+  try {
+    const res = await fetch(url);
+    const ok = res.ok;
+    let status = res.status;
+    let text = '';
+    if (!ok) {
+      // capture body text for visibility (often says 403/404/etc)
+      try { text = await res.text(); } catch { /* ignore */ }
+      return { slug, url, debug: { havePublicEnv: true, ok, status, text } };
+    }
 
-  return {
-    slug,
-    team,
-    // we’ll use this in a later step for avatar fallback
-    avatarBasePath: '/playoffs-projection/avatars'
-  };
+    const all = await res.json();
+    const team = all.find((t) => slugFrom(t.team) === slug);
+
+    if (!team) {
+      return { slug, url, debug: { havePublicEnv: true, ok: true, status, text: 'Team not found in JSON.' } };
+    }
+
+    return {
+      slug,
+      url,
+      team,
+      avatarBasePath: '/playoffs-projection/avatars'
+    };
+  } catch (e) {
+    return {
+      slug,
+      url,
+      debug: { havePublicEnv: true, ok: false, status: 'network/error', text: String(e) }
+    };
+  }
 };
+
