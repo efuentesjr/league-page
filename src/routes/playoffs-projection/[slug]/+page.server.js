@@ -10,7 +10,6 @@ const slugFrom = (s) =>
 const norm = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
 function getTeamName(obj) {
-  // Be liberal about possible field names
   return (
     obj?.team ??
     obj?.Team ??
@@ -44,19 +43,60 @@ export const prerender = false;
 
 export const load = async ({ params, fetch }) => {
   const { slug } = params;
-  const url = PUBLIC_PROJECTIONS_URL;
-  if (!url) throw error(500, 'PUBLIC_PROJECTIONS_URL is undefined');
 
-  const res = await fetch(url);
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw error(502, `Projections fetch failed: ${res.status} ${text}`);
+  let all = [];
+  let source = '';
+
+  // ---- Try #1: PUBLIC_PROJECTIONS_URL (R2)
+  if (PUBLIC_PROJECTIONS_URL) {
+    try {
+      const res = await fetch(PUBLIC_PROJECTIONS_URL);
+      if (res.ok) {
+        all = coerceArray(await res.json());
+        source = `env:${PUBLIC_PROJECTIONS_URL}`;
+      } else {
+        // fall through to next source
+      }
+    } catch {
+      // fall through
+    }
   }
 
-  const raw = await res.json();
-  const all = coerceArray(raw);
+  // ---- Try #2: static file (/static/projections-latest.json)
+  if (!all.length) {
+    try {
+      const res2 = await fetch('/projections-latest.json');
+      if (res2.ok) {
+        all = coerceArray(await res2.json());
+        source = 'static:/projections-latest.json';
+      }
+    } catch {
+      // fall through
+    }
+  }
 
-  // Map to {name, item} pairs using the first name-like field we can find
+  // ---- Try #3: bundled file (src/lib/data/projections-latest.json)
+  if (!all.length) {
+    try {
+      // import assertion works on the server
+      const mod = await import('$lib/data/projections-latest.json', {
+        assert: { type: 'json' }
+      });
+      all = coerceArray(mod.default);
+      source = 'lib:$lib/data/projections-latest.json';
+    } catch {
+      // nothing left
+    }
+  }
+
+  if (!all.length) {
+    throw error(
+      502,
+      'Could not load projections from any source (env, static, or lib).'
+    );
+  }
+
+  // Find the team
   const pairs = all
     .map((item) => {
       const name = getTeamName(item);
@@ -64,21 +104,13 @@ export const load = async ({ params, fetch }) => {
     })
     .filter(Boolean);
 
-  // Try to match
   const hit = pairs.find((p) => matchesSlug(p.name, slug));
-
   if (!hit) {
-    // Build a short debug payload to show what we actually received
-    const sample = pairs.slice(0, 10).map((p) => ({
-      name: p.name,
-      slug: slugFrom(p.name)
-    }));
-    const keysFirst = Object.keys(all?.[0] ?? {});
+    const sample = pairs.slice(0, 10).map((p) => slugFrom(p.name));
     throw error(
       404,
-      `Team not found in projections. Searched slug "${slug}". ` +
-        `JSON items: ${all.length}. First item keys: ${keysFirst.join(', ') || '(none)'}.\n` +
-        `Sample computed slugs: ${sample.map((s) => s.slug).join(', ') || '(no names found)'}`
+      `Team not found in projections for slug "${slug}". Source: ${source}. `
+        + `Sample slugs: ${sample.join(', ')}`
     );
   }
 
@@ -86,7 +118,8 @@ export const load = async ({ params, fetch }) => {
 
   return {
     slug,
-    team, // whatever shape the item has—we’ll read fields on the Svelte page next step
+    team,
+    source, // <-- visible in the Svelte page if you want to show/debug it
     avatarBasePath: '/playoffs-projection/avatars'
   };
 };
