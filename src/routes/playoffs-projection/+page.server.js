@@ -1,4 +1,3 @@
-I think you're mixed up a bit. Hee's the current: // src/routes/playoffs-projection/+page.server.js
 export const prerender = false;
 import { env } from '$env/dynamic/public';
 import { leagueID } from '$lib/utils/leagueInfo';
