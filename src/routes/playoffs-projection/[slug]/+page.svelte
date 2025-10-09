@@ -200,6 +200,18 @@
 </style>
 
 <div class="page">
+  <!-- Breadcrumb -->
+  <div style="margin:-0.5rem 0 1rem 0;">
+    <a href="/playoffs-projection"
+       style="color:#00baff;text-decoration:none;border-bottom:1px solid rgba(0,186,255,.35);padding-bottom:2px;">
+      ← Back to Playoff Projections
+    </a>
+    {#if data.source}
+      <span style="opacity:.55;font-size:.9rem;margin-left:12px;">(source: {data.source})</span>
+    {/if}
+  </div>
+
+<div class="page">
   <div class="team-header">
     <div class="avatar-block">
       <div class="avatar">
