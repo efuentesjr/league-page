@@ -74,12 +74,6 @@ export const tabs = [
 	       	key: 'records',
     },
     {
-        icon: 'trending_up',
-        label: 'Playoff Projections',
-        dest: '/playoffs-projection',
-		key: 'playoffs-projection',
-    },
-    {
         icon: 'history_edu',
         label: 'Constitution',
         dest: '/constitution',
