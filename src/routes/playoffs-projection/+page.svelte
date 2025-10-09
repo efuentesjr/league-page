@@ -135,4 +135,4 @@
     font-weight: 600;
     font-size: 0.95rem;
     letter-spacing: 0.3px;
-    box-shadow: 0 0 10px rgba(0,186,255,0.
+    box-shadow: 0 0 10px rgba(0,186,255,0.);
