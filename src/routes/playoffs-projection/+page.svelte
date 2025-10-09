@@ -1,194 +1,187 @@
 <script>
-  // src/routes/playoffs-projection/+page.svelte
+  // Data from +page.server.js (R2 fetch)
   export let data;
 
-  // The server loader returns: { projections, error }
-  const rows = Array.isArray(data?.projections) ? data.projections : [];
-  const err = data?.error || '';
+  const {
+    projections = [],
+    error = null,
+    lastModified = null,
+    fetchedAt = null,
+    sourceUrl = null
+  } = data ?? {};
 
-  const AVATAR_BASE = '/playoffs-projection/avatars';
+  import { managers } from '$lib/utils/leagueInfo';
+  import SleeperAvatar from '$lib/components/SleeperAvatar.svelte';
 
-  // Helpers
-  function initials(name = '') {
-    return String(name)
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((w) => w[0])
-      .slice(0, 2)
-      .join('')
-      .toUpperCase();
+  // ---------- helpers ----------
+  const s = (v) => (typeof v === 'string' ? v.trim() : '');
+  const prettifySlug = (str = '') =>
+    str.replace(/-/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, (c) => c.toUpperCase());
+
+  // Build quick lookup by slug
+  const bySlug = new Map((Array.isArray(managers) ? managers : []).map((m) => [m.slug, m]));
+
+  // Label (prefer configured teamName, else prettified slug)
+  const labelFor = (slug) => {
+    const m = bySlug.get(slug);
+    return s(m?.teamName ?? m?.team_name) || prettifySlug(slug);
+  };
+
+  // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
+  function parsePlayStatus(sv) {
+    if (!sv) return { c: -Infinity, t: -Infinity };
+    const c = Number((sv.match(/C:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
+    const t = Number((sv.match(/T:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
+    return { c, t };
   }
 
-  // Fallback handlers: PNG -> JPG -> Initials
-  function onPngError(e) {
-    const png = e.currentTarget;
-    const jpg = png.nextElementSibling;         // the JPG <img>
-    png.style.display = 'none';
-    if (jpg) jpg.style.display = 'block';
+  function humanTime(iso) {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleString(); }
+    catch { return iso; }
   }
-  function onJpgError(e) {
-    const jpg = e.currentTarget;
-    const init = jpg.nextElementSibling;        // the <span> initials
-    jpg.style.display = 'none';
-    if (init) init.style.display = 'flex';
-  }
+
+  // Build + sort rows reactively
+  let rows = [];
+  $: rows = (projections || [])
+    .filter((p) => p?.slug)
+    .map((p) => ({
+      slug: p.slug,
+      division: p.division ?? '',
+      wins: p.wins ?? 0,
+      losses: p.losses ?? 0,
+      ties: p.ties ?? 0,
+      points: p.points ?? 0,
+      divStatus: p.divStatus ?? '',
+      playStatus: p.playStatus ?? '',
+      min: p.min ?? '',
+      targets: p.targets ?? '',
+      gIn: p.gIn ?? '',
+      divTgts: p.divTgts ?? ''
+    }))
+    .sort((a, b) => {
+      const A = parsePlayStatus(a.playStatus);
+      const B = parsePlayStatus(b.playStatus);
+      if (B.c !== A.c) return B.c - A.c;   // Clinch % desc
+      if (B.t !== A.t) return B.t - A.t;   // then Tiebreak % desc
+      return (a.slug || '').localeCompare(b.slug || '');
+    });
 </script>
 
-<style>
-  .page {
-    min-height: 100vh;
-    background: radial-gradient(circle at 20% 20%, #0b0b0b 0%, #000 100%);
-    color: #fff;
-    padding: 2rem 1.25rem;
-  }
-  h1 {
-    margin: 0 0 1rem 0;
-    font-size: 1.9rem;
-    font-weight: 800;
-    letter-spacing: .2px;
-  }
-  .error {
-    background: #2a1111;
-    border: 1px solid #5c1b1b;
-    color: #ffb3b3;
-    padding: 0.75rem 1rem;
-    border-radius: 10px;
-    margin: 0 0 1rem 0;
-    font-size: 0.95rem;
-  }
+<div class="wrap">
+  <h2 class="title">Playoffs AI Analysis</h2>
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
-    overflow: hidden;
-  }
-  th, td {
-    padding: 0.7rem 0.75rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    text-align: left;
-    font-size: 0.95rem;
-  }
-  th {
-    background: rgba(255,255,255,0.04);
-    font-weight: 700;
-  }
-  tbody tr:hover {
-    background: rgba(0,186,255,0.08);
-  }
-
-  .teamcell {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-  }
-
-  /* Avatar styles to match dark theme */
-  .avatar {
-    position: relative;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #222;
-    overflow: hidden;
-    flex: 0 0 40px;
-    background: radial-gradient(circle at 40% 40%, #1e1e1e 0%, #000 100%);
-    box-shadow:
-      0 0 14px rgba(0, 186, 255, 0.20),
-      inset 0 0 8px rgba(0, 186, 255, 0.08);
-  }
-  .avatar img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .avatar img + img { display: none; } /* JPG hidden until PNG fails */
-  .avatar .init {
-    display: none;               /* shown if both images fail */
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: .9rem;
-    color: #fff;
-  }
-
-  a.teamlink {
-    color: #00baff;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(0,186,255,0.35);
-    padding-bottom: 1px;
-  }
-  .muted { opacity: 0.65; }
-</style>
-
-<div class="page">
-  <h1>Playoff Projections</h1>
-
-  {#if err}
-    <div class="error">Error loading projections: {err}</div>
+  {#if lastModified || fetchedAt}
+  <div class="meta">
+    <span class="updated">Updated: {humanTime(lastModified || fetchedAt)}</span>
+  </div>
   {/if}
 
-  {#if rows.length === 0}
-    <div class="muted">No projections found.</div>
-  {:else}
-    <table>
-      <thead>
-        <tr>
-          <th>Team</th>
-          <th>Division</th>
-          <th>Record</th>
-          <th>Points</th>
-          <th>Chances</th>
-          <th>Targets</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each rows as row}
+  <div class="overlay">
+    {#if error}
+      <p class="text-red-500">Error loading projections: {error}</p>
+    {/if}
+
+    {#if rows.length === 0}
+      <p class="text-center text-sm text-gray-300">No projections found.</p>
+    {:else}
+      <table>
+        <thead>
           <tr>
-            <td>
-              <div class="teamcell">
-                <div class="avatar" title={row.teamName}>
-                  {#if row.slug}
-                    <img
-                      alt={row.teamName}
-                      src={`${AVATAR_BASE}/${row.slug}.png`}
-                      on:error={onPngError}
-                    />
-                    <img
-                      alt=""
-                      src={`${AVATAR_BASE}/${row.slug}.jpg`}
-                      on:error={onJpgError}
-                    />
-                    <span class="init">{initials(row.teamName)}</span>
-                  {:else}
-                    <span class="init" style="display:flex">{initials(row.teamName)}</span>
-                  {/if}
-                </div>
-
-                {#if row.slug}
-                  <!-- Guarded link: only when slug is truthy -->
-                  <a class="teamlink" href={`/playoffs-projection/${row.slug}`}>{row.teamName}</a>
-                {:else}
-                  <span class="muted">{row.teamName}</span>
-                {/if}
-              </div>
-            </td>
-
-            <td>{row.division}</td>
-            <td>{row.wins}-{row.losses}-{row.ties}</td>
-            <td>{row.points}</td>
-            <td>{row.divStatus} {row.playStatus}</td>
-            <td>{row.targets}{row.min ? ` (min ${row.min})` : ''}</td>
+            <th>Dv</th>
+            <th>Team</th>
+            <th>W-L-T</th>
+            <th>Pts</th>
+            <th>DivSTATUS</th>
+            <th>PlaySTATUS</th>
+            <th>mIn</th>
+            <th>Targets</th>
+            <th>gIn</th>
+            <th>DivTgts</th>
           </tr>
-        {/each}
-      </tbody>
-    </table>
-  {/if}
+        </thead>
+<tbody>
+  {#each rows as r (r.slug)}
+    <tr>
+      <td>{r.division}</td>
+      <td class="teamcell">
+        <a class="teamlink" href={`/playoffs-projection/${r.slug}`}>
+          <!-- Sleeper avatar auto-resolves from slug → managerID → users[owner].avatar -->
+          <SleeperAvatar slug={r.slug} size={24} alt={labelFor(r.slug)} />
+          <span class="name">{labelFor(r.slug)}</span>
+        </a>
+      </td>
+      <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
+      <td>{r.points ?? 0}</td>
+      <td>{r.divStatus ?? ''}</td>
+      <td>{r.playStatus ?? ''}</td>
+      <td>{r.min ?? ''}</td>
+      <td>{r.targets ?? ''}</td>
+      <td>{r.gIn ?? ''}</td>
+      <td>{r.divTgts ?? ''}</td>
+    </tr>
+  {/each}
+</tbody>
+
+      </table>
+    {/if}
+  </div>
 </div>
+
+<style>
+.wrap {
+  position: relative;
+  max-width: 980px;
+  margin: 1rem auto;
+  background: #111;
+  padding: 1rem 0 2rem;
+  border-radius: 10px;
+}
+.title {
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+  color: #fff;
+  margin: 0 0 0.25rem;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+.meta {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  font-size: .8rem;
+  color: #aaa;
+  margin-bottom: .5rem;
+}
+.meta a { color: #6fb4ff; text-decoration: none; }
+.meta a:hover { text-decoration: underline; }
+.meta .dot { opacity: .6; }
+
+.overlay {
+  width: min(97%, 920px);
+  margin: 0 auto;
+  max-height: 70vh;
+  overflow: auto;
+  padding: 0.5rem;
+  background: rgba(0,0,0,0.35);
+  border-radius: 8px;
+}
+.overlay table { width: 100%; border-collapse: collapse; font-size: 0.8rem; line-height: 1.1rem; }
+.overlay th, .overlay td { padding: 4px 6px; text-align: center; white-space: nowrap; }
+.overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
+.overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
+.overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
+.teamcell { display:flex; align-items:center; gap: 8px; }
+
+.teamlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #6fb4ff;
+  font-weight: 600;
+}
+.teamlink:hover { text-decoration: underline; }
+
+.name { line-height: 1; }
+</style>
