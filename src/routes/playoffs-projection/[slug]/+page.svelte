@@ -2,6 +2,7 @@
   export let data;
   const { slug, team, avatarBasePath } = data;
 
+  // Avatar candidates (PNG then JPG)
   const candidates = [
     `${avatarBasePath}/${slug}.png`,
     `${avatarBasePath}/${slug}.jpg`
@@ -22,6 +23,19 @@
     .slice(0, 2)
     .join('')
     .toUpperCase();
+
+  // ----- Odds helpers -----
+  function pctNumber(x) {
+    if (x == null) return 0;
+    const n = Number(String(x).replace('%','').trim());
+    return isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
+  }
+
+  const odds = [
+    { label: 'Division', value: pctNumber(team.status?.division) },
+    { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
+    { label: 'Title',    value: pctNumber(team.status?.title) }
+  ];
 </script>
 
 <style>
@@ -91,6 +105,39 @@
     background: linear-gradient(to right, transparent, #00baff 40%, transparent);
     margin: 2rem 0;
   }
+
+  /* ----- Odds bars ----- */
+  .odds {
+    margin-top: 1.5rem;
+    max-width: 720px;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 120px 1fr 64px;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+  }
+  .track {
+    height: 12px;
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00baff, #00e1ff);
+    box-shadow: 0 0 12px rgba(0,186,255,.35) inset;
+    transition: width 400ms ease;
+  }
+  .percent {
+    text-align: right;
+    opacity: 0.9;
+  }
 </style>
 
 <div class="page">
@@ -120,4 +167,16 @@
     </li>
     <li><strong>Targets:</strong> {team.targets} (min {team.min})</li>
   </ul>
+
+  <div class="odds">
+    {#each odds as o}
+      <div class="row">
+        <strong>{o.label}</strong>
+        <div class="track">
+          <div class="fill" style={`width:${o.value}%`}></div>
+        </div>
+        <div class="percent">{o.value.toFixed(1)}%</div>
+      </div>
+    {/each}
+  </div>
 </div>
