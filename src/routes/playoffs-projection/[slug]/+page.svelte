@@ -34,7 +34,7 @@
   const odds = [
     { label: 'Division', value: pctNumber(team.status?.division) },
     { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
-    { label: 'Title',    value: pctNumber(team.status?.title) }
+    { label: 'Tie',    value: pctNumber(team.status?.tie) }
   ];
 </script>
 
@@ -240,7 +240,7 @@
     <li><strong>Points:</strong> {team.points}</li>
     <li>
       <strong>Chances:</strong>
-      Division {team.status?.division} · Playoffs {team.status?.playoffs} · Title {team.status?.title}
+      Division {team.status?.division} · Playoffs {team.status?.playoffs} · Tie {team.status?.tie}
     </li>
     <li><strong>Targets:</strong> {team.targets} (min {team.min})</li>
   </ul>
