@@ -2,7 +2,6 @@
   export let data;
   const { slug, team, avatarBasePath } = data;
 
-  // Avatar candidates (PNG then JPG)
   const candidates = [
     `${avatarBasePath}/${slug}.png`,
     `${avatarBasePath}/${slug}.jpg`
@@ -24,7 +23,7 @@
     .join('')
     .toUpperCase();
 
-  // ----- Odds helpers -----
+  // Helpers for percentages
   function pctNumber(x) {
     if (x == null) return 0;
     const n = Number(String(x).replace('%','').trim());
@@ -34,7 +33,7 @@
   const odds = [
     { label: 'Division', value: pctNumber(team.status?.division) },
     { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
-    { label: 'Title',    value: pctNumber(team.status?.title) }
+    { label: 'Title', value: pctNumber(team.status?.title) }
   ];
 </script>
 
@@ -48,9 +47,17 @@
 
   .team-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     gap: 1.5rem;
     margin-bottom: 2rem;
+  }
+
+  .avatar-block {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
   }
 
   .avatar {
@@ -87,6 +94,37 @@
     font-size: 1rem;
   }
 
+  /* Badges */
+  .badges {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
+  .badge {
+    background: linear-gradient(90deg, #00baff, #007bff);
+    color: #fff;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    box-shadow: 0 0 10px rgba(0,186,255,0.3);
+    white-space: nowrap;
+  }
+
+  .points-badge {
+    background: linear-gradient(90deg, #00ff9d, #00b37a);
+    box-shadow: 0 0 10px rgba(0,255,157,0.25);
+  }
+
+  .divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, #00baff 40%, transparent);
+    margin: 2rem 0;
+  }
+
   .stats {
     margin-top: 1rem;
     font-size: 1.1rem;
@@ -100,13 +138,7 @@
     font-weight: 600;
   }
 
-  .divider {
-    height: 2px;
-    background: linear-gradient(to right, transparent, #00baff 40%, transparent);
-    margin: 2rem 0;
-  }
-
-  /* ----- Odds bars ----- */
+  /* Odds bars */
   .odds {
     margin-top: 1.5rem;
     max-width: 720px;
@@ -142,16 +174,23 @@
 
 <div class="page">
   <div class="team-header">
-    <div class="avatar">
-      {#if avatarUrl}
-        <img src={avatarUrl} alt={team.team} on:error={handleError} />
-      {:else}
-        {initials}
-      {/if}
+    <div class="avatar-block">
+      <div class="avatar">
+        {#if avatarUrl}
+          <img src={avatarUrl} alt={team.team} on:error={handleError} />
+        {:else}
+          {initials}
+        {/if}
+      </div>
+      <div class="team-info">
+        <h1>{team.team}</h1>
+        <p>Slug: <strong>{slug}</strong></p>
+      </div>
     </div>
-    <div class="team-info">
-      <h1>{team.team}</h1>
-      <p>Slug: <strong>{slug}</strong></p>
+
+    <div class="badges">
+      <div class="badge">Record: {team.record}</div>
+      <div class="badge points-badge">Points: {team.points}</div>
     </div>
   </div>
 
