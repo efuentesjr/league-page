@@ -2,6 +2,7 @@
   export let data;
   const { slug, team, avatarBasePath } = data;
 
+  // Avatar candidates (PNG then JPG)
   const candidates = [
     `${avatarBasePath}/${slug}.png`,
     `${avatarBasePath}/${slug}.jpg`
@@ -60,11 +61,13 @@
     gap: 1.5rem;
   }
 
+  /* --- Avatar: glow + no-overlap --- */
   .avatar {
+    position: relative;
     width: 140px;
     height: 140px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #1a1a1a, #333);
+    background: radial-gradient(circle at 40% 40%, #1e1e1e 0%, #000 100%);
     color: #fff;
     font-size: 3.5rem;
     display: flex;
@@ -72,14 +75,38 @@
     justify-content: center;
     font-weight: 700;
     border: 3px solid #222;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     overflow: hidden;
+    box-shadow:
+      0 0 20px rgba(0, 186, 255, 0.25),
+      0 0 40px rgba(0, 186, 255, 0.15),
+      inset 0 0 10px rgba(0, 186, 255, 0.1);
+    animation: pulse 4s ease-in-out infinite;
   }
-
   .avatar img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 2;
+  }
+  .avatar span {
+    position: relative;
+    z-index: 1;
+  }
+  @keyframes pulse {
+    0%, 100% {
+      box-shadow:
+        0 0 15px rgba(0, 186, 255, 0.3),
+        0 0 35px rgba(0, 186, 255, 0.15),
+        inset 0 0 10px rgba(0, 186, 255, 0.1);
+    }
+    50% {
+      box-shadow:
+        0 0 25px rgba(0, 186, 255, 0.6),
+        0 0 50px rgba(0, 186, 255, 0.3),
+        inset 0 0 15px rgba(0, 186, 255, 0.15);
+    }
   }
 
   .team-info h1 {
@@ -179,7 +206,7 @@
         {#if avatarUrl}
           <img src={avatarUrl} alt={team.team} on:error={handleError} />
         {:else}
-          {initials}
+          <span>{initials}</span>
         {/if}
       </div>
       <div class="team-info">
