@@ -1,187 +1,138 @@
 <script>
-  // Data from +page.server.js (R2 fetch)
   export let data;
+  const { slug, team } = data;
 
-  const {
-    projections = [],
-    error = null,
-    lastModified = null,
-    fetchedAt = null,
-    sourceUrl = null
-  } = data ?? {};
+  // Avatar candidates (PNG then JPG) from static/playoffs-projection
+  const candidates = [
+    `/playoffs-projection/${slug}.png`,
+    `/playoffs-projection/${slug}.jpg`
+  ];
+  let avatarUrl = candidates[0];
+  let tried = 0;
 
-  import { managers } from '$lib/utils/leagueInfo';
-  import SleeperAvatar from '$lib/components/SleeperAvatar.svelte';
-
-  // ---------- helpers ----------
-  const s = (v) => (typeof v === 'string' ? v.trim() : '');
-  const prettifySlug = (str = '') =>
-    str.replace(/-/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, (c) => c.toUpperCase());
-
-  // Build quick lookup by slug
-  const bySlug = new Map((Array.isArray(managers) ? managers : []).map((m) => [m.slug, m]));
-
-  // Label (prefer configured teamName, else prettified slug)
-  const labelFor = (slug) => {
-    const m = bySlug.get(slug);
-    return s(m?.teamName ?? m?.team_name) || prettifySlug(slug);
-  };
-
-  // Parse "C:41.8% T:17.2%" -> { c: 41.8, t: 17.2 }
-  function parsePlayStatus(sv) {
-    if (!sv) return { c: -Infinity, t: -Infinity };
-    const c = Number((sv.match(/C:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
-    const t = Number((sv.match(/T:\s*([\d.]+)%/i) || [])[1] ?? -Infinity);
-    return { c, t };
+  function handleError() {
+    tried++;
+    if (tried < candidates.length) avatarUrl = candidates[tried];
+    else avatarUrl = ''; // fallback to initials
   }
 
-  function humanTime(iso) {
-    if (!iso) return '';
-    try { return new Date(iso).toLocaleString(); }
-    catch { return iso; }
+  const initials = String(team?.team || '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
+  // Helpers for percentages
+  function pctNumber(x) {
+    if (x == null) return 0;
+    const n = Number(String(x).replace('%','').trim());
+    return isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
   }
 
-  // Build + sort rows reactively
-  let rows = [];
-  $: rows = (projections || [])
-    .filter((p) => p?.slug)
-    .map((p) => ({
-      slug: p.slug,
-      division: p.division ?? '',
-      wins: p.wins ?? 0,
-      losses: p.losses ?? 0,
-      ties: p.ties ?? 0,
-      points: p.points ?? 0,
-      divStatus: p.divStatus ?? '',
-      playStatus: p.playStatus ?? '',
-      min: p.min ?? '',
-      targets: p.targets ?? '',
-      gIn: p.gIn ?? '',
-      divTgts: p.divTgts ?? ''
-    }))
-    .sort((a, b) => {
-      const A = parsePlayStatus(a.playStatus);
-      const B = parsePlayStatus(b.playStatus);
-      if (B.c !== A.c) return B.c - A.c;   // Clinch % desc
-      if (B.t !== A.t) return B.t - A.t;   // then Tiebreak % desc
-      return (a.slug || '').localeCompare(b.slug || '');
-    });
+  const odds = [
+    { label: 'Division', value: pctNumber(team.status?.division) },
+    { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
+    { label: 'Tie',      value: pctNumber(team.status?.tie) }
+  ];
 </script>
 
-<div class="wrap">
-  <h2 class="title">Playoffs AI Analysis</h2>
-
-  {#if lastModified || fetchedAt}
-  <div class="meta">
-    <span class="updated">Updated: {humanTime(lastModified || fetchedAt)}</span>
-  </div>
-  {/if}
-
-  <div class="overlay">
-    {#if error}
-      <p class="text-red-500">Error loading projections: {error}</p>
-    {/if}
-
-    {#if rows.length === 0}
-      <p class="text-center text-sm text-gray-300">No projections found.</p>
-    {:else}
-      <table>
-        <thead>
-          <tr>
-            <th>Dv</th>
-            <th>Team</th>
-            <th>W-L-T</th>
-            <th>Pts</th>
-            <th>DivSTATUS</th>
-            <th>PlaySTATUS</th>
-            <th>mIn</th>
-            <th>Targets</th>
-            <th>gIn</th>
-            <th>DivTgts</th>
-          </tr>
-        </thead>
-<tbody>
-  {#each rows as r (r.slug)}
-    <tr>
-      <td>{r.division}</td>
-      <td class="teamcell">
-        <a class="teamlink" href={`/playoffs-projection/${r.slug}`}>
-          <!-- Sleeper avatar auto-resolves from slug → managerID → users[owner].avatar -->
-          <SleeperAvatar slug={r.slug} size={24} alt={labelFor(r.slug)} />
-          <span class="name">{labelFor(r.slug)}</span>
-        </a>
-      </td>
-      <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
-      <td>{r.points ?? 0}</td>
-      <td>{r.divStatus ?? ''}</td>
-      <td>{r.playStatus ?? ''}</td>
-      <td>{r.min ?? ''}</td>
-      <td>{r.targets ?? ''}</td>
-      <td>{r.gIn ?? ''}</td>
-      <td>{r.divTgts ?? ''}</td>
-    </tr>
-  {/each}
-</tbody>
-
-      </table>
-    {/if}
-  </div>
-</div>
-
 <style>
-.wrap {
-  position: relative;
-  max-width: 980px;
-  margin: 1rem auto;
-  background: #111;
-  padding: 1rem 0 2rem;
-  border-radius: 10px;
-}
-.title {
-  text-align: center;
-  font-weight: 800;
-  font-size: clamp(1.6rem, 3.6vw, 2.2rem);
-  color: #fff;
-  margin: 0 0 0.25rem;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
-}
-.meta {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  font-size: .8rem;
-  color: #aaa;
-  margin-bottom: .5rem;
-}
-.meta a { color: #6fb4ff; text-decoration: none; }
-.meta a:hover { text-decoration: underline; }
-.meta .dot { opacity: .6; }
+  .page {
+    min-height: 100vh;
+    background: radial-gradient(circle at 20% 20%, #0b0b0b 0%, #000 100%);
+    color: #fff;
+    padding: 3rem 2rem;
+  }
 
-.overlay {
-  width: min(97%, 920px);
-  margin: 0 auto;
-  max-height: 70vh;
-  overflow: auto;
-  padding: 0.5rem;
-  background: rgba(0,0,0,0.35);
-  border-radius: 8px;
-}
-.overlay table { width: 100%; border-collapse: collapse; font-size: 0.8rem; line-height: 1.1rem; }
-.overlay th, .overlay td { padding: 4px 6px; text-align: center; white-space: nowrap; }
-.overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
-.overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
-.overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
-.teamcell { display:flex; align-items:center; gap: 8px; }
+  .team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
 
-.teamlink {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: #6fb4ff;
-  font-weight: 600;
-}
-.teamlink:hover { text-decoration: underline; }
+  .avatar-block {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
 
-.name { line-height: 1; }
-</style>
+  .avatar {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #1e1e1e 0%, #000 100%);
+    color: #fff;
+    font-size: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 3px solid #222;
+    overflow: hidden;
+    box-shadow:
+      0 0 20px rgba(0, 186, 255, 0.25),
+      0 0 40px rgba(0, 186, 255, 0.15),
+      inset 0 0 10px rgba(0, 186, 255, 0.1);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  .avatar img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+  }
+  .avatar span {
+    position: relative;
+    z-index: 1;
+  }
+  @keyframes pulse {
+    0%, 100% {
+      box-shadow:
+        0 0 15px rgba(0, 186, 255, 0.3),
+        0 0 35px rgba(0, 186, 255, 0.15),
+        inset 0 0 10px rgba(0, 186, 255, 0.1);
+    }
+    50% {
+      box-shadow:
+        0 0 25px rgba(0, 186, 255, 0.6),
+        0 0 50px rgba(0, 186, 255, 0.3),
+        inset 0 0 15px rgba(0, 186, 255, 0.15);
+    }
+  }
+
+  .team-info h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+
+  .team-info p {
+    margin: 0.4rem 0;
+    opacity: 0.8;
+    font-size: 1rem;
+  }
+
+  .badges {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
+  .badge {
+    background: linear-gradient(90deg, #00baff, #007bff);
+    color: #fff;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    box-shadow: 0 0 10px rgba(0,186,255,0.
