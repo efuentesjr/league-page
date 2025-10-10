@@ -14,7 +14,7 @@ const slugMap = {
   'bLuE BaLLeRs': 'blue-ballers',
   'TexasTimeshi': 'texastimeshifts',
   'Brute Force': 'brute-force-attack',
-  'The Comeback': 'comeback-kid',
+  'Comeback kid': 'comeback-kid',
   'SlickBears': 'slickbears',
   '88boyz11': 'team-88boyz11',
   'PrimeTime Pr': 'primetime-prodigies',
