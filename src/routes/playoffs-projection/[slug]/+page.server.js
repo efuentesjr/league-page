@@ -1,115 +1,128 @@
 // src/routes/playoffs-projection/[slug]/+page.server.js
-import { error } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';            // ⬅ private, runtime-safe
-import { PUBLIC_PROJECTIONS_URL } from '$env/static/public'; // ⬅ public, build-time safe
+import { env } from '$env/dynamic/private';                 // private env at runtime
+import { PUBLIC_PROJECTIONS_URL } from '$env/static/public'; // your public R2 JSON
 import { managers } from '$lib/utils/leagueInfo';
 
-// ---- helpers: safe fetch JSON ----
+// ----------------- tiny utils -----------------
+const norm = (s) => String(s || '').trim().toLowerCase();
+const title = (s) => String(s || '').replace(/-/g, ' ')
+  .replace(/\b\w/g, (c) => c.toUpperCase());
+
 async function safeJSON(fetch, url) {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
+  try { const r = await fetch(url); if (!r.ok) return null; return r.json(); }
+  catch { return null; }
 }
 
-// Try multiple common keys to read a value from a manager object
-function pick(m, keys = []) {
-  for (const k of keys) {
-    if (m && m[k] != null) return m[k];
-  }
-  return undefined;
-}
+function pick(m, keys) { for (const k of keys) if (m?.[k] != null) return m[k]; }
 
-// Build maps to translate Sleeper IDs -> our slugs
+// Build mappings between your manager slugs and team names
+const bySlug = new Map((Array.isArray(managers) ? managers : []).map(m => [m.slug, m]));
+const slugByTeamName = new Map((Array.isArray(managers) ? managers : []).map(m => {
+  const name = pick(m, ['teamName', 'team_name', 'team']) || '';
+  return [norm(name), m.slug];
+}));
+
+// -------- Sleeper helpers (for SOS) --------
 function buildSlugMaps(managersArr) {
   const byRosterId = new Map();
   const byOwnerId  = new Map();
-  const byUserId   = new Map();
-
   for (const m of managersArr || []) {
     const slug = pick(m, ['slug', 'Slug']) || '';
     if (!slug) continue;
-
-    const rosterId = pick(m, ['rosterId', 'roster_id', 'sleeperRosterId', 'sleeper_roster_id']);
-    const ownerId  = pick(m, ['ownerId', 'owner_id', 'sleeperOwnerId', 'sleeper_owner_id']);
-    const userId   = pick(m, ['userId', 'user_id', 'sleeperUserId', 'sleeper_user_id']);
-
+    const rosterId = pick(m, ['rosterId','roster_id','sleeperRosterId','sleeper_roster_id']);
+    const ownerId  = pick(m, ['ownerId','owner_id','sleeperOwnerId','sleeper_owner_id']);
     if (rosterId != null) byRosterId.set(Number(rosterId), slug);
     if (ownerId  != null) byOwnerId.set(String(ownerId), slug);
-    if (userId   != null) byUserId.set(String(userId), slug);
   }
-  return { byRosterId, byOwnerId, byUserId };
+  return { byRosterId, byOwnerId };
 }
 
-// Compute a conservative "currentWeek" (can be overridden by env or other logic)
-function inferCurrentWeek() {
-  // TODO: Replace with your real week source if you have one.
-  // Simple fallback, clamped to [1, 18]:
-  const now = new Date();
-  const week = Math.min(18, Math.max(1, Math.floor((now.getMonth() + 1) / 1.5)));
-  return week;
-}
-
-// Pair Sleeper matchups into games by matchup_id → two rosters
 function pairMatchupsToGames(week, matchups, rosterIdToSlug) {
   const byMid = new Map();
   for (const m of matchups || []) {
-    const mid = m.matchup_id;
-    if (mid == null) continue;
+    const mid = m.matchup_id; if (mid == null) continue;
     if (!byMid.has(mid)) byMid.set(mid, []);
     byMid.get(mid).push(m);
   }
-
   const games = [];
   for (const [_mid, arr] of byMid.entries()) {
-    if (arr.length < 2) continue; // ignore incomplete pairs
+    if (arr.length < 2) continue;
     const a = arr[0], b = arr[1];
-    const slugA = rosterIdToSlug.get(Number(a.roster_id));
-    const slugB = rosterIdToSlug.get(Number(b.roster_id));
-    if (!slugA || !slugB) continue;
-
-    // Sleeper doesn't define home/away; pick deterministically
-    const home = slugA.localeCompare(slugB) <= 0 ? slugA : slugB;
-    const away = home === slugA ? slugB : slugA;
-
+    const sa = rosterIdToSlug.get(Number(a.roster_id));
+    const sb = rosterIdToSlug.get(Number(b.roster_id));
+    if (!sa || !sb) continue;
+    const home = sa.localeCompare(sb) <= 0 ? sa : sb;
+    const away = home === sa ? sb : sa;
     games.push({ week, home, away, played: false });
   }
   return games;
 }
 
+function inferCurrentWeek() {
+  // simple fallback; replace if you track true NFL week
+  const now = new Date();
+  return Math.min(18, Math.max(1, Math.floor((now.getMonth() + 1) / 1.5)));
+}
+
+// ----------------- main load -----------------
 export const load = async ({ params, fetch }) => {
   const slug = params.slug;
 
-  // -------- 1) Your existing team payload (keep your logic here) --------
-  // Placeholder so the page never breaks if you haven't wired your source yet.
-  let team = {
-    team: slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
-    division: '',
-    record: '0-0-0',
-    points: 0,
-    status: { division: '0%', playoffs: '0%', tie: '0%' },
-    targets: '',
-    min: ''
-  };
+  // 1) Pull your projections JSON (R2) and rebuild the per-team object
+  const projections = PUBLIC_PROJECTIONS_URL
+    ? await safeJSON(fetch, PUBLIC_PROJECTIONS_URL)
+    : null;
 
-  // If your current server already sets `team`, preserve it:
-  // const teamFromR2 = await safeJSON(fetch, YOUR_TEAM_ENDPOINT_HERE);
-  // if (teamFromR2) team = teamFromR2;
+  // Resolve the intended team name for this slug from managers config
+  const m = bySlug.get(slug);
+  const desiredName =
+    pick(m, ['teamName', 'team_name', 'team']) || title(slug);
+
+  // Find the matching row in projections by team name (case-insensitive)
+  let row = Array.isArray(projections)
+    ? projections.find(p => norm(p.team) === norm(desiredName))
+    : null;
+
+  // Build the exact shape your +page.svelte expects
+  let team = {
+    team: row?.team ?? desiredName,
+    division: row?.division ?? '',
+    record: row?.record ?? `${row?.wins ?? 0}-${row?.losses ?? 0}${row?.ties ? `-${row?.ties}` : ''}`,
+    points: Number(row?.points ?? 0),
+    status: {
+      division: row?.status?.division ?? (row?.divStatus ?? ''),
+      playoffs: row?.status?.playoffs ?? (row?.playStatus ?? ''),
+      tie:      row?.status?.title     ?? '' // if you track tie separately, map it here
+    },
+    targets: row?.targets ?? '',
+    min: row?.min ?? ''
+  };
 
   const avatarBasePath = '/playoffs-projection/avatars';
 
-  // -------- 2) Build ID maps from your managers config --------
+  // 2) Prepare allTeams snapshot (used to rate opponents for SOS)
+  let allTeams = [];
+  if (Array.isArray(projections)) {
+    allTeams = projections.map(p => {
+      // map projection team name back to slug via managers
+      const s = slugByTeamName.get(norm(p.team)) || '';
+      return {
+        slug: s,
+        record: p.record ?? `${p.wins ?? 0}-${p.losses ?? 0}${p.ties ? `-${p.ties}` : ''}`,
+        points: Number(p.points ?? 0)
+      };
+    }).filter(t => t.slug);
+  } else {
+    // soft fallback so page never breaks
+    allTeams = [{ slug, record: team.record, points: team.points }];
+  }
+
+  // 3) Pull remaining matchups from Sleeper for SOS (optional; fails soft)
   const { byRosterId, byOwnerId } = buildSlugMaps(managers || []);
-
-  // -------- 3) Fetch Sleeper rosters to map roster_id -> owner_id --------
-  const SLEEPER_LEAGUE_ID = env.SLEEPER_LEAGUE_ID || '';  // ⬅ from $env/dynamic/private
-  let rosterOwner = new Map(); // roster_id (number) -> owner_id (string)
-
-  if (SLEEPER_LEAGUE_ID) {
-    const rosters = await safeJSON(fetch, `https://api.sleeper.app/v1/league/${SLEEPER_LEAGUE_ID}/rosters`);
+  const LEAGUE = env.SLEEPER_LEAGUE_ID || '';
+  const rosterOwner = new Map();
+  if (LEAGUE) {
+    const rosters = await safeJSON(fetch, `https://api.sleeper.app/v1/league/${LEAGUE}/rosters`);
     if (Array.isArray(rosters)) {
       for (const r of rosters) {
         const rid = Number(r.roster_id);
@@ -118,8 +131,6 @@ export const load = async ({ params, fetch }) => {
       }
     }
   }
-
-  // Build roster_id -> slug map (prefer direct mapping; else via owner_id)
   const rosterIdToSlug = new Map();
   for (const [rid, owner] of rosterOwner.entries()) {
     const direct = byRosterId.get(rid);
@@ -128,50 +139,24 @@ export const load = async ({ params, fetch }) => {
     else if (viaOwner) rosterIdToSlug.set(rid, viaOwner);
   }
 
-  // -------- 4) Determine current week and fetch remaining matchups --------
   const currentWeek = inferCurrentWeek();
   const MAX_WEEK = 18;
   let schedule = [];
-
-  if (SLEEPER_LEAGUE_ID && rosterIdToSlug.size > 0) {
+  if (LEAGUE && rosterIdToSlug.size > 0) {
     for (let wk = currentWeek; wk <= MAX_WEEK; wk++) {
-      const matchups = await safeJSON(fetch, `https://api.sleeper.app/v1/league/${SLEEPER_LEAGUE_ID}/matchups/${wk}`);
+      const matchups = await safeJSON(fetch, `https://api.sleeper.app/v1/league/${LEAGUE}/matchups/${wk}`);
       if (!Array.isArray(matchups)) continue;
-      const games = pairMatchupsToGames(wk, matchups, rosterIdToSlug);
-      schedule.push(...games);
+      schedule.push(...pairMatchupsToGames(wk, matchups, rosterIdToSlug));
     }
   }
 
-  // -------- 5) allTeams snapshot for SOS opponent rating (record/points) --------
-  // Expecting array like: { slug, record, points, ... }
-  let allTeams = [];
-  if (PUBLIC_PROJECTIONS_URL) {
-    const proj = await safeJSON(fetch, PUBLIC_PROJECTIONS_URL);
-    if (Array.isArray(proj)) {
-      allTeams = proj.map((p) => ({
-        slug: p.slug ?? p.Slug ?? p.team_slug ?? p.team?.toLowerCase?.().replace(/\s+/g,'-') ?? '',
-        record: p.record ?? p.Record ?? `${p.wins ?? 0}-${p.losses ?? 0}${p.ties ? `-${p.ties}` : ''}`,
-        points: Number(p.points ?? p.Points ?? 0)
-      })).filter(t => t.slug);
-    }
-  }
-
-  // Soft fallback: at least include the current team
-  if (allTeams.length === 0) {
-    allTeams = [{
-      slug,
-      record: team.record || '0-0-0',
-      points: Number(team.points || 0)
-    }];
-  }
-
-  // -------- 6) Return payload --------
   return {
     slug,
     team,
     avatarBasePath,
-    schedule,      // [{ week, home, away, played:false }, ...] for weeks >= currentWeek
-    allTeams,      // [{ slug, record, points }, ...]
-    currentWeek    // number
+    // For SOS UI:
+    schedule,      // remaining games from currentWeek forward
+    allTeams,      // [{ slug, record, points }]
+    currentWeek
   };
 };
