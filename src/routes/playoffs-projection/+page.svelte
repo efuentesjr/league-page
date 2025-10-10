@@ -52,6 +52,7 @@
       losses: p.losses ?? 0,
       ties: p.ties ?? 0,
       points: p.points ?? 0,
+      // these remain on the object, but we won't render them anymore
       divStatus: p.divStatus ?? '',
       playStatus: p.playStatus ?? '',
       min: p.min ?? '',
@@ -72,9 +73,9 @@
   <h2 class="title">Playoffs AI Analysis</h2>
 
   {#if lastModified || fetchedAt}
-  <div class="meta">
-    <span class="updated">Updated: {humanTime(lastModified || fetchedAt)}</span>
-  </div>
+    <div class="meta">
+      <span class="updated">Updated: {humanTime(lastModified || fetchedAt)}</span>
+    </div>
   {/if}
 
   <div class="overlay">
@@ -90,39 +91,40 @@
           <tr>
             <th>Dv</th>
             <th>Team</th>
-            <th>W-L-T</th>
-            <th>Pts</th>
-            <th>DivSTATUS</th>
-            <th>PlaySTATUS</th>
+            <!-- removed W-L-T and Pts columns -->
+            <!-- removed DivSTATUS & PlaySTATUS columns -->
             <th>mIn</th>
             <th>Targets</th>
             <th>gIn</th>
             <th>DivTgts</th>
           </tr>
         </thead>
-<tbody>
-  {#each rows as r (r.slug)}
-    <tr>
-      <td>{r.division}</td>
-      <td class="teamcell">
-        <a class="teamlink" href={`/playoffs-projection/${r.slug}`}>
-          <!-- Sleeper avatar auto-resolves from slug → managerID → users[owner].avatar -->
-          <SleeperAvatar slug={r.slug} size={24} alt={labelFor(r.slug)} />
-          <span class="name">{labelFor(r.slug)}</span>
-        </a>
-      </td>
-      <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
-      <td>{r.points ?? 0}</td>
-      <td>{r.divStatus ?? ''}</td>
-      <td>{r.playStatus ?? ''}</td>
-      <td>{r.min ?? ''}</td>
-      <td>{r.targets ?? ''}</td>
-      <td>{r.gIn ?? ''}</td>
-      <td>{r.divTgts ?? ''}</td>
-    </tr>
-  {/each}
-</tbody>
+        <tbody>
+          {#each rows as r (r.slug)}
+            <tr>
+              <td>{r.division}</td>
+              <td class="teamcell">
+                <a class="teamlink" href={`/playoffs-projection/${r.slug}`}>
+                  <SleeperAvatar slug={r.slug} size={24} alt={labelFor(r.slug)} />
+                  <div class="teamblock">
+                    <span class="name">{labelFor(r.slug)}</span>
+                    <!-- Inline Record & Points (moved here) -->
+                    <div class="mini">
+                      <span class="pill record">Record: {r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</span>
+                      <span class="pill points">Points: {r.points ?? 0}</span>
+                    </div>
+                  </div>
+                </a>
+              </td>
 
+              <!-- compact columns that remain -->
+              <td>{r.min ?? ''}</td>
+              <td>{r.targets ?? ''}</td>
+              <td>{r.gIn ?? ''}</td>
+              <td>{r.divTgts ?? ''}</td>
+            </tr>
+          {/each}
+        </tbody>
       </table>
     {/if}
   </div>
@@ -171,8 +173,8 @@
 .overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
 .overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
 .overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
-.teamcell { display:flex; align-items:center; gap: 8px; }
 
+.teamcell { display:flex; align-items:center; gap: 8px; }
 .teamlink {
   display: inline-flex;
   align-items: center;
@@ -183,5 +185,23 @@
 }
 .teamlink:hover { text-decoration: underline; }
 
+.teamblock { display:flex; flex-direction: column; gap: 2px; }
 .name { line-height: 1; }
+
+.mini {
+  display:flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.72rem;
+}
+.pill {
+  display:inline-block;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  line-height: 1rem;
+}
+.record { color: #ffea00; }  /* yellow */
+.points { color: #ffea00; }  /* yellow */
 </style>
