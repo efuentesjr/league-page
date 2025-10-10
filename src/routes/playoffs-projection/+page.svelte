@@ -1,41 +1,8 @@
 <script>
+  // Expecting { projections, error } from +page.server.js
   export let data;
-  const { slug, team } = data;
-
-  // Avatar candidates (PNG then JPG) from static/playoffs-projection
-  const candidates = [
-    `/playoffs-projection/${slug}.png`,
-    `/playoffs-projection/${slug}.jpg`
-  ];
-  let avatarUrl = candidates[0];
-  let tried = 0;
-
-  function handleError() {
-    tried++;
-    if (tried < candidates.length) avatarUrl = candidates[tried];
-    else avatarUrl = ''; // fallback to initials
-  }
-
-  const initials = String(team?.team || '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
-
-  // Helpers for percentages
-  function pctNumber(x) {
-    if (x == null) return 0;
-    const n = Number(String(x).replace('%','').trim());
-    return isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
-  }
-
-  const odds = [
-    { label: 'Division', value: pctNumber(team.status?.division) },
-    { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
-    { label: 'Tie',      value: pctNumber(team.status?.tie) }
-  ];
+  const rows = Array.isArray(data?.projections) ? data.projections : [];
+  const err = data?.error || '';
 </script>
 
 <style>
@@ -43,202 +10,91 @@
     min-height: 100vh;
     background: radial-gradient(circle at 20% 20%, #0b0b0b 0%, #000 100%);
     color: #fff;
-    padding: 3rem 2rem;
+    padding: 2rem 1.25rem;
   }
-
-  .team-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .avatar-block {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  /* --- Avatar --- */
-  .avatar {
-    position: relative;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 40% 40%, #1e1e1e 0%, #000 100%);
-    color: #fff;
-    font-size: 3.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  h1 {
+    margin: 0 0 1rem 0;
+    font-size: 1.8rem;
     font-weight: 700;
-    border: 3px solid #222;
-    overflow: hidden;
-    box-shadow:
-      0 0 20px rgba(0, 186, 255, 0.25),
-      0 0 40px rgba(0, 186, 255, 0.15),
-      inset 0 0 10px rgba(0, 186, 255, 0.1);
-    animation: pulse 4s ease-in-out infinite;
   }
-  .avatar img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 2;
-  }
-  .avatar span {
-    position: relative;
-    z-index: 1;
-  }
-  @keyframes pulse {
-    0%, 100% {
-      box-shadow:
-        0 0 15px rgba(0, 186, 255, 0.3),
-        0 0 35px rgba(0, 186, 255, 0.15),
-        inset 0 0 10px rgba(0, 186, 255, 0.1);
-    }
-    50% {
-      box-shadow:
-        0 0 25px rgba(0, 186, 255, 0.6),
-        0 0 50px rgba(0, 186, 255, 0.3),
-        inset 0 0 15px rgba(0, 186, 255, 0.15);
-    }
-  }
-
-  .team-info h1 {
-    margin: 0;
-    font-size: 2.5rem;
-    line-height: 1.2;
-  }
-
-  .divider {
-    height: 2px;
-    background: linear-gradient(to right, transparent, #00baff 40%, transparent);
-    margin: 2rem 0;
-  }
-
-  /* Badges (moved below divider, above graphs) */
-  .badges {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin: 0 0 1.25rem 0; /* spacing above graphs */
-  }
-  .badge {
-    background: linear-gradient(90deg, #00baff, #007bff);
-    color: #fff;
-    padding: 0.45rem 0.9rem;
-    border-radius: 999px;
-    font-weight: 700;
+  .error {
+    background: #2a1111;
+    border: 1px solid #5c1b1b;
+    color: #ffb3b3;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    margin: 0 0 1rem 0;
     font-size: 0.95rem;
-    letter-spacing: 0.3px;
-    box-shadow: 0 0 10px rgba(0,186,255,0.3);
-    white-space: nowrap;
   }
-  .points-badge {
-    background: linear-gradient(90deg, #00ff9d, #00b37a);
-    box-shadow: 0 0 10px rgba(0,255,157,0.25);
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    overflow: hidden;
   }
-
-  /* Left stats list (trimmed to remove duplicates) */
-  .stats {
-    margin-top: 0.25rem;
-    font-size: 1.1rem;
-    line-height: 1.8;
-    list-style: none;
-    padding-left: 0;
+  th, td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    text-align: left;
+    font-size: 0.95rem;
   }
-  .stats li strong {
-    color: #00baff;
+  th {
+    background: rgba(255,255,255,0.04);
     font-weight: 600;
   }
-
-  /* Odds bars */
-  .odds {
-    margin-top: 0.5rem;
-    max-width: 720px;
-    display: grid;
-    gap: 0.75rem;
+  tbody tr:hover {
+    background: rgba(0,186,255,0.08);
   }
-  .row {
-    display: grid;
-    grid-template-columns: 120px 1fr 64px;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.95rem;
+  a.teamlink {
+    color: #00baff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0,186,255,0.35);
+    padding-bottom: 1px;
   }
-  .track {
-    height: 12px;
-    background: #141414;
-    border: 1px solid #1f1f1f;
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #00baff, #00e1ff);
-    box-shadow: 0 0 12px rgba(0,186,255,.35) inset;
-    transition: width 400ms ease;
-  }
-  .percent {
-    text-align: right;
-    opacity: 0.9;
-  }
+  .muted { opacity: 0.65; }
 </style>
 
 <div class="page">
-  <!-- Breadcrumb -->
-  <div style="margin:-0.5rem 0 1rem 0;">
-    <a href="/playoffs-projection"
-       style="color:#00baff;text-decoration:none;border-bottom:1px solid rgba(0,186,255,.35);padding-bottom:2px;">
-      ← Back to Playoff Projections
-    </a>
-  </div>
+  <h1>Playoff Projections</h1>
 
-  <div class="team-header">
-    <div class="avatar-block">
-      <div class="avatar">
-        {#if avatarUrl}
-          <img src={avatarUrl} alt={team.team} on:error={handleError} />
-        {:else}
-          <span>{initials}</span>
-        {/if}
-      </div>
-      <div class="team-info">
-        <h1>{team.team}</h1>
-      </div>
-    </div>
-    <!-- (Removed badges from right side) -->
-  </div>
+  {#if err}
+    <div class="error">Error loading projections: {err}</div>
+  {/if}
 
-  <div class="divider"></div>
-
-  <!-- ✅ Badges moved here, above graphs -->
-  <div class="badges">
-    <div class="badge">Record: {team.record}</div>
-    <div class="badge points-badge">Points: {team.points}</div>
-  </div>
-
-  <!-- Trimmed stats: removed Record, Points, and Chances (to avoid duplicates) -->
-  <ul class="stats">
-    <li><strong>Division:</strong> {team.division}</li>
-    <li><strong>Targets:</strong> {team.targets} {team.min ? `(min ${team.min})` : ''}</li>
-  </ul>
-
-  <div class="odds">
-    {#each odds as o}
-      <div class="row">
-        <strong>{o.label}</strong>
-        <div class="track">
-          <div class="fill" style={`width:${o.value}%`}></div>
-        </div>
-        <div class="percent">{o.value.toFixed(1)}%</div>
-      </div>
-    {/each}
-  </div>
+  {#if rows.length === 0}
+    <div class="muted">No projections found.</div>
+  {:else}
+    <table>
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Division</th>
+          <th>Record</th>
+          <th>Points</th>
+          <th>Chances</th>
+          <th>Targets</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each rows as row}
+          <tr>
+            <td>
+              {#if row.slug}
+                <a class="teamlink" href={`/playoffs-projection/${row.slug}`}>{row.teamName}</a>
+              {:else}
+                <span class="muted">{row.teamName}</span>
+              {/if}
+            </td>
+            <td>{row.division}</td>
+            <td>{row.wins}-{row.losses}-{row.ties}</td>
+            <td>{row.points}</td>
+            <td>{row.divStatus} {row.playStatus}</td>
+            <td>{row.targets}{row.min ? ` (min ${row.min})` : ''}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {/if}
 </div>
