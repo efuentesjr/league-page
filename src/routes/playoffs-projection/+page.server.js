@@ -8,7 +8,7 @@ const slugMap = {
   'Bay Area Par': 'bay-area-party-supplies',
   'CeeDees TDs': 'ceedees-tds',          // fixed case/typo
   'Chosen one.': 'chosen-one',
-  'The Peoples': 'peoples-champ',
+  'Peoples champ': 'peoples-champ',
   'Pete Weber B': 'pete-weber-bowl-club',
   'Los Loquitos': 'los-loquitos',
   'bLuE BaLLeRs': 'blue-ballers',
