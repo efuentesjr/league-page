@@ -115,46 +115,13 @@
     line-height: 1.2;
   }
 
-  .team-info p {
-    margin: 0.4rem 0;
-    opacity: 0.8;
-    font-size: 1rem;
-  }
-
-  /* Badges (reused in body) */
-  .badges {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .badges-body {
-    align-items: flex-start;   /* left align in body */
-    margin: 0.25rem 0 0.75rem; /* spacing above facts */
-  }
-
-  .badge {
-    background: linear-gradient(90deg, #00baff, #007bff);
-    color: #fff;
-    padding: 0.4rem 1rem;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    letter-spacing: 0.3px;
-    box-shadow: 0 0 10px rgba(0,186,255,0.3);
-    white-space: nowrap;
-  }
-
-  .points-badge {
-    background: linear-gradient(90deg, #00ff9d, #00b37a);
-    box-shadow: 0 0 10px rgba(0,255,157,0.25);
-  }
-
   .divider {
     height: 2px;
     background: linear-gradient(to right, transparent, #00baff 40%, transparent);
     margin: 2rem 0;
   }
 
+  /* Body facts list */
   .stats {
     margin-top: 1rem;
     font-size: 1.1rem;
@@ -162,7 +129,6 @@
     list-style: none;
     padding-left: 0;
   }
-
   .stats li strong {
     color: #00baff;
     font-weight: 600;
@@ -209,7 +175,6 @@
        style="color:#00baff;text-decoration:none;border-bottom:1px solid rgba(0,186,255,.35);padding-bottom:2px;">
       ← Back to Playoff Projections
     </a>
-    <!-- Source removed from UI -->
   </div>
 
   <div class="team-header">
@@ -223,23 +188,17 @@
       </div>
       <div class="team-info">
         <h1>{team.team}</h1>
-        <!-- Slug removed from UI -->
       </div>
     </div>
-
-    <!-- Badges removed from header -->
+    <!-- no badges in header -->
   </div>
 
   <div class="divider"></div>
 
-  <!-- MOVED HERE: Record / Points badges (above Division) -->
-  <div class="badges badges-body">
-    <div class="badge">Record: {team.record}</div>
-    <div class="badge points-badge">Points: {team.points}</div>
-  </div>
-
-  <!-- BODY FACTS — ONLY Division + Targets -->
+  <!-- BODY FACTS — Record / Points like Targets, simple text -->
   <ul class="stats">
+    <li><strong>Record:</strong> {team.record}</li>
+    <li><strong>Points:</strong> {team.points}</li>
     <li><strong>Division:</strong> {team.division}</li>
     <li>
       <strong>Targets:</strong> {team.targets}
