@@ -232,15 +232,13 @@
 
   <div class="divider"></div>
 
+  <!-- BODY FACTS — ONLY Division + Targets -->
   <ul class="stats">
     <li><strong>Division:</strong> {team.division}</li>
-    <li><strong>Record:</strong> {team.record}</li>
-    <li><strong>Points:</strong> {team.points}</li>
     <li>
-      <strong>Chances:</strong>
-      Division {team.status?.division} · Playoffs {team.status?.playoffs} · Tie {team.status?.tie}
+      <strong>Targets:</strong> {team.targets}
+      {#if team.min} (min {team.min}){/if}
     </li>
-    <li><strong>Targets:</strong> {team.targets} (min {team.min})</li>
   </ul>
 
   <div class="odds">
