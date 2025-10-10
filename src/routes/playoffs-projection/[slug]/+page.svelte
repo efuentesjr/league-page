@@ -121,12 +121,15 @@
     font-size: 1rem;
   }
 
-  /* Badges */
+  /* Badges (reused in body) */
   .badges {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
     gap: 0.5rem;
+  }
+  .badges-body {
+    align-items: flex-start;   /* left align in body */
+    margin: 0.25rem 0 0.75rem; /* spacing above facts */
   }
 
   .badge {
@@ -224,13 +227,16 @@
       </div>
     </div>
 
-    <div class="badges">
-      <div class="badge">Record: {team.record}</div>
-      <div class="badge points-badge">Points: {team.points}</div>
-    </div>
+    <!-- Badges removed from header -->
   </div>
 
   <div class="divider"></div>
+
+  <!-- MOVED HERE: Record / Points badges (above Division) -->
+  <div class="badges badges-body">
+    <div class="badge">Record: {team.record}</div>
+    <div class="badge points-badge">Points: {team.points}</div>
+  </div>
 
   <!-- BODY FACTS — ONLY Division + Targets -->
   <ul class="stats">
