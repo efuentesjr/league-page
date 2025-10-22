@@ -939,8 +939,8 @@
       </tr>
       <tr>
         <td style="border: 1px solid #333; padding: 5px;">Rings (x2)</td>
-        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 75.00</td>
-        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 70.00</td>
+        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 145.00</td>
+        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 145.00</td>
       </tr>
     </tbody>
   </table>
@@ -958,7 +958,7 @@
       <tr>
         <td style="border: 1px solid #333; padding: 5px;">Surplus Budget</td>
         <td style="border: 1px solid #333; padding: 5px; text-align: right;">-</td>
-        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 70.00</td>
+        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 0.00</td>
       </tr>
     </tbody>
   </table>
