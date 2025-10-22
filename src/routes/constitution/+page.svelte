@@ -847,7 +847,7 @@
 </p>
 <p>⚾ Three Strikes &amp; You're Out Rule ⚾:</p>
 <p>
-  If a manager’s team finishes 15th or 16th in back-to-back seasons, they must plead their strategy to the commissioner &
+  If a manager’s team finishes 14th, 15th or 16th in back-to-back seasons, they must plead their strategy to the commissioner &
   co-commissioners. If approved, they’ll get one final season—a probation year—where their team must improve as outlined by
   the commissioners. Failure to do so? Strike three, and you’re out!
 </p>
