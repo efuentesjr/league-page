@@ -18,7 +18,7 @@
   const proposals: Proposal[] = [
     { id: 1, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'OPEN' },
     { id: 2, title: 'Review player scoring', owner: 'Commish', notes: 'Section 4.1', status: 'OPEN' },
-    { id: 3, title: 'Draw for draft order', owner: 'League', notes: 'Section 3.1', status: 'OPEN' },
+    { id: 3, title: 'Draw for draft order', owner: 'League', status: 'OPEN' },
     { id: 4, title: 'Draft “ping-pong” entry for #1 spot via FAAB', owner: 'Ray Rodriguez', status: 'NEW' },
     { id: 5, title: 'Buy FAAB right to select division when joining', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
     { id: 6, title: 'Run draft in an auction-type bidding format', owner: 'Commish', status: 'OPEN' },
@@ -54,8 +54,8 @@
   </header>
 
   <!-- ACTIVE -->
-  <section class="cc-section">
-    <h1 class="cc-section-title">Active Rule Discussions</h1>
+  <section class="cc-section cc-section--white">
+    <h2 class="cc-section-title">Active Rule Discussions</h2>
     <div class="cc-grid">
       {#each proposals as p}
         <article class="cc-card">
@@ -77,8 +77,8 @@
   </section>
 
   <!-- PREVIOUS -->
-  <section class="cc-section">
-    <h1 class="cc-section-title">Previous Outcomes & Notes</h1>
+  <section class="cc-section cc-section--white">
+    <h2 class="cc-section-title">Previous Outcomes & Notes</h2>
     <div class="cc-grid">
       {#each previous as o}
         <article class="cc-card cc-card--sm">
@@ -92,7 +92,7 @@
 </section>
 
 <style>
-  /* ---------- LOCAL ONLY: Prefixed with cc- so nothing leaks ---------- */
+  /* ---------- Scoped, safe, and contained ---------- */
 
   .cc-page {
     max-width: 1100px;
@@ -106,7 +106,7 @@
   }
 
   .cc-title {
-    font-size: 1.15rem;          /* small */
+    font-size: 1.15rem;
     font-weight: 700;
     margin: 0 0 0.15rem 0;
     letter-spacing: 0.2px;
@@ -114,11 +114,22 @@
 
   .cc-subtitle {
     font-size: 0.8rem;
-    color: var(--cc-muted, #FFFFFF);
+    color: #6b7280;
     margin: 0;
   }
 
-  .cc-section { margin-top: 1.25rem; }
+  .cc-section {
+    margin-top: 1.25rem;
+    background: transparent;
+    border-radius: 12px;
+    padding: 1rem;
+  }
+
+  .cc-section--white {
+    background: #ffffff; /* 👈 PURE WHITE */
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+  }
 
   .cc-section-title {
     font-size: 0.95rem;
@@ -126,7 +137,7 @@
     color: #222;
     margin: 0 0 0.6rem 0;
     padding-left: 0.5rem;
-    border-left: 4px solid var(--cc-accent, #FFFFFF);
+    border-left: 4px solid #0b4eb3;
     line-height: 1.2;
   }
 
@@ -137,12 +148,11 @@
   }
 
   .cc-card {
-    background: var(--cc-card, #ffffff);
-    border: 1px solid var(--cc-border, #e7e7e7);
-    border-radius: 12px;
+    background: #fafafa;
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
     padding: 0.75rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .cc-card:hover {
     transform: translateY(-1px);
@@ -164,7 +174,7 @@
   }
 
   .cc-card-title {
-    font-size: 0.9rem;           /* compact */
+    font-size: 0.9rem;
     font-weight: 700;
     color: #1f2937;
     margin: 0.15rem 0 0.3rem;
@@ -191,6 +201,7 @@
     border: 1px solid;
     letter-spacing: 0.02em;
   }
+
   .cc-chip--new  { background:#fff4db; color:#8b5b00; border-color:#f6dfaa; }
   .cc-chip--open { background:#eaf2ff; color:#0b4eb3; border-color:#cfdcfd; }
   .cc-chip--ok   { background:#e8f7ed; color:#197a45; border-color:#cfeedd; }
