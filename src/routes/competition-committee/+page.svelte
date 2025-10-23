@@ -18,7 +18,7 @@
   const proposals: Proposal[] = [
     { id: 1, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'OPEN' },
     { id: 2, title: 'Review player scoring', owner: 'Commish', notes: 'Section 4.1', status: 'OPEN' },
-    { id: 3, title: 'Draw for draft order', owner: 'League', status: 'OPEN' },
+    { id: 3, title: 'Draw for draft order', owner: 'League', notes: 'Section 3.1', status: 'OPEN' },
     { id: 4, title: 'Draft “ping-pong” entry for #1 spot via FAAB', owner: 'Ray Rodriguez', status: 'NEW' },
     { id: 5, title: 'Buy FAAB right to select division when joining', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
     { id: 6, title: 'Run draft in an auction-type bidding format', owner: 'Commish', status: 'OPEN' },
