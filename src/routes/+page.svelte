@@ -28,8 +28,8 @@
 
   // ✅ Hero video (Cloudflare R2)
   const HERO_VIDEO = {
-   // src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/1003%20(5).mp4',
-   // poster: '/videos/LOGO1.jpg',
+    // src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/1003%20(5).mp4',
+    // poster: '/videos/LOGO1.jpg',
   };
 
   // Accessibility: detect reduced motion
@@ -205,26 +205,28 @@
   }
 </style>
 
-<!-- ===== Hero video block (poster enabled, no autoplay/loop) ===== -->
-<div class="hero-video" style="aspect-ratio: {heroAspect}">
-  {#if !prefersReducedMotion}
-    <video
-      bind:this={heroEl}
-      muted
-      playsinline
-      controls
-      preload="metadata"
-      poster={HERO_VIDEO.poster}
-      src={HERO_VIDEO.src}
-      on:loadedmetadata={onLoadedMetadata}
-    >
-      <source src={HERO_VIDEO.src} type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-  {:else}
-    <img src={HERO_VIDEO.poster} alt="Season intro" />
-  {/if}
-</div>
+<!-- ===== Hero video block (renders ONLY if a src or poster is provided) ===== -->
+{#if HERO_VIDEO.src || HERO_VIDEO.poster}
+  <div class="hero-video" style="aspect-ratio: {heroAspect}">
+    {#if HERO_VIDEO.src && !prefersReducedMotion}
+      <video
+        bind:this={heroEl}
+        muted
+        playsinline
+        controls
+        preload="metadata"
+        poster={HERO_VIDEO.poster}
+        src={HERO_VIDEO.src}
+        on:loadedmetadata={onLoadedMetadata}
+      >
+        <source src={HERO_VIDEO.src} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    {:else if HERO_VIDEO.poster}
+      <img src={HERO_VIDEO.poster} alt="Season intro" />
+    {/if}
+  </div>
+{/if}
 
 <div id="home">
   <div id="main">
