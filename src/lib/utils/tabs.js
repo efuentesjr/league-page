@@ -78,11 +78,14 @@ export const tabs = [
     label: 'Constitution',
     dest: '/constitution',
     key: 'constitution',
-  },
-  {
-    icon: 'gavel',
-    label: 'Competition Committee',
-    dest: '/competition-committee',
+    children: [
+      {
+        icon: 'gavel',
+        label: 'Competition Committee',
+        dest: '/competition-committee',
+        key: 'competition-committee'
+      }
+    ]
   },
   {
     icon: 'lightbulb',
