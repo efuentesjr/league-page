@@ -126,7 +126,7 @@
     color: #222;
     margin: 0 0 0.6rem 0;
     padding-left: 0.5rem;
-    border-left: 4px solid var(--cc-accent, #0b4eb3);
+    border-left: 4px solid var(--cc-accent, #FFFFFF);
     line-height: 1.2;
   }
 
