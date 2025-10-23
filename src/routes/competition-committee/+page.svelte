@@ -120,15 +120,15 @@
 
   .cc-section {
     margin-top: 1.25rem;
-    background: transparent;
     border-radius: 12px;
     padding: 1rem;
   }
 
+  /* Outer large box color → light blue */
   .cc-section--white {
-    background: #ffffff; /* 👈 PURE WHITE */
+    background: #e9f3ff; /* Light blue */
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    border: 1px solid #eee;
+    border: 1px solid #d1e4ff;
   }
 
   .cc-section-title {
@@ -148,7 +148,7 @@
   }
 
   .cc-card {
-    background: #fafafa;
+    background: #ffffff; /* inner small boxes remain white */
     border: 1px solid #e7e7e7;
     border-radius: 10px;
     padding: 0.75rem;
