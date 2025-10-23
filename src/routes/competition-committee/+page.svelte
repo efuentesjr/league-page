@@ -114,7 +114,7 @@
 
   .cc-subtitle {
     font-size: 0.8rem;
-    color: var(--cc-muted, #6b7280);
+    color: var(--cc-muted, #FFFFFF);
     margin: 0;
   }
 
