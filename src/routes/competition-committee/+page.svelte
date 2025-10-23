@@ -55,7 +55,7 @@
 
   <!-- ACTIVE -->
   <section class="cc-section">
-    <h2 class="cc-section-title">Active Rule Discussions</h2>
+    <h1 class="cc-section-title">Active Rule Discussions</h1>
     <div class="cc-grid">
       {#each proposals as p}
         <article class="cc-card">
@@ -78,7 +78,7 @@
 
   <!-- PREVIOUS -->
   <section class="cc-section">
-    <h2 class="cc-section-title">Previous Outcomes & Notes</h2>
+    <h1 class="cc-section-title">Previous Outcomes & Notes</h1>
     <div class="cc-grid">
       {#each previous as o}
         <article class="cc-card cc-card--sm">
