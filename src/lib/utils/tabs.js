@@ -83,7 +83,6 @@ export const tabs = [
         icon: 'gavel',
         label: 'Competition Committee',
         dest: '/competition-committee',
-        key: 'competition-committee'
       }
     ]
   },
