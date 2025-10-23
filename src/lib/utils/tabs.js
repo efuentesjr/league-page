@@ -96,5 +96,5 @@ export const tabs = [
     dest: `https://sleeper.app/leagues/${leagueID}`,
     key: 'sleeper',
     external: true
-  },
+  }
 ];
