@@ -16,7 +16,6 @@
     notes?: string;
   };
 
-  // ===== Replace with your actual items =====
   const proposals: Proposal[] = [
     { id: 1, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'OPEN' },
     { id: 2, title: 'Review player scoring', owner: 'Commish', notes: 'Section 4.1', status: 'OPEN' },
@@ -64,7 +63,6 @@
     { title: 'Reshuffle divisions every 4 years', ruleDeadline: 2027, notes: 'Next: 2028 off-season.' }
   ];
 
-  // ===== Group & filters (small, unobtrusive) =====
   const order: Proposal['status'][] = ['NEW', 'OPEN', 'CARRIED', 'REJECTED', 'TABLED'];
   let q = '';
   let owner = 'All';
@@ -101,13 +99,11 @@
 </svelte:head>
 
 <section class="max-w-6xl mx-auto px-4 py-8">
-  <!-- Header -->
   <div class="mb-6">
     <h1 class="text-xl font-semibold tracking-tight">Competition Committee</h1>
     <p class="text-xs text-neutral-600 mt-1">Clean, compact view of proposals and outcomes.</p>
   </div>
 
-  <!-- Controls -->
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
     <input
       class="text-sm w-full rounded-xl border border-neutral-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-300"
@@ -123,7 +119,6 @@
     <div class="hidden sm:block"></div>
   </div>
 
-  <!-- PROPOSALS (grouped into neat rounded boxes) -->
   <div class="space-y-4">
     {#each order as status}
       {#if groups()[status]?.length}
@@ -131,7 +126,7 @@
           <div class="flex items-center justify-between px-4 py-2.5 border-b border-neutral-200">
             <h2 class="text-sm font-semibold">{status}</h2>
             <span class={'text-[11px] px-2 py-0.5 rounded-full border ' + chipClass(status)}>
-              {groups()[status].length} item{s: groups()[status].length === 1 ? '' : 's'}
+              {groups()[status].length} item{groups()[status].length === 1 ? '' : 's'}
             </span>
           </div>
 
@@ -171,7 +166,6 @@
     {/each}
   </div>
 
-  <!-- PREVIOUS OUTCOMES (compact card list) -->
   <section class="mt-8 rounded-2xl border border-neutral-200 bg-white">
     <div class="px-4 py-2.5 border-b border-neutral-200 flex items-center gap-2">
       <h2 class="text-sm font-semibold">Previous Years — Outcomes & Notes</h2>
@@ -197,6 +191,5 @@
 </section>
 
 <style>
-  /* Keep icons small if you use Material Icons globally */
   .material-icons { font-size: 1rem; line-height: 1; }
 </style>
