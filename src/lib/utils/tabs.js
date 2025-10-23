@@ -17,7 +17,7 @@ export const tabs = [
         icon: 'leaderboard',
         label: 'Standings',
         dest: '/standings',
-		      key: 'standings',
+		key: 'standings',
     },
 	{
         icon: 'trending_up',
@@ -35,25 +35,25 @@ export const tabs = [
         icon: 'storage',
         label: 'Rosters',
         dest: '/rosters',
-		      key: 'rosters',
+		key: 'rosters',
     },
     {
         icon: 'groups',
         label: 'Managers',
         dest: '/managers',
-		      key: 'managers',
+		key: 'managers',
     },
     {
         icon: 'local_fire_department',
         label: 'Rivalry',
         dest: '/rivalry',
-		      key: 'rivalry',
+		key: 'rivalry',
     },
     {
         icon: 'movie',
         label: 'Championship Videos',
         dest: '/champ-videos',
-		      key: 'champ-videos',
+		key: 'champ-videos',
     },
 	   {
         icon: 'view_comfy',
@@ -71,13 +71,19 @@ export const tabs = [
         icon: 'military_tech',
         label: 'Records',
         dest: '/records',
-	       	key: 'records',
+	    key: 'records',
     },
     {
         icon: 'history_edu',
         label: 'Constitution',
         dest: '/constitution',
 	    key: 'constitution',
+		childern: [
+			icon: 'Gavel',
+        	label: 'Competition Committee',
+        	dest: '/Competition Committee',
+			key: 'Competition Committee',
+			]
     },
     {
         icon: 'lightbulb',
