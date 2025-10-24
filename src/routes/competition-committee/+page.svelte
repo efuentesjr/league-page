@@ -37,7 +37,7 @@
     { id: 3, title: 'Draw for 2026 draft order', owner: 'League', status: 'OPEN' },
     { id: 4, title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. OPTION#1: Only allow 1 team. Hold an auction, winner gets one entry. OPTION#2: Only allow non-playoff teams. OPTION#3: Allow non-top 3 teams.', owner: 'Ray Rodriguez', status: 'NEW' },
     { id: 5, title: 'Allow teams to buy by way of FAAB, the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
-    { id: 6, title: 'Run draft in an auction-type bidding format', owner: 'Commish', status: 'OPEN' },
+    { id: 6, title: 'Player tags, "No trade back for top 35 players. Re-evaluate and reduce to: OPTION#1: QB's: 16 OPTION#2: RB's: 20 WR's: 25, TE's: 10', owner: 'Commish', status: 'OPEN' },
     { id: 7, title: 'Reduce Pro Bowlers list size / counts', owner: 'Commish', notes: 'Section 13.2', status: 'OPEN' },
     { id: 8, title: 'Punt return yards scoring (vote)', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
     { id: 9, title: 'Raise dues (75 → 85); 2/3 vote', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
