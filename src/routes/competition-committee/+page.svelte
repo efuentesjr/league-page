@@ -37,10 +37,10 @@
     { id: 3, title: 'Draw for 2026 draft order', owner: 'League', status: 'OPEN' },
     { id: 4, title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. OPTION#1: Only allow 1 team. Hold an auction, winner gets one entry. OPTION#2: Only allow non-playoff teams. OPTION#3: Allow non-top 3 teams.', owner: 'Ray Rodriguez', status: 'NEW' },
     { id: 5, title: 'Allow teams to buy by way of FAAB, the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
-    { id: 6, title: 'Player tags, "No trade back for top 35 players. Re-evaluate and reduce to OPTION#1: QBs 16. OPTION#2: RBs 20. OPTION#3 WRs 25. OPTION#4 TEs 10', owner: 'Commish', status: 'OPEN' },
-    { id: 7, title: 'Punt return yards scoring Re-vote from ', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
-    { id: 8, title: 'Raise dues $75 → $85); 2/3 vote needed to raise fee's. Commish to put together reasoning.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
-    { id: 9, title: 'Conditional trade rules. VOTE on weather we should vote to allow/Not conditional trading. OPTION#1: limit to FAAB:', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
+    { id: 6, title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 16. OPTION#2: RBs 20. OPTION#3: WRs 25. OPTION#4: TEs 10.', owner: 'Commish', status: 'OPEN' },
+    { id: 7, title: 'Punt return yards scoring (re-vote)', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
+    { id: 8, title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+    { id: 9, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
     { id: 10, title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'OPEN' }
   ];
 
@@ -56,6 +56,12 @@
     { title: 'Loser’s punishment – 2 strike rule', ruleDeadline: 2027 },
     { title: 'Reshuffle divisions every 4 years', ruleDeadline: 2027, notes: 'Next reshuffle: 2028 offseason' }
   ];
+
+  // Precompute parsed proposals (avoid {#await} for sync work)
+  const parsedProposals = proposals.map((p) => ({
+    ...p,
+    parsed: splitOptions(p.title)
+  }));
 </script>
 
 <svelte:head>
@@ -72,38 +78,34 @@
   <section class="cc-section cc-section--white">
     <h2 class="cc-section-title">Proposed Active Rule Discussions</h2>
     <div class="cc-grid">
-      {#each proposals as p}
-        {#key p.id}
-          {#await Promise.resolve(splitOptions(p.title)) then parsed}
-            <article class="cc-card">
-              <div class="cc-card-top">
-                <span class={"cc-chip " + (p.status === 'NEW' ? 'cc-chip--new' :
-                                            p.status === 'OPEN' ? 'cc-chip--open' :
-                                            p.status === 'CARRIED' ? 'cc-chip--ok' :
-                                            p.status === 'REJECTED' ? 'cc-chip--bad' : 'cc-chip--hold')}>
-                  {p.status}
-                </span>
-                <span class="cc-id">#{p.id}</span>
-              </div>
+      {#each parsedProposals as p (p.id)}
+        <article class="cc-card">
+          <div class="cc-card-top">
+            <span class={"cc-chip " + (p.status === 'NEW' ? 'cc-chip--new' :
+                                        p.status === 'OPEN' ? 'cc-chip--open' :
+                                        p.status === 'CARRIED' ? 'cc-chip--ok' :
+                                        p.status === 'REJECTED' ? 'cc-chip--bad' : 'cc-chip--hold')}>
+              {p.status}
+            </span>
+            <span class="cc-id">#{p.id}</span>
+          </div>
 
-              <!-- Title becomes the base statement; options go as bullets if present -->
-              <h3 class="cc-card-title">
-                {parsed.base}{parsed.options.length ? ':' : ''}
-              </h3>
+          <!-- Title becomes the base statement; options go as bullets if present -->
+          <h3 class="cc-card-title">
+            {p.parsed.base}{p.parsed.options.length ? ':' : ''}
+          </h3>
 
-              {#if parsed.options.length}
-                <ul class="cc-bullets">
-                  {#each parsed.options as opt}
-                    <li>{opt}</li>
-                  {/each}
-                </ul>
-              {/if}
+          {#if p.parsed.options.length}
+            <ul class="cc-bullets">
+              {#each p.parsed.options as opt}
+                <li>{opt}</li>
+              {/each}
+            </ul>
+          {/if}
 
-              <p class="cc-meta"><strong>Owner:</strong> {p.owner}</p>
-              {#if p.notes}<p class="cc-notes">{p.notes}</p>{/if}
-            </article>
-          {/await}
-        {/key}
+          <p class="cc-meta"><strong>Owner:</strong> {p.owner}</p>
+          {#if p.notes}<p class="cc-notes">{p.notes}</p>{/if}
+        </article>
       {/each}
     </div>
   </section>
@@ -112,7 +114,7 @@
   <section class="cc-section cc-section--white">
     <h2 class="cc-section-title">Previous Outcomes of VOTES</h2>
     <div class="cc-grid">
-      {#each previous as o}
+      {#each previous as o, i (i)}
         <article class="cc-card cc-card--sm">
           <h3 class="cc-card-title">{o.title}</h3>
           <p class="cc-meta"><strong>Rule Deadline:</strong> {o.ruleDeadline ?? '—'}</p>
