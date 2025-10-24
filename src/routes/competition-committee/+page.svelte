@@ -39,8 +39,8 @@
     { id: 5, title: 'Allow teams to buy by way of FAAB, the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
     { id: 6, title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 16. OPTION#2: RBs 20. OPTION#3: WRs 25. OPTION#4: TEs 10.', owner: 'Commish', status: 'OPEN' },
     { id: 7, title: 'Punt return yards scoring (re-vote)', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
-    { id: 8, title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
-    { id: 9, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
+    { id: 8, title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+    { id: 9, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB. OPTION#2: No trade backs on all players involved. OPTION#3: When a trade involves pick only or non impact players, it must be offered to the entire league.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
     { id: 10, title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'OPEN' }
   ];
 
