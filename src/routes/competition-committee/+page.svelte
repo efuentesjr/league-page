@@ -37,7 +37,7 @@
     { id: 3, title: 'Draw for 2026 draft order', owner: 'League', status: 'OPEN' },
     { id: 4, title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. OPTION#1: Only allow 1 team. Hold an auction, winner gets one entry. OPTION#2: Only allow non-playoff teams. OPTION#3: Allow non-top 3 teams.', owner: 'Ray Rodriguez', status: 'NEW' },
     { id: 5, title: 'Allow teams to buy by way of FAAB, the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
-    { id: 6, title: 'Player tags, "No trade back for top 35 players. Re-evaluate and reduce to OPTION#1: QBs- 16. OPTION#2: RBs- 20. OPTION#3 WRs- 25. OPTION#4 TEs- 10', owner: 'Commish', status: 'OPEN' },
+    { id: 6, title: 'Player tags, "No trade back for top 35 players. Re-evaluate and reduce to OPTION#1: QBs 16. OPTION#2: RBs 20. OPTION#3 WRs 25. OPTION#4 TEs 10', owner: 'Commish', status: 'OPEN' },
     { id: 7, title: 'Punt return yards scoring Re-vote from ', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
     { id: 8, title: 'Raise dues $75 → $85); 2/3 vote needed to raise fee's. Commish to put together reasoning.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
     { id: 9, title: 'Conditional trade rules. VOTE on weather we should vote to allow/Not conditional trading. OPTION#1: limit to FAAB:', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
