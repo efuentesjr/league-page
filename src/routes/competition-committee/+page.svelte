@@ -15,12 +15,28 @@
     notes?: string;
   };
 
+  // --- Helpers ---------------------------------------------------------------
+  function splitOptions(title: string): { base: string; options: string[] } {
+    // capture OPTION#N: ... segments (non-greedy until next OPTION or end)
+    const re = /OPTION#\d+:\s*([\s\S]*?)(?=(?:\s*OPTION#\d+:|$))/g;
+    const options: string[] = [];
+
+    const firstIdx = title.search(/OPTION#\d+:/);
+    const base = (firstIdx !== -1 ? title.slice(0, firstIdx) : title).trim().replace(/[.\s]+$/, '');
+
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(title)) !== null) {
+      options.push(m[1].trim().replace(/[.\s]+$/, ''));
+    }
+    return { base, options };
+  }
+
   const proposals: Proposal[] = [
     { id: 1, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'OPEN' },
     { id: 2, title: 'Review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'OPEN' },
     { id: 3, title: 'Draw for 2026 draft order', owner: 'League', status: 'OPEN' },
     { id: 4, title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. OPTION#1: Only allow 1 team. Hold an auction, winner gets one entry. OPTION#2: Only allow non-playoff teams. OPTION#3: Allow non-top 3 teams.', owner: 'Ray Rodriguez', status: 'NEW' },
-    { id: 5, title: 'Allow eams to buy by way of FAAB, the right to select division when reshuffling divisions. ONLY one winner in a FAAB auction type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
+    { id: 5, title: 'Allow teams to buy by way of FAAB, the right to select division when reshuffling divisions. ONLY one winner in a FAAB auction type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
     { id: 6, title: 'Run draft in an auction-type bidding format', owner: 'Commish', status: 'OPEN' },
     { id: 7, title: 'Reduce Pro Bowlers list size / counts', owner: 'Commish', notes: 'Section 13.2', status: 'OPEN' },
     { id: 8, title: 'Punt return yards scoring (vote)', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
@@ -58,20 +74,37 @@
     <h2 class="cc-section-title">Proposed Active Rule Discussions</h2>
     <div class="cc-grid">
       {#each proposals as p}
-        <article class="cc-card">
-          <div class="cc-card-top">
-            <span class={"cc-chip " + (p.status === 'NEW' ? 'cc-chip--new' :
-                                        p.status === 'OPEN' ? 'cc-chip--open' :
-                                        p.status === 'CARRIED' ? 'cc-chip--ok' :
-                                        p.status === 'REJECTED' ? 'cc-chip--bad' : 'cc-chip--hold')}>
-              {p.status}
-            </span>
-            <span class="cc-id">#{p.id}</span>
-          </div>
-          <h3 class="cc-card-title">{p.title}</h3>
-          <p class="cc-meta"><strong>Owner:</strong> {p.owner}</p>
-          {#if p.notes}<p class="cc-notes">{p.notes}</p>{/if}
-        </article>
+        {#key p.id}
+          {#await Promise.resolve(splitOptions(p.title)) then parsed}
+            <article class="cc-card">
+              <div class="cc-card-top">
+                <span class={"cc-chip " + (p.status === 'NEW' ? 'cc-chip--new' :
+                                            p.status === 'OPEN' ? 'cc-chip--open' :
+                                            p.status === 'CARRIED' ? 'cc-chip--ok' :
+                                            p.status === 'REJECTED' ? 'cc-chip--bad' : 'cc-chip--hold')}>
+                  {p.status}
+                </span>
+                <span class="cc-id">#{p.id}</span>
+              </div>
+
+              <!-- Title becomes the base statement; options go as bullets if present -->
+              <h3 class="cc-card-title">
+                {parsed.base}{parsed.options.length ? ':' : ''}
+              </h3>
+
+              {#if parsed.options.length}
+                <ul class="cc-bullets">
+                  {#each parsed.options as opt}
+                    <li>{opt}</li>
+                  {/each}
+                </ul>
+              {/if}
+
+              <p class="cc-meta"><strong>Owner:</strong> {p.owner}</p>
+              {#if p.notes}<p class="cc-notes">{p.notes}</p>{/if}
+            </article>
+          {/await}
+        {/key}
       {/each}
     </div>
   </section>
@@ -181,10 +214,19 @@
     line-height: 1.25;
   }
 
+  .cc-bullets {
+    margin: 0.25rem 0 0.4rem;
+    padding-left: 1.1rem;      /* indent */
+    list-style: disc;
+    color: #1f2937;
+    font-size: 0.86rem;
+  }
+  .cc-bullets li { margin: 0.15rem 0; }
+
   .cc-meta {
     font-size: 0.78rem;
     color: #4b5563;
-    margin: 0 0 0.2rem 0;
+    margin: 0.25rem 0 0.2rem 0;
   }
 
   .cc-notes {
