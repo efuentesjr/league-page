@@ -19,7 +19,7 @@
     { id: 1, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'OPEN' },
     { id: 2, title: 'Review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'OPEN' },
     { id: 3, title: 'Draw for 2026 draft order', owner: 'League', status: 'OPEN' },
-    { id: 4, title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB Option1: Only allow 1 team. Hold an austion, winner gets one entry.', owner: 'Ray Rodriguez', status: 'NEW' },
+    { id: 4, title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. OPTION#1: Only allow 1 team. Hold an austion, winner gets one entry. OPTION#2: Only allow non-playoff teams. OPTION#3: Allow non-top 3 teams.', owner: 'Ray Rodriguez', status: 'NEW' },
     { id: 5, title: 'Buy FAAB right to select division when joining', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
     { id: 6, title: 'Run draft in an auction-type bidding format', owner: 'Commish', status: 'OPEN' },
     { id: 7, title: 'Reduce Pro Bowlers list size / counts', owner: 'Commish', notes: 'Section 13.2', status: 'OPEN' },
