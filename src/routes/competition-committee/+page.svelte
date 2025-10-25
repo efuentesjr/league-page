@@ -76,7 +76,7 @@
 
   <!-- ACTIVE -->
   <section class="cc-section cc-section--white">
-    <h2 class="cc-section-title">Proposed Active Rule Discussions</h2>
+    <h2 class="cc-section-title">2026 Active Proposed Rule Discussions</h2>
     <div class="cc-grid">
       {#each parsedProposals as p (p.id)}
         <article class="cc-card">
@@ -161,7 +161,7 @@
   /* Outer large box color → light blue */
   .cc-section--white {
     background: #e9f3ff; /* Light blue */
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 4px rgba(51,153,255,1);
     border: 1px solid #d1e4ff;
   }
 
