@@ -53,9 +53,9 @@
     { title: 'Trade deadline moved to Week 7, midseason.', ruleDeadline: 2026 },
     { title: 'Divisions. Move to a four divisions structure.', ruleDeadline: 2026, notes: 'Approved' },
     { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', ruleDeadline: 2027, notes: 'Approved' },
-    { title: 'Toilet Bowl rules', ruleDeadline: 2027, notes: 'Approved' },
+    { title: 'Toilet Bowl rules. Section 3.4', ruleDeadline: 2027, notes: 'Approved' },
     { title: 'Manager replacement draft priority', ruleDeadline: 2027, notes: 'Enacted by Commish powers' },
-    { title: 'Loser’s punishment – 2 strike rule', ruleDeadline: 2027, notes: 'Enacted by Commish powers' }
+    { title: 'Loser’s punishment – 2 strike rule. Section 6.1', ruleDeadline: 2027, notes: 'Enacted by Commish powers' }
   ];
 
   // Precompute parsed proposals (avoid {#await} for sync work)
