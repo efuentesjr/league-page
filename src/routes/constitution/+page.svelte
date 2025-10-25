@@ -859,7 +859,8 @@
   someone interested in joining, please provide their name to the commissioner. Priority will be given to managers who are
   eager to commit to a dynasty league and will be highly active within the league.
 </p>
-
+<p>When we have a new incoming manager the Commishiner has the authority to give the #1 draft pick to the incoming manager as compensation for a non-competitive team. All three commishners must vote and agree. In given case that one of the comishners has a conflict of intrest, meaning they might land the #1 pick a substut league manager will vote in his place.
+</p>
 <h3 bind:this={sixThree}>6.3 Quitting/Replacement of Inactive Managers</h3>
 <p>In the event that a manager chooses to quit the league, the following conditions must be met:</p>
 <p>1. A reigning champion CANNOT leave the league; they must return to defend or lose their championship!</p>
