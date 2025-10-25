@@ -592,7 +592,7 @@
     <tbody>
       <tr><td>TM1</td><td>1st</td><td>16th</td><td>0%</td></tr>
       <tr><td>TM2</td><td>2nd</td><td>15th</td><td>0%</td></tr>
-      <tr><td>TM3</td><td>3rd</td><td>14th</td><td>0%</td></tr>
+      <tr><td>TM3</td><td>3rd</td><td>TBD</td><td>0%</td></tr>
       <tr><td>TM4</td><td>4th</td><td>TBD</td><td>0%</td></tr>
       <tr><td>TM5</td><td>5th</td><td>TBD</td><td>0%</td></tr>
       <tr><td>TM6</td><td>6th</td><td>TBD</td><td>0%</td></tr>
