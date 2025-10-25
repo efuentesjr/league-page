@@ -41,7 +41,7 @@
     { id: 8, title: 'Punt return yards scoring (re-vote)', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
     { id: 9, title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 16. OPTION#2: RBs 20. OPTION#3: WRs 25. OPTION#4: TEs 10.', owner: 'Commish', status: 'OPEN' },
     { id: 10, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB. OPTION#2: No trade backs on all players involved. OPTION#3: When a trade involves pick only or non impact players, it must be offered to the entire league.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
-    { id: 11, title: 'When trading future picks you'll need to pay some additiona $$$, in addition to regular fees and those fees will goes towards that years fees', owner: 'John Diaz-DeCaro', status: 'New' }
+    { id: 11, title: 'When trading future picks you\'ll need to pay some additiona $$$, in addition to regular fees and those fees will goes towards that years fees', owner: 'John Diaz-DeCaro', status: 'NEW' },
     { id: 12, title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'OPEN' }
   ];
 
@@ -52,10 +52,10 @@
     { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', ruleDeadline: 2025, notes: 'Defaulted to Sleeper settings' },
     { title: 'Trade deadline moved to Week 7, midseason.', ruleDeadline: 2026 },
     { title: 'Divisions reshuffling', ruleDeadline: 2026, notes: 'Approved' },
-    { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', ruleDeadline: 2027, notes: 'Approved' }
+    { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', ruleDeadline: 2027, notes: 'Approved' },
     { title: 'Toilet Bowl rules', ruleDeadline: 2027, notes: 'Approved' },
     { title: 'Manager replacement draft priority', ruleDeadline: 2027, notes: 'Enacted by Commish powers' },
-    { title: 'Loser’s punishment – 2 strike rule', ruleDeadline: 2027, notes: 'Enacted by Commish powers' },
+    { title: 'Loser’s punishment – 2 strike rule', ruleDeadline: 2027, notes: 'Enacted by Commish powers' }
   ];
 
   // Precompute parsed proposals (avoid {#await} for sync work)
