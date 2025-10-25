@@ -51,7 +51,7 @@
     { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', ruleDeadline: 2025, notes: 'Approved' },
     { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', ruleDeadline: 2025, notes: 'Defaulted to Sleeper settings' },
     { title: 'Trade deadline moved to Week 7, midseason.', ruleDeadline: 2026 },
-    { title: 'Divisions.' notes: 'Move to a four divisions structure.', ruleDeadline: 2026, notes: 'Approved' },
+    { title: 'Divisions.', notes: 'Move to a four divisions structure.', ruleDeadline: 2026, notes: 'Approved' },
     { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', ruleDeadline: 2027, notes: 'Approved' },
     { title: 'Toilet Bowl rules', ruleDeadline: 2027, notes: 'Approved' },
     { title: 'Manager replacement draft priority', ruleDeadline: 2027, notes: 'Enacted by Commish powers' },
