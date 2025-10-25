@@ -564,12 +564,12 @@
       <tr><td>TM5</td><td>5th</td><td>0</td><td>0%</td></tr>
       <tr><td>TM6</td><td>6th</td><td>0</td><td>0%</td></tr>
       <tr><td>TM7</td><td>7th</td><td>0</td><td>0%</td></tr>
-      <tr><td>TM8</td><td>8th</td><td>2</td><td>14%</td></tr>
+      <tr><td>TM8</td><td>8th</td><td>1</td><td>8%</td></tr>
       <tr><td>TM9</td><td>9th</td><td>0</td><td>0%</td></tr>
       <tr><td>TM10</td><td>10th</td><td>0</td><td>0%</td></tr>
-      <tr><td>TM11</td><td>11th</td><td>3</td><td>21%</td></tr>
-      <tr><td>TM12</td><td>12th</td><td>2</td><td>14%</td></tr>
-      <tr><td>TM13</td><td>13th</td><td>1</td><td>7%</td></tr>
+      <tr><td>TM11</td><td>11th</td><td>3</td><td>23%</td></tr>
+      <tr><td>TM12</td><td>12th</td><td>2</td><td>15%</td></tr>
+      <tr><td>TM13</td><td>13th</td><td>1</td><td>8%</td></tr>
       <tr><td>TM14</td><td>14th</td><td>0</td><td>0%</td></tr>
       <tr><td>TM15</td><td>15th</td><td>0</td><td>0%</td></tr>
       <tr><td>TM16</td><td>16th</td><td>0</td><td>0%</td></tr>
@@ -598,9 +598,9 @@
       <tr><td>TM6</td><td>6th</td><td>TBD</td><td>0%</td></tr>
       <tr><td>TM7</td><td>7th</td><td>TBD</td><td>0%</td></tr>
       <tr><td>TM8</td><td>8th</td><td>TBD</td><td>0%</td></tr>
-      <tr><td>TM9</td><td>9th</td><td>3</td><td>21%</td></tr>
-      <tr><td>TM10</td><td>10th</td><td>2</td><td>14%</td></tr>
-      <tr><td>TM11</td><td>11th</td><td>1</td><td>7%</td></tr>
+      <tr><td>TM9</td><td>9th</td><td>3</td><td>23%</td></tr>
+      <tr><td>TM10</td><td>10th</td><td>2</td><td>15%</td></tr>
+      <tr><td>TM11</td><td>11th</td><td>1</td><td>8%</td></tr>
       <tr><td>TM12</td><td>12th</td><td>0</td><td>0%</td></tr>
       <tr><td>TM13</td><td>13th</td><td>0</td><td>0%</td></tr>
       <tr><td>TM14</td><td>14th</td><td>0</td><td>0%</td></tr>
