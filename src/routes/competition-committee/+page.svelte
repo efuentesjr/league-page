@@ -161,7 +161,7 @@
   /* Outer large box color → light blue */
   .cc-section--white {
     background: #e9f3ff; /* Light blue */
-    box-shadow: 0 1px 4px rgba(51,153,255,1);
+    box-shadow: 0 1px 4px rgba(0,0,255,1);
     border: 1px solid #d1e4ff;
   }
 
