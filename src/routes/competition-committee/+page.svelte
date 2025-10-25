@@ -39,22 +39,23 @@
     { id: 5, title: 'Allow teams to buy by way of FAAB, the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
     { id: 7, title: 'Review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'OPEN' },
     { id: 8, title: 'Punt return yards scoring (re-vote)', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
-    { id: 6, title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 16. OPTION#2: RBs 20. OPTION#3: WRs 25. OPTION#4: TEs 10.', owner: 'Commish', status: 'OPEN' },
-    { id: 9, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB. OPTION#2: No trade backs on all players involved. OPTION#3: When a trade involves pick only or non impact players, it must be offered to the entire league.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
-    { id: 10, title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'OPEN' }
+    { id: 9, title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 16. OPTION#2: RBs 20. OPTION#3: WRs 25. OPTION#4: TEs 10.', owner: 'Commish', status: 'OPEN' },
+    { id: 10, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB. OPTION#2: No trade backs on all players involved. OPTION#3: When a trade involves pick only or non impact players, it must be offered to the entire league.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
+    { id: 11, title: 'When trading future picks you'll need to pay some additiona $$$, in addition to regular fees and those fees will goes towards that years fees', owner: 'John Diaz-DeCaro', status: 'New' }
+    { id: 12, title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'OPEN' }
   ];
 
   const previous: Outcome[] = [
-    { title: 'Top 3 “Pro Bowlers” no trade-back', ruleDeadline: 2025, notes: 'Reduce to top 20 or 25' },
+    { title: 'Top 35 “Pro Bowlers” no trade-back', ruleDeadline: 2025, notes: 'Approved' },
     { title: '“Best Roster” integrity rule', ruleDeadline: 2025, notes: 'Rejected' },
-    { title: 'Starting / Bench / Taxi / IR settings', ruleDeadline: 2025, notes: '3 | 10 | 3 | 4' },
-    { title: 'Taxi squad move rules', ruleDeadline: 2025, notes: 'Updated mid-season timing' },
-    { title: 'Trade deadline moved to Week 7', ruleDeadline: 2026 },
-    { title: 'Divisions reshuffling cadence', ruleDeadline: 2026 },
-    { title: 'Toilet Bowl rules', ruleDeadline: 2026 },
-    { title: 'Manager replacement draft priority', ruleDeadline: 2027 },
-    { title: 'Loser’s punishment – 2 strike rule', ruleDeadline: 2027 },
-    { title: 'Reshuffle divisions every 4 years', ruleDeadline: 2027, notes: 'Next reshuffle: 2028 offseason' }
+    { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', ruleDeadline: 2025, notes: 'Approved' },
+    { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', ruleDeadline: 2025, notes: 'Defaulted to Sleeper settings' },
+    { title: 'Trade deadline moved to Week 7, midseason.', ruleDeadline: 2026 },
+    { title: 'Divisions reshuffling', ruleDeadline: 2026, notes: 'Approved' },
+    { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', ruleDeadline: 2027, notes: 'Approved' }
+    { title: 'Toilet Bowl rules', ruleDeadline: 2027, notes: 'Approved' },
+    { title: 'Manager replacement draft priority', ruleDeadline: 2027, notes: 'Enacted by Commish powers' },
+    { title: 'Loser’s punishment – 2 strike rule', ruleDeadline: 2027, notes: 'Enacted by Commish powers' },
   ];
 
   // Precompute parsed proposals (avoid {#await} for sync work)
