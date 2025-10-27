@@ -51,7 +51,7 @@
 
   // Previous outcomes now support statuses + year and OPTION parsing
   const previous: Outcome[] = [
-    { title: 'Top 35 “Pro Bowlers” no trade-back', ruleDeadline: 2025, status: 'Approved', year: 2025 },
+    { title: 'Top 35 “Pro Bowlers” no trade-back', notes: Section 1.3.2', status: 'Approved', year: 2025 },
     { title: '“Best Roster” integrity rule', ruleDeadline: 2025, status: 'Rejected', year: 2025 },
     { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', ruleDeadline: 2025, status: 'Approved', year: 2025 },
     { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', ruleDeadline: 2025, notes: 'Defaulted to Sleeper settings', status: 'Approved', year: 2025 },
