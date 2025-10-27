@@ -9,10 +9,14 @@
     status: 'NEW' | 'OPEN' | 'CARRIED' | 'REJECTED' | 'TABLED';
   };
 
+  type OutcomeStatus = 'Approved' | 'Rejected' | 'Enacted by Commish';
+
   type Outcome = {
     title: string;
     ruleDeadline?: string | number;
     notes?: string;
+    status?: OutcomeStatus;   // new explicit status
+    year?: number;            // optional year shown next to status
   };
 
   // --- Helpers ---------------------------------------------------------------
@@ -45,17 +49,18 @@
     { id: 12, title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'OPEN' }
   ];
 
+  // Previous outcomes now support statuses + year and OPTION parsing
   const previous: Outcome[] = [
-    { title: 'Top 35 “Pro Bowlers” no trade-back', ruleDeadline: 2025, notes: 'Approved' },
-    { title: '“Best Roster” integrity rule', ruleDeadline: 2025, notes: 'Rejected' },
-    { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', ruleDeadline: 2025, notes: 'Approved' },
-    { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', ruleDeadline: 2025, notes: 'Defaulted to Sleeper settings' },
-    { title: 'Trade deadline moved to Week 7, midseason.', ruleDeadline: 2026 },
-    { title: 'Divisions. Move to a four divisions structure.', ruleDeadline: 2026, notes: 'Approved' },
-    { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', ruleDeadline: 2027, notes: 'Approved' },
-    { title: 'Toilet Bowl rules. Section 3.4', ruleDeadline: 2027, notes: 'Approved' },
-    { title: 'Manager replacement draft priority. New incoming manager may be given #1 draft pick, All 3 commish must approve', ruleDeadline: 2027, notes: 'Enacted by Commish powers' },
-    { title: 'Loser’s punishment – 2 strike rule. Section 6.1', ruleDeadline: 2027, notes: 'Enacted by Commish powers' }
+    { title: 'Top 35 “Pro Bowlers” no trade-back', ruleDeadline: 2025, status: 'Approved', year: 2025 },
+    { title: '“Best Roster” integrity rule', ruleDeadline: 2025, status: 'Rejected', year: 2025 },
+    { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', ruleDeadline: 2025, status: 'Approved', year: 2025 },
+    { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', ruleDeadline: 2025, notes: 'Defaulted to Sleeper settings', status: 'Approved', year: 2025 },
+    { title: 'Trade deadline moved to Week 7, midseason.', ruleDeadline: 2026, status: 'Approved', year: 2026 },
+    { title: 'Divisions. Move to a four divisions structure.', ruleDeadline: 2026, status: 'Approved', year: 2026 },
+    { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', ruleDeadline: 2027, status: 'Approved', year: 2027 },
+    { title: 'Toilet Bowl rules. Section 3.4', ruleDeadline: 2027, status: 'Approved', year: 2027 },
+    { title: 'Manager replacement draft priority. New incoming manager may be given #1 draft pick, All 3 commish must approve', ruleDeadline: 2027, status: 'Enacted by Commish', year: 2027 },
+    { title: 'Loser’s punishment – 2 strike rule. Section 6.1', ruleDeadline: 2027, status: 'Enacted by Commish', year: 2027 }
   ];
 
   // Precompute parsed proposals (avoid {#await} for sync work)
@@ -63,6 +68,19 @@
     ...p,
     parsed: splitOptions(p.title)
   }));
+
+  // Precompute parsed previous outcomes (same OPTION parsing behavior)
+  const parsedPrevious = previous.map((o) => ({
+    ...o,
+    parsed: splitOptions(o.title)
+  }));
+
+  function previousChipClass(s?: OutcomeStatus) {
+    if (s === 'Approved') return 'cc-chip--ok';
+    if (s === 'Rejected') return 'cc-chip--bad';
+    if (s === 'Enacted by Commish') return 'cc-chip--commish';
+    return 'cc-chip--hold';
+  }
 </script>
 
 <svelte:head>
@@ -115,9 +133,28 @@
   <section class="cc-section cc-section--white">
     <h2 class="cc-section-title">Previous Outcomes of VOTES</h2>
     <div class="cc-grid">
-      {#each previous as o, i (i)}
+      {#each parsedPrevious as o, i (i)}
         <article class="cc-card cc-card--sm">
-          <h3 class="cc-card-title">{o.title}</h3>
+          <div class="cc-card-top">
+            {#if o.status}
+              <span class={"cc-chip " + previousChipClass(o.status)}>
+                {o.status}{o.year ? ` ${o.year}` : ''}
+              </span>
+            {/if}
+          </div>
+
+          <h3 class="cc-card-title">
+            {o.parsed.base}{o.parsed.options.length ? ':' : ''}
+          </h3>
+
+          {#if o.parsed.options.length}
+            <ul class="cc-bullets">
+              {#each o.parsed.options as opt}
+                <li>{opt}</li>
+              {/each}
+            </ul>
+          {/if}
+
           <p class="cc-meta"><strong>Rule Deadline:</strong> {o.ruleDeadline ?? '—'}</p>
           {#if o.notes}<p class="cc-notes">{o.notes}</p>{/if}
         </article>
@@ -201,6 +238,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.35rem;
+    min-height: 1.25rem;
   }
 
   .cc-id {
@@ -251,4 +289,7 @@
   .cc-chip--ok   { background:#e8f7ed; color:#197a45; border-color:#cfeedd; }
   .cc-chip--bad  { background:#ffecec; color:#b42318; border-color:#ffd1d1; }
   .cc-chip--hold { background:#fff3e8; color:#b25e09; border-color:#ffd9b8; }
+
+  /* New chip style for "Enacted by Commish" */
+  .cc-chip--commish { background:#eef2ff; color:#3730a3; border-color:#dbe1ff; }
 </style>
