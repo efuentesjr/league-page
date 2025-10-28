@@ -35,6 +35,13 @@
     return { base, options };
   }
 
+  // render guard for optional fields (handles string/number/blank)
+  function hasValue(x: unknown): boolean {
+    if (x === undefined || x === null) return false;
+    const s = String(x);
+    return s.trim().length > 0;
+  }
+
   const proposals: Proposal[] = [
     { id: 1, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'OPEN' },
     { id: 2, title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
@@ -143,9 +150,11 @@
             {/if}
           </div>
 
-          <h3 class="cc-card-title">
-            {o.parsed.base}{o.parsed.options.length ? ':' : ''}
-          </h3>
+          {#if hasValue(o.parsed.base)}
+            <h3 class="cc-card-title">
+              {o.parsed.base}{o.parsed.options.length ? ':' : ''}
+            </h3>
+          {/if}
 
           {#if o.parsed.options.length}
             <ul class="cc-bullets">
@@ -155,7 +164,10 @@
             </ul>
           {/if}
 
-          <p class="cc-meta"><strong>Rule Deadline:</strong> {o.ruleDeadline ?? '—'}</p>
+          {#if hasValue(o.ruleDeadline)}
+            <p class="cc-meta"><strong>Rule Deadline:</strong> {o.ruleDeadline}</p>
+          {/if}
+
           {#if o.notes}<p class="cc-notes">{o.notes}</p>{/if}
         </article>
       {/each}
