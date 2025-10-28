@@ -60,9 +60,9 @@
   const previous: Outcome[] = [
     { title: 'Top 35 “Pro Bowlers” no trade-back', notes: 'Section 1.3.2', status: 'Approved', year: 2024 },
     { title: '“Best Roster” integrity rule', status: 'Rejected', year: 2024 },
-    { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', status: 'Approved', year: 2024 },
+    { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', notes: 'Section 1.1', status: 'Approved', year: 2024 },
     { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', notes: 'Defaulted to Sleeper settings', status: 'Approved', year: 2024 },
-    { title: 'Trade deadline moved to Week 7, midseason.', status: 'Approved', year: 2024 },
+    { title: 'Trade deadline moved to Week 7, midseason.', notes: 'Section 1.3.3', status: 'Approved', year: 2024 },
     { title: 'Divisions. Move to a four divisions structure.', status: 'Approved', year: 2024 },
     { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', status: 'Approved', year: 2024 },
     { title: 'Toilet Bowl rules. Section 3.4', status: 'Approved', year: 2025 },
