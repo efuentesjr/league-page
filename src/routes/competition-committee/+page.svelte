@@ -138,7 +138,7 @@
 
   <!-- PREVIOUS -->
   <section class="cc-section cc-section--white">
-    <h2 class="cc-section-title">Previous Outcomes of VOTES</h2>
+    <h2 class="cc-section-title">Previous Outcomes of Rule Votes</h2>
     <div class="cc-grid">
       {#each parsedPrevious as o, i (i)}
         <article class="cc-card cc-card--sm">
