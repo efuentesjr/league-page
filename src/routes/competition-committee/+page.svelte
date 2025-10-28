@@ -59,15 +59,15 @@
   // Previous outcomes now support statuses + year and OPTION parsing
   const previous: Outcome[] = [
     { title: 'Top 35 “Pro Bowlers” no trade-back', notes: 'Section 1.3.2', status: 'Approved', year: 2025 },
-    { title: '“Best Roster” integrity rule', ruleDeadline: 2025, status: 'Rejected', year: 2025 },
-    { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', ruleDeadline: 2025, status: 'Approved', year: 2025 },
-    { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', ruleDeadline: 2025, notes: 'Defaulted to Sleeper settings', status: 'Approved', year: 2025 },
-    { title: 'Trade deadline moved to Week 7, midseason.', ruleDeadline: 2026, status: 'Approved', year: 2026 },
-    { title: 'Divisions. Move to a four divisions structure.', ruleDeadline: 2026, status: 'Approved', year: 2026 },
-    { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', ruleDeadline: 2027, status: 'Approved', year: 2027 },
-    { title: 'Toilet Bowl rules. Section 3.4', ruleDeadline: 2027, status: 'Approved', year: 2027 },
-    { title: 'Manager replacement draft priority. New incoming manager may be given #1 draft pick, All 3 commish must approve', ruleDeadline: 2027, status: 'Enacted by Commish', year: 2027 },
-    { title: 'Loser’s punishment – 2 strike rule. Section 6.1', ruleDeadline: 2027, status: 'Enacted by Commish', year: 2027 }
+    { title: '“Best Roster” integrity rule', status: 'Rejected', year: 2025 },
+    { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', status: 'Approved', year: 2025 },
+    { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', notes: 'Defaulted to Sleeper settings', status: 'Approved', year: 2025 },
+    { title: 'Trade deadline moved to Week 7, midseason.', status: 'Approved', year: 2026 },
+    { title: 'Divisions. Move to a four divisions structure.', status: 'Approved', year: 2026 },
+    { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', status: 'Approved', year: 2027 },
+    { title: 'Toilet Bowl rules. Section 3.4', status: 'Approved', year: 2027 },
+    { title: 'Manager replacement draft priority. New incoming manager may be given #1 draft pick, All 3 commish must approve', status: 'Enacted by Commish', year: 2027 },
+    { title: 'Loser’s punishment – 2 strike rule. Section 6.1', status: 'Enacted by Commish', year: 2027 }
   ];
 
   // Precompute parsed proposals (avoid {#await} for sync work)
