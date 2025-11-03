@@ -60,14 +60,14 @@
   const previous: Outcome[] = [
     { title: 'Toilet Bowl rules.', notes: 'Section 2.1', status: 'Approved', year: 2025 },
     { title: 'Manager replacement draft priority. New incoming manager may be given #1 draft pick, All 3 commish must approve', notes: 'Section 6.0', status: 'Enacted by Commish', year: 2025 },
-    { title: 'Loser’s punishment – 2 strike rule.', notes: 'Section 6.1', status: 'Enacted by Commish', year: 2025 }
+    { title: 'Loser’s punishment – 2 strike rule.', notes: 'Section 6.1', status: 'Enacted by Commish', year: 2025 },
     { title: 'Top 35 “Pro Bowlers” no trade-back', notes: 'Section 1.3.2', status: 'Approved', year: 2024 },
     { title: '“Best Roster” integrity rule', status: 'Rejected', year: 2024 },
     { title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', notes: 'Section 1.1', status: 'Approved', year: 2024 },
     { title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', notes: 'Defaulted to Sleeper settings', status: 'Approved', year: 2024 },
     { title: 'Trade deadline moved to Week 7, midseason.', notes: 'Section 1.3.3', status: 'Approved', year: 2024 },
     { title: 'Divisions. Move to a four divisions structure.', notes: 'Section 1.2.1', status: 'Approved', year: 2024 },
-    { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', notes: 'Section 1.2.1', status: 'Approved', year: 2024 },
+    { title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', notes: 'Section 1.2.1', status: 'Approved', year: 2024 }
   ];
 
   // Precompute parsed proposals (avoid {#await} for sync work)
