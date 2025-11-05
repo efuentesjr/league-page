@@ -382,7 +382,10 @@
   <!-- ----------------- Paths to the Playoffs (placed after Tie) ----------------- -->
   {#if divisionPaths.length || playoffPaths.length || tieOnlyPaths.length}
     <div class="paths">
-      <h1 class="text-lg" style="color:#7dd3fc;">Path to the Playoffs</h1>
+      <h1 class="text-lg" style="color:#7dd3fc; font-size:1.125rem; line-height:1.5rem; margin:0;">
+          Path to the Playoffs
+      </h1>
+
       <div class="paths-note">
         Paths apply to the upcoming round. If Deep Analysis wasn’t selected, accuracy may be reduced.
       </div>
