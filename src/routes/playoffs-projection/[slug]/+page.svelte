@@ -36,6 +36,142 @@
     { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
     { label: 'Tie',      value: pctNumber(team.status?.tie) }
   ];
+
+  // ---------------- Paths to Clinch (inline; no new component) ----------------
+
+  // Make a stable key from the current page team name
+  function keyFor(name) {
+    const n = (name || '').toLowerCase();
+    if (n.includes('people')) return 'peoples';
+    if (n.includes('bay area')) return 'bayarea';
+    if (n.includes('cee') || n.includes('tds')) return 'ceedees';
+    return n;
+  }
+
+  // Split one OR-path into chips (we show chips for each *AND* condition)
+  function chipsFrom(line) {
+    return String(line)
+      .split(/\*AND\*/i)
+      .map((s) => s.trim().replace(/\s+/g, ' '))
+      .filter(Boolean)
+      .map((chunk) => {
+        const m = chunk.match(/(.+?)\s+(WINS|LOSES)$/i);
+        return m
+          ? { team: m[1].trim(), outcome: m[2].toUpperCase() }
+          : { team: chunk, outcome: '' };
+      });
+  }
+
+  // ---- DATA (exactly as provided; long lines unwrapped) ----
+
+  // The People’s Champ
+  const paths_peoples = {
+    division: [
+      "Do it to them LOSES",
+      "WINS"
+    ],
+    playoffs: [
+      "Do it to them LOSES",
+      "Vick2times LOSES",
+      "CeeDees TDs LOSES",
+      "WINS",
+      "bLuE BaLLeRs LOSES",
+      "Brute Force Att LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES",
+      "Brute Force Att LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* Pete Weber Bowl LOSES *AND* Los Loquitos LOSES *AND* Bay Area Party LOSES *AND* Loud and Stroud LOSES",
+      "Brute Force Att LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* Pete Weber Bowl LOSES *AND* Los Loquitos LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES",
+      "Brute Force Att LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Bay Area Party LOSES *AND* Loud and Stroud LOSES",
+      "Brute Force Att LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES",
+      "Brute Force Att LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* Pete Weber Bowl LOSES *AND* Los Loquitos LOSES *AND* Bay Area Party LOSES *AND* Loud and Stroud LOSES"
+    ],
+    tieonly: []
+  };
+
+  // Bay Area Party
+  const paths_bayarea = {
+    division: [],
+    playoffs: [
+      "Pete Weber Bowl LOSES",
+      "WINS",
+      "Do it to them LOSES *AND* The Comeback Ki LOSES *AND* PrimeTime Prodi LOSES",
+      "TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES",
+      "Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* PrimeTime Prodi LOSES",
+      "Chosen one. LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES",
+      "SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES",
+      "Brute Force Att LOSES *AND* PrimeTime Prodi LOSES *AND* Demboyz LOSES",
+      "The Comeback Ki LOSES *AND* PrimeTime Prodi LOSES *AND* Demboyz LOSES",
+      "Brute Force Att LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES",
+      "The Comeback Ki LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES",
+      "Brute Force Att LOSES *AND* Chosen one. LOSES *AND* PrimeTime Prodi LOSES",
+      "Brute Force Att LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES",
+      "The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* PrimeTime Prodi LOSES",
+      "The Comeback Ki LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Demboyz LOSES"
+    ],
+    tieonly: [
+      "Brute Force Att LOSES",
+      "The Comeback Ki LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Loud and Stroud LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Loud and Stroud LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Demboyz LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Loud and Stroud LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Demboyz LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Loud and Stroud LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Demboyz LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Loud and Stroud LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Demboyz LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Loud and Stroud LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Demboyz LOSES",
+      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Demboyz LOSES"
+    ]
+  };
+
+  // CeeDees TDs
+  const paths_ceedees = {
+    division: [],
+    playoffs: [
+      "WINS *AND* Do it to them LOSES *AND* TexasTimeshifts LOSES",
+      "WINS *AND* Do it to them LOSES *AND* Vick2times LOSES",
+      "WINS *AND* Do it to them LOSES *AND* Loud and Stroud LOSES",
+      "WINS *AND* Do it to them LOSES *AND* The Comeback Ki LOSES",
+      "WINS *AND* Do it to them LOSES *AND* Pete Weber Bowl LOSES",
+      "WINS *AND* Do it to them LOSES *AND* bLuE BaLLeRs LOSES",
+      "WINS *AND* Chosen one. LOSES *AND* Loud and Stroud LOSES",
+      "WINS *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES",
+      "WINS *AND* The Comeback Ki LOSES *AND* SlickBears LOSES",
+      "WINS *AND* The Comeback Ki LOSES *AND* bLuE BaLLeRs LOSES",
+      "WINS *AND* Chosen one. LOSES *AND* bLuE BaLLeRs LOSES",
+      "WINS *AND* SlickBears LOSES *AND* bLuE BaLLeRs LOSES",
+      "WINS *AND* Pete Weber Bowl LOSES *AND* bLuE BaLLeRs LOSES",
+      "WINS *AND* bLuE BaLLeRs LOSES *AND* Demboyz LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* Bay Area Party LOSES *AND* Loud and Stroud LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* Vick2times LOSES *AND* Pete Weber Bowl LOSES *AND* Bay Area Party LOSES *AND* Loud and Stroud LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* Vick2times LOSES *AND* Pete Weber Bowl LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Bay Area Party LOSES *AND* Loud and Stroud LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* Pete Weber Bowl LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* Pete Weber Bowl LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* TexasTimeshifts LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* Bay Area Party LOSES *AND* Loud and Stroud LOSES",
+      "WINS *AND* Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* TexasTimeshifts LOSES *AND* Vick2times LOSES *AND* Pete Weber Bowl LOSES *AND* Bay Area Party LOSES *AND* Demboyz LOSES"
+    ],
+    tieonly: []
+  };
+
+  // Choose lists for the active team tab
+  const k = keyFor(team.team);
+  const divisionPaths =
+    k === 'peoples' ? paths_peoples.division :
+    k === 'bayarea' ? paths_bayarea.division :
+    k === 'ceedees' ? paths_ceedees.division : [];
+  const playoffPaths =
+    k === 'peoples' ? paths_peoples.playoffs :
+    k === 'bayarea' ? paths_bayarea.playoffs :
+    k === 'ceedees' ? paths_ceedees.playoffs : [];
+  const tieOnlyPaths =
+    k === 'peoples' ? paths_peoples.tieonly :
+    k === 'bayarea' ? paths_bayarea.tieonly :
+    k === 'ceedees' ? paths_ceedees.tieonly : [];
 </script>
 
 <style>
@@ -166,6 +302,31 @@
     text-align: right;
     opacity: 0.9;
   }
+
+  /* ----- Paths section styling ----- */
+  .paths { max-width: 920px; margin-top: 2.25rem; }
+  .paths h3 { margin: 0 0 .25rem 0; }
+  .paths-note { color:#a1a1aa; font-size:.8rem; margin-top:.25rem; }
+
+  .card {
+    border: 1px solid #1f1f1f;
+    background: rgba(18,18,18,.6);
+    border-radius: 14px;
+    padding: .75rem .9rem;
+  }
+  .card + .card { margin-top: .6rem; }
+
+  .opt { color:#a1a1aa; font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:.35rem; }
+
+  .chip {
+    display:inline-flex; align-items:center;
+    border:1px solid #2a2a2a; border-radius:999px;
+    padding:.35rem .6rem; margin:.22rem .22rem 0 0;
+    font-size:.9rem; background:rgba(10,10,10,.6);
+  }
+  .chip .sep { width:1px; height:16px; background:#2a2a2a; margin:0 .5rem; }
+  .chip .win { color:#30e3a3; font-weight:700; font-size:.72rem; }
+  .chip .lose{ color:#ff6b6b; font-weight:700; font-size:.72rem; }
 </style>
 
 <div class="page">
@@ -217,4 +378,68 @@
       </div>
     {/each}
   </div>
+
+  <!-- ----------------- Paths to the Playoffs (placed after Tie) ----------------- -->
+  {#if divisionPaths.length || playoffPaths.length || tieOnlyPaths.length}
+    <div class="paths">
+      <h3 class="text-lg" style="color:#7dd3fc;">Path to the Playoffs</h3>
+      <div class="paths-note">
+        Paths apply to the upcoming round. If Deep Analysis wasn’t selected, accuracy may be reduced.
+      </div>
+
+      {#if divisionPaths.length}
+        <div style="margin-top:1rem; font-weight:600; color:#e5e7eb;">Clinch Division (any one):</div>
+        {#each divisionPaths as line, i}
+          <div class="card">
+            <div class="opt">Option {i + 1}</div>
+            {#each chipsFrom(line) as c}
+              <span class="chip">
+                <span>{c.team}</span>
+                {#if c.outcome}
+                  <span class="sep"></span>
+                  <span class={c.outcome === 'WINS' ? 'win' : 'lose'}>{c.outcome}</span>
+                {/if}
+              </span>
+            {/each}
+          </div>
+        {/each}
+      {/if}
+
+      {#if playoffPaths.length}
+        <div style="margin-top:1.25rem; font-weight:600; color:#e5e7eb;">Clinch Playoff Spot (any one):</div>
+        {#each playoffPaths as line, i}
+          <div class="card">
+            <div class="opt">Option {i + 1}</div>
+            {#each chipsFrom(line) as c}
+              <span class="chip">
+                <span>{c.team}</span>
+                {#if c.outcome}
+                  <span class="sep"></span>
+                  <span class={c.outcome === 'WINS' ? 'win' : 'lose'}>{c.outcome}</span>
+                {/if}
+              </span>
+            {/each}
+          </div>
+        {/each}
+      {/if}
+
+      {#if tieOnlyPaths.length}
+        <div style="margin-top:1.25rem; font-weight:600; color:#e5e7eb;">Can Do No Worse Than a Tie:</div>
+        {#each tieOnlyPaths as line, i}
+          <div class="card">
+            <div class="opt">Option {i + 1}</div>
+            {#each chipsFrom(line) as c}
+              <span class="chip">
+                <span>{c.team}</span>
+                {#if c.outcome}
+                  <span class="sep"></span>
+                  <span class={c.outcome === 'WINS' ? 'win' : 'lose'}>{c.outcome}</span>
+                {/if}
+              </span>
+            {/each}
+          </div>
+        {/each}
+      {/if}
+    </div>
+  {/if}
 </div>
