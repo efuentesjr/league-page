@@ -37,6 +37,19 @@
     { label: 'Tie',      value: pctNumber(team.status?.tie) }
   ];
 
+  // ---------------- Elimination badges ----------------
+  function isEliminated(val) {
+    return typeof val === 'string' && val.trim().toLowerCase() === 'eliminated';
+  }
+  function isPossibleElim(val) {
+    // supports "Possible Elimination"
+    return typeof val === 'string' && val.trim().toLowerCase().startsWith('possible');
+  }
+
+  const divElim = isEliminated(team.status?.division);
+  const poElim  = isEliminated(team.status?.playoffs);
+  const poPoss  = isPossibleElim(team.status?.playoffs);
+
   // ---------------- Paths to Clinch (inline; no new component) ----------------
 
   // Make a stable key from the current page team name
@@ -270,6 +283,17 @@
     font-weight: 600;
   }
 
+  /* Elimination badges */
+  .badges { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.6rem; }
+  .pill {
+    display:inline-flex; align-items:center; gap:.4rem;
+    padding:.25rem .55rem; border-radius:999px; font-size:.75rem; font-weight:600;
+    border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04);
+  }
+  .pill .dot { width:.5rem; height:.5rem; border-radius:999px; }
+  .dot-red   { background:#ef4444; }
+  .dot-amber { background:#f59e0b; }
+
   /* Odds bars */
   .odds {
     margin-top: 1.5rem;
@@ -305,11 +329,7 @@
 
   /* ----- Paths section styling ----- */
   .paths { max-width: 920px; margin-top: 2.25rem; }
-  .paths h3, .paths h1 { margin: 0 0 .25rem 0; }
-
-  /* keep h1 small */
-  .h1-compact { font-size:1.125rem; line-height:1.5rem; margin:0; }
-
+  .paths h3 { margin: 0 0 .25rem 0; }
   .paths-note { color:#a1a1aa; font-size:.8rem; margin-top:.25rem; }
 
   .card {
@@ -371,6 +391,21 @@
     </li>
   </ul>
 
+  <!-- Elimination badges -->
+  {#if divElim || poElim || poPoss}
+    <div class="badges">
+      {#if divElim}
+        <span class="pill"><span class="dot dot-red"></span> Eliminated from Division</span>
+      {/if}
+      {#if poElim}
+        <span class="pill"><span class="dot dot-red"></span> Eliminated from Playoffs</span>
+      {/if}
+      {#if poPoss}
+        <span class="pill"><span class="dot dot-amber"></span> Possible Elimination (Playoffs)</span>
+      {/if}
+    </div>
+  {/if}
+
   <div class="odds">
     {#each odds as o}
       <div class="row">
@@ -386,7 +421,7 @@
   <!-- ----------------- Paths to the Playoffs (placed after Tie) ----------------- -->
   {#if divisionPaths.length || playoffPaths.length || tieOnlyPaths.length}
     <div class="paths">
-      <h1 class="text-lg h1-compact" style="color:#7dd3fc;">Path to the Playoffs</h1>
+      <h3 class="text-lg" style="color:#7dd3fc;">Path to the Playoffs</h3>
       <div class="paths-note">
         Paths apply to the upcoming round. If Deep Analysis wasn’t selected, accuracy may be reduced.
       </div>
