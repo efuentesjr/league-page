@@ -42,8 +42,10 @@
     return typeof val === 'string' && val.trim().toLowerCase() === 'eliminated';
   }
   function isPossibleElim(val) {
-    // supports "Possible Elimination"
-    return typeof val === 'string' && val.trim().toLowerCase().startsWith('possible');
+    // supports both "Possible Elimination" and the legacy "Poss. Elim."
+    if (typeof val !== 'string') return false;
+    const v = val.trim().toLowerCase();
+    return v.startsWith('possible elim') || v.startsWith('poss.');
   }
 
   const divElim = isEliminated(team.status?.division);
@@ -329,7 +331,7 @@
 
   /* ----- Paths section styling ----- */
   .paths { max-width: 920px; margin-top: 2.25rem; }
-  .paths h3 { margin: 0 0 .25rem 0; }
+  .paths h1 { margin: 0 0 .25rem 0; }
   .paths-note { color:#a1a1aa; font-size:.8rem; margin-top:.25rem; }
 
   .card {
@@ -395,7 +397,7 @@
   {#if divElim || poElim || poPoss}
     <div class="badges">
       {#if divElim}
-        <span class="pill"><span class="dot dot-red"></span> Eliminated from Division</span>
+        <span class="pill"><span class="dot dot-red"></span> Eliminated from Division Champion</span>
       {/if}
       {#if poElim}
         <span class="pill"><span class="dot dot-red"></span> Eliminated from Playoffs</span>
@@ -421,7 +423,7 @@
   <!-- ----------------- Paths to the Playoffs (placed after Tie) ----------------- -->
   {#if divisionPaths.length || playoffPaths.length || tieOnlyPaths.length}
     <div class="paths">
-      <h3 class="text-lg" style="color:#7dd3fc;">Path to the Playoffs</h3>
+      <h1 class="text-lg" style="color:#7dd3fc;">Path to the Playoffs</h1>
       <div class="paths-note">
         Paths apply to the upcoming round. If Deep Analysis wasn’t selected, accuracy may be reduced.
       </div>
