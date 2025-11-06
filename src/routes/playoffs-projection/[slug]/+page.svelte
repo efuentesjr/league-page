@@ -305,7 +305,11 @@
 
   /* ----- Paths section styling ----- */
   .paths { max-width: 920px; margin-top: 2.25rem; }
-  .paths h3 { margin: 0 0 .25rem 0; }
+  .paths h3, .paths h1 { margin: 0 0 .25rem 0; }
+
+  /* keep h1 small */
+  .h1-compact { font-size:1.125rem; line-height:1.5rem; margin:0; }
+
   .paths-note { color:#a1a1aa; font-size:.8rem; margin-top:.25rem; }
 
   .card {
@@ -382,10 +386,7 @@
   <!-- ----------------- Paths to the Playoffs (placed after Tie) ----------------- -->
   {#if divisionPaths.length || playoffPaths.length || tieOnlyPaths.length}
     <div class="paths">
-      <h1 class="text-lg" style="color:#7dd3fc; font-size:1.125rem; line-height:1.5rem; margin:0;">
-          Path to the Playoffs
-      </h1>
-
+      <h1 class="text-lg h1-compact" style="color:#7dd3fc;">Path to the Playoffs</h1>
       <div class="paths-note">
         Paths apply to the upcoming round. If Deep Analysis wasn’t selected, accuracy may be reduced.
       </div>
