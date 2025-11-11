@@ -27,7 +27,13 @@
   // Helpers for percentages
   function pctNumber(x) {
     if (x == null) return 0;
-    const n = Number(String(x).replace('%', '').trim());
+    const s = String(x).trim().toLowerCase();
+
+    // Text statuses
+    if (s.includes('clinched')) return 100;
+    if (s.includes('eliminated')) return 0;
+
+    const n = Number(s.replace('%', '').trim());
     return isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
   }
 
@@ -37,20 +43,29 @@
     { label: 'Title',    value: pctNumber(team.status?.title) }
   ];
 
-  // ---------------- Elimination badges ----------------
+  // ---------------- Elimination / Clinch badges ----------------
   function isEliminated(val) {
     return typeof val === 'string' && val.trim().toLowerCase() === 'eliminated';
   }
-  function isPossibleElim(val) {
-    // supports both "Possible Elimination" and the legacy "Poss. Elim."
-    if (typeof val !== 'string') return false;
-    const v = val.trim().toLowerCase();
-    return v.startsWith('possible elim') || v.startsWith('poss.');
+
+  function isClinched(val) {
+    return typeof val === 'string' && val.trim().toLowerCase() === 'clinched';
   }
 
-  const divElim = isEliminated(team.status?.division);
-  const poElim  = isEliminated(team.status?.playoffs);
-  const poPoss  = isPossibleElim(team.status?.playoffs);
+  // Only treat values that explicitly mention "elim" as possible elimination.
+  // This avoids misreading "Poss. Clinched" as "Possible Elimination".
+  function isPossibleElim(val) {
+    if (typeof val !== 'string') return false;
+    const v = val.trim().toLowerCase();
+    if (!v.includes('elim')) return false; // must actually be about elimination
+    return v.startsWith('possible elim') || v.startsWith('poss. elim');
+  }
+
+  const divElim     = isEliminated(team.status?.division);
+  const poElim      = isEliminated(team.status?.playoffs);
+  const poPoss      = isPossibleElim(team.status?.playoffs);
+  const divClinched = isClinched(team.status?.division);
+  const poClinched  = isClinched(team.status?.playoffs);
 
   // ---------------- Paths to Clinch (inline; no new component) ----------------
 
@@ -77,7 +92,7 @@
       });
   }
 
-  // ---- NEW Paths-to-Clinch data (exactly from your latest text) ----
+  // ---- NEW Paths-to-Clinch data (exact from your latest text) ----
 
   // Brute Force Att
   const paths_bruteforce = {
@@ -126,8 +141,6 @@
       "Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Pete Weber Bowl LOSES *AND* bLuE BaLLeRs LOSES *AND* CeeDees TDs LOSES",
       "Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Pete Weber Bowl LOSES *AND* bLuE BaLLeRs LOSES *AND* Loud and Stroud LOSES"
     ],
-    // Text note: "Bay Area Party can already do no worse than end up tied for a spot"
-    // We keep tie-only list empty here.
     tieonly: []
   };
 
@@ -243,7 +256,7 @@
     font-weight: 600;
   }
 
-  /* Elimination badges */
+  /* Elimination / clinch badges */
   .badges { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.6rem; }
   .pill {
     display:inline-flex; align-items:center; gap:.4rem;
@@ -253,6 +266,7 @@
   .pill .dot { width:.5rem; height:.5rem; border-radius:999px; }
   .dot-red   { background:#ef4444; }
   .dot-amber { background:#f59e0b; }
+  .dot-green { background:#22c55e; }
 
   /* Odds bars */
   .odds {
@@ -357,11 +371,17 @@
     </li>
   </ul>
 
-  <!-- Elimination badges -->
-  {#if divElim || poElim || poPoss}
+  <!-- Elimination / Clinch badges -->
+  {#if divElim || poElim || poPoss || divClinched || poClinched}
     <div class="badges">
+      {#if divClinched}
+        <span class="pill"><span class="dot dot-green"></span> Clinched Division</span>
+      {/if}
+      {#if poClinched}
+        <span class="pill"><span class="dot dot-green"></span> Clinched Playoff Berth</span>
+      {/if}
       {#if divElim}
-        <span class="pill"><span class="dot dot-red"></span> Eliminated from Division Champion</span>
+        <span class="pill"><span class="dot dot-red"></span> Eliminated from Division</span>
       {/if}
       {#if poElim}
         <span class="pill"><span class="dot dot-red"></span> Eliminated from Playoffs</span>
