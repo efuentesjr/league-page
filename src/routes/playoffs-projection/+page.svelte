@@ -41,7 +41,7 @@
     catch { return iso; }
   }
 
-  // Build + sort rows reactively
+  // ---------- build + sort rows ----------
   let rows = [];
   $: rows = (projections || [])
     .filter((p) => p?.slug)
@@ -59,12 +59,12 @@
       gIn: p.gIn ?? '',
       divTgts: p.divTgts ?? ''
     }))
+    // --------- sort by record (wins → losses → ties → points) ---------
     .sort((a, b) => {
-      const A = parsePlayStatus(a.playStatus);
-      const B = parsePlayStatus(b.playStatus);
-      if (B.c !== A.c) return B.c - A.c;   // Clinch % desc
-      if (B.t !== A.t) return B.t - A.t;   // then Tiebreak % desc
-      return (a.slug || '').localeCompare(b.slug || '');
+      if (b.wins !== a.wins) return b.wins - a.wins;        // more wins first
+      if (a.losses !== b.losses) return a.losses - b.losses; // fewer losses next
+      if (b.ties !== a.ties) return b.ties - a.ties;        // then more ties
+      return (b.points ?? 0) - (a.points ?? 0);             // finally by points desc
     });
 </script>
 
@@ -100,29 +100,27 @@
             <th>DivTgts</th>
           </tr>
         </thead>
-<tbody>
-  {#each rows as r (r.slug)}
-    <tr>
-      <td>{r.division}</td>
-      <td class="teamcell">
-        <a class="teamlink" href={`/playoffs-projection/${r.slug}`}>
-          <!-- Sleeper avatar auto-resolves from slug → managerID → users[owner].avatar -->
-          <SleeperAvatar slug={r.slug} size={24} alt={labelFor(r.slug)} />
-          <span class="name">{labelFor(r.slug)}</span>
-        </a>
-      </td>
-      <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
-      <td>{r.points ?? 0}</td>
-      <td>{r.divStatus ?? ''}</td>
-      <td>{r.playStatus ?? ''}</td>
-      <td>{r.min ?? ''}</td>
-      <td>{r.targets ?? ''}</td>
-      <td>{r.gIn ?? ''}</td>
-      <td>{r.divTgts ?? ''}</td>
-    </tr>
-  {/each}
-</tbody>
-
+        <tbody>
+          {#each rows as r (r.slug)}
+            <tr>
+              <td>{r.division}</td>
+              <td class="teamcell">
+                <a class="teamlink" href={`/playoffs-projection/${r.slug}`}>
+                  <SleeperAvatar slug={r.slug} size={24} alt={labelFor(r.slug)} />
+                  <span class="name">{labelFor(r.slug)}</span>
+                </a>
+              </td>
+              <td>{r.wins}-{r.losses}{#if r.ties && r.ties > 0}-{r.ties}{/if}</td>
+              <td>{r.points ?? 0}</td>
+              <td>{r.divStatus ?? ''}</td>
+              <td>{r.playStatus ?? ''}</td>
+              <td>{r.min ?? ''}</td>
+              <td>{r.targets ?? ''}</td>
+              <td>{r.gIn ?? ''}</td>
+              <td>{r.divTgts ?? ''}</td>
+            </tr>
+          {/each}
+        </tbody>
       </table>
     {/if}
   </div>
@@ -166,11 +164,32 @@
   background: rgba(0,0,0,0.35);
   border-radius: 8px;
 }
-.overlay table { width: 100%; border-collapse: collapse; font-size: 0.8rem; line-height: 1.1rem; }
-.overlay th, .overlay td { padding: 4px 6px; text-align: center; white-space: nowrap; }
-.overlay th { background: rgba(0,0,0,0.55); color: white; position: sticky; top: 0; z-index: 1; }
-.overlay td { color: white; border-bottom: 1px solid rgba(255,255,255,0.12); }
-.overlay td:first-child, .overlay td:nth-child(2) { text-align: left; }
+.overlay table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  line-height: 1.1rem;
+}
+.overlay th, .overlay td {
+  padding: 4px 6px;
+  text-align: center;
+  white-space: nowrap;
+}
+.overlay th {
+  background: rgba(0,0,0,0.55);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.overlay td {
+  color: white;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.overlay td:first-child,
+.overlay td:nth-child(2) {
+  text-align: left;
+}
 .teamcell { display:flex; align-items:center; gap: 8px; }
 
 .teamlink {
