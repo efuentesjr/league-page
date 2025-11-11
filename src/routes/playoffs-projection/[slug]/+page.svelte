@@ -48,8 +48,10 @@
     return typeof val === 'string' && val.trim().toLowerCase() === 'eliminated';
   }
 
+  // FIX: treat anything containing "clinched" as clinched
   function isClinched(val) {
-    return typeof val === 'string' && val.trim().toLowerCase() === 'clinched';
+    if (typeof val !== 'string') return false;
+    return val.trim().toLowerCase().includes('clinched');
   }
 
   // Only treat values that explicitly mention "elim" as possible elimination.
@@ -92,7 +94,7 @@
       });
   }
 
-  // ---- NEW Paths-to-Clinch data (exact from your latest text) ----
+  // ---- Paths-to-Clinch data (from your latest text) ----
 
   // Brute Force Att
   const paths_bruteforce = {
