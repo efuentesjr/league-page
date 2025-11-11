@@ -77,7 +77,7 @@
       });
   }
 
-  // ---- DATA: NEW "Paths to Clinch" from your latest output ----
+  // ---- NEW Paths-to-Clinch data (exactly from your latest text) ----
 
   // Brute Force Att
   const paths_bruteforce = {
@@ -126,22 +126,9 @@
       "Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Pete Weber Bowl LOSES *AND* bLuE BaLLeRs LOSES *AND* CeeDees TDs LOSES",
       "Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Pete Weber Bowl LOSES *AND* bLuE BaLLeRs LOSES *AND* Loud and Stroud LOSES"
     ],
-    tieonly: [
-      "Brute Force Att LOSES",
-      "The Comeback Ki LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Loud and Stroud LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Loud and Stroud LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Demboyz LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Loud and Stroud LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* TexasTimeshifts LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Demboyz LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Loud and Stroud LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Demboyz LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Loud and Stroud LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* Vick2times LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Demboyz LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Loud and Stroud LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES *AND* Demboyz LOSES",
-      "Do it to them LOSES *AND* The People’s Ch LOSES *AND* Chosen one. LOSES *AND* SlickBears LOSES *AND* PrimeTime Prodi LOSES *AND* Los Loquitos LOSES *AND* Demboyz LOSES"
-    ]
+    // Text note: "Bay Area Party can already do no worse than end up tied for a spot"
+    // We keep tie-only list empty here.
+    tieonly: []
   };
 
   // Choose lists for the active team tab
@@ -302,7 +289,6 @@
 
   /* ----- Paths section styling ----- */
   .paths { max-width: 920px; margin-top: 2.25rem; }
-  .paths h1 { margin: 0 0 .25rem 0; }
   .paths-note { color:#a1a1aa; font-size:.8rem; margin-top:.25rem; }
 
   .paths-title {
