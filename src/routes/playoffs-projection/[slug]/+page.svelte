@@ -40,7 +40,7 @@
   const odds = [
     { label: 'Division', value: pctNumber(team.status?.division) },
     { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
-    { label: 'Title',    value: pctNumber(team.status?.title) }
+    { label: 'Tie',    value: pctNumber(team.status?.tie) }
   ];
 
   // ---------------- Elimination / Clinch badges ----------------
