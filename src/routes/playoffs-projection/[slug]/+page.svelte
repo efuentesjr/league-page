@@ -76,7 +76,8 @@
     const n = (name || '').toLowerCase();
     if (n.includes('brute')) return 'bruteforce';
     if (n.includes('chosen')) return 'chosen';
-    if (n.includes('bay area')) return 'bayarea';
+    if (n.includes('slick')) return 'slick';
+    if (n.includes('cee')) return 'ceedees';
     return n;
   }
 
@@ -94,55 +95,52 @@
       });
   }
 
-  // ---- Paths-to-Clinch data (from your latest text) ----
+  // ---- Paths-to-Clinch data (UPDATED) ----
 
   // Brute Force Att
   const paths_bruteforce = {
     division: [],
     playoffs: [
       "WINS *AND* PrimeTime Prodi LOSES",
-      "WINS *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* TexasTimeshifts LOSES *AND* Demboyz LOSES *AND* bLuE BaLLeRs LOSES *AND* Bay Area Party LOSES *AND* CeeDees TDs LOSES"
+      "WINS *AND* SlickBears LOSES *AND* bLuE BaLLeRs LOSES *AND* Demboyz LOSES"
     ],
     tieonly: [
-      "WINS *AND* TexasTimeshifts LOSES",
-      "WINS *AND* bLuE BaLLeRs LOSES",
-      "WINS *AND* Los Loquitos LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Demboyz LOSES *AND* Vick2times LOSES *AND* Bay Area Party LOSES *AND* CeeDees TDs LOSES",
-      "WINS *AND* Los Loquitos LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Pete Weber Bowl LOSES *AND* Vick2times LOSES *AND* Bay Area Party LOSES *AND* CeeDees TDs LOSES",
-      "WINS *AND* The Comeback Ki LOSES *AND* Do it to them LOSES *AND* The People’s Ch LOSES *AND* Demboyz LOSES *AND* Vick2times LOSES *AND* Bay Area Party LOSES *AND* Loud and Stroud LOSES",
-      "WINS *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Demboyz LOSES *AND* Vick2times LOSES *AND* Bay Area Party LOSES *AND* CeeDees TDs LOSES"
+      "WINS"
     ]
   };
 
   // Chosen one.
   const paths_chosen = {
     division: [
-      "WINS *AND* Los Loquitos LOSES *AND* Pete Weber Bowl LOSES"
+      "WINS",
+      "Blue Tent All-S LOSES"
     ],
     playoffs: [
-      "WINS *AND* Los Loquitos LOSES *AND* Pete Weber Bowl LOSES"
+      "WINS",
+      "Blue Tent All-S LOSES",
+      "The Comeback Ki LOSES *AND* SlickBears LOSES *AND* Do it to them LOSES *AND* Los Loquitos LOSES *AND* bLuE BaLLeRs LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES",
+      "The Comeback Ki LOSES *AND* SlickBears LOSES *AND* Do it to them LOSES *AND* Los Loquitos LOSES *AND* bLuE BaLLeRs LOSES *AND* PrimeTime Prodi LOSES *AND* Bay Area Party LOSES",
+      "The Comeback Ki LOSES *AND* SlickBears LOSES *AND* The People’s Ch LOSES *AND* Los Loquitos LOSES *AND* bLuE BaLLeRs LOSES *AND* PrimeTime Prodi LOSES *AND* CeeDees TDs LOSES",
+      "The Comeback Ki LOSES *AND* SlickBears LOSES *AND* The People’s Ch LOSES *AND* Los Loquitos LOSES *AND* bLuE BaLLeRs LOSES *AND* PrimeTime Prodi LOSES *AND* Bay Area Party LOSES"
     ],
     tieonly: []
   };
 
-  // Bay Area Party
-  const paths_bayarea = {
+  // SlickBears
+  const paths_slick = {
     division: [],
-    playoffs: [
-      "WINS",
-      "SlickBears LOSES *AND* TexasTimeshifts LOSES",
-      "SlickBears LOSES *AND* bLuE BaLLeRs LOSES",
-      "TexasTimeshifts LOSES *AND* bLuE BaLLeRs LOSES",
-      "SlickBears LOSES *AND* Los Loquitos LOSES *AND* Do it to them LOSES *AND* The People’s Ch LOSES *AND* Pete Weber Bowl LOSES *AND* Vick2times LOSES *AND* CeeDees TDs LOSES",
-      "SlickBears LOSES *AND* The Comeback Ki LOSES *AND* Do it to them LOSES *AND* The People’s Ch LOSES *AND* Demboyz LOSES *AND* Vick2times LOSES *AND* CeeDees TDs LOSES",
-      "SlickBears LOSES *AND* The Comeback Ki LOSES *AND* Do it to them LOSES *AND* The People’s Ch LOSES *AND* Demboyz LOSES *AND* Vick2times LOSES *AND* Loud and Stroud LOSES",
-      "Brute Force Att LOSES *AND* Los Loquitos LOSES *AND* Do it to them LOSES *AND* TexasTimeshifts LOSES *AND* Pete Weber Bowl LOSES *AND* Vick2times LOSES *AND* Loud and Stroud LOSES",
-      "Brute Force Att LOSES *AND* Los Loquitos LOSES *AND* Chosen one. LOSES *AND* TexasTimeshifts LOSES *AND* Demboyz LOSES *AND* Vick2times LOSES *AND* Loud and Stroud LOSES",
-      "Brute Force Att LOSES *AND* Los Loquitos LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Demboyz LOSES *AND* bLuE BaLLeRs LOSES *AND* Loud and Stroud LOSES",
-      "Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* TexasTimeshifts LOSES *AND* Demboyz LOSES *AND* Vick2times LOSES *AND* Loud and Stroud LOSES",
-      "Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Demboyz LOSES *AND* bLuE BaLLeRs LOSES *AND* Loud and Stroud LOSES",
-      "Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Pete Weber Bowl LOSES *AND* bLuE BaLLeRs LOSES *AND* CeeDees TDs LOSES",
-      "Brute Force Att LOSES *AND* The Comeback Ki LOSES *AND* Chosen one. LOSES *AND* The People’s Ch LOSES *AND* Pete Weber Bowl LOSES *AND* bLuE BaLLeRs LOSES *AND* Loud and Stroud LOSES"
+    playoffs: [],
+    tieonly: [
+      "WINS *AND* The Comeback Ki LOSES *AND* Blue Tent All-S LOSES *AND* PrimeTime Prodi LOSES"
+    ]
+  };
+
+  // CeeDees TDs
+  const paths_ceedees = {
+    division: [
+      "WINS"
     ],
+    playoffs: [],
     tieonly: []
   };
 
@@ -151,15 +149,18 @@
   const divisionPaths =
     k === 'bruteforce' ? paths_bruteforce.division :
     k === 'chosen'      ? paths_chosen.division :
-    k === 'bayarea'     ? paths_bayarea.division : [];
+    k === 'slick'       ? paths_slick.division :
+    k === 'ceedees'     ? paths_ceedees.division : [];
   const playoffPaths =
     k === 'bruteforce' ? paths_bruteforce.playoffs :
     k === 'chosen'      ? paths_chosen.playoffs :
-    k === 'bayarea'     ? paths_bayarea.playoffs : [];
+    k === 'slick'       ? paths_slick.playoffs :
+    k === 'ceedees'     ? paths_ceedees.playoffs : [];
   const tieOnlyPaths =
     k === 'bruteforce' ? paths_bruteforce.tieonly :
     k === 'chosen'      ? paths_chosen.tieonly :
-    k === 'bayarea'     ? paths_bayarea.tieonly : [];
+    k === 'slick'       ? paths_slick.tieonly :
+    k === 'ceedees'     ? paths_ceedees.tieonly : [];
 </script>
 
 <style>
