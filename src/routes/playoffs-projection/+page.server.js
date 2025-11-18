@@ -9,7 +9,7 @@ const slugMap = {
   'CeeDees TDs': 'ceedees-tds',          // fixed case/typo
   'Chosen one.': 'chosen-one',
   'Peoples Champ': 'peoples-champ',
-  'Pete Weber B': 'pete-weber-bowl-club',
+  'Blue Tent Al': 'blue-tent-all-stars',
   'Los Loquitos': 'los-loquitos',
   'bLuE BaLLeRs': 'blue-ballers',
   'TexasTimeshi': 'texastimeshifts',
@@ -29,7 +29,7 @@ const slugToRosterId = {
   'ceedees-tds':             852068353894916096,
   'chosen-one':              846592470551732224,
   'peoples-champ':           849793148648546304,
-  'pete-weber-bowl-club':    850894566360997888,
+  'blue-tent-all-stars':     850894566360997888,
   'los-loquitos':            851154711770939392,
   'blue-ballers':            851243503987032064,
   'texastimeshifts':         851923896448942080,
