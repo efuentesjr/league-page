@@ -43,7 +43,7 @@
   }
 
   const proposals: Proposal[] = [
-    { id: 1, title: 'Offer incentives for Divisional Champs. OPTION#1 $25 payout, would require Fee increase. ', owner: 'Jordan Fristoe / Nick Bowens', status: 'OPEN' },
+    { id: 1, title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout, would require Fee increase. ', owner: 'Jordan Fristoe / Nick Bowens', status: 'OPEN' },
     { id: 2, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'OPEN' },
     { id: 3, title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
     { id: 4, title: 'Draw for 2026 draft order', owner: 'League', status: 'OPEN' },
