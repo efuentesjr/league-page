@@ -43,17 +43,17 @@
   }
 
   const proposals: Proposal[] = [
-    { id: 1, title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league Fee increase). OPTION#2: A bye week for the 1st round of playoffs. (Would require begining playoffs WK13 or end WK18). ', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
-    { id: 2, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'OPEN' },
-    { id: 3, title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
-    { id: 4, title: 'Draw for 2026 draft order', owner: 'League', status: 'OPEN' },
-    { id: 5, title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. OPTION#1: Only allow 1 team. Hold an auction, winner gets one entry. OPTION#2: Only allow non-playoff teams. OPTION#3: Allow non-top 3 teams.', owner: 'Ray Rodriguez', status: 'NEW' },
-    { id: 6, title: 'Allow teams to buy by way of FAAB, the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
-    { id: 7, title: 'Review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'OPEN' },
-    { id: 8, title: 'Punt return yards scoring (re-vote)', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
-    { id: 9, title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 16. OPTION#2: RBs 20. OPTION#3: WRs 25. OPTION#4: TEs 10.', owner: 'Commish', status: 'OPEN' },
+    { id: 1, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'OPEN' },
+    { id: 2, title: 'Review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'OPEN' },
+    { id: 3, title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 16. OPTION#2: RBs 20. OPTION#3: WRs 25. OPTION#4: TEs 10.', owner: 'Commish', status: 'OPEN' },
+    { id: 4, title: 'Punt return yards scoring (re-vote)', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'OPEN' },
+    { id: 5, title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league Fee increase). OPTION#2: A bye week for the 1st round of playoffs. (Would require begining playoffs WK13 or end WK18). ', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
+    { id: 6, title: 'When trading future picks you'll need to pay some additiona $$$, in addition to regular fees and those fees will goes towards that years fees', owner: 'John Diaz-DeCaro', status: 'NEW' },
+    { id: 7, title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+    { id: 8, title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. OPTION#1: Only allow 1 team. Hold an auction, winner gets one entry. OPTION#2: Only allow non-playoff teams. OPTION#3: Allow non-top 3 teams.', owner: 'Ray Rodriguez', status: 'NEW' },
+    { id: 9, title: 'Allow teams to buy by way of FAAB, the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
     { id: 10, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB. OPTION#2: No trade backs on all players involved. OPTION#3: When a trade involves pick only or non impact players, it must be offered to the entire league.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
-    { id: 11, title: 'When trading future picks you\'ll need to pay some additiona $$$, in addition to regular fees and those fees will goes towards that years fees', owner: 'John Diaz-DeCaro', status: 'NEW' },
+    { id: 11, title: 'Draw for 2026 draft order', owner: 'League', status: 'OPEN' },
     { id: 12, title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'OPEN' }
   ];
 
