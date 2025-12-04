@@ -330,12 +330,24 @@
     letter-spacing: 0.02em;
   }
 
-  .cc-chip--new  { background:#fff4db; color:#8b5b00; border-color:#f6dfaa; }
-  .cc-chip--open { background:#eaf2ff; color:#0b4eb3; border-color:#cfdcfd; }
-  .cc-chip--ok   { background:#e8f7ed; color:#197a45; border-color:#cfeedd; }
-  .cc-chip--bad  { background:#ffecec; color:#b42318; border-color:#ffd1d1; }
-  .cc-chip--hold { background:#fff3e8; color:#b25e09; border-color:#ffd9b8; }
-  .cc-chip--commish { background:#eef2ff; color:#3730a3; border-color:#dbe1ff; }
+    .cc-chip--new  { background:#fff4db; color:#8b5b00; border-color:#f6dfaa; }
+    .cc-chip--open { background:#eaf2ff; color:#0b4eb3; border-color:#cfdcfd; }
+    .cc-chip--ok   { background:#e8f7ed; color:#197a45; border-color:#cfeedd; }
+    .cc-chip--bad  { background:#ffecec; color:#b42318; border-color:#ffd1d1; }
+    .cc-chip--hold { background:#fff3e8; color:#b25e09; border-color:#ffd9b8; }
+    .cc-chip--commish { background:#eef2ff; color:#3730a3; border-color:#dbe1ff; }
+
+    .cc-chip--yearly {
+      background:#e4f9ff;
+      color:#076b7c;
+      border-color:#bdefff;
+  }
+
+    .cc-chip--revote {
+      background:#fff6e6;
+      color:#b45d00;
+      border-color:#ffe1b3;
+  }
 
   .cc-year-block {
     margin-bottom: 1rem;
