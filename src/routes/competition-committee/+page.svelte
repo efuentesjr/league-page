@@ -1,6 +1,8 @@
 <script lang="ts">
   export const prerender = true;
 
+  import { slide } from 'svelte/transition';
+
   type Proposal = {
     id: number;
     title: string;
@@ -12,21 +14,23 @@
   type OutcomeStatus = 'Approved' | 'Rejected' | 'Enacted by Commish';
 
   type Outcome = {
+    id?: number;
     title: string;
     ruleDeadline?: string | number;
     notes?: string;
-    status?: OutcomeStatus;   // new explicit status
-    year?: number;            // optional year shown next to status
+    status?: OutcomeStatus;
+    year?: number;
   };
 
   // --- Helpers ---------------------------------------------------------------
   function splitOptions(title: string): { base: string; options: string[] } {
-    // capture OPTION#N: ... segments (non-greedy until next OPTION or end)
     const re = /OPTION#\d+:\s*([\s\S]*?)(?=(?:\s*OPTION#\d+:|$))/g;
     const options: string[] = [];
 
     const firstIdx = title.search(/OPTION#\d+:/);
-    const base = (firstIdx !== -1 ? title.slice(0, firstIdx) : title).trim().replace(/[.\s]+$/, '');
+    const base = (firstIdx !== -1 ? title.slice(0, firstIdx) : title)
+      .trim()
+      .replace(/[.\s]+$/, '');
 
     let m: RegExpExecArray | null;
     while ((m = re.exec(title)) !== null) {
@@ -35,11 +39,9 @@
     return { base, options };
   }
 
-  // render guard for optional fields (handles string/number/blank)
   function hasValue(x: unknown): boolean {
     if (x === undefined || x === null) return false;
-    const s = String(x);
-    return s.trim().length > 0;
+    return String(x).trim().length > 0;
   }
 
   const proposals: Proposal[] = [
@@ -57,12 +59,11 @@
     { id: 12, title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'OPEN' }
   ];
 
-
-  // Previous outcomes now support statuses + year and OPTION parsing
   const previous: Outcome[] = [
     { id: 1, title: 'Toilet Bowl rules.', notes: 'Section 2.1', status: 'Approved', year: 2025 },
     { id: 2, title: 'Manager replacement draft priority. New incoming manager may be given #1 draft pick, All 3 commish must approve', notes: 'Section 6.0', status: 'Enacted by Commish', year: 2025 },
     { id: 3, title: 'Loser’s punishment – 2 strike rule.', notes: 'Section 6.1', status: 'Enacted by Commish', year: 2025 },
+
     { id: 1, title: 'Top 35 “Pro Bowlers” no trade-back', notes: 'Section 1.3.2', status: 'Approved', year: 2024 },
     { id: 2, title: '“Best Roster” integrity rule', status: 'Rejected', year: 2024 },
     { id: 3, title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', notes: 'Section 1.1', status: 'Approved', year: 2024 },
@@ -72,17 +73,34 @@
     { id: 7, title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', notes: 'Section 1.2.1', status: 'Approved', year: 2024 }
   ];
 
-  // Precompute parsed proposals (avoid {#await} for sync work)
+  // parse proposals
   const parsedProposals = proposals.map((p) => ({
     ...p,
     parsed: splitOptions(p.title)
   }));
 
-  // Precompute parsed previous outcomes (same OPTION parsing behavior)
+  // parse previous outcomes
   const parsedPrevious = previous.map((o) => ({
     ...o,
     parsed: splitOptions(o.title)
   }));
+
+  // --- GROUP PREVIOUS BY YEAR ---
+  const grouped = Object.values(
+    parsedPrevious.reduce((acc, item) => {
+      const y = item.year ?? 0;
+      if (!acc[y]) acc[y] = { year: y, items: [] };
+      acc[y].items.push(item);
+      return acc;
+    }, {} as Record<number, { year: number; items: any[] }>)
+  ).sort((a, b) => b.year - a.year); // newest first
+
+  // collapsed state per year
+  let openYears: Record<number, boolean> = {};
+
+  function toggleYear(y: number) {
+    openYears[y] = !openYears[y];
+  }
 
   function previousChipClass(s?: OutcomeStatus) {
     if (s === 'Approved') return 'cc-chip--ok';
@@ -102,7 +120,7 @@
     <p class="cc-subtitle">Active proposals and previous outcomes</p>
   </header>
 
-  <!-- ACTIVE -->
+  <!-- ACTIVE PROPOSALS -->
   <section class="cc-section cc-section--white">
     <h2 class="cc-section-title">2026 Active Proposed Rule Discussions</h2>
     <div class="cc-grid">
@@ -118,7 +136,6 @@
             <span class="cc-id">#{p.id}</span>
           </div>
 
-          <!-- Title becomes the base statement; options go as bullets if present -->
           <h3 class="cc-card-title">
             {p.parsed.base}{p.parsed.options.length ? ':' : ''}
           </h3>
@@ -138,48 +155,58 @@
     </div>
   </section>
 
-  <!-- PREVIOUS -->
+  <!-- PREVIOUS OUTCOMES (GROUPED & COLLAPSIBLE WITH SLIDE) -->
   <section class="cc-section cc-section--white">
     <h2 class="cc-section-title">Previous Outcomes of Rule Votes</h2>
-    <div class="cc-grid">
-      {#each parsedPrevious as o, i (i)}
-        <article class="cc-card cc-card--sm">
-          <div class="cc-card-top">
-            {#if o.status}
-              <span class={"cc-chip " + previousChipClass(o.status)}>
-                {o.status}{o.year ? ` ${o.year}` : ''}
-              </span>
-            {/if}
+
+    {#each grouped as g}
+      <div class="cc-year-block">
+        <button class="cc-year-toggle" on:click={() => toggleYear(g.year)}>
+          <span>{g.year}</span>
+          <span>{openYears[g.year] ? '▼' : '▶'}</span>
+        </button>
+
+        {#if openYears[g.year]}
+          <div class="cc-grid" transition:slide>
+            {#each g.items as o, i (o.id + '-' + i)}
+              <article class="cc-card cc-card--sm">
+                <div class="cc-card-top">
+                  {#if o.status}
+                    <span class={"cc-chip " + previousChipClass(o.status)}>
+                      {o.status}{o.year ? ` ${o.year}` : ''}
+                    </span>
+                  {/if}
+                </div>
+
+                {#if hasValue(o.parsed.base)}
+                  <h3 class="cc-card-title">
+                    {o.parsed.base}{o.parsed.options.length ? ':' : ''}
+                  </h3>
+                {/if}
+
+                {#if o.parsed.options.length}
+                  <ul class="cc-bullets">
+                    {#each o.parsed.options as opt}
+                      <li>{opt}</li>
+                    {/each}
+                  </ul>
+                {/if}
+
+                {#if hasValue(o.ruleDeadline)}
+                  <p class="cc-meta"><strong>Rule Deadline:</strong> {o.ruleDeadline}</p>
+                {/if}
+
+                {#if o.notes}<p class="cc-notes">{o.notes}</p>{/if}
+              </article>
+            {/each}
           </div>
-
-          {#if hasValue(o.parsed.base)}
-            <h3 class="cc-card-title">
-              {o.parsed.base}{o.parsed.options.length ? ':' : ''}
-            </h3>
-          {/if}
-
-          {#if o.parsed.options.length}
-            <ul class="cc-bullets">
-              {#each o.parsed.options as opt}
-                <li>{opt}</li>
-              {/each}
-            </ul>
-          {/if}
-
-          {#if hasValue(o.ruleDeadline)}
-            <p class="cc-meta"><strong>Rule Deadline:</strong> {o.ruleDeadline}</p>
-          {/if}
-
-          {#if o.notes}<p class="cc-notes">{o.notes}</p>{/if}
-        </article>
-      {/each}
-    </div>
+        {/if}
+      </div>
+    {/each}
   </section>
 </section>
 
 <style>
-  /* ---------- Scoped, safe, and contained ---------- */
-
   .cc-page {
     max-width: 1100px;
     margin: 0 auto;
@@ -210,9 +237,8 @@
     padding: 1rem;
   }
 
-  /* Outer large box color → light blue */
   .cc-section--white {
-    background: #e9f3ff; /* Light blue */
+    background: #e9f3ff;
     box-shadow: 0 1px 4px rgba(0,0,255,1);
     border: 1px solid #d1e4ff;
   }
@@ -234,18 +260,21 @@
   }
 
   .cc-card {
-    background: #ffffff; /* inner small boxes remain white */
+    background: #ffffff;
     border: 1px solid #e7e7e7;
     border-radius: 10px;
     padding: 0.75rem;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
+
   .cc-card:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   }
 
-  .cc-card--sm { font-size: 0.85rem; }
+  .cc-card--sm {
+    font-size: 0.85rem;
+  }
 
   .cc-card-top {
     display: flex;
@@ -270,12 +299,15 @@
 
   .cc-bullets {
     margin: 0.25rem 0 0.4rem;
-    padding-left: 1.1rem;      /* indent */
+    padding-left: 1.1rem;
     list-style: disc;
     color: #1f2937;
     font-size: 0.86rem;
   }
-  .cc-bullets li { margin: 0.15rem 0; }
+
+  .cc-bullets li {
+    margin: 0.15rem 0;
+  }
 
   .cc-meta {
     font-size: 0.78rem;
@@ -303,7 +335,28 @@
   .cc-chip--ok   { background:#e8f7ed; color:#197a45; border-color:#cfeedd; }
   .cc-chip--bad  { background:#ffecec; color:#b42318; border-color:#ffd1d1; }
   .cc-chip--hold { background:#fff3e8; color:#b25e09; border-color:#ffd9b8; }
-
-  /* New chip style for "Enacted by Commish" */
   .cc-chip--commish { background:#eef2ff; color:#3730a3; border-color:#dbe1ff; }
+
+  .cc-year-block {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: #f7faff;
+    border: 1px solid #d9e5ff;
+  }
+
+  .cc-year-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #dce9ff;
+    border: 1px solid #bcd1ff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.7rem;
+  }
 </style>
