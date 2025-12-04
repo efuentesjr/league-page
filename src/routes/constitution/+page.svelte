@@ -934,14 +934,14 @@
         <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 170.00</td>
       </tr>
       <tr>
-        <td style="border: 1px solid #333; padding: 5px;">Trophy Shipment</td>
-        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 25.00</td>
-        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 145.00</td>
+        <td style="border: 1px solid #333; padding: 5px;">Trophy Shipment (Ring JDD)</td>
+        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 15.00</td>
+        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 155.00</td>
       </tr>
       <tr>
         <td style="border: 1px solid #333; padding: 5px;">Rings x4 NBow, JRod, GCall, JDD</td>
-        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 145.00</td>
-        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 145.00</td>
+        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 155.00</td>
+        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 155.00</td>
       </tr>
     </tbody>
   </table>
