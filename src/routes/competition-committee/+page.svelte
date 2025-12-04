@@ -345,24 +345,15 @@
     letter-spacing: 0.02em;
   }
 
-  .cc-chip--new  { background:#00efa6; color:#8b5b00; border-color:#f6dfaa; }
-  .cc-chip--open { background:#eaf2ff; color:#0b4eb3; border-color:#cfdcfd; }
-  .cc-chip--ok   { background:#e8f7ed; color:#197a45; border-color:#cfeedd; }
-  .cc-chip--bad  { background:#ffecec; color:#b42318; border-color:#ffd1d1; }
-  .cc-chip--hold { background:#fff3e8; color:#b25e09; border-color:#ffd9b8; }
-  .cc-chip--commish { background:#eef2ff; color:#3730a3; border-color:#dbe1ff; }
+    .cc-chip--new  { background:#00efa6; color:#003a24; border-color:#00c987; }
+    .cc-chip--open { background:#bcd8ff; color:#003f97; border-color:#82b7ff; }
+    .cc-chip--ok   { background:#b9f6c5; color:#065f28; border-color:#7eea97; }
+    .cc-chip--bad  { background:#ffb8b8; color:#7d0000; border-color:#ff7a7a; }
+    .cc-chip--hold { background:#ffd9a0; color:#8a4900; border-color:#ffb865; }
+    .cc-chip--commish { background:#d3ccff; color:#2b198c; border-color:#b3a8ff; }
+    .cc-chip--yearly { background:#8af2ff; color:#004d57; border-color:#4de8ff; }
+    .cc-chip--revote { background:#ffd57a; color:#6a3f00; border-color:#ffb733; }
 
-  .cc-chip--yearly {
-    background:#e4f9ff;
-    color:#076b7c;
-    border-color:#bdefff;
-  }
-
-  .cc-chip--revote {
-    background:#fff6e6;
-    color:#b45d00;
-    border-color:#ffe1b3;
-  }
 
   .cc-year-block {
     margin-bottom: 1rem;
