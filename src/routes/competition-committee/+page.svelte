@@ -345,7 +345,7 @@
     letter-spacing: 0.02em;
   }
 
-  .cc-chip--new  { background:#fff4db; color:#8b5b00; border-color:#f6dfaa; }
+  .cc-chip--new  { background:#00efa6; color:#8b5b00; border-color:#f6dfaa; }
   .cc-chip--open { background:#eaf2ff; color:#0b4eb3; border-color:#cfdcfd; }
   .cc-chip--ok   { background:#e8f7ed; color:#197a45; border-color:#cfeedd; }
   .cc-chip--bad  { background:#ffecec; color:#b42318; border-color:#ffd1d1; }
