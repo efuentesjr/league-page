@@ -102,13 +102,7 @@
 
   // Blue Tent All-S can do no worse than end up tied for a spot if:
   // 1) WINS *AND* bLuE BaLLeRs LOSES *AND* TexasTimeshifts LOSES
-  const paths_bluetent = {
-    division: [],
-    playoffs: [],
-    tieonly: [
-      'Blue Tent All-S WINS *AND* bLuE BaLLeRs LOSES *AND* TexasTimeshifts LOSES'
-    ]
-  };
+
 
   // bLuE BaLLeRs clinches a playoff spot:
   // 1) WINS *AND* PrimeTime Prodi LOSES, OR;
@@ -116,28 +110,13 @@
   // bLuE BaLLeRs can do no worse than end up tied for a spot if:
   // 1) WINS, OR;
   // 2) TexasTimeshifts LOSES
-  const paths_blueballers = {
-    division: [],
-    playoffs: [
-      'bLuE BaLLeRs WINS *AND* PrimeTime Prodi LOSES',
-      'bLuE BaLLeRs WINS *AND* TexasTimeshifts LOSES'
-    ],
-    tieonly: ['bLuE BaLLeRs WINS', 'TexasTimeshifts LOSES']
-  };
+
 
   // PrimeTime Prodi clinches a playoff spot:
   // 1) bLuE BaLLeRs LOSES, OR;
   // 2) WINS, OR;
   // 3) TexasTimeshifts LOSES
-  const paths_primetime = {
-    division: [],
-    playoffs: [
-      'bLuE BaLLeRs LOSES',
-      'PrimeTime Prodi WINS',
-      'TexasTimeshifts LOSES'
-    ],
-    tieonly: []
-  };
+
 
   // TexasTimeshifts clinches a playoff spot:
   // 1) WINS *AND* bLuE BaLLeRs LOSES, OR;
@@ -145,14 +124,7 @@
   // TexasTimeshifts can do no worse than end up tied for a spot if:
   // 1) bLuE BaLLeRs LOSES, OR;
   // 2) WINS
-  const paths_texastimeshifts = {
-    division: [],
-    playoffs: [
-      'TexasTimeshifts WINS *AND* bLuE BaLLeRs LOSES',
-      'TexasTimeshifts WINS *AND* PrimeTime Prodi LOSES'
-    ],
-    tieonly: ['bLuE BaLLeRs LOSES', 'TexasTimeshifts WINS']
-  };
+
 
   // Choose lists for the active team tab
   const k = keyFor(team.team);
