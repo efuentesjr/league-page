@@ -45,7 +45,7 @@
   }
 
   const proposals: Proposal[] = [
-    { id: '1-A', title: 'Review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
+    { id: '1-A', title: 'Review league scoring per owner(s) and yearly trends. Also, review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
     { id: '1-B', title: 'Allow punt return yards scoring (re-vote) OPTION#1: No. OPTION#2: Yes, the same as RB/WR. OPTION#3: Yes, but less than RB/WR.', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'REVOTE' },
     { id: '2-A', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'NEW' },
     { id: '2-B', title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB. OPTION#2: No trade backs on all players involved. OPTION#3: When a trade involves picks only or non-impact players, it must be offered to the entire league.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
