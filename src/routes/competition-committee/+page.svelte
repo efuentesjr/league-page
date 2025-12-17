@@ -57,7 +57,7 @@
     { id: '4-B', title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league fee increase). OPTION#2: A bye week for the 1st round of playoffs (would require beginning playoffs WK13 or ending WK18).', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
     { id: '4-C', title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
     { id: '4-D', title: "When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.", owner: 'John Diaz-DeCaro', status: 'NEW' },
-    { id: '13', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
+    { id: '5-A', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
   ];
 
   const previous: Outcome[] = [
