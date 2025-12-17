@@ -4,7 +4,7 @@
   import { slide } from 'svelte/transition';
 
   type Proposal = {
-    id: number;
+    id: string; // ✅ was number
     title: string;
     owner: string;
     notes?: string;
@@ -45,19 +45,19 @@
   }
 
   const proposals: Proposal[] = [
-    { id: 1-A, title: 'Review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
-    { id: 1-B, title: 'Allow punt return yards scoring (re-vote) OPTION#1: No. OPTION#2: Yes, the same as RB/WR. OPTION#3: Yes, but less than RB/WR.', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'REVOTE' },
-    { id: 2-A, title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'NEW' },
-    { id: 2-B, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB. OPTION#2: No trade backs on all players involved. OPTION#3: When a trade involves picks only or non-impact players, it must be offered to the entire league.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
-    { id: 2-C, title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 20. OPTION#2: RBs 20. OPTION#3: WRs 20. OPTION#4: TEs 10.', owner: 'Commish', status: 'REVOTE' },
-    { id: 3-A, title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. OPTION#1: Only allow 1 team. Hold an auction, winner gets one entry. OPTION#2: Only allow non-playoff teams. OPTION#3: Allow non-top 3 teams.', owner: 'Ray Rodriguez', status: 'NEW' },
-    { id: 3-B, title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction-type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
-    { id: 3-C, title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
-    { id: 4-A, title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'YEARLY' },
-    { id: 4-B, title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league fee increase). OPTION#2: A bye week for the 1st round of playoffs (would require beginning playoffs WK13 or ending WK18).', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
-    { id: 4-C, title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
-    { id: 4-D, title: 'When trading future picks you\'ll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year\'s fees.', owner: 'John Diaz-DeCaro', status: 'NEW' },
-    { id: 13, title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
+    { id: '1-A', title: 'Review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
+    { id: '1-B', title: 'Allow punt return yards scoring (re-vote) OPTION#1: No. OPTION#2: Yes, the same as RB/WR. OPTION#3: Yes, but less than RB/WR.', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'REVOTE' },
+    { id: '2-A', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'NEW' },
+    { id: '2-B', title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB. OPTION#2: No trade backs on all players involved. OPTION#3: When a trade involves picks only or non-impact players, it must be offered to the entire league.', owner: 'Trey Fuentes', notes: 'Section 13', status: 'OPEN' },
+    { id: '2-C', title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 20. OPTION#2: RBs 20. OPTION#3: WRs 20. OPTION#4: TEs 10.', owner: 'Commish', status: 'REVOTE' },
+    { id: '3-A', title: 'VOTE to allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. OPTION#1: Only allow 1 team. Hold an auction, winner gets one entry. OPTION#2: Only allow non-playoff teams. OPTION#3: Allow non-top 3 teams.', owner: 'Ray Rodriguez', status: 'NEW' },
+    { id: '3-B', title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction-type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
+    { id: '3-C', title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
+    { id: '4-A', title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'YEARLY' },
+    { id: '4-B', title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league fee increase). OPTION#2: A bye week for the 1st round of playoffs (would require beginning playoffs WK13 or ending WK18).', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
+    { id: '4-C', title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+    { id: '4-D', title: "When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.", owner: 'John Diaz-DeCaro', status: 'NEW' },
+    { id: '13', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
   ];
 
   const previous: Outcome[] = [
@@ -100,7 +100,7 @@
   let openYears: Record<number, boolean> = {};
 
   function toggleYear(y: number) {
-    openYears[y] = !openYears[y];
+    openYears = { ...openYears, [y]: !openYears[y] }; // ✅ ensures reactivity
   }
 
   function previousChipClass(s?: OutcomeStatus) {
@@ -345,15 +345,14 @@
     letter-spacing: 0.02em;
   }
 
-    .cc-chip--new  { background:#00efa6; color:#003a24; border-color:#00c987; }
-    .cc-chip--open { background:#bcd8ff; color:#003f97; border-color:#82b7ff; }
-    .cc-chip--ok   { background:#b9f6c5; color:#065f28; border-color:#7eea97; }
-    .cc-chip--bad  { background:#ffb8b8; color:#7d0000; border-color:#ff7a7a; }
-    .cc-chip--hold { background:#ffd9a0; color:#8a4900; border-color:#ffb865; }
-    .cc-chip--commish { background:#d3ccff; color:#2b198c; border-color:#b3a8ff; }
-    .cc-chip--yearly { background:#8af2ff; color:#004d57; border-color:#4de8ff; }
-    .cc-chip--revote { background:#ffd57a; color:#6a3f00; border-color:#ffb733; }
-
+  .cc-chip--new  { background:#00efa6; color:#003a24; border-color:#00c987; }
+  .cc-chip--open { background:#bcd8ff; color:#003f97; border-color:#82b7ff; }
+  .cc-chip--ok   { background:#b9f6c5; color:#065f28; border-color:#7eea97; }
+  .cc-chip--bad  { background:#ffb8b8; color:#7d0000; border-color:#ff7a7a; }
+  .cc-chip--hold { background:#ffd9a0; color:#8a4900; border-color:#ffb865; }
+  .cc-chip--commish { background:#d3ccff; color:#2b198c; border-color:#b3a8ff; }
+  .cc-chip--yearly { background:#8af2ff; color:#004d57; border-color:#4de8ff; }
+  .cc-chip--revote { background:#ffd57a; color:#6a3f00; border-color:#ffb733; }
 
   .cc-year-block {
     margin-bottom: 1rem;
