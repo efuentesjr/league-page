@@ -62,11 +62,11 @@
 
   const previous: Outcome[] = [
     { id: 1, title: 'Change how ping pong balls are eraned. Toilet Bowl rules.', notes: 'Section 3.4', status: 'Approved', year: 2025 },
-    { id: 2, title: 'Add Bonus 0.1 for RB's (40+ yard Rush TD)', notes: 'Section 4.1', status: 'Approved', year: 2024 }
+    { id: 2, title: 'Add Bonus 0.1 for RB's (40+ yard Rush TD)', notes: 'Section 4.1', status: 'Approved', year: 2024 },
     { id: 3, title: 'Decide draft order during Comp-Comittee every year..', notes: 'Section 3', status: 'Approved', year: 2025 },
     { id: 4, title: 'Loser’s punishment – 3 strike rule.', notes: 'Section 6.1', status: 'Approved', year: 2025 },
     { id: 5, title: 'Trade deadline moved to Wednesday of week 7- @8pm CST. This was approved to revote', notes: 'Section 1.3.3', status: 'Approved', year: 2025 },
-    { id: 6, title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', notes: 'Section 1.2.2', status: 'Approved', year: 2025 }
+    { id: 6, title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', notes: 'Section 1.2.2', status: 'Approved', year: 2025 },
     { id: 7, title: 'Manager replacement draft priority. New incoming manager may be given #1 draft pick, All 3 commish must approve', notes: 'Section 6.2', status: 'Enacted by Commish', year: 2025 },
 
     { id: 1, title: 'Top 35 “Pro Bowlers” no trade-back', notes: 'Section 1.3.2', status: 'Approved', year: 2024 },
