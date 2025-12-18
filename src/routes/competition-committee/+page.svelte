@@ -62,7 +62,7 @@
 
   const previous: Outcome[] = [
     { id: 1, title: 'Change how ping pong balls are eraned. Toilet Bowl rules.', notes: 'Section 3.4', status: 'Approved', year: 2025 },
-    { id: 2, title: 'Add Bonus 0.1 for RBs (40+ yard Rush TD)', notes: 'Section 4.1', status: 'Approved', year: 2024 },
+    { id: 2, title: 'Add Bonus 0.1 for RBs (40+ yard Rush TD)', notes: 'Section 4.1', status: 'Approved', year: 2025 },
     { id: 3, title: 'Decide draft order during Comp-Comittee every year..', notes: 'Section 3', status: 'Approved', year: 2025 },
     { id: 4, title: 'Loser’s punishment – 3 strike rule.', notes: 'Section 6.1', status: 'Approved', year: 2025 },
     { id: 5, title: 'Trade deadline moved to Wednesday of week 7- @8pm CST. This was approved to revote', notes: 'Section 1.3.3', status: 'Approved', year: 2025 },
@@ -75,6 +75,8 @@
     { id: 4, title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', notes: 'Defaulted to Sleeper settings', status: 'Approved', year: 2024 },
     { id: 5, title: 'Trade deadline moved to Week 7, midseason.', notes: 'Section 1.3.3', status: 'Approved', year: 2024 },
     { id: 6, title: 'Divisions. Move to a four divisions structure.', notes: 'Section 1.2.1', status: 'Approved', year: 2024 },
+    { id: 7, title: 'Allow special teams (PR. KR) players TDs to count towards scoring.', notes: 'Section 4.1', status: 'Approved', year: 2024 },
+    { id: 7, title: 'Allow special teams (PR. KR) players yards to count towards scoring.', notes: 'Section 4.1', status: 'Rejected', year: 2024 },
   ];
 
   // parse proposals
