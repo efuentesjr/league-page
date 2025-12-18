@@ -76,22 +76,22 @@
 
   // Chart bar colors
 /* --- Power Rankings: NFL-inspired 3-stripe bars with fade effect --- */
---barChartOne:      linear-gradient(90deg, #002244 0%, #002244 25%, #A5ACAF 40%, #A5ACAF 60%, #002244 75%, #002244 100%); /* Cowboys: Navy → Silver → Navy */
---barChartTwo:      linear-gradient(90deg, #101820 0%, #101820 25%, #FFB612 40%, #FFB612 60%, #101820 75%, #101820 100%); /* Pittsburgh Steelers: Black → Gold */
---barChartThree:    linear-gradient(90deg, #DC4405 0%, #DC4405 25%, #0B162A 40%, #0B162A 60%, #DC4405 75%, #DC4405 100%); /* Bears Inverted: Orange → Navy → Orange */
---barChartFour:     linear-gradient(90deg, #03202F 0%, #03202F 25%, #A71930 40%, #A71930 60%, #03202F 75%, #03202F 100%); /* Texans: Steel Blue → White → Battle Red */
---barChartFive:     linear-gradient(90deg, #03202F 0%, #03202F 25%, #A71930 40%, #A71930 60%, #03202F 75%, #03202F 100%); /* Texans: Steel Blue → White → Battle Red */
---barChartSix:      linear-gradient(90deg, #DC4405 0%, #DC4405 25%, #0B162A 40%, #0B162A 60%, #DC4405 75%, #DC4405 100%); /* Bears Inverted: Orange → Navy → Orange */
---barChartSeven:    linear-gradient(90deg, #DC4405 0%, #DC4405 25%, #0B162A 40%, #0B162A 60%, #DC4405 75%, #DC4405 100%); /* Bears Inverted: Orange → Navy → Orange */ 
---barChartEight:    linear-gradient(90deg, #002244 0%, #002244 25%, #A5ACAF 40%, #A5ACAF 60%, #002244 75%, #002244 100%); /* Cowboys: Navy → Silver → Navy */
---barChartNine:     linear-gradient(90deg, #A5ACAF 0%, #A5ACAF 25%, #000000 40%, #000000 60%, #A5ACAF 75%, #A5ACAF 100%); /* Raiders: Black → Silver → Black */
---barChartTen:      linear-gradient(90deg, #A5ACAF 0%, #A5ACAF 25%, #000000 40%, #000000 60%, #A5ACAF 75%, #A5ACAF 100%); /* Raiders: Black → Silver → Black */
---barChartEleven:   linear-gradient(90deg, #AA0000 0%, #AA0000 25%, #B3995D 40%, #B3995D 60%, #AA0000 75%, #AA0000 100%); /* 49ers: Red → Gold → Red */
---barChartTwelve:   linear-gradient(90deg, #5A1414 0%, #5A1414 25%, #FFB612 40%, #FFB612 60%, #5A1414 75%, #5A1414 100%); /* Washington: Burgundy → Gold → Burgundy */
---barChartThirteen: linear-gradient(90deg, #002244 0%, #002244 25%, #A5ACAF 40%, #A5ACAF 60%, #002244 75%, #002244 100%); /* Cowboys: Navy → Silver → Navy */
---barChartFourteen: linear-gradient(90deg, #DC4405 0%, #DC4405 25%, #0B162A 40%, #0B162A 60%, #DC4405 75%, #DC4405 100%); /* Bears Inverted: Orange → Navy → Orange */
---barChartFifteen:  linear-gradient(90deg, #002244 0%, #002244 25%, #A5ACAF 40%, #A5ACAF 60%, #002244 75%, #002244 100%); /* Cowboys: Navy → Silver → Navy */
---barChartSixteen:  linear-gradient(90deg, #4F2683 0%, #4F2683 25%, #FFC62F 40%, #FFC62F 60%, #4F2683 75%, #4F2683 100%); /* Vikings: Purple → Gold → Purple */
+--barChartOne: linear-gradient(90deg, #C2410C 0%, #C2410C 25%, #0A1224 40%, #0A1224 60%, #C2410C 75%, #C2410C 100%); /* Bears – dark */
+--barChartTwo: linear-gradient(90deg, #00172E 0%, #00172E 25%, #7E8890 40%, #7E8890 60%, #00172E 75%, #00172E 100%); /* Cowboys – dark */
+--barChartThree: linear-gradient(90deg, #0B0E11 0%, #0B0E11 25%, #C89B3C 40%, #C89B3C 60%, #0B0E11 75%, #0B0E11 100%); /* Steelers – dark */
+--barChartFour: linear-gradient(90deg, #02161F 0%, #02161F 25%, #8E1B2C 40%, #8E1B2C 60%, #02161F 75%, #02161F 100%); /* Texans – dark */
+--barChartFive: linear-gradient(90deg, #090909 0%, #090909 25%, #7E8890 40%, #7E8890 60%, #090909 75%, #090909 100%); /* Raiders – dark */
+--barChartSix: linear-gradient(90deg, #8B0000 0%, #8B0000 25%, #8E7A4A 40%, #8E7A4A 60%, #8B0000 75%, #8B0000 100%); /* 49ers – dark */
+--barChartSeven: linear-gradient(90deg, #3E0C0C 0%, #3E0C0C 25%, #C89B3C 40%, #C89B3C 60%, #3E0C0C 75%, #3E0C0C 100%); /* Commanders – dark */
+--barChartEight: linear-gradient(90deg, #3A1E6A 0%, #3A1E6A 25%, #C9A227 40%, #C9A227 60%, #3A1E6A 75%, #3A1E6A 100%); /* Vikings – dark */
+--barChartNine: linear-gradient(90deg, #16241D 0%, #16241D 25%, #C89B3C 40%, #C89B3C 60%, #16241D 75%, #16241D 100%); /* Packers – dark */
+--barChartTen: linear-gradient(90deg, #0A4A6E 0%, #0A4A6E 25%, #8B949A 40%, #8B949A 60%, #0A4A6E 75%, #0A4A6E 100%); /* Lions – dark */
+--barChartEleven: linear-gradient(90deg, #B11226 0%, #B11226 25%, #C89B3C 40%, #C89B3C 60%, #B11226 75%, #B11226 100%); /* Chiefs – dark */
+--barChartTwelve: linear-gradient(90deg, #001F5B 0%, #001F5B 25%, #8E1B2C 40%, #8E1B2C 60%, #001F5B 75%, #001F5B 100%); /* Bills – dark */
+--barChartThirteen: linear-gradient(90deg, #006B72 0%, #006B72 25%, #C2410C 40%, #C2410C 60%, #006B72 75%, #006B72 100%); /* Dolphins – dark */
+--barChartFourteen: linear-gradient(90deg, #00383F 0%, #00383F 25%, #7E8890 40%, #7E8890 60%, #00383F 75%, #00383F 100%); /* Eagles – dark */
+--barChartFifteen: linear-gradient(90deg, #071A44 0%, #071A44 25%, #8E1B2C 40%, #8E1B2C 60%, #071A44 75%, #071A44 100%); /* Giants – dark */
+--barChartSixteen: linear-gradient(90deg, #00215F 0%, #00215F 25%, #C98600 40%, #C98600 60%, #00215F 75%, #00215F 100%); /* Rams – dark */
 
   // Comparisson bar colors
   --compBarOne: #446a88;
