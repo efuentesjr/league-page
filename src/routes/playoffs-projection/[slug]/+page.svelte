@@ -19,7 +19,8 @@
     }
   }
 
-  const initials = team.team
+  // ✅ null-safe (prevents blank page if team is undefined)
+  const initials = (team?.team || '')
     .split(/\s+/)
     .filter(Boolean)
     .map((w) => w[0])
@@ -40,11 +41,11 @@
     return isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
   }
 
-  // ✅ CHANGE #1: Tie → Title
+  // ✅ CHANGE #1: Tie → Title (new JSON has status.title)
   const odds = [
-    { label: 'Division', value: pctNumber(team.status?.division) },
-    { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
-    { label: 'Title', value: pctNumber(team.status?.title) }
+    { label: 'Division', value: pctNumber(team?.status?.division) },
+    { label: 'Playoffs', value: pctNumber(team?.status?.playoffs) },
+    { label: 'Title', value: pctNumber(team?.status?.title) }
   ];
 
   // ---------------- Elimination / Clinch badges ----------------
@@ -66,11 +67,11 @@
     return v.startsWith('possible elim') || v.startsWith('poss. elim');
   }
 
-  const divElim = isEliminated(team.status?.division);
-  const poElim = isEliminated(team.status?.playoffs);
-  const poPoss = isPossibleElim(team.status?.playoffs);
-  const divClinched = isClinched(team.status?.division);
-  const poClinched = isClinched(team.status?.playoffs);
+  const divElim = isEliminated(team?.status?.division);
+  const poElim = isEliminated(team?.status?.playoffs);
+  const poPoss = isPossibleElim(team?.status?.playoffs);
+  const divClinched = isClinched(team?.status?.division);
+  const poClinched = isClinched(team?.status?.playoffs);
 
   // ---------------- Paths to Clinch (inline; no new component) ----------------
 
@@ -99,7 +100,7 @@
       });
   }
 
-  // ---- Paths-to-Playoffs data (UNCHANGED) ----
+  // ---- Paths-to-Playoffs data (YOUR NEW INFO) ----
 
   const paths_bluetent = {
     division: [],
@@ -138,7 +139,7 @@
   };
 
   // Choose lists for the active team tab
-  const k = keyFor(team.team);
+  const k = keyFor(team?.team);
 
   const divisionPaths =
     k === 'bluetent'
