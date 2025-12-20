@@ -40,7 +40,7 @@
     return isFinite(n) ? Math.max(0, Math.min(100, n)) : 0;
   }
 
-  // ✅ CHANGE #1: Tie → Title
+  // ✅ CHANGE #1: Tie -> Title (new JSON uses status.title)
   const odds = [
     { label: 'Division', value: pctNumber(team.status?.division) },
     { label: 'Playoffs', value: pctNumber(team.status?.playoffs) },
@@ -80,7 +80,7 @@
     if (n.includes('blue tent')) return 'bluetent';
     if (n.includes('baller')) return 'blueballers';
     if (n.includes('prime')) return 'primetime';
-    // ✅ CHANGE #2: handle truncated "TexasTimeshi"
+    // ✅ CHANGE #2: also match truncated "TexasTimeshi"
     if (n.includes('timeshi') || n.includes('timeshift')) return 'texastimeshifts';
     return n;
   }
@@ -99,8 +99,10 @@
       });
   }
 
-  // ---- Paths-to-Playoffs data (UNCHANGED) ----
+  // ---- Paths-to-Playoffs data (YOUR NEW INFO) ----
 
+  // Blue Tent All-S can do no worse than end up tied for a spot if:
+  // 1) WINS *AND* bLuE BaLLeRs LOSES *AND* TexasTimeshifts LOSES
   const paths_bluetent = {
     division: [],
     playoffs: [],
@@ -109,6 +111,12 @@
     ]
   };
 
+  // bLuE BaLLeRs clinches a playoff spot:
+  // 1) WINS *AND* PrimeTime Prodi LOSES, OR;
+  // 2) WINS *AND* TexasTimeshifts LOSES
+  // bLuE BaLLeRs can do no worse than end up tied for a spot if:
+  // 1) WINS, OR;
+  // 2) TexasTimeshifts LOSES
   const paths_blueballers = {
     division: [],
     playoffs: [
@@ -118,6 +126,10 @@
     tieonly: ['bLuE BaLLeRs WINS', 'TexasTimeshifts LOSES']
   };
 
+  // PrimeTime Prodi clinches a playoff spot:
+  // 1) bLuE BaLLeRs LOSES, OR;
+  // 2) WINS, OR;
+  // 3) TexasTimeshifts LOSES
   const paths_primetime = {
     division: [],
     playoffs: [
@@ -128,6 +140,12 @@
     tieonly: []
   };
 
+  // TexasTimeshifts clinches a playoff spot:
+  // 1) WINS *AND* bLuE BaLLeRs LOSES, OR;
+  // 2) WINS *AND* PrimeTime Prodi LOSES
+  // TexasTimeshifts can do no worse than end up tied for a spot if:
+  // 1) bLuE BaLLeRs LOSES, OR;
+  // 2) WINS
   const paths_texastimeshifts = {
     division: [],
     playoffs: [
