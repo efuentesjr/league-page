@@ -20,12 +20,6 @@ export const tabs = [
     key: 'standings'
   },
   {
-    icon: 'trending_up',
-    label: 'Playoff Projections',
-    dest: '/playoffs-projection',
-    key: 'playoffs-projection'
-  },
-  {
     icon: 'swap_horiz',
     label: 'Trades & Waivers',
     dest: '/transactions',
@@ -74,16 +68,22 @@ export const tabs = [
     key: 'records'
   },
   {
-    icon: 'history_edu',
-    label: 'Constitution',
-    dest: '/constitution',
-    key: 'constitution'
+    icon: 'trending_up',
+    label: 'Playoff Projections',
+    dest: '/playoffs-projection',
+    key: 'playoffs-projection'
   },
   {
     icon: 'gavel',
     label: 'Competition Committee',
     dest: '/competition-committee',
     key: 'competition-committee'
+  },
+  {
+    icon: 'history_edu',
+    label: 'Constitution',
+    dest: '/constitution',
+    key: 'constitution'
   },
   {
     icon: 'lightbulb',
