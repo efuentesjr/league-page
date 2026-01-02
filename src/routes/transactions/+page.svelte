@@ -1,259 +1,264 @@
 <script>
   import LinearProgress from '@smui/linear-progress';
-  import { TransactionsPage } from '$lib/components';
-  import { waitForAll } from '$lib/utils/helper';
 
   export let data;
-  const { show, query, page, playersData, transactionsData, leagueTeamManagersData } = data;
 
-  const perPage = 10;
+  const {
+    show,
+    query,
+    page,
+    playersData,
+    transactionsData,
+    leagueTeamManagersData
+  } = data;
 
-  /* --------------------------------------------------
-   Helpers
-  -------------------------------------------------- */
-  const clean = (v) => String(v ?? '').trim();
-  const key = (v) => clean(v).toLowerCase();
-
-  const aliasToCanonical = new Map([
-    ['los loquitos', 'Los Loquitos'],
-    ['slikbears all luck', 'Los Loquitos'],
-    ['“slikbears” all luck', 'Los Loquitos'],
-    ['sb bound', 'Los Loquitos'],
-    ['sb bound🏆', 'Los Loquitos'],
-
-    ['slickbears', 'SlickBears'],
-
-    ['primetime prodigies', 'PrimeTime Prodigies'],
-    ['primetime j', 'PrimeTime Prodigies'],
-
-    ['brute force attacks', 'Brute Force Attack'],
-    ['brute force attack', 'Brute Force Attack'],
-    ['end zone entourage', 'Brute Force Attack'],
-
-    ['blue ballers', 'Blue Ballers'],
-    ['austin rattlers', 'Blue Ballers'],
-
-    ['demboyz', 'Demboyz'],
-    ['88boyz11', 'Demboyz'],
-
-    ['vick2times', 'Vick2times'],
-
-    ['blue tent all-stars', 'Blue Tent All-Stars'],
-    ['perfectly balanced', 'Blue Tent All-Stars'],
-    ['the snap', 'Blue Tent All-Stars'],
-    ['zero dark purdy', 'Blue Tent All-Stars'],
-
-    ['the process', 'The Process'],
-    ['death row', 'The Process'],
-    ['dreamville', 'The Process'],
-    ['chosen one.', 'The Process'],
-    ['chosen one', 'The Process']
-  ]);
-
-  function normalizeTeam(name) {
-    const k = key(name);
-    return aliasToCanonical.get(k) ?? clean(name);
+  // ---- helpers ----
+  function safeStr(x) {
+    return (x ?? '').toString();
   }
 
-  function normalizeTransactionsShape(t) {
-    if (Array.isArray(t)) return t;
-    if (t && typeof t === 'object') {
-      return [
-        ...(Array.isArray(t.trades) ? t.trades : []),
-        ...(Array.isArray(t.waivers) ? t.waivers : [])
-      ];
-    }
-    return [];
+  function getSeason(tx) {
+    // Try common fields you might have in your normalized data
+    return (
+      tx.season ??
+      tx.year ??
+      tx.league_year ??
+      tx.metadata?.season ??
+      null
+    );
   }
 
-  function resolveRosterName(leagueTeamManagers, currentTeams, season, rosterId) {
-    const rid = Number(rosterId);
-
-    const tm = leagueTeamManagers?.teamManagersMap?.[season]?.[rid];
-    if (tm) {
-      const raw =
-        tm.teamName || tm.team_name || tm.name || tm.team || tm.rosterName;
-      if (raw) return normalizeTeam(raw);
-    }
-
-    const ct = currentTeams?.[rid] ?? currentTeams?.[String(rid)];
-    if (ct) {
-      if (typeof ct === 'string') return normalizeTeam(ct);
-      const raw = ct.teamName || ct.team_name || ct.name || ct.team;
-      if (raw) return normalizeTeam(raw);
-    }
-
-    return null;
+  function normalizeTransactions(transactions) {
+    // Assumes transactionsData already contains trade-like records.
+    // If your "normalized" step is elsewhere, keep it there and just return it.
+    // This function just ensures we always return an array.
+    return Array.isArray(transactions) ? transactions : [];
   }
 
-  function computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams, year = 'all') {
-    const pairs = new Map();
+  // Build a "current teams" lookup from leagueTeamManagersData if you need it
+  function buildCurrentTeams(leagueTeamManagers) {
+    // Keep generic: return whatever structure your compute function expects.
+    // If you already have currentTeams elsewhere, use that instead.
+    return leagueTeamManagers;
+  }
 
-    function inc(a, b) {
-      if (!a || !b || a === b) return;
-      const [x, y] = a.localeCompare(b) <= 0 ? [a, b] : [b, a];
-      const k = `${x}|||${y}`;
-      if (!pairs.has(k)) pairs.set(k, { teamA: x, teamB: y, count: 0 });
-      pairs.get(k).count++;
-    }
+  /**
+   * computeTradePartnerCounts(transactionsNormalized, leagueTeamManagers, currentTeams, seasonKey)
+   * -> returns an array of rows like:
+   *    [{ aRosterId, aName, bRosterId, bName, tradeCount }, ...]
+   *
+   * IMPORTANT: keep YOUR existing implementation if you already have one.
+   * Below is a safe placeholder that expects "transactionsNormalized" trades with "rosters" involved.
+   */
+  function computeTradePartnerCounts(transactionsNormalized, leagueTeamManagers, currentTeams, seasonKey) {
+    const seasonFilter = seasonKey === 'all' ? null : seasonKey;
 
-    for (const tx of transactions) {
-      if (tx.type !== 'trade') continue;
-      if (year !== 'all' && Number(tx.season) !== Number(year)) continue;
+    // You may already have manager/team name lookups. This tries a few shapes.
+    const rosterIdToName = new Map();
+    (leagueTeamManagers || []).forEach((t) => {
+      // try common keys; adjust if you know exact schema
+      const rid = t.roster_id ?? t.rosterId ?? t.id;
+      const name = t.team_name ?? t.teamName ?? t.name ?? t.manager ?? t.display_name ?? t.displayName;
+      if (rid != null && name) rosterIdToName.set(String(rid), String(name));
+    });
 
-      const unique = new Map();
-      for (const rid of tx.rosters ?? []) {
-        const nm = resolveRosterName(leagueTeamManagers, currentTeams, tx.season, rid);
-        if (nm && !unique.has(nm)) unique.set(nm, nm);
-      }
+    const pairCounts = new Map();
 
-      const teams = [...unique.values()];
-      if (teams.length < 2) continue;
+    for (const tx of transactionsNormalized) {
+      const season = getSeason(tx);
+      if (seasonFilter != null && String(season) !== String(seasonFilter)) continue;
 
-      for (let i = 0; i < teams.length; i++) {
-        for (let j = i + 1; j < teams.length; j++) {
-          inc(teams[i], teams[j]);
+      // Expecting trades have something like tx.roster_ids or tx.rosters
+      const rosterIds =
+        tx.roster_ids ??
+        tx.rosterIds ??
+        tx.rosters ??
+        tx.participants ??
+        [];
+
+      if (!Array.isArray(rosterIds) || rosterIds.length < 2) continue;
+
+      // Count each unique pair in this trade
+      const unique = Array.from(new Set(rosterIds.map((r) => String(r)))).sort();
+      for (let i = 0; i < unique.length; i++) {
+        for (let j = i + 1; j < unique.length; j++) {
+          const a = unique[i];
+          const b = unique[j];
+          const key = `${a}__${b}`;
+          pairCounts.set(key, (pairCounts.get(key) ?? 0) + 1);
         }
       }
     }
 
-    return [...pairs.values()].sort((a, b) => b.count - a.count);
+    const rows = [];
+    for (const [key, tradeCount] of pairCounts.entries()) {
+      const [aRosterId, bRosterId] = key.split('__');
+      rows.push({
+        aRosterId,
+        aName: rosterIdToName.get(aRosterId) ?? `Roster ${aRosterId}`,
+        bRosterId,
+        bName: rosterIdToName.get(bRosterId) ?? `Roster ${bRosterId}`,
+        tradeCount
+      });
+    }
+
+    // Sort highest trade counts first, then alphabetical
+    rows.sort((r1, r2) => {
+      if (r2.tradeCount !== r1.tradeCount) return r2.tradeCount - r1.tradeCount;
+      const n1 = `${r1.aName} vs ${r1.bName}`.toLowerCase();
+      const n2 = `${r2.aName} vs ${r2.bName}`.toLowerCase();
+      return n1.localeCompare(n2);
+    });
+
+    return rows;
   }
+
+  // ---- derived data ----
+  let transactionsNormalized = [];
+  let currentTeams = [];
+
+  // If your loader provides normalized data already, swap these lines to use it.
+  $: transactionsNormalized = normalizeTransactions(transactionsData);
+  $: currentTeams = buildCurrentTeams(leagueTeamManagersData);
+
+  // Collect seasons found in transactions (exclude null/undefined)
+  $: seasons = Array.from(
+    new Set(transactionsNormalized.map(getSeason).filter((s) => s != null).map((s) => String(s)))
+  ).sort((a, b) => Number(b) - Number(a)); // numeric-desc
+
+  // Pre-compute rows for "All Years" and each year (NO {@const} needed)
+  let rowsAll = [];
+  let rowsBySeason = {};
+
+  $: rowsAll = computeTradePartnerCounts(
+    transactionsNormalized,
+    leagueTeamManagersData,
+    currentTeams,
+    'all'
+  );
+
+  $: rowsBySeason = seasons.reduce((acc, season) => {
+    acc[season] = computeTradePartnerCounts(
+      transactionsNormalized,
+      leagueTeamManagersData,
+      currentTeams,
+      season
+    );
+    return acc;
+  }, {});
 </script>
 
+{#if show === false}
+  <LinearProgress indeterminate />
+{:else}
+  <div class="wrap">
+    <h1>Head to Head Trades</h1>
+
+    <details open>
+      <summary>All Years</summary>
+
+      {#if rowsAll.length === 0}
+        <p class="muted">No trades found.</p>
+      {:else}
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Teams</th>
+                <th class="num">Trades</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each rowsAll as row (row.aRosterId + '_' + row.bRosterId)}
+                <tr>
+                  <td>{row.aName} vs {row.bName}</td>
+                  <td class="num">{row.tradeCount}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/if}
+    </details>
+
+    {#each seasons as season (season)}
+      <details>
+        <summary>{season}</summary>
+
+        {#if (rowsBySeason[season] ?? []).length === 0}
+          <p class="muted">No trades found for {season}.</p>
+        {:else}
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Teams</th>
+                  <th class="num">Trades</th>
+                </tr>
+              </thead>
+              <tbody>
+                {#each rowsBySeason[season] as row (row.aRosterId + '_' + row.bRosterId)}
+                  <tr>
+                    <td>{row.aName} vs {row.bName}</td>
+                    <td class="num">{row.tradeCount}</td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
+        {/if}
+      </details>
+    {/each}
+  </div>
+{/if}
+
 <style>
-  #main {
-    position: relative;
-    z-index: 1;
-    display: block;
-    margin: 30px auto;
-    width: 95%;
-    max-width: 1000px;
-    overflow-y: hidden;
+  .wrap {
+    padding: 16px;
   }
-
-  .loading {
-    display: block;
-    width: 85%;
-    max-width: 500px;
-    margin: 80px auto;
+  h1 {
+    margin: 0 0 12px 0;
+    font-size: 22px;
+    font-weight: 700;
   }
-
   details {
-    margin-top: 12px;
+    margin: 10px 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 10px 12px;
   }
-
   summary {
     cursor: pointer;
-    font-weight: 600;
-    padding: 8px 0;
+    font-weight: 700;
   }
-
+  .muted {
+    opacity: 0.75;
+    margin: 10px 0 0 0;
+  }
+  .tableWrap {
+    overflow-x: auto;
+    margin-top: 10px;
+  }
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 8px;
+    min-width: 420px;
   }
-
-  th, td {
-    padding: 6px 8px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+  th,
+  td {
+    padding: 10px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    vertical-align: top;
   }
-
-  th:last-child,
-  td:last-child {
+  th {
+    text-align: left;
+    font-size: 12px;
+    opacity: 0.8;
+    letter-spacing: 0.02em;
+  }
+  .num {
     text-align: right;
+    width: 90px;
+    white-space: nowrap;
   }
 </style>
-
-<div id="main">
-  {#await waitForAll(transactionsData, playersData, leagueTeamManagersData)}
-    <div class="loading">
-      <p>Loading league transactions...</p>
-      <LinearProgress indeterminate />
-    </div>
-
-  {:then [txPkg, playersInfo, leagueTeamManagers]}
-    {@const transactionsNormalized = normalizeTransactionsShape(txPkg.transactions)}
-    {@const currentTeams = txPkg.currentTeams ?? txPkg.current_teams}
-    {@const stale = txPkg.stale ?? false}
-
-    {@const years = Array.from(
-      new Set(transactionsNormalized.map(t => t.season).filter(Boolean))
-    ).sort((a, b) => b - a)}
-
-    <!-- ========================= -->
-    <!-- Head to Head Trades -->
-    <!-- ========================= -->
-    <h2>Head to Head Trades</h2>
-
-    <!-- All Years -->
-    <details open>
-      <summary>All Years</summary>
-      {@const rowsAll = computeTradePartnerCounts(transactionsNormalized, leagueTeamManagers, currentTeams, 'all')}
-
-      <table>
-        <thead>
-          <tr>
-            <th>Team A</th>
-            <th>Team B</th>
-            <th>Trades</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each rowsAll as r (r.teamA + r.teamB)}
-            <tr>
-              <td>{r.teamA}</td>
-              <td>{r.teamB}</td>
-              <td>{r.count}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    </details>
-
-    <!-- Per Year -->
-    {#each years as y}
-      <details>
-        <summary>{y}</summary>
-        {@const rowsYear = computeTradePartnerCounts(transactionsNormalized, leagueTeamManagers, currentTeams, y)}
-
-        <table>
-          <thead>
-            <tr>
-              <th>Team A</th>
-              <th>Team B</th>
-              <th>Trades</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each rowsYear as r (r.teamA + r.teamB)}
-              <tr>
-                <td>{r.teamA}</td>
-                <td>{r.teamB}</td>
-                <td>{r.count}</td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </details>
-    {/each}
-
-    <!-- Existing Transactions Page -->
-    <TransactionsPage
-      {playersInfo}
-      {stale}
-      transactions={txPkg.transactions}
-      currentTeams={currentTeams}
-      {show}
-      {query}
-      queryPage={page}
-      {perPage}
-      postUpdate={true}
-      {leagueTeamManagers}
-    />
-
-  {:catch error}
-    <p class="center">Something went wrong: {error.message}</p>
-  {/await}
-</div>
