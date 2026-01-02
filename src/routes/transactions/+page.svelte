@@ -2,14 +2,13 @@
   import LinearProgress from '@smui/linear-progress';
   import { TransactionsPage } from '$lib/components';
 
-  // Piggy-back logo source used elsewhere (no fallbacks)
-  import { managers } from '$lib/utils/leagueInfo';
-
   export let data;
   const { show, query, page, playersData, transactionsData, leagueTeamManagersData } = data;
 
   const perPage = 10;
-  let partnerSearch = '';
+
+  // year filter: "all" or a specific year number
+  let yearFilter = 'all';
 
   // ----------------------------
   // Prevent infinite loading
@@ -55,6 +54,7 @@
     ['88boyz11', 'Demboyz'],
 
     ['vick2times', 'Vick2times'],
+    ['vick2times ', 'Vick2times'],
 
     ['blue tent all-stars', 'Blue Tent All-Stars'],
     ['perfectly balanced', 'Blue Tent All-Stars'],
@@ -81,29 +81,18 @@
     if (!v) return '';
     if (typeof v === 'string') return v;
     if (typeof v === 'object') {
-      return v.teamName || v.team_name || v.name || v.team || '';
+      return v.teamName || v.team_name || v.name || v.team || v.rosterName || '';
     }
     return String(v);
   }
 
   // ----------------------------
-  // Piggy-back ONLY: logos from managers[].photo (no fallbacks)
+  // Resolve roster -> canonical team name
   // ----------------------------
-  function logoUrlFromSlug(slug) {
-    if (!slug) return null;
-    const m = Array.isArray(managers) ? managers.find((x) => x.slug === slug) : null;
-    const url = m?.photo || null;
-    return typeof url === 'string' && url.trim() ? url.trim() : null;
-  }
-
-  // ----------------------------
-  // Resolve roster -> { name, slug }
-  // Try leagueTeamManagers first, then currentTeams fallback.
-  // ----------------------------
-  function resolveRoster(leagueTeamManagers, currentTeams, season, rosterId) {
+  function resolveRosterName(leagueTeamManagers, currentTeams, season, rosterId) {
     const rid = Number(rosterId);
 
-    // 1) leagueTeamManagers (various shapes)
+    // 1) leagueTeamManagers
     const tmMap = leagueTeamManagers?.teamManagersMap?.[season];
     const tm = tmMap?.[rid];
 
@@ -116,14 +105,8 @@
         tm.rosterName ||
         '';
 
-      const rawSlug =
-        (Array.isArray(tm.managers) && tm.managers[0]) ||
-        tm.slug ||
-        tm.managerSlug ||
-        '';
-
       const finalName = normalizeTeamName(nameToString(rawName));
-      if (finalName) return { name: finalName, slug: String(rawSlug ?? '') };
+      if (finalName) return finalName;
     }
 
     // 2) currentTeams fallback
@@ -131,43 +114,40 @@
     if (ct) {
       if (typeof ct === 'string') {
         const finalName = normalizeTeamName(ct);
-        return finalName ? { name: finalName, slug: '' } : null;
+        return finalName || null;
       }
 
       const rawName = ct.teamName || ct.team_name || ct.name || ct.team || '';
-      const rawSlug = ct.slug || ct.managerSlug || '';
       const finalName = normalizeTeamName(nameToString(rawName));
-      return finalName ? { name: finalName, slug: String(rawSlug ?? '') } : null;
+      return finalName || null;
     }
 
     return null;
   }
 
   // ----------------------------
-  // Compute pairwise counts (2-way + 3-way; 3-way credited to each pair)
-  // FIX: Dedupe teams within each trade AFTER normalization to avoid self-pairs.
+  // Compute pairwise counts for a given year (or all)
+  // 3-way credited to each pair; self-pairs prevented by dedupe.
   // ----------------------------
-  function computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams) {
+  function computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams, year = 'all') {
     const pairs = new Map();
 
     function pairKey(a, b) {
       return `${a}|||${b}`;
     }
 
-    function inc(nameA, slugA, nameB, slugB) {
-      if (!nameA || !nameB) return;
-      if (nameA === nameB) return; // no self-pairs
+    function inc(a, b) {
+      if (!a || !b) return;
+      if (a === b) return;
 
-      const AFirst = nameA.localeCompare(nameB) <= 0;
-      const teamA = AFirst ? nameA : nameB;
-      const teamB = AFirst ? nameB : nameA;
-      const sA = AFirst ? (slugA || '') : (slugB || '');
-      const sB = AFirst ? (slugB || '') : (slugA || '');
+      const AFirst = a.localeCompare(b) <= 0;
+      const teamA = AFirst ? a : b;
+      const teamB = AFirst ? b : a;
 
       const k = pairKey(teamA, teamB);
 
       if (!pairs.has(k)) {
-        pairs.set(k, { teamA, teamB, slugA: sA, slugB: sB, count: 0 });
+        pairs.set(k, { teamA, teamB, count: 0 });
       }
       pairs.get(k).count++;
     }
@@ -176,31 +156,26 @@
       if (tx.type !== 'trade') continue;
 
       const season = tx.season;
+      if (year !== 'all' && Number(season) !== Number(year)) continue;
+
       const rosterIds = tx.rosters ?? [];
       if (rosterIds.length < 2 || rosterIds.length > 3) continue;
 
-      // Resolve -> normalize -> DEDUPE by canonical name
+      // resolve -> normalize -> DEDUPE by canonical name
       const uniqueByName = new Map();
 
       for (const rid of rosterIds) {
-        const resolved = resolveRoster(leagueTeamManagers, currentTeams, season, rid);
-        if (!resolved) continue;
-
-        const name = normalizeTeamName(nameToString(resolved.name));
-        if (!name) continue;
-
-        if (!uniqueByName.has(name)) {
-          uniqueByName.set(name, { name, slug: resolved.slug || '' });
-        }
+        const nm = resolveRosterName(leagueTeamManagers, currentTeams, season, rid);
+        if (!nm) continue;
+        if (!uniqueByName.has(nm)) uniqueByName.set(nm, nm);
       }
 
       const teams = Array.from(uniqueByName.values());
       if (teams.length < 2) continue;
 
-      // Credit 2-way and 3-way to each pair
       for (let i = 0; i < teams.length; i++) {
         for (let j = i + 1; j < teams.length; j++) {
-          inc(teams[i].name, teams[i].slug, teams[j].name, teams[j].slug);
+          inc(teams[i], teams[j]);
         }
       }
     }
@@ -242,16 +217,28 @@
     background: rgba(0, 0, 0, 0.35);
   }
 
+  .panelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
   .panel h2 {
-    margin: 0 0 10px 0;
+    margin: 0;
     font-size: 28px;
     font-weight: 600;
   }
 
-  .search {
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0 12px 0;
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  select {
+    padding: 8px 10px;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
@@ -261,9 +248,11 @@
   table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
   }
 
-  th, td {
+  th,
+  td {
     padding: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
@@ -273,18 +262,10 @@
     width: 90px;
   }
 
-  .teamCell {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .logo {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
+  .hint {
+    opacity: 0.75;
+    font-size: 12px;
+    margin-top: 6px;
   }
 </style>
 
@@ -304,15 +285,30 @@
     {@const currentTeams = txPkg.currentTeams ?? txPkg.current_teams ?? null}
     {@const stale = txPkg.stale ?? false}
 
-    {@const rows = computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams)}
-    {@const filtered = partnerSearch
-      ? rows.filter(r => `${r.teamA} ${r.teamB}`.toLowerCase().includes(partnerSearch.toLowerCase()))
-      : rows
-    }
+    {@const years = Array.from(
+      new Set((transactions ?? []).map(t => t?.season).filter(Boolean).map(Number))
+    ).sort((a, b) => b - a)}
+
+    {#if yearFilter === 'all' && years.length > 0}
+      {@html ''} <!-- keep yearFilter stable -->
+    {/if}
+
+    {@const rows = computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams, yearFilter)}
+    {@const selectedLabel = yearFilter === 'all' ? 'All Years' : String(yearFilter)}
 
     <div class="panel">
-      <h2>Trade Partners</h2>
-      <input class="search" placeholder="Search teams..." bind:value={partnerSearch} />
+      <div class="panelHeader">
+        <h2>Head to Head Trades</h2>
+
+        <div class="controls">
+          <select bind:value={yearFilter}>
+            <option value="all">All Years</option>
+            {#each years as y}
+              <option value={String(y)}>{y}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
 
       <table>
         <thead>
@@ -323,49 +319,25 @@
           </tr>
         </thead>
         <tbody>
-          {#if filtered.length === 0}
+          {#if rows.length === 0}
             <tr>
-              <td colspan="3" style="opacity:.8;">No results.</td>
+              <td colspan="3" style="opacity:.8;">No trades found for {selectedLabel}.</td>
             </tr>
           {:else}
-            {#each filtered as r (r.teamA + r.teamB)}
+            {#each rows as r (r.teamA + r.teamB)}
               <tr>
-                <td>
-                  <div class="teamCell">
-                    {#if logoUrlFromSlug(r.slugA)}
-                      <img
-                        class="logo"
-                        src={logoUrlFromSlug(r.slugA)}
-                        alt={r.teamA}
-                        loading="lazy"
-                        referrerpolicy="no-referrer"
-                      />
-                    {/if}
-                    <span>{r.teamA}</span>
-                  </div>
-                </td>
-
-                <td>
-                  <div class="teamCell">
-                    {#if logoUrlFromSlug(r.slugB)}
-                      <img
-                        class="logo"
-                        src={logoUrlFromSlug(r.slugB)}
-                        alt={r.teamB}
-                        loading="lazy"
-                        referrerpolicy="no-referrer"
-                      />
-                    {/if}
-                    <span>{r.teamB}</span>
-                  </div>
-                </td>
-
+                <td>{r.teamA}</td>
+                <td>{r.teamB}</td>
                 <td class="count">{r.count}</td>
               </tr>
             {/each}
           {/if}
         </tbody>
       </table>
+
+      <div class="hint">
+        Includes 2-way and 3-way trades. 3-way trades are credited once to each participating pair.
+      </div>
     </div>
 
     <TransactionsPage
