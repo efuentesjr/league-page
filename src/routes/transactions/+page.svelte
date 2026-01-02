@@ -9,9 +9,9 @@
 
   const perPage = 10;
 
-  // ----------------------------
-  // Name normalization (your rules)
-  // ----------------------------
+  /* ----------------------------------
+     NORMALIZATION
+  ---------------------------------- */
   const aliasToCanonical = new Map([
     ['los loquitos', 'Los Loquitos'],
     ['slikbears all luck', 'Los Loquitos'],
@@ -44,42 +44,42 @@
     ['chosen one', 'The Process']
   ]);
 
-  function cleanKey(s) {
-    return String(s ?? '').trim().toLowerCase();
-  }
+  const clean = (v) => String(v ?? '').trim();
+  const cleanKey = (v) => clean(v).toLowerCase();
 
   function normalizeTeam(name) {
     const key = cleanKey(name);
-    return aliasToCanonical.get(key) ?? name;
+    return aliasToCanonical.get(key) ?? clean(name);
   }
 
-  // ----------------------------
-  // Canonical roster → team resolver
-  // (uses SAME structure as transaction cards)
-  // ----------------------------
+  /* ----------------------------------
+     CANONICAL TEAM RESOLUTION
+  ---------------------------------- */
   function resolveTeam(leagueTeamManagers, season, rosterId) {
     const tm = leagueTeamManagers?.teamManagersMap?.[season]?.[rosterId];
     if (!tm) return null;
 
     return {
-      name: normalizeTeam(tm.teamName),
-      slug: tm.managers?.[0] ?? ''
+      name: normalizeTeam(tm.teamName ?? ''),
+      slug: String(tm.managers?.[0] ?? '')
     };
   }
 
-  // ----------------------------
-  // Pairwise trade counts
-  // ----------------------------
+  /* ----------------------------------
+     PAIR COUNTS (SAFE)
+  ---------------------------------- */
   function computePairCounts(transactions, leagueTeamManagers) {
-    const pairs = new Map();
+    const map = new Map();
 
-    function inc(a, b) {
+    function addPair(a, b) {
+      if (!a?.name || !b?.name) return;
+
       const A = a.name.localeCompare(b.name) <= 0 ? a : b;
       const B = A === a ? b : a;
-      const key = `${A.name}|||${B.name}`;
 
-      if (!pairs.has(key)) {
-        pairs.set(key, {
+      const key = `${A.name}|||${B.name}`;
+      if (!map.has(key)) {
+        map.set(key, {
           teamA: A.name,
           teamB: B.name,
           slugA: A.slug,
@@ -87,28 +87,30 @@
           count: 0
         });
       }
-      pairs.get(key).count++;
+      map.get(key).count++;
     }
 
     for (const tx of transactions ?? []) {
       if (tx.type !== 'trade') continue;
 
       const season = tx.season;
-      const teams = tx.rosters
+      const teams = (tx.rosters ?? [])
         .map(rid => resolveTeam(leagueTeamManagers, season, rid))
-        .filter(Boolean);
+        .filter(t => t && t.name);
 
       if (teams.length < 2 || teams.length > 3) continue;
 
       for (let i = 0; i < teams.length; i++) {
         for (let j = i + 1; j < teams.length; j++) {
-          inc(teams[i], teams[j]);
+          addPair(teams[i], teams[j]);
         }
       }
     }
 
-    return Array.from(pairs.values()).sort(
-      (a, b) => b.count - a.count || a.teamA.localeCompare(b.teamA)
+    return Array.from(map.values()).sort((a, b) =>
+      (b.count - a.count) ||
+      clean(a.teamA).localeCompare(clean(b.teamA)) ||
+      clean(a.teamB).localeCompare(clean(b.teamB))
     );
   }
 
@@ -165,64 +167,4 @@
 <div id="main">
   {#await waitForAll(transactionsData, playersData, leagueTeamManagersData)}
     <LinearProgress indeterminate />
-  {:then [{ transactions, currentTeams, stale }, playersInfo, leagueTeamManagers]}
-
-    {@const rows = computePairCounts(transactions, leagueTeamManagers)}
-    {@const filtered = partnerSearch
-      ? rows.filter(r =>
-          `${r.teamA} ${r.teamB}`.toLowerCase().includes(partnerSearch.toLowerCase())
-        )
-      : rows
-    }
-
-    <div class="panel">
-      <h2>Trade Partners</h2>
-      <input placeholder="Search teams..." bind:value={partnerSearch} />
-
-      <table>
-        <thead>
-          <tr>
-            <th>Team A</th>
-            <th>Team B</th>
-            <th class="count">Trades</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each filtered as r (r.teamA + r.teamB)}
-            <tr>
-              <td>
-                <div class="teamCell">
-                  <SleeperAvatar slug={r.slugA} size={22} />
-                  {r.teamA}
-                </div>
-              </td>
-              <td>
-                <div class="teamCell">
-                  <SleeperAvatar slug={r.slugB} size={22} />
-                  {r.teamB}
-                </div>
-              </td>
-              <td class="count">{r.count}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
-
-    <TransactionsPage
-      {playersInfo}
-      {stale}
-      {transactions}
-      {currentTeams}
-      {show}
-      {query}
-      queryPage={page}
-      {perPage}
-      postUpdate={true}
-      {leagueTeamManagers}
-    />
-
-  {:catch e}
-    <p>Error: {e.message}</p>
-  {/await}
-</div>
+  {:then [{ transactions]()
