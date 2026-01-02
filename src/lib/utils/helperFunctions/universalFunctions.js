@@ -1,389 +1,309 @@
-<!-- PATH: src/routes/transactions/+page.svelte -->
+import { managers as managersObj } from '$lib/utils/leagueInfo';
+import { goto } from "$app/navigation";
+import { stringDate } from './news';
 
-<script>
-  import LinearProgress from '@smui/linear-progress';
-  import { TransactionsPage } from '$lib/components';
+const QUESTION = 'managers/question.jpg';
 
-  // Piggy-back logo source used elsewhere (no fallbacks)
-  import { managers } from '$lib/utils/leagueInfo';
+export const cleanName = (name) => {
+    return name.replace('Team ', '').toLowerCase().replace(/[ ’'!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^_`{|}~']/g, "");
+}
 
-  export let data;
-  const { show, query, page, playersData, transactionsData, leagueTeamManagersData } = data;
-
-  const perPage = 10;
-  let partnerSearch = '';
-
-  // ----------------------------
-  // Prevent infinite loading
-  // ----------------------------
-  function withTimeout(promise, ms = 30000, label = 'data') {
-    return Promise.race([
-      Promise.resolve(promise),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)
-      )
-    ]);
-  }
-
-  const allData = Promise.all([
-    withTimeout(transactionsData, 30000, 'transactionsData'),
-    withTimeout(playersData, 30000, 'playersData'),
-    withTimeout(leagueTeamManagersData, 30000, 'leagueTeamManagersData')
-  ]);
-
-  // ----------------------------
-  // Name normalization (your rules)
-  // ----------------------------
-  const aliasToCanonical = new Map([
-    ['los loquitos', 'Los Loquitos'],
-    ['slikbears all luck', 'Los Loquitos'],
-    ['“slikbears” all luck', 'Los Loquitos'],
-    ['sb bound', 'Los Loquitos'],
-    ['sb bound🏆', 'Los Loquitos'],
-
-    ['slickbears', 'SlickBears'],
-
-    ['primetime prodigies', 'PrimeTime Prodigies'],
-    ['primetime j', 'PrimeTime Prodigies'],
-
-    ['brute force attacks', 'Brute Force Attack'],
-    ['brute force attack', 'Brute Force Attack'],
-    ['end zone entourage', 'Brute Force Attack'],
-
-    ['blue ballers', 'Blue Ballers'],
-    ['austin rattlers', 'Blue Ballers'],
-
-    ['demboyz', 'Demboyz'],
-    ['88boyz11', 'Demboyz'],
-
-    ['vick2times', 'Vick2times'],
-
-    ['blue tent all-stars', 'Blue Tent All-Stars'],
-    ['perfectly balanced', 'Blue Tent All-Stars'],
-    ['the snap', 'Blue Tent All-Stars'],
-    ['zero dark purdy', 'Blue Tent All-Stars'],
-
-    ['the process', 'The Process'],
-    ['death row', 'The Process'],
-    ['dreamville', 'The Process'],
-    ['chosen one.', 'The Process'],
-    ['chosen one', 'The Process']
-  ]);
-
-  const clean = (v) => String(v ?? '').trim();
-  const key = (v) => clean(v).toLowerCase();
-
-  function normalizeTeamName(name) {
-    const k = key(name);
-    return aliasToCanonical.get(k) ?? clean(name);
-  }
-
-  // Ensure we never render [object Object]
-  function nameToString(v) {
-    if (!v) return '';
-    if (typeof v === 'string') return v;
-    if (typeof v === 'object') {
-      return v.teamName || v.team_name || v.name || v.team || '';
+export const round = (num) => {
+    if(typeof(num) =="string") {
+        num = parseFloat(num)
     }
-    return String(v);
-  }
+    return (Math.round((num + Number.EPSILON) * 100) / 100).toFixed(2);
+}
 
-  // ----------------------------
-  // Piggy-back ONLY: logos from managers[].photo (no fallbacks)
-  // ----------------------------
-  function logoUrlFromSlug(slug) {
-    if (!slug) return null;
-    const m = Array.isArray(managers) ? managers.find((x) => x.slug === slug) : null;
-    const url = m?.photo || null;
-    return typeof url === 'string' && url.trim() ? url.trim() : null;
-  }
+const min = (stats, roundOverride, max) => {
+    const num = Math.min(...stats);
+    let minAnswer = Math.floor(num / roundOverride) * roundOverride;
+    if(max && num > 0) {
+        let i = 0;
+        while(minAnswer > 0 && (num - minAnswer) / (max - minAnswer) < .15) {
+            minAnswer -= roundOverride;
+            i++;
+            // prevent infinite loop, emergency exit
+            if(i > 100) {
+                break;
+            }
+        }
+    }
+    return minAnswer > 0 ? minAnswer : 0;
+}
 
-  // ----------------------------
-  // Resolve roster -> { name, slug }
-  // Try leagueTeamManagers first, then currentTeams fallback.
-  // ----------------------------
-  function resolveRoster(leagueTeamManagers, currentTeams, season, rosterId) {
-    const rid = Number(rosterId);
+const max = (stats, roundOverride) => {
+    const num = Math.max(...stats);
+    return Math.ceil(num / roundOverride) * roundOverride;
+}
 
-    // 1) leagueTeamManagers (various shapes)
-    const tmMap = leagueTeamManagers?.teamManagersMap?.[season];
-    const tm = tmMap?.[rid];
+export const gotoManager = ({leagueTeamManagers, managerID, rosterID, year}) => {
+    if(!managersObj.length) return;
+    let managersIndex = -1;
 
-    if (tm) {
-      const rawName =
-        tm.teamName ||
-        tm.team_name ||
-        tm.name ||
-        tm.team ||
-        tm.rosterName ||
-        '';
-
-      const rawSlug =
-        (Array.isArray(tm.managers) && tm.managers[0]) ||
-        tm.slug ||
-        tm.managerSlug ||
-        '';
-
-      const finalName = normalizeTeamName(nameToString(rawName));
-      if (finalName) return { name: finalName, slug: String(rawSlug ?? '') };
+    if(!year || year > leagueTeamManagers.currentSeason) {
+        year = leagueTeamManagers.currentSeason;
     }
 
-    // 2) currentTeams fallback
-    const ct = currentTeams?.[rid] ?? currentTeams?.[String(rid)];
-    if (ct) {
-      if (typeof ct === 'string') {
-        const finalName = normalizeTeamName(ct);
-        return finalName ? { name: finalName, slug: '' } : null;
-      }
+    if(managerID) {
+        // modern approach
+        managersIndex = managersObj.findIndex(m => m.managerID == managerID);
 
-      const rawName = ct.teamName || ct.team_name || ct.name || ct.team || '';
-      const rawSlug = ct.slug || ct.managerSlug || '';
-      const finalName = normalizeTeamName(nameToString(rawName));
-      return finalName ? { name: finalName, slug: String(rawSlug ?? '') } : null;
+        // support for league pages still using deprecated roster field
+        if(managersIndex < 0 && leagueTeamManagers.teamManagersMap[year] != null) {
+            for(const rID in leagueTeamManagers.teamManagersMap[year]) {
+                if(leagueTeamManagers.teamManagersMap[year][rID] == null) continue;
+                for(const mID of leagueTeamManagers.teamManagersMap[year][rID].managers) {
+                    if(mID == managerID) {
+                        managersIndex =  managersObj.findIndex(m => m.roster == rID);
+                        goto(`/manager?manager=${managersIndex}`);
+                        return;
+                    }
+                }
+            }
+        }
+    } else if(rosterID) {
+        // check for matching managerID first
+        if(leagueTeamManagers.teamManagersMap[year] != null) {
+            for(const mID of leagueTeamManagers.teamManagersMap[year][rosterID].managers) {
+                managersIndex = managersObj.findIndex(m => m.managerID == mID);
+                if(managersIndex > -1) {
+                    goto(`/manager?manager=${managersIndex}`);
+                    return;
+                }
+            }
+        }
+        
+        // support for league pages still using deprecated roster field
+        managersIndex = managersObj.findIndex(m => m.roster == rosterID);
     }
 
+    // if no manager exists for that roster, -1 will take you to the main managers page
+    goto(`/manager?manager=${managersIndex}`);
+}
+
+export const getAuthor = (leagueTeamManagers, author) => {
+    for(const userID in leagueTeamManagers.users) {
+        if(leagueTeamManagers.users[userID].user_name.toLowerCase() == author.toLowerCase()) {
+            return [`<a href="/manager?manager=${managersObj.findIndex(m => m.managerID == String(userID))}">${leagueTeamManagers.users[userID].display_name}</a>`, ]
+        }
+    }
+    return author;
+}
+
+export const getAvatar = (leagueTeamManagers, author) => {
+    for(const uID in leagueTeamManagers.users) {
+        if(leagueTeamManagers.users[uID].user_name.toLowerCase() == author.toLowerCase()) {
+            return `https://sleepercdn.com/avatars/thumbs/${leagueTeamManagers.users[uID].avatar}`;
+        }
+    }
+    return QUESTION;
+}
+
+export const parseDate = (rawDate) => {
+    const ts = Date.parse(rawDate);
+    const d = new Date(ts);
+    return stringDate(d);
+}
+
+export const generateGraph = ({stats, x, stat, header, field, short, secondField = null}, year, roundOverride = 10, xMinOverride = null) => {
+    if(!stats) {
+        return null;
+    }
+    const graph = {
+        stats: [],
+        secondStats: [],
+        managerIDs: [],
+        rosterIDs: [],
+        labels: {x, stat},
+        header,
+        xMin: 0,
+        xMax: 0,
+        short,
+        year
+    }
+
+    const sortedStats = [...stats].sort((a, b) => b[field] - a[field]);
+
+    for(const indivStat of sortedStats) {
+        graph.stats.push(indivStat[field]);
+        if(secondField) {
+            graph.secondStats.push(indivStat[secondField]);
+        }
+        if(indivStat.managerID) {
+            graph.managerIDs.push(indivStat.managerID);
+            graph.rosterIDs.push(null);
+        } else if(indivStat.rosterID) {
+            graph.managerIDs.push(null);
+            graph.rosterIDs.push(indivStat.rosterID);
+        }
+    }
+
+    graph.xMax = max(graph.stats, roundOverride);
+    graph.xMin = min(graph.stats, roundOverride, graph.xMax);
+    if(secondField) {
+        graph.xMin = min(graph.secondStats, roundOverride, graph.xMax);
+    }
+    if(xMinOverride) {
+        graph.xMin = xMinOverride;
+    }
+
+    return graph;
+}
+
+
+/**
+ * takes an array and array field, sorts the array, and returns
+ * the 10 highest and lowest members of the array in desc and asc order respectively
+ * @param {Object[]} arr the array to be sorted
+ * @param {string} field the field to sort on
+ * @returns {arr|arr} [high, low] an array where the first element is the 10 highest records and the second is the 10 lowest elements
+ */
+ export const sortHighAndLow = (arr, field) => {
+	const sorted = arr.sort((a, b) => b[field] - a[field]);
+	const high = sorted.slice(0, 10);
+	const low = sorted.slice(-10).reverse();
+	return [high, low]
+}
+
+/**
+ * get all managers of a roster
+ * @param {Object} roster an object with all data for a roster
+ * @returns {Object[]} [managerIDs...] an array of manager IDs
+ */
+export const getManagers = (roster) => {
+	const managers = [];
+    if(roster.owner_id) {
+        managers.push(roster.owner_id);
+    }
+    if(roster.co_owners) {
+        for(const coOwner of roster.co_owners) {
+            managers.push(coOwner);
+        }
+    }
+    return managers;
+}
+
+/**
+ * takes in a map of users and a owner ID and returns an object with a user's avatar and name
+ * @param {Object} users the map of users
+ * @param {string} ownerID the ID of the owner
+ * @returns {Object} {avatar, name} an object containing a user's avatar image url and their name
+ */
+export const getTeamData = (users, ownerID) => {
+	const user = users[ownerID];
+	if(user) {
+		return {
+			avatar: user.metadata?.avatar ? user.metadata.avatar : `https://sleepercdn.com/avatars/thumbs/${user.avatar}`,
+			name: user.metadata.team_name ? user.metadata.team_name : user.display_name,
+		}
+	}
+    return {
+        avatar: `https://sleepercdn.com/images/v2/icons/player_default.webp`,
+        name: 'Unknown Team',
+    }
+}
+
+export const getAvatarFromTeamManagers = (teamManagers, rosterID, year) => {
+    if(!year || year > teamManagers.currentSeason) {
+        year = teamManagers.currentSeason;
+    }
+    const yearManagers = teamManagers.teamManagersMap[year];
+    if(yearManagers == null) {
+        return QUESTION;
+    }
+    const roster = yearManagers[rosterID];
+    if(roster == null) {
+        return QUESTION;
+    }
+    return roster.team?.avatar;
+}
+
+export const getTeamNameFromTeamManagers = (teamManagers, rosterID, year) => {
+    if(!year || year > teamManagers.currentSeason) {
+        year = teamManagers.currentSeason;
+    }
+    return teamManagers.teamManagersMap[year][rosterID].team.name;
+}
+
+export const renderManagerNames = (teamManagers, rosterID, year) => {
+    if(!year || year > teamManagers.currentSeason) {
+        year = teamManagers.currentSeason;
+    }
+    let managersString = "";
+    for(const managerID of teamManagers.teamManagersMap[year][rosterID].managers) {
+        const manager = teamManagers.users[managerID];
+        if(manager) {
+            if(managersString != "") {
+                managersString += ", "
+            }
+            managersString += manager.display_name;
+        }
+    }
+    return managersString;
+}
+
+export const getTeamFromTeamManagers = (teamManagers, rosterID, year) => {
+    if(!year || year > teamManagers.currentSeason) {
+        year = teamManagers.currentSeason;
+    }
+    return teamManagers.teamManagersMap[year][rosterID]['team'];
+}
+
+export const getNestedTeamNamesFromTeamManagers = (teamManagers, year, rosterID) => {
+    const originalName = teamManagers.teamManagersMap[year][rosterID]['team']['name'];
+    const currentName = teamManagers.teamManagersMap[teamManagers.currentSeason][rosterID]['team']['name'];
+    if(cleanName(originalName) != cleanName(currentName)) {
+        return `${originalName}<div class="curOwner">(${currentName})</div>`;
+    }
+    return originalName;
+}
+
+export const getDatesActive = (teamManagers, managerID) => {
+    if(!managerID) return;
+    let datesActive = {start: null, end: null};
+    const years = Object.keys(teamManagers.teamManagersMap).sort((a, b) => b - a);
+    for(const year of years) {
+        for(const rosterID in  teamManagers.teamManagersMap[year]) {
+            if(teamManagers.teamManagersMap[year][rosterID].managers.indexOf(managerID) > -1) {
+                datesActive.start = year;
+                if(!datesActive.end) {
+                    datesActive.end = year;
+                }
+                break;
+            }
+        }
+    }
+    if(datesActive.end == teamManagers.currentSeason) {
+        datesActive.end = null;
+    }
+    return datesActive;
+}
+
+export const getRosterIDFromManagerID = (teamManagers, managerID) => {
+    if(!managerID) return null;
+    const years = Object.keys(teamManagers.teamManagersMap).sort((a, b) => b - a);
+    for(const year of years) {
+        for(const rosterID in  teamManagers.teamManagersMap[year]) {
+            if(teamManagers.teamManagersMap[year][rosterID].managers.indexOf(managerID) > -1) {
+                return {rosterID, year};
+            }
+        }
+    }
     return null;
-  }
+}
 
-  // ----------------------------
-  // Compute pairwise counts (2-way + 3-way; 3-way credited to each pair)
-  // FIX: Dedupe teams within each trade AFTER normalization to avoid self-pairs.
-  // ----------------------------
-  function computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams) {
-    const pairs = new Map();
-
-    function pairKey(a, b) {
-      return `${a}|||${b}`;
-    }
-
-    function inc(nameA, slugA, nameB, slugB) {
-      if (!nameA || !nameB) return;
-      if (nameA === nameB) return; // no self-pairs
-
-      const AFirst = nameA.localeCompare(nameB) <= 0;
-      const teamA = AFirst ? nameA : nameB;
-      const teamB = AFirst ? nameB : nameA;
-      const sA = AFirst ? (slugA || '') : (slugB || '');
-      const sB = AFirst ? (slugB || '') : (slugA || '');
-
-      const k = pairKey(teamA, teamB);
-
-      if (!pairs.has(k)) {
-        pairs.set(k, { teamA, teamB, slugA: sA, slugB: sB, count: 0 });
-      }
-      pairs.get(k).count++;
-    }
-
-    for (const tx of transactions ?? []) {
-      if (tx.type !== 'trade') continue;
-
-      const season = tx.season;
-      const rosterIds = tx.rosters ?? [];
-      if (rosterIds.length < 2 || rosterIds.length > 3) continue;
-
-      // Resolve -> normalize -> DEDUPE by canonical name
-      const uniqueByName = new Map();
-
-      for (const rid of rosterIds) {
-        const resolved = resolveRoster(leagueTeamManagers, currentTeams, season, rid);
-        if (!resolved) continue;
-
-        const name = normalizeTeamName(nameToString(resolved.name));
-        if (!name) continue;
-
-        if (!uniqueByName.has(name)) {
-          uniqueByName.set(name, { name, slug: resolved.slug || '' });
+export const getRosterIDFromManagerIDAndYear = (teamManagers, managerID, year) => {
+    if(!managerID || !year) return null;
+    for(const rosterID in  teamManagers.teamManagersMap[year]) {
+        if(teamManagers.teamManagersMap[year][rosterID].managers.indexOf(managerID) > -1) {
+            return rosterID;
         }
-      }
-
-      const teams = Array.from(uniqueByName.values());
-      if (teams.length < 2) continue;
-
-      // Credit 2-way and 3-way to each pair
-      for (let i = 0; i < teams.length; i++) {
-        for (let j = i + 1; j < teams.length; j++) {
-          inc(teams[i].name, teams[i].slug, teams[j].name, teams[j].slug);
-        }
-      }
     }
+    return null;
+}
 
-    return Array.from(pairs.values()).sort(
-      (a, b) =>
-        b.count - a.count ||
-        a.teamA.localeCompare(b.teamA) ||
-        a.teamB.localeCompare(b.teamB)
-    );
-  }
-</script>
-
-<style>
-  #main {
-    position: relative;
-    z-index: 1;
-    display: block;
-    margin: 30px auto;
-    width: 95%;
-    max-width: 1000px;
-    overflow-y: hidden;
-  }
-
-  .loading {
-    display: block;
-    position: relative;
-    z-index: 1;
-    width: 85%;
-    max-width: 500px;
-    margin: 80px auto;
-  }
-
-  .panel {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 18px;
-    background: rgba(0, 0, 0, 0.35);
-  }
-
-  .panel h2 {
-    margin: 0 0 10px 0;
-    font-size: 28px;
-    font-weight: 600;
-  }
-
-  .search {
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0 12px 0;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    color: inherit;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  th, td {
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .count {
-    text-align: right;
-    width: 90px;
-  }
-
-  .teamCell {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .logo {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
-  }
-</style>
-
-<div id="main">
-  {#await allData}
-    <div class="loading">
-      <p>Loading league transactions...</p>
-      <LinearProgress indeterminate />
-    </div>
-
-  {:then resolved}
-    {@const txPkg = resolved[0] ?? {}}
-    {@const playersInfo = resolved[1]}
-    {@const leagueTeamManagers = resolved[2]}
-
-    {@const transactions = txPkg.transactions ?? []}
-    {@const currentTeams = txPkg.currentTeams ?? txPkg.current_teams ?? null}
-    {@const stale = txPkg.stale ?? false}
-
-    {@const rows = computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams)}
-    {@const filtered = partnerSearch
-      ? rows.filter(r => `${r.teamA} ${r.teamB}`.toLowerCase().includes(partnerSearch.toLowerCase()))
-      : rows
-    }
-
-    <div class="panel">
-      <h2>Trade Partners</h2>
-      <input class="search" placeholder="Search teams..." bind:value={partnerSearch} />
-
-      <table>
-        <thead>
-          <tr>
-            <th>Team A</th>
-            <th>Team B</th>
-            <th class="count">Trades</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#if filtered.length === 0}
-            <tr>
-              <td colspan="3" style="opacity:.8;">No results.</td>
-            </tr>
-          {:else}
-            {#each filtered as r (r.teamA + r.teamB)}
-              <tr>
-                <td>
-                  <div class="teamCell">
-                    {#if logoUrlFromSlug(r.slugA)}
-                      <img
-                        class="logo"
-                        src={logoUrlFromSlug(r.slugA)}
-                        alt={r.teamA}
-                        loading="lazy"
-                        referrerpolicy="no-referrer"
-                      />
-                    {/if}
-                    <span>{r.teamA}</span>
-                  </div>
-                </td>
-
-                <td>
-                  <div class="teamCell">
-                    {#if logoUrlFromSlug(r.slugB)}
-                      <img
-                        class="logo"
-                        src={logoUrlFromSlug(r.slugB)}
-                        alt={r.teamB}
-                        loading="lazy"
-                        referrerpolicy="no-referrer"
-                      />
-                    {/if}
-                    <span>{r.teamB}</span>
-                  </div>
-                </td>
-
-                <td class="count">{r.count}</td>
-              </tr>
-            {/each}
-          {/if}
-        </tbody>
-      </table>
-    </div>
-
-    <TransactionsPage
-      {playersInfo}
-      {stale}
-      {transactions}
-      {currentTeams}
-      {show}
-      {query}
-      queryPage={page}
-      {perPage}
-      postUpdate={true}
-      {leagueTeamManagers}
-    />
-
-  {:catch error}
-    <p class="center">Something went wrong: {error.message}</p>
-  {/await}
-</div>
+export const checkIfManagerReceivedAward = (teamManagers, awardRosterID, year, managerID) => {
+    if(!managerID) return false;
+    return teamManagers.teamManagersMap[year][awardRosterID].managers.indexOf(managerID) > -1;
+}
