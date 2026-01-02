@@ -1,7 +1,6 @@
 <script>
   import LinearProgress from '@smui/linear-progress';
   import { TransactionsPage } from '$lib/components';
-  import SleeperAvatar from '$lib/components/SleeperAvatar.svelte';
 
   export let data;
   const { show, query, page, playersData, transactionsData, leagueTeamManagersData } = data;
@@ -51,10 +50,8 @@
 
     ['demboyz', 'Demboyz'],
     ['88boyz11', 'Demboyz'],
-    ['88boyz11 ', 'Demboyz'],
 
     ['vick2times', 'Vick2times'],
-    ['vick2times ', 'Vick2times'],
 
     ['blue tent all-stars', 'Blue Tent All-Stars'],
     ['perfectly balanced', 'Blue Tent All-Stars'],
@@ -76,6 +73,16 @@
     return aliasToCanonical.get(k) ?? clean(name);
   }
 
+  // Ensure we never render [object Object]
+  function nameToString(v) {
+    if (!v) return '';
+    if (typeof v === 'string') return v;
+    if (typeof v === 'object') {
+      return v.teamName || v.team_name || v.name || v.team || '';
+    }
+    return String(v);
+  }
+
   // ----------------------------
   // Resolve roster -> { name, slug }
   // Try leagueTeamManagers first, then currentTeams fallback.
@@ -88,7 +95,7 @@
     const tm = tmMap?.[rid];
 
     if (tm) {
-      const name =
+      const rawName =
         tm.teamName ||
         tm.team_name ||
         tm.name ||
@@ -96,18 +103,17 @@
         tm.rosterName ||
         '';
 
-      const slug =
+      const rawSlug =
         (Array.isArray(tm.managers) && tm.managers[0]) ||
         tm.slug ||
         tm.managerSlug ||
         '';
 
-      const finalName = normalizeTeamName(name);
-      if (finalName) return { name: finalName, slug: String(slug ?? '') };
+      const finalName = normalizeTeamName(nameToString(rawName));
+      if (finalName) return { name: finalName, slug: String(rawSlug ?? '') };
     }
 
-    // 2) currentTeams fallback (various shapes)
-    // Often currentTeams is a map: { [rosterId]: { name, slug } } or { [rosterId]: "Team Name" }
+    // 2) currentTeams fallback
     const ct = currentTeams?.[rid] ?? currentTeams?.[String(rid)];
     if (ct) {
       if (typeof ct === 'string') {
@@ -115,10 +121,10 @@
         return finalName ? { name: finalName, slug: '' } : null;
       }
 
-      const name = ct.teamName || ct.team_name || ct.name || ct.team || '';
-      const slug = ct.slug || ct.managerSlug || '';
-      const finalName = normalizeTeamName(name);
-      return finalName ? { name: finalName, slug: String(slug ?? '') } : null;
+      const rawName = ct.teamName || ct.team_name || ct.name || ct.team || '';
+      const rawSlug = ct.slug || ct.managerSlug || '';
+      const finalName = normalizeTeamName(nameToString(rawName));
+      return finalName ? { name: finalName, slug: String(rawSlug ?? '') } : null;
     }
 
     return null;
@@ -131,12 +137,20 @@
     const pairs = new Map();
 
     function inc(a, b) {
-      if (!a?.name || !b?.name) return;
+      const nameA = normalizeTeamName(nameToString(a?.name));
+      const nameB = normalizeTeamName(nameToString(b?.name));
+      if (!nameA || !nameB) return;
 
-      const A = a.name.localeCompare(b.name) <= 0 ? a : b;
-      const B = A === a ? b : a;
+      const A = nameA.localeCompare(nameB) <= 0
+        ? { ...a, name: nameA }
+        : { ...b, name: nameB };
+
+      const B = A === a
+        ? { ...b, name: nameB }
+        : { ...a, name: nameA };
 
       const pairKey = `${A.name}|||${B.name}`;
+
       if (!pairs.has(pairKey)) {
         pairs.set(pairKey, {
           teamA: A.name,
@@ -146,7 +160,8 @@
           count: 0
         });
       }
-      pairs.get(pairKey).count += 1;
+
+      pairs.get(pairKey).count++;
     }
 
     for (const tx of transactions ?? []) {
@@ -158,7 +173,9 @@
 
       const teams = rosterIds
         .map((rid) => resolveRoster(leagueTeamManagers, currentTeams, season, rid))
-        .filter(Boolean);
+        .filter(Boolean)
+        .map(t => ({ name: t.name, slug: t.slug }))
+        .filter(t => t.name);
 
       if (teams.length < 2) continue;
 
@@ -216,8 +233,8 @@
     width: 100%;
     padding: 10px;
     margin: 6px 0 12px 0;
-    background: rgba(0,0,0,.4);
-    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
     color: inherit;
   }
@@ -230,12 +247,6 @@
   th, td {
     padding: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .teamCell {
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
   .count {
@@ -286,18 +297,8 @@
           {:else}
             {#each filtered as r (r.teamA + r.teamB)}
               <tr>
-                <td>
-                  <div class="teamCell">
-                    <SleeperAvatar slug={r.slugA} size={22} />
-                    {r.teamA}
-                  </div>
-                </td>
-                <td>
-                  <div class="teamCell">
-                    <SleeperAvatar slug={r.slugB} size={22} />
-                    {r.teamB}
-                  </div>
-                </td>
+                <td>{r.teamA}</td>
+                <td>{r.teamB}</td>
                 <td class="count">{r.count}</td>
               </tr>
             {/each}
