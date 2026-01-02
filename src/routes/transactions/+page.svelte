@@ -1,7 +1,8 @@
 <script>
   import LinearProgress from '@smui/linear-progress';
   import { TransactionsPage } from '$lib/components';
-  import { waitForAll } from '$lib/utils/helper';
+  import SleeperAvatar from '$lib/components/SleeperAvatar.svelte';
+  import { waitForAll, getTeamFromTeamManagers } from '$lib/utils/helper';
 
   export let data;
   const { show, query, page, playersData, transactionsData, leagueTeamManagersData } = data;
@@ -35,8 +36,6 @@
     ['blue ballers', 'Blue Ballers'],
     ['austin rattlers', 'Blue Ballers'],
     ['blueballers', 'Blue Ballers'],
-    ['blue ba llers', 'Blue Ballers'],
-    ['blue  ballers', 'Blue Ballers'],
     ['blu e ballers', 'Blue Ballers'],
 
     // Demboyz group
@@ -75,103 +74,13 @@
     return aliasToCanonical.get(key) ?? String(name ?? '').trim();
   }
 
-  function uniqNormalized(names) {
-    const seen = new Set();
-    const out = [];
-    for (const n of names ?? []) {
-      const nn = normalizeTeam(n);
-      const k = cleanKey(nn);
-      if (!k) continue;
-      if (!seen.has(k)) {
-        seen.add(k);
-        out.push(nn);
-      }
-    }
-    return out;
-  }
-
   // ----------------------------
-  // Build roster_id -> team name lookup (defensive)
-  // ----------------------------
-  function buildRosterNameLookup(leagueTeamManagers, currentTeams) {
-    const map = new Map();
-
-    const trySet = (rid, name) => {
-      if (rid == null) return;
-      const key = String(rid);
-      const val = String(name ?? '').trim();
-      if (!val) return;
-      if (!map.has(key)) map.set(key, val);
-    };
-
-    // 1) leagueTeamManagers: often array of objects
-    if (Array.isArray(leagueTeamManagers)) {
-      for (const m of leagueTeamManagers) {
-        const rid = m?.roster_id ?? m?.rosterId ?? m?.roster ?? m?.id;
-        const name =
-          m?.team_name ??
-          m?.teamName ??
-          m?.metadata?.team_name ??
-          m?.display_name ??
-          m?.displayName ??
-          m?.name ??
-          m?.username ??
-          m?.slug;
-        trySet(rid, name);
-      }
-    } else if (leagueTeamManagers && typeof leagueTeamManagers === 'object') {
-      // sometimes it’s already a map-like object
-      for (const [k, v] of Object.entries(leagueTeamManagers)) {
-        if (v && typeof v === 'object') {
-          const rid = v?.roster_id ?? v?.rosterId ?? k;
-          const name =
-            v?.team_name ??
-            v?.teamName ??
-            v?.metadata?.team_name ??
-            v?.display_name ??
-            v?.displayName ??
-            v?.name ??
-            v?.username ??
-            v?.slug;
-          trySet(rid, name);
-        } else {
-          // k -> string name
-          trySet(k, v);
-        }
-      }
-    }
-
-    // 2) currentTeams: often array or object keyed by roster_id
-    if (Array.isArray(currentTeams)) {
-      for (const t of currentTeams) {
-        const rid = t?.roster_id ?? t?.rosterId ?? t?.roster ?? t?.id;
-        const name = t?.team_name ?? t?.teamName ?? t?.name ?? t?.display_name ?? t?.displayName ?? t?.slug;
-        trySet(rid, name);
-      }
-    } else if (currentTeams && typeof currentTeams === 'object') {
-      for (const [k, v] of Object.entries(currentTeams)) {
-        if (v && typeof v === 'object') {
-          const rid = v?.roster_id ?? v?.rosterId ?? k;
-          const name = v?.team_name ?? v?.teamName ?? v?.name ?? v?.display_name ?? v?.displayName ?? v?.slug;
-          trySet(rid, name);
-        } else {
-          trySet(k, v);
-        }
-      }
-    }
-
-    return map;
-  }
-
-  // ----------------------------
-  // Extract trade participants (2-way/3-way) from a transaction (defensive)
+  // Transaction helpers (defensive)
   // ----------------------------
   function isTrade(tx) {
     const t = String(tx?.type ?? tx?.transaction_type ?? tx?.transactionType ?? '').toLowerCase();
-    // common values: "trade" / "traded"
     if (t.includes('trade')) return true;
 
-    // fallback: some models store "trade" as a category
     const cat = String(tx?.category ?? tx?.kind ?? '').toLowerCase();
     if (cat.includes('trade')) return true;
 
@@ -179,7 +88,6 @@
   }
 
   function getRosterIds(tx) {
-    // Sleeper raw: roster_ids: [1,2] or [1,2,3]
     const r =
       tx?.roster_ids ??
       tx?.rosterIds ??
@@ -189,47 +97,88 @@
       null;
 
     if (Array.isArray(r)) return r;
-
-    // sometimes nested
     if (Array.isArray(tx?.metadata?.roster_ids)) return tx.metadata.roster_ids;
-
     return [];
   }
 
-  function computePairCounts(transactions, leagueTeamManagers, currentTeams) {
-    const lookup = buildRosterNameLookup(leagueTeamManagers, currentTeams);
+  // ----------------------------
+  // Piggy-back on your site's mapping logic
+  // ----------------------------
+  function resolveTeamFromRosterId(leagueTeamManagers, rosterId) {
+    const t = getTeamFromTeamManagers?.(leagueTeamManagers, rosterId);
+
+    const name =
+      t?.team_name ??
+      t?.teamName ??
+      t?.name ??
+      t?.display_name ??
+      t?.displayName ??
+      t?.manager?.name ??
+      t?.manager?.display_name ??
+      t?.manager?.displayName ??
+      '';
+
+    const slug =
+      t?.slug ??
+      t?.team_slug ??
+      t?.teamSlug ??
+      t?.manager?.slug ??
+      t?.manager_slug ??
+      t?.managerSlug ??
+      '';
+
+    return {
+      name: (name?.trim?.() || `Roster ${rosterId}`),
+      slug: (slug?.trim?.() || '')
+    };
+  }
+
+  // ----------------------------
+  // Pairwise counts (2-way + 3-way)
+  // 3-way trades credit each pair inside the deal
+  // ----------------------------
+  function computePairCounts(transactions, leagueTeamManagers) {
     const pairCounts = new Map();
 
     const incPair = (a, b) => {
-      const A = a.toLowerCase() <= b.toLowerCase() ? a : b;
-      const B = a.toLowerCase() <= b.toLowerCase() ? b : a;
-      const key = `${A}|||${B}`;
-      pairCounts.set(key, (pairCounts.get(key) ?? 0) + 1);
+      const A = a.name.toLowerCase() <= b.name.toLowerCase() ? a : b;
+      const B = a.name.toLowerCase() <= b.name.toLowerCase() ? b : a;
+      const key = `${A.name}|||${B.name}`;
+
+      const prev = pairCounts.get(key);
+      if (prev) prev.count += 1;
+      else pairCounts.set(key, { teamA: A.name, teamB: B.name, slugA: A.slug, slugB: B.slug, count: 1 });
     };
 
     for (const tx of transactions ?? []) {
       if (!isTrade(tx)) continue;
 
       const rosterIds = getRosterIds(tx);
-      const teamNamesRaw = rosterIds.map((rid) => lookup.get(String(rid)) ?? `Roster ${rid}`);
-      const teamNames = uniqNormalized(teamNamesRaw);
+      const rawTeams = rosterIds.map((rid) => {
+        const { name, slug } = resolveTeamFromRosterId(leagueTeamManagers, rid);
+        return { name: normalizeTeam(name), slug };
+      });
 
-      // only count 2-way and 3-way after normalization
-      if (teamNames.length !== 2 && teamNames.length !== 3) continue;
+      // de-dupe after normalization (in case aliases merge)
+      const seen = new Set();
+      const teams = [];
+      for (const t of rawTeams) {
+        const k = cleanKey(t.name);
+        if (!k || seen.has(k)) continue;
+        seen.add(k);
+        teams.push(t);
+      }
 
-      // credit each pair inside the trade (3-way => 3 pairs)
-      for (let i = 0; i < teamNames.length; i++) {
-        for (let j = i + 1; j < teamNames.length; j++) {
-          incPair(teamNames[i], teamNames[j]);
+      if (teams.length !== 2 && teams.length !== 3) continue;
+
+      for (let i = 0; i < teams.length; i++) {
+        for (let j = i + 1; j < teams.length; j++) {
+          incPair(teams[i], teams[j]);
         }
       }
     }
 
-    const rows = Array.from(pairCounts.entries()).map(([k, count]) => {
-      const [teamA, teamB] = k.split('|||');
-      return { teamA, teamB, count };
-    });
-
+    const rows = Array.from(pairCounts.values());
     rows.sort((x, y) => y.count - x.count || x.teamA.localeCompare(y.teamA) || x.teamB.localeCompare(y.teamB));
     return rows;
   }
@@ -258,11 +207,11 @@
   }
 
   .panel {
-    border: 1px solid rgba(255,255,255,0.10);
+    border: 1px solid rgba(255, 255, 255, 0.10);
     border-radius: 10px;
     padding: 14px 14px 10px;
     margin-bottom: 16px;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(6px);
   }
 
@@ -288,8 +237,8 @@
     flex: 1;
     padding: 10px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.45);
     color: inherit;
   }
 
@@ -301,7 +250,7 @@
   th, td {
     text-align: left;
     padding: 10px 8px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 14px;
   }
 
@@ -317,6 +266,12 @@
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
+
+  .teamCell {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
 </style>
 
 <div id="main">
@@ -327,8 +282,7 @@
     </div>
   {:then [{ transactions, currentTeams, stale }, playersInfo, leagueTeamManagers]}
 
-    <!-- Trade partner counts (piggy-back on already-loaded data) -->
-    {@const partnerRows = computePairCounts(transactions, leagueTeamManagers, currentTeams)}
+    {@const partnerRows = computePairCounts(transactions, leagueTeamManagers)}
     {@const filteredPartnerRows = partnerSearch
       ? partnerRows.filter(r => `${r.teamA} ${r.teamB}`.toLowerCase().includes(partnerSearch.toLowerCase()))
       : partnerRows
@@ -358,8 +312,18 @@
           <tbody>
             {#each filteredPartnerRows as r (r.teamA + '|' + r.teamB)}
               <tr>
-                <td>{r.teamA}</td>
-                <td>{r.teamB}</td>
+                <td>
+                  <span class="teamCell">
+                    <SleeperAvatar slug={r.slugA || ''} size={22} alt={r.teamA} />
+                    {r.teamA}
+                  </span>
+                </td>
+                <td>
+                  <span class="teamCell">
+                    <SleeperAvatar slug={r.slugB || ''} size={22} alt={r.teamB} />
+                    {r.teamB}
+                  </span>
+                </td>
                 <td class="count">{r.count}</td>
               </tr>
             {/each}
@@ -368,7 +332,6 @@
       {/if}
     </div>
 
-    <!-- Existing page (unchanged) -->
     <TransactionsPage
       {playersInfo}
       {stale}
