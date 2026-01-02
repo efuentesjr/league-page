@@ -2,7 +2,7 @@
   import LinearProgress from '@smui/linear-progress';
   import { TransactionsPage } from '$lib/components';
   import SleeperAvatar from '$lib/components/SleeperAvatar.svelte';
-  import { waitForAll, getTeamFromTeamManagers } from '$lib/utils/helper';
+  import { waitForAll } from '$lib/utils/helper';
 
   export let data;
   const { show, query, page, playersData, transactionsData, leagueTeamManagersData } = data;
@@ -75,62 +75,31 @@
   }
 
   // ----------------------------
-  // Transaction helpers (defensive)
+  // Use your site's canonical mapping:
+  // leagueTeamManagers.teamManagersMap[season][roster]
   // ----------------------------
-  function isTrade(tx) {
-    const t = String(tx?.type ?? tx?.transaction_type ?? tx?.transactionType ?? '').toLowerCase();
-    if (t.includes('trade')) return true;
+  function resolveRosterMeta(leagueTeamManagers, season, rosterId) {
+    const s = String(season ?? '').trim();
+    const rid = String(rosterId ?? '').trim();
 
-    const cat = String(tx?.category ?? tx?.kind ?? '').toLowerCase();
-    if (cat.includes('trade')) return true;
-
-    return false;
-  }
-
-  function getRosterIds(tx) {
-    const r =
-      tx?.roster_ids ??
-      tx?.rosterIds ??
-      tx?.rosters ??
-      tx?.participants ??
-      tx?.teams ??
+    const tm =
+      leagueTeamManagers?.teamManagersMap?.[s]?.[rid] ??
+      leagueTeamManagers?.teamManagersMap?.[Number(s)]?.[Number(rid)] ??
       null;
 
-    if (Array.isArray(r)) return r;
-    if (Array.isArray(tx?.metadata?.roster_ids)) return tx.metadata.roster_ids;
-    return [];
-  }
-
-  // ----------------------------
-  // Piggy-back on your site's mapping logic
-  // ----------------------------
-  function resolveTeamFromRosterId(leagueTeamManagers, rosterId) {
-    const t = getTeamFromTeamManagers?.(leagueTeamManagers, rosterId);
-
+    // Most likely fields; keep fallbacks so we don't break if structure differs slightly
     const name =
-      t?.team_name ??
-      t?.teamName ??
-      t?.name ??
-      t?.display_name ??
-      t?.displayName ??
-      t?.manager?.name ??
-      t?.manager?.display_name ??
-      t?.manager?.displayName ??
-      '';
+      tm?.teamName ??
+      tm?.team_name ??
+      tm?.name ??
+      tm?.displayName ??
+      tm?.display_name ??
+      `Roster ${rid}`;
 
-    const slug =
-      t?.slug ??
-      t?.team_slug ??
-      t?.teamSlug ??
-      t?.manager?.slug ??
-      t?.manager_slug ??
-      t?.managerSlug ??
-      '';
+    // This should match leagueInfo.managers slugs (used by SleeperAvatar)
+    const slug = Array.isArray(tm?.managers) && tm.managers.length ? String(tm.managers[0]) : '';
 
-    return {
-      name: (name?.trim?.() || `Roster ${rosterId}`),
-      slug: (slug?.trim?.() || '')
-    };
+    return { name: normalizeTeam(name), slug };
   }
 
   // ----------------------------
@@ -151,15 +120,14 @@
     };
 
     for (const tx of transactions ?? []) {
-      if (!isTrade(tx)) continue;
+      if (tx?.type !== 'trade') continue;
 
-      const rosterIds = getRosterIds(tx);
-      const rawTeams = rosterIds.map((rid) => {
-        const { name, slug } = resolveTeamFromRosterId(leagueTeamManagers, rid);
-        return { name: normalizeTeam(name), slug };
-      });
+      const season = tx?.season;
+      const rosterIds = Array.isArray(tx?.rosters) ? tx.rosters : [];
 
-      // de-dupe after normalization (in case aliases merge)
+      const rawTeams = rosterIds.map((rid) => resolveRosterMeta(leagueTeamManagers, season, rid));
+
+      // de-dupe after normalization (aliases can collapse)
       const seen = new Set();
       const teams = [];
       for (const t of rawTeams) {
