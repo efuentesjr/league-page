@@ -2,6 +2,9 @@
   import LinearProgress from '@smui/linear-progress';
   import { TransactionsPage } from '$lib/components';
 
+  // Piggy-back logo source used elsewhere (no fallbacks)
+  import { managers } from '$lib/utils/leagueInfo';
+
   export let data;
   const { show, query, page, playersData, transactionsData, leagueTeamManagersData } = data;
 
@@ -84,6 +87,16 @@
   }
 
   // ----------------------------
+  // Piggy-back ONLY: logos from managers[].photo (no fallbacks)
+  // ----------------------------
+  function logoUrlFromSlug(slug) {
+    if (!slug) return null;
+    const m = Array.isArray(managers) ? managers.find((x) => x.slug === slug) : null;
+    const url = m?.photo || null;
+    return typeof url === 'string' && url.trim() ? url.trim() : null;
+  }
+
+  // ----------------------------
   // Resolve roster -> { name, slug }
   // Try leagueTeamManagers first, then currentTeams fallback.
   // ----------------------------
@@ -143,7 +156,7 @@
 
     function inc(nameA, slugA, nameB, slugB) {
       if (!nameA || !nameB) return;
-      if (nameA === nameB) return; // hard stop for self-pairs
+      if (nameA === nameB) return; // no self-pairs
 
       const AFirst = nameA.localeCompare(nameB) <= 0;
       const teamA = AFirst ? nameA : nameB;
@@ -182,7 +195,7 @@
       }
 
       const teams = Array.from(uniqueByName.values());
-      if (teams.length < 2) continue; // after dedupe, might collapse to 1
+      if (teams.length < 2) continue;
 
       // Credit 2-way and 3-way to each pair
       for (let i = 0; i < teams.length; i++) {
@@ -259,6 +272,20 @@
     text-align: right;
     width: 90px;
   }
+
+  .teamCell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
 </style>
 
 <div id="main">
@@ -303,8 +330,36 @@
           {:else}
             {#each filtered as r (r.teamA + r.teamB)}
               <tr>
-                <td>{r.teamA}</td>
-                <td>{r.teamB}</td>
+                <td>
+                  <div class="teamCell">
+                    {#if logoUrlFromSlug(r.slugA)}
+                      <img
+                        class="logo"
+                        src={logoUrlFromSlug(r.slugA)}
+                        alt={r.teamA}
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
+                      />
+                    {/if}
+                    <span>{r.teamA}</span>
+                  </div>
+                </td>
+
+                <td>
+                  <div class="teamCell">
+                    {#if logoUrlFromSlug(r.slugB)}
+                      <img
+                        class="logo"
+                        src={logoUrlFromSlug(r.slugB)}
+                        alt={r.teamB}
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
+                      />
+                    {/if}
+                    <span>{r.teamB}</span>
+                  </div>
+                </td>
+
                 <td class="count">{r.count}</td>
               </tr>
             {/each}
