@@ -7,7 +7,7 @@
 
   const perPage = 10;
 
-  // year filter: "all" or a specific year number
+  // "all" or a specific season like "2025"
   let yearFilter = 'all';
 
   // ----------------------------
@@ -54,7 +54,6 @@
     ['88boyz11', 'Demboyz'],
 
     ['vick2times', 'Vick2times'],
-    ['vick2times ', 'Vick2times'],
 
     ['blue tent all-stars', 'Blue Tent All-Stars'],
     ['perfectly balanced', 'Blue Tent All-Stars'],
@@ -76,7 +75,6 @@
     return aliasToCanonical.get(k) ?? clean(name);
   }
 
-  // Ensure we never render [object Object]
   function nameToString(v) {
     if (!v) return '';
     if (typeof v === 'string') return v;
@@ -84,6 +82,23 @@
       return v.teamName || v.team_name || v.name || v.team || v.rosterName || '';
     }
     return String(v);
+  }
+
+  // ----------------------------
+  // Normalize transactions to ONE array
+  // Handles both:
+  //   - Array
+  //   - { trades:[], waivers:[] }
+  // ----------------------------
+  function normalizeTransactionsShape(t) {
+    if (Array.isArray(t)) return t;
+    if (t && typeof t === 'object') {
+      const trades = Array.isArray(t.trades) ? t.trades : [];
+      const waivers = Array.isArray(t.waivers) ? t.waivers : [];
+      // We only care about trades for counting, but we keep full list for TransactionsPage
+      return [...trades, ...waivers];
+    }
+    return [];
   }
 
   // ----------------------------
@@ -129,12 +144,8 @@
   // Compute pairwise counts for a given year (or all)
   // 3-way credited to each pair; self-pairs prevented by dedupe.
   // ----------------------------
-  function computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams, year = 'all') {
+  function computeTradePartnerCounts(transactionsArray, leagueTeamManagers, currentTeams, year = 'all') {
     const pairs = new Map();
-
-    function pairKey(a, b) {
-      return `${a}|||${b}`;
-    }
 
     function inc(a, b) {
       if (!a || !b) return;
@@ -144,7 +155,7 @@
       const teamA = AFirst ? a : b;
       const teamB = AFirst ? b : a;
 
-      const k = pairKey(teamA, teamB);
+      const k = `${teamA}|||${teamB}`;
 
       if (!pairs.has(k)) {
         pairs.set(k, { teamA, teamB, count: 0 });
@@ -152,18 +163,19 @@
       pairs.get(k).count++;
     }
 
-    for (const tx of transactions ?? []) {
-      if (tx.type !== 'trade') continue;
+    for (const tx of transactionsArray ?? []) {
+      if (tx?.type !== 'trade') continue;
 
-      const season = tx.season;
+      const season = tx?.season;
+      if (!season) continue;
+
       if (year !== 'all' && Number(season) !== Number(year)) continue;
 
-      const rosterIds = tx.rosters ?? [];
+      const rosterIds = tx?.rosters ?? [];
       if (rosterIds.length < 2 || rosterIds.length > 3) continue;
 
-      // resolve -> normalize -> DEDUPE by canonical name
+      // Resolve -> normalize -> DEDUPE by canonical name
       const uniqueByName = new Map();
-
       for (const rid of rosterIds) {
         const nm = resolveRosterName(leagueTeamManagers, currentTeams, season, rid);
         if (!nm) continue;
@@ -231,12 +243,6 @@
     font-weight: 600;
   }
 
-  .controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
   select {
     padding: 8px 10px;
     background: rgba(0, 0, 0, 0.4);
@@ -281,33 +287,35 @@
     {@const playersInfo = resolved[1]}
     {@const leagueTeamManagers = resolved[2]}
 
-    {@const transactions = txPkg.transactions ?? []}
+    <!-- normalize shape for counting + year list -->
+    {@const transactionsNormalized = normalizeTransactionsShape(txPkg.transactions)}
     {@const currentTeams = txPkg.currentTeams ?? txPkg.current_teams ?? null}
     {@const stale = txPkg.stale ?? false}
 
+    <!-- build years from normalized list -->
     {@const years = Array.from(
-      new Set((transactions ?? []).map(t => t?.season).filter(Boolean).map(Number))
+      new Set(
+        (transactionsNormalized ?? [])
+          .map(t => t?.season)
+          .filter(Boolean)
+          .map(Number)
+      )
     ).sort((a, b) => b - a)}
 
-    {#if yearFilter === 'all' && years.length > 0}
-      {@html ''} <!-- keep yearFilter stable -->
-    {/if}
-
-    {@const rows = computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams, yearFilter)}
+    <!-- compute rows based on filter -->
+    {@const rows = computeTradePartnerCounts(transactionsNormalized, leagueTeamManagers, currentTeams, yearFilter)}
     {@const selectedLabel = yearFilter === 'all' ? 'All Years' : String(yearFilter)}
 
     <div class="panel">
       <div class="panelHeader">
         <h2>Head to Head Trades</h2>
 
-        <div class="controls">
-          <select bind:value={yearFilter}>
-            <option value="all">All Years</option>
-            {#each years as y}
-              <option value={String(y)}>{y}</option>
-            {/each}
-          </select>
-        </div>
+        <select bind:value={yearFilter}>
+          <option value="all">All Years</option>
+          {#each years as y}
+            <option value={String(y)}>{y}</option>
+          {/each}
+        </select>
       </div>
 
       <table>
@@ -340,11 +348,12 @@
       </div>
     </div>
 
+    <!-- Keep the rest of the page exactly as-is -->
     <TransactionsPage
       {playersInfo}
       {stale}
-      {transactions}
-      {currentTeams}
+      transactions={txPkg.transactions}
+      currentTeams={txPkg.currentTeams}
       {show}
       {query}
       queryPage={page}
