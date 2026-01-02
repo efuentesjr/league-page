@@ -132,36 +132,31 @@
 
   // ----------------------------
   // Compute pairwise counts (2-way + 3-way; 3-way credited to each pair)
+  // FIX: Dedupe teams within each trade AFTER normalization to avoid self-pairs.
   // ----------------------------
   function computeTradePartnerCounts(transactions, leagueTeamManagers, currentTeams) {
     const pairs = new Map();
 
-    function inc(a, b) {
-      const nameA = normalizeTeamName(nameToString(a?.name));
-      const nameB = normalizeTeamName(nameToString(b?.name));
+    function pairKey(a, b) {
+      return `${a}|||${b}`;
+    }
+
+    function inc(nameA, slugA, nameB, slugB) {
       if (!nameA || !nameB) return;
+      if (nameA === nameB) return; // hard stop for self-pairs
 
-      const A = nameA.localeCompare(nameB) <= 0
-        ? { ...a, name: nameA }
-        : { ...b, name: nameB };
+      const AFirst = nameA.localeCompare(nameB) <= 0;
+      const teamA = AFirst ? nameA : nameB;
+      const teamB = AFirst ? nameB : nameA;
+      const sA = AFirst ? (slugA || '') : (slugB || '');
+      const sB = AFirst ? (slugB || '') : (slugA || '');
 
-      const B = A === a
-        ? { ...b, name: nameB }
-        : { ...a, name: nameA };
+      const k = pairKey(teamA, teamB);
 
-      const pairKey = `${A.name}|||${B.name}`;
-
-      if (!pairs.has(pairKey)) {
-        pairs.set(pairKey, {
-          teamA: A.name,
-          teamB: B.name,
-          slugA: A.slug || '',
-          slugB: B.slug || '',
-          count: 0
-        });
+      if (!pairs.has(k)) {
+        pairs.set(k, { teamA, teamB, slugA: sA, slugB: sB, count: 0 });
       }
-
-      pairs.get(pairKey).count++;
+      pairs.get(k).count++;
     }
 
     for (const tx of transactions ?? []) {
@@ -171,17 +166,28 @@
       const rosterIds = tx.rosters ?? [];
       if (rosterIds.length < 2 || rosterIds.length > 3) continue;
 
-      const teams = rosterIds
-        .map((rid) => resolveRoster(leagueTeamManagers, currentTeams, season, rid))
-        .filter(Boolean)
-        .map(t => ({ name: t.name, slug: t.slug }))
-        .filter(t => t.name);
+      // Resolve -> normalize -> DEDUPE by canonical name
+      const uniqueByName = new Map();
 
-      if (teams.length < 2) continue;
+      for (const rid of rosterIds) {
+        const resolved = resolveRoster(leagueTeamManagers, currentTeams, season, rid);
+        if (!resolved) continue;
 
+        const name = normalizeTeamName(nameToString(resolved.name));
+        if (!name) continue;
+
+        if (!uniqueByName.has(name)) {
+          uniqueByName.set(name, { name, slug: resolved.slug || '' });
+        }
+      }
+
+      const teams = Array.from(uniqueByName.values());
+      if (teams.length < 2) continue; // after dedupe, might collapse to 1
+
+      // Credit 2-way and 3-way to each pair
       for (let i = 0; i < teams.length; i++) {
         for (let j = i + 1; j < teams.length; j++) {
-          inc(teams[i], teams[j]);
+          inc(teams[i].name, teams[i].slug, teams[j].name, teams[j].slug);
         }
       }
     }
