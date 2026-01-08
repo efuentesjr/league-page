@@ -341,7 +341,7 @@ export const managers = [
     "rival": {
       name: "Blue Tent All-Stars",
       link: 0,
-      image: "/managers/JD.jpg",
+      image: "/managers/JDD.jpg",
     },
     "favoritePlayer": 11631,
     "valuePosition": "QB",
