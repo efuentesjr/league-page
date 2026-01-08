@@ -335,7 +335,7 @@ export const managers = [
     "location": "Marengo IL",
     "bio": "Aim low",
     "photo": "/managers/VV.jpg",
-    "fantasyStart": 2022,
+    "fantasyStart": 2019,
     "favoriteTeam": "chi",
     "mode": "Rebuild",
     "rival": {
