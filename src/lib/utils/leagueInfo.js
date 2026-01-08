@@ -33,7 +33,7 @@ export const managers = [
     "location": "Manor TX", // (optional)
     "bio": "Da Bears! Bears Down! 🐻⬇️",
     "photo": "/managers/EFJ.jpg", // square ratio recommended (no larger than 500x500)
-    "fantasyStart": 2014, // (optional) when did the manager start playing fantasy football
+    "fantasyStart": "2014", // (optional) when did the manager start playing fantasy football
     "favoriteTeam": "chi", // (optional) favorite NFL team, (follows convention: nyj, sea, mia, etc.) MUST BE LOWERCASE
     "mode": "Win Now", // (optional) 'Win Now', 'Dynasty', or 'Rebuild'
     "rival": {
