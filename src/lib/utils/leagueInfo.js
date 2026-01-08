@@ -108,9 +108,9 @@ export const managers = [
     "favoriteTeam": "chi",
     "mode": "Dynasty",
     "rival": {
-      name: "Comeback Kid",
+      name: "People's Champ",
       link: 1,
-      image: "/managers/JR.jpg",
+      image: "/managers/GC.jpg",
     },
     "favoritePlayer": 6768,
     "valuePosition": "QB",
