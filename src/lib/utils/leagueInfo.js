@@ -46,7 +46,7 @@ export const managers = [
     "valuePosition": "RB",
     "rookieOrVets": "Rookies",
     "philosophy": "Relentless. No tanking, no excuses—just a drive to win. If the path gets rough, it’s all about fighting through and clinching that playoff spot, because once we're there, it’s anyone's game. Every matchup, every play, every trade, waiver pick-up, it’s all about finding a way to the top!",
-    "tradingScale": 3,
+    "tradingScale": 4,
     "preferredContact": "Sleeper",
   },
   {
@@ -59,7 +59,7 @@ export const managers = [
     "photo": "/managers/JR.jpg",
     "fantasyStart": 2014,
     "favoriteTeam": "was",
-    "mode": "Win Now",
+    "mode": "Dynasty",
     "rival": {
       name: "CeeDees TDs",
       link: 12,
@@ -82,7 +82,7 @@ export const managers = [
     "photo": "/managers/JP.jpg",
     "fantasyStart": 2017,
     "favoriteTeam": "chi",
-    "mode": "Win Now",
+    "mode": "Rebuild",
     "rival": {
       name: "Comeback Kid",
       link: 1,
@@ -153,7 +153,7 @@ export const managers = [
     "photo": "/managers/JDD.jpg",
     "fantasyStart": 2021,
     "favoriteTeam": "sf",
-    "mode": "Rebuild",
+    "mode": "Win Now",
     "rival": {
       name: "Comeback Kid",
       link: 1,
