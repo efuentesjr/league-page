@@ -247,7 +247,7 @@
                 {#if viewManager.fantasyStart}
                     <!-- Use manager config for "league since" for everyone -->
                     <span class="infoChild">
-                        In the league since '{viewManager.fantasyStart.toString().substr(2)}
+                        est. '{viewManager.fantasyStart.toString().substr(2)}
                     </span>
                 {:else if datesActive.end}
                     <!-- Fallback: show date range if they left -->
