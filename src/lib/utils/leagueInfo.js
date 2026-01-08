@@ -178,7 +178,7 @@ export const managers = [
     "favoriteTeam": "pit",
     "mode": "Dynasty",
     "rival": {
-      "name": "Brute Force Attack",
+      "name": "Cee Dee's TD's",
       "link": 0,
       "image": "/managers/EF.jpg"
     },
@@ -247,9 +247,9 @@ export const managers = [
     "favoriteTeam": "dal",
     "mode": "Rebuild",
     "rival": {
-      name: "PrimeTimne Prodigies",
+      name: "Blue Ballers",
       link: 11,
-      image: "/managers/JG.jpg",
+      image: "/managers/RR.jpg",
     },
     "favoritePlayer": 11566,
     "valuePosition": "QB",
@@ -339,9 +339,9 @@ export const managers = [
     "favoriteTeam": "chi",
     "mode": "Rebuild",
     "rival": {
-      name: "Brute Force Attack",
+      name: "Blue Tent All-Stars",
       link: 0,
-      image: "/managers/EF.jpg",
+      image: "/managers/JD.jpg",
     },
     "favoritePlayer": 11631,
     "valuePosition": "QB",
