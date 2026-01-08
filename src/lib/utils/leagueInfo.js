@@ -291,7 +291,7 @@ export const managers = [
     "photo": "/managers/JG.jpg",
     "fantasyStart": [2018, 2021],
     "favoriteTeam": "hou",
-    "mode": "Dynasty",
+    "mode": "Win Now",
     "rival": {
       name: "SlikBears",
       link: 3,
@@ -360,7 +360,7 @@ export const managers = [
     "photo": "/managers/JeR.jpg",
     "fantasyStart": 2014,
     "favoriteTeam": "lv",
-    "mode": "Rebuild",
+    "mode": "Win Now",
     "rival": {
       name: "Cee Dees TDs",
       link: 12,
