@@ -46,7 +46,7 @@
 
   const proposals: Proposal[] = [
     { id: '1', title: 'Review league scoring per owner(s) and yearly trends. Also, review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
-    { id: '2', title: 'Allow punt return yards scoring (re-vote). OPTION#1: No. OPTION#2: Yes, the same as RB, 10yrd=1pts (100yrd=10pts). OPTION#3: Yes, but less than RB/WR, 15yrd=1pts (150yrds=10pts).', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'REVOTE' },
+    { id: '2', title: 'Allow punt return yards scoring (re-vote). OPTION#1: No. OPTION#2: Yes, the same as RB, 10yrd=1pts (100yrd=10pts). OPTION#3: Yes, but less than RB/WR, 30yrd=1pts (100yrds=3.33pts).', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'REVOTE' },
     { id: '3', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'NEW' },
     { id: '4', title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Limit to FAAB. OPTION#2: No trade backs on all players involved. OPTION#3: When a trade involves picks only or non-impact players, it must be offered to the entire league. OPTION#4: NO.', owner: 'Trey Fuentes', notes: 'Section 1.3', status: 'OPEN' },
     { id: '5', title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 20. OPTION#2: RBs 20. OPTION#3: WRs 20. OPTION#4: TEs 10.', owner: 'Commish', status: 'REVOTE' },
