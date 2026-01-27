@@ -941,7 +941,7 @@
       <tr>
         <td style="border: 1px solid #333; padding: 5px;">Rings x4 NBow, JRod, GCall, JDD</td>
         <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 155.00</td>
-        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 155.00</td>
+        <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 0.00</td>
       </tr>
     </tbody>
   </table>
