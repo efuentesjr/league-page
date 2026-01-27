@@ -57,6 +57,7 @@
     { id: '10', title: "When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.", owner: 'John Diaz-DeCaro', status: 'NEW' },
     { id: '11', title: 'Waiver wire player "drop" restrictions and collusion prevention. OPTION#1: All players over 10 PPG. #OPTION#2: All players above 15 PPG. ', owner: 'Commish', status: 'NEW' },
     { id: '12', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'NEW' },
+    { id: '13', title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', owner: 'Commish', status: 'NEW' },
     { id: '13', title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
     { id: '14', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
   ];
