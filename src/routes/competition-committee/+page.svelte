@@ -70,7 +70,7 @@
     { id: 5, title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions.', status: 'Approved', year: 2026 },
     { id: 6, title: 'Offer incentives for Divisional Champs.', status: 'Approved', year: 2026 },
     { id: 7, title: 'Raise dues ($75 → $85).', notes: 'Section 7.3', status: 'Approved', year: 2026 },
-    { id: 8, title: 'When trading future picks you will need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.', status: 'Approved', year: 2026 },
+    { id: 8, title: 'When trading future picks you will need to pay some additional $$$, in addition to regular fees and those fees will go towards that years fees.', status: 'Approved', year: 2026 },
     { id: 9, title: 'Waiver wire player "drop" restrictions and collusion prevention.', status: 'Approved', year: 2026 },
     { id: 10, title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades.', status: 'Approved', year: 2026 },
     { id: 11, title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', status: 'Approved', year: 2026 },
