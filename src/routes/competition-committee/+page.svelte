@@ -272,7 +272,7 @@
   }
 
   .cc-section--white {
-    background: #9b9b9b45;
+    background: #d8dbd42e;
     box-shadow: 0 1px 4px rgba(0,0,255,1);
     border: 1px solid #d1e4ff;
   }
