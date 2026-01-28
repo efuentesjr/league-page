@@ -64,8 +64,8 @@
 
   const previous: Outcome[] = [
     { id: 1, title: 'Allow punt return yards scoring (re-vote).', notes: 'Section 4.1', status: 'Approved', year: 2026 },
-    { id: 2, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading.', notes: 'Section 1.3' status: 'Approved', year: 2026 },
-    { id: 3, title: 'Player tags, "No trade back for top 35 players.',  notes: 'Section 1.3.2' status: 'Approved', year: 2026 },
+    { id: 2, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading.', notes: 'Section 1.3', status: 'Approved', year: 2026 },
+    { id: 3, title: 'Player tags, "No trade back for top 35 players.',  notes: 'Section 1.3.2', status: 'Approved', year: 2026 },
     { id: 4, title: 'Allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB.', status: 'Approved', year: 2026 },
     { id: 5, title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions.', status: 'Approved', year: 2026 },
     { id: 6, title: 'Offer incentives for Divisional Champs. status: 'Approved', year: 2026 },
