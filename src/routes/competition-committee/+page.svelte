@@ -68,7 +68,7 @@
     { id: 3, title: 'Player tags, "No trade back for top 35 players.',  notes: 'Section 1.3.2', status: 'Approved', year: 2026 },
     { id: 4, title: 'Allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB.', status: 'Approved', year: 2026 },
     { id: 5, title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions.', status: 'Approved', year: 2026 },
-    { id: 6, title: 'Offer incentives for Divisional Champs. status: 'Approved', year: 2026 },
+    { id: 6, title: 'Offer incentives for Divisional Champs.', status: 'Approved', year: 2026 },
     { id: 7, title: 'Raise dues ($75 → $85).', notes: 'Section 7.3', status: 'Approved', year: 2026 },
     { id: 8, title: 'When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.', status: 'Approved', year: 2026 },
     { id: 9, title: 'Waiver wire player "drop" restrictions and collusion prevention.', status: 'Approved', year: 2026 },
