@@ -1,12 +1,14 @@
 // src/routes/playoffs-projection/+page.server.js
 export const prerender = false;
+
 import { env } from '$env/dynamic/public';
 import { leagueID } from '$lib/utils/leagueInfo';
+import { getLeagueTeamManagers } from '$lib/utils/helper';
 
-// ——— Team label -> site slug (MUST exactly match JSON "team" values) ———
+// Temporary fallback only. Once projections JSON includes roster_id, this becomes irrelevant.
 const slugMap = {
   'Bay Area Par': 'bay-area-party-supplies',
-  'CeeDees TDs': 'ceedees-tds',          // fixed case/typo
+  'CeeDees TDs': 'ceedees-tds',
   'Chosen one.': 'chosen-one',
   'Peoples Champ': 'peoples-champ',
   'Blue Tent Al': 'blue-tent-all-stars',
@@ -23,27 +25,6 @@ const slugMap = {
   'Vick2times': 'vick2times'
 };
 
-// ——— Optional: slug -> roster_id (SoS) ———
-const slugToRosterId = {
-  'bay-area-party-supplies': 110121045876686848,
-  'ceedees-tds':             852068353894916096,
-  'chosen-one':              846592470551732224,
-  'peoples-champ':           849793148648546304,
-  'blue-tent-all-stars':     850894566360997888,
-  'los-loquitos':            851154711770939392,
-  'blue-ballers':            851243503987032064,
-  'texastimeshifts':         851923896448942080,
-  'brute-force-attack':      844760551790858240,
-  'comeback-kid':            791852794729598976,
-  'slickbears':              731626118116925440,
-  'demboyz':                 851283708244766720,
-  'primetime-prodigies':     851918795718131712,
-  'do-it-to-them':           855631483610697728,
-  'loud-and-stroud':         953418569209995264,
-  'vick2times':              852025689220677632
-};
-
-// Convert {division:"42.7%", playoffs:"80.0%", title:"3.7%"} -> UI strings
 const toStatuses = (st = {}) => ({
   divStatus: st.division ? `C:${st.division}` : '',
   playStatus: [st.playoffs ? `C:${st.playoffs}` : '', st.title ? `T:${st.title}` : '']
@@ -51,9 +32,23 @@ const toStatuses = (st = {}) => ({
     .join(' ')
 });
 
-// normalize a single row from the JSON into what the table reads
+function keyify(s) {
+  return String(s ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/[\u2019']/g, '')       // remove apostrophes (handles People’s)
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function toAvatarUrl(v) {
+  if (!v) return '';
+  if (typeof v === 'string' && /^https?:\/\//i.test(v)) return v;
+  if (typeof v === 'string' && v.startsWith('/')) return v;
+  return `https://sleepercdn.com/avatars/thumbs/${v}`;
+}
+
 function normalizeRow(r) {
-  // record "3-0-0" -> wins/losses/ties
   let wins = 0, losses = 0, ties = 0;
   if (typeof r.record === 'string') {
     const [w, l, t] = r.record.split('-').map((n) => Number(n || 0));
@@ -63,12 +58,14 @@ function normalizeRow(r) {
   }
 
   const { divStatus, playStatus } = toStatuses(r.status || {});
-  // prefer slug in JSON if you add it; fallback to map by team label
   const slug = (r.slug && String(r.slug)) || slugMap[r.team] || null;
 
   return {
-    slug,                       // used for link & filtering
-    teamName: r.team || '',     // keep the friendly name for team pages
+    // Stable id (future): if you add roster_id to JSON, this flows through automatically
+    roster_id: Number.isFinite(Number(r.roster_id)) ? Number(r.roster_id) : null,
+
+    slug,
+    teamName: r.team || '',
     division: String(r.division ?? ''),
     wins, losses, ties,
     points: Number(r.points ?? 0),
@@ -81,7 +78,7 @@ function normalizeRow(r) {
 }
 
 function normalize(rows = []) {
-  return rows.map(normalizeRow).filter((x) => !!x.slug);
+  return rows.map(normalizeRow);
 }
 
 // ——— SoS (past-only, safe fallback) ———
@@ -125,9 +122,9 @@ async function computeSoSPast(fetch) {
     regWeeks = Number(league.settings?.playoff_week_start) - 1 || 14;
   } catch {}
 
-  const gp = new Map();     // games played
-  const pf = new Map();     // points for
-  const oppPts = new Map(); // opponent points
+  const gp = new Map();
+  const pf = new Map();
+  const oppPts = new Map();
 
   for (let w = 1; w <= regWeeks; w++) {
     const week = await getMatchups(fetch, w);
@@ -156,15 +153,59 @@ async function computeSoSPast(fetch) {
   return { leagueAvgPPG: Number(leagueAvgPPG.toFixed(2)), past };
 }
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ fetch, setHeaders }) {
-  // IMPORTANT: put your R2 URL in PUBLIC_PROJECTIONS_URL
-  // e.g. PUBLIC_PROJECTIONS_URL="https://pub-6c49...r2.dev/projections-latest.json"
-  const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
-  if (!url) {
-    return { projections: [], sourceUrl: url, error: 'Missing PUBLIC_PROJECTIONS_URL' };
+function buildLookupsFromLTM(ltm) {
+  const year = ltm?.currentSeason;
+  const mapForYear = ltm?.teamManagersMap?.[year] || {};
+
+  const rosterMetaById = {};
+  const rosterIdByNameKey = {};
+
+  for (const [ridStr, entry] of Object.entries(mapForYear)) {
+    const rosterId = Number(ridStr);
+    const team = entry?.team || {};
+
+    const teamName =
+      team.team_name ??
+      team.name ??
+      '';
+
+    const slug =
+      team.slug ??
+      team.teamSlug ??
+      team.team_slug ??
+      null;
+
+    rosterMetaById[rosterId] = {
+      rosterId,
+      slug,
+      teamName,
+      avatarUrl: toAvatarUrl(team.avatar)
+    };
+
+    const k = keyify(teamName);
+    if (k && rosterIdByNameKey[k] == null) rosterIdByNameKey[k] = rosterId;
   }
 
+  return { year, rosterMetaById, rosterIdByNameKey };
+}
+
+/** @type {import('./$types').PageServerLoad} */
+export async function load({ fetch, setHeaders }) {
+  const url = (env.PUBLIC_PROJECTIONS_URL || '').trim();
+  if (!url) {
+    return { projections: [], error: 'Missing PUBLIC_PROJECTIONS_URL' };
+  }
+
+  // 1) Load LTM (same shared source as Standings)
+  let ltm = null;
+  try {
+    ltm = await getLeagueTeamManagers();
+  } catch (e) {
+    console.error('[playoffs-projection] getLeagueTeamManagers failed', e);
+  }
+  const lookups = ltm ? buildLookupsFromLTM(ltm) : null;
+
+  // 2) Fetch projections JSON
   let projections = [];
   let error = null;
 
@@ -181,17 +222,43 @@ export async function load({ fetch, setHeaders }) {
     error = String(e);
   }
 
-  // Merge SoS (fail-soft)
+  // 3) Join to roster_id + avatarUrl + canonical slug (stable once roster_id exists)
+  if (lookups) {
+    projections = projections.map((r) => {
+      let rosterId = Number.isFinite(Number(r.roster_id)) ? Number(r.roster_id) : null;
+
+      // If roster_id is not in JSON yet, try to match by team name from LTM
+      if (!rosterId) {
+        const nameKey = keyify(r.teamName);
+        rosterId = (nameKey && lookups.rosterIdByNameKey[nameKey]) ? lookups.rosterIdByNameKey[nameKey] : null;
+      }
+
+      const meta = rosterId ? lookups.rosterMetaById?.[rosterId] : null;
+
+      return {
+        ...r,
+        roster_id: rosterId,
+        // keep existing slug if present, else prefer canonical from LTM, else fallback slugMap
+        slug: r.slug || meta?.slug || null,
+        // avatar/logo is now from the same shared source as Standings
+        avatarUrl: meta?.avatarUrl || ''
+      };
+    }).filter((x) => !!x.slug);
+  } else {
+    // if we have no lookups, at least filter to rows that can still link
+    projections = projections.filter((x) => !!x.slug);
+  }
+
+  // 4) SoS join now uses roster_id (stable once added to JSON)
   try {
     const sos = await computeSoSPast(fetch);
     projections = projections.map((r) => {
-      const rosterId = slugToRosterId[r.slug];
-      const past = rosterId ? sos.past?.[rosterId] : null;
+      const rosterId = Number(r.roster_id ?? NaN);
+      const past = Number.isFinite(rosterId) ? sos.past?.[rosterId] : null;
       return past ? { ...r, sos: { leagueAvgPPG: sos.leagueAvgPPG, past } } : r;
     });
   } catch {}
 
   setHeaders({ 'cache-control': 'no-store' });
-  // NOTE: if you want to hide the Source URL line in the UI, just don’t return sourceUrl
-  return { projections, /* sourceUrl: url, */ error };
+  return { projections, error };
 }
