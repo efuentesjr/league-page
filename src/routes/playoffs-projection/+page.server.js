@@ -22,7 +22,13 @@ const slugMap = {
   'PrimeTime Pr': 'primetime-prodigies',
   'Do it to the': 'do-it-to-them',
   'Loud and Str': 'loud-and-stroud',
-  'Vick2times': 'vick2times'
+  'Vick2times': 'vick2times',
+
+  // Add these if/when you know their real slugs (your JSON currently includes these labels)
+  // 'The People’s': 'peoples-champ',
+  // 'The Comeback': 'comeback-kid',
+  // 'Pete Weber B': '???',
+  // '88boyz11': '???'
 };
 
 const toStatuses = (st = {}) => ({
@@ -36,7 +42,7 @@ function keyify(s) {
   return String(s ?? '')
     .trim()
     .toLowerCase()
-    .replace(/[\u2019']/g, '')       // remove apostrophes (handles People’s)
+    .replace(/[\u2019']/g, '') // remove apostrophes (handles People’s)
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
 }
@@ -49,7 +55,10 @@ function toAvatarUrl(v) {
 }
 
 function normalizeRow(r) {
-  let wins = 0, losses = 0, ties = 0;
+  let wins = 0,
+    losses = 0,
+    ties = 0;
+
   if (typeof r.record === 'string') {
     const [w, l, t] = r.record.split('-').map((n) => Number(n || 0));
     wins = Number.isFinite(w) ? w : 0;
@@ -58,18 +67,26 @@ function normalizeRow(r) {
   }
 
   const { divStatus, playStatus } = toStatuses(r.status || {});
+
+  // NOTE: slugMap uses the raw "team" field from the JSON (which is often truncated)
   const slug = (r.slug && String(r.slug)) || slugMap[r.team] || null;
 
   return {
     // Stable id (future): if you add roster_id to JSON, this flows through automatically
     roster_id: Number.isFinite(Number(r.roster_id)) ? Number(r.roster_id) : null,
 
+    // Link/display helpers
     slug,
-    teamName: r.team || '',
+    teamLabel: r.team || '', // keep the raw label from projections JSON
+    teamName: r.team || '',  // alias (your UI expects teamName today)
+
     division: String(r.division ?? ''),
-    wins, losses, ties,
+    wins,
+    losses,
+    ties,
     points: Number(r.points ?? 0),
-    divStatus, playStatus,
+    divStatus,
+    playStatus,
     min: r.min ?? '',
     targets: r.targets ?? '',
     gIn: r.gamesIn ?? '',
@@ -150,6 +167,7 @@ async function computeSoSPast(fetch) {
       index: leagueAvgPPG ? Number((oppPPG / leagueAvgPPG).toFixed(3)) : 0
     };
   }
+
   return { leagueAvgPPG: Number(leagueAvgPPG.toFixed(2)), past };
 }
 
@@ -158,35 +176,63 @@ function buildLookupsFromLTM(ltm) {
   const mapForYear = ltm?.teamManagersMap?.[year] || {};
 
   const rosterMetaById = {};
-  const rosterIdByNameKey = {};
+  const rosterIdBySlug = {};
+  const rosterNameKeyToId = {}; // exact-ish match
+  const rosterNameKeys = [];    // for fuzzy contains match
 
   for (const [ridStr, entry] of Object.entries(mapForYear)) {
     const rosterId = Number(ridStr);
     const team = entry?.team || {};
 
-    const teamName =
-      team.team_name ??
-      team.name ??
-      '';
+    const teamName = (team.team_name ?? team.name ?? '').trim();
+    const slug = team.slug ?? team.teamSlug ?? team.team_slug ?? null;
 
-    const slug =
-      team.slug ??
-      team.teamSlug ??
-      team.team_slug ??
-      null;
+    const nameKey = keyify(teamName);
 
-    rosterMetaById[rosterId] = {
+    const meta = {
       rosterId,
       slug,
       teamName,
+      nameKey,
       avatarUrl: toAvatarUrl(team.avatar)
     };
 
-    const k = keyify(teamName);
-    if (k && rosterIdByNameKey[k] == null) rosterIdByNameKey[k] = rosterId;
+    rosterMetaById[rosterId] = meta;
+
+    if (slug && rosterIdBySlug[slug] == null) rosterIdBySlug[slug] = rosterId;
+    if (nameKey && rosterNameKeyToId[nameKey] == null) rosterNameKeyToId[nameKey] = rosterId;
+    if (nameKey) rosterNameKeys.push({ rosterId, nameKey });
   }
 
-  return { year, rosterMetaById, rosterIdByNameKey };
+  return { year, rosterMetaById, rosterIdBySlug, rosterNameKeyToId, rosterNameKeys };
+}
+
+function findRosterIdByFuzzyName(teamLabel, lookups) {
+  const k = keyify(teamLabel);
+  if (!k) return null;
+
+  // 1) Exact nameKey match
+  const exact = lookups.rosterNameKeyToId?.[k];
+  if (exact) return exact;
+
+  // 2) Contains match either direction (handles truncation like "the peoples", "the comeback")
+  // Prefer the longest overlap by simple score
+  let best = { rosterId: null, score: 0 };
+
+  for (const item of lookups.rosterNameKeys) {
+    const a = k;
+    const b = item.nameKey;
+
+    if (!a || !b) continue;
+
+    if (b.includes(a) || a.includes(b)) {
+      // score = shorter length (the more specific the label, the higher)
+      const score = Math.min(a.length, b.length);
+      if (score > best.score) best = { rosterId: item.rosterId, score };
+    }
+  }
+
+  return best.rosterId;
 }
 
 /** @type {import('./$types').PageServerLoad} */
@@ -222,15 +268,20 @@ export async function load({ fetch, setHeaders }) {
     error = String(e);
   }
 
-  // 3) Join to roster_id + avatarUrl + canonical slug (stable once roster_id exists)
+  // 3) Join to roster_id + avatarUrl + canonical slug
   if (lookups) {
     projections = projections.map((r) => {
+      // prefer JSON roster_id if present (future-proof)
       let rosterId = Number.isFinite(Number(r.roster_id)) ? Number(r.roster_id) : null;
 
-      // If roster_id is not in JSON yet, try to match by team name from LTM
+      // if slug exists, use slug -> roster_id
+      if (!rosterId && r.slug && lookups.rosterIdBySlug?.[r.slug]) {
+        rosterId = lookups.rosterIdBySlug[r.slug];
+      }
+
+      // if still missing, attempt fuzzy name match against LTM team names
       if (!rosterId) {
-        const nameKey = keyify(r.teamName);
-        rosterId = (nameKey && lookups.rosterIdByNameKey[nameKey]) ? lookups.rosterIdByNameKey[nameKey] : null;
+        rosterId = findRosterIdByFuzzyName(r.teamLabel, lookups);
       }
 
       const meta = rosterId ? lookups.rosterMetaById?.[rosterId] : null;
@@ -238,18 +289,19 @@ export async function load({ fetch, setHeaders }) {
       return {
         ...r,
         roster_id: rosterId,
-        // keep existing slug if present, else prefer canonical from LTM, else fallback slugMap
+        // use canonical slug from LTM if we found rosterId, else keep whatever we had
         slug: r.slug || meta?.slug || null,
-        // avatar/logo is now from the same shared source as Standings
+        // display the CURRENT team name from LTM when we can (handles team renames)
+        teamName: meta?.teamName || r.teamName,
         avatarUrl: meta?.avatarUrl || ''
       };
-    }).filter((x) => !!x.slug);
-  } else {
-    // if we have no lookups, at least filter to rows that can still link
-    projections = projections.filter((x) => !!x.slug);
+    });
+
+    // only drop rows that cannot link anywhere
+    projections = projections.filter((x) => !!x.slug || Number.isFinite(Number(x.roster_id)));
   }
 
-  // 4) SoS join now uses roster_id (stable once added to JSON)
+  // 4) SoS join uses roster_id
   try {
     const sos = await computeSoSPast(fetch);
     projections = projections.map((r) => {
