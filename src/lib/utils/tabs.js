@@ -67,12 +67,12 @@ export const tabs = [
     dest: '/records',
     key: 'records'
   },
-  {
-    icon: 'trending_up',
-    label: 'Playoff Projections',
-    dest: '/playoffs-projection',
-    key: 'playoffs-projection'
-  },
+//  {
+//    icon: 'trending_up',
+//    label: 'Playoff Projections',
+//    dest: '/playoffs-projection',
+ //   key: 'playoffs-projection'
+//  },
   {
     icon: 'gavel',
     label: 'Competition Committee',
