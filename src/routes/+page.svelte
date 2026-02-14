@@ -29,7 +29,6 @@
   // ✅ Hero video (Cloudflare R2)
   const HERO_VIDEO = {
   //  src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/Smash_Builborad.mp4',
-      poster: '/2026.png<',
   };
 
   // Accessibility: detect reduced motion
