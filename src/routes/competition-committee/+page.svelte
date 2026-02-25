@@ -162,6 +162,7 @@
                   ? 'cc-chip--yearly'
                   : p.status === 'REVOTE'
                   ? 'cc-chip--revote'
+                  : p.status === 'HOLD'
                   : 'cc-chip--hold')
               }
             >
