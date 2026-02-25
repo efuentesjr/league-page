@@ -8,7 +8,7 @@
     title: string;
     owner: string;
     notes?: string;
-    status: 'NEW' | 'YEARLY' | 'CARRIED' | 'REJECTED' | 'REVOTE' | 'OPEN';
+    status: 'NEW' | 'YEARLY' | 'CARRIED' | 'REJECTED' | 'REVOTE' | 'OPEN' | 'HOLD';
   };
 
   type OutcomeStatus = 'Approved' | 'Rejected' | 'Enacted by Commish';
