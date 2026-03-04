@@ -47,7 +47,7 @@
   const proposals: Proposal[] = [
     { id: '1', title: 'Review league scoring per owner(s) and yearly trends. Also, review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
     { id: '2', title: 'Allow punt return yards scoring (re-vote). OPTION#1: No. OPTION#2: Yes, the same as RB/WR, 10yrd=1pts (100yrd=10pts). OPTION#3: Yes, but less than RB/WR, 20yrd=1pts (100yrds=5pts). OPTION#4: Yes, but less than RB/WR, 30yrd=1pts (100yrds=3.33pts).', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'REVOTE' },
-    { id: '3', title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 20. OPTION#2: RBs 20. OPTION#3: WRs 20. OPTION#4: TEs 10. OPTION#5: TOP 100.', owner: 'Commish', status: 'REVOTE' },
+    { id: '3', title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 20- RBs 20- WRs 20- TEs 10. OPTION#5: TOP 100.', owner: 'Commish', status: 'REVOTE' },
     { id: '4', title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Yes, with clearly defined rules. OPTION#2: NO.', owner: 'Trey Fuentes', notes: 'Section 1.3', status: 'OPEN' },
     { id: '5', title: 'Allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. Only allow 1 team. Hold aN auction, winner gets one entry. OPTION#1: Only allow non-playoff teams. OPTION#2: Allow non-top 3 teams. OPTION#3: NO.', owner: 'Ray Rodriguez', status: 'NEW' },
     { id: '6', title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction-type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
