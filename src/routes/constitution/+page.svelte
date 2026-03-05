@@ -872,7 +872,7 @@
 <h2 class="sectionHeading" bind:this={seven}>Section 7 League Finances</h2>
 
 <h3 bind:this={sevenOne}>7.1 League Dues</h3>
-<p>League dues are set at ${dues} and are collected by the commissioner. All managers must be fully paid by no later than Week 6 of the season.</p>
+<p>League dues are set at ${dues} and are collected by the commissioner. All managers must be fully paid by draft day of the season.</p>
 
 <h3 bind:this={sevenTwo}>7.2 Payout</h3>
 <p>League payout is structured as follows:</p>
