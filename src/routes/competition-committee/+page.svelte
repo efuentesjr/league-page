@@ -51,7 +51,7 @@
     { id: '5', title: 'Allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. Only allow 1 team. Hold aN auction, winner gets one entry. OPTION#1: Only allow non-playoff teams. OPTION#2: Allow non-top 3 teams. OPTION#3: NO.', owner: 'Ray Rodriguez', status: 'NEW' },
     { id: '6', title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction-type bidding. OPTION#2: Two winners multiple divisiona. OPTION#3: NO.', owner: 'Ray Rodriguez', status: 'NEW' },
     { id: '7', title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'YEARLY' },
-    { id: '8', title: 'Payout 3rd place runner-up. OPTION#1: $2. OPTION#2: $35. OPTION#3: NO.', owner: 'Commish', status: 'NEW' },
+    { id: '8', title: 'Payout 3rd place runner-up. OPTION#1: $25. OPTION#2: $35. OPTION#3: NO.', owner: 'Commish', status: 'NEW' },
     { id: '9', title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league fee increase). OPTION#2: A bye week for the 1st round of playoffs (would require beginning playoffs WK13 or ending WK18). OPTION#3: 25% of Max yearly FAAB.', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
     { id: '10', title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
     { id: '11', title: 'When trading future picks you will need to pay some additional $$$, in addition to regular fees and those fees will go towards that years fees. OPTION#1: YES. OPTION#2: NO.', owner: 'John Diaz-DeCaro', status: 'NEW' },
