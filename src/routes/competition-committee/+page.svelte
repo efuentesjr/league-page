@@ -53,13 +53,14 @@
     { id: '6', title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction-type bidding.', owner: 'Eddie Fuentes / Ray Rodriguez', status: 'NEW' },
     { id: '7', title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'YEARLY' },
     { id: '8', title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league fee increase). OPTION#2: A bye week for the 1st round of playoffs (would require beginning playoffs WK13 or ending WK18). OPTION#3: 25% of Max yearly FAAB.', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
-    { id: '9', title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
-    { id: '10', title: "When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.", owner: 'John Diaz-DeCaro', status: 'NEW' },
-    { id: '11', title: 'Waiver wire player "drop" restrictions and collusion prevention. OPTION#1: All players over 10 PPG. OPTION#2: All players above 15 PPG. ', owner: 'Commish', status: 'NEW' },
-    { id: '12', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'HOLD' },
-    { id: '13', title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', owner: 'Commish', status: 'NEW' },
-    { id: '14', title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
-    { id: '15', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
+    { id: '9', title: 'Payout for the 3rd place runner-up. OPTION#1: NO. OPTION#2: $25. OPTION#3: $40.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+    { id: '10', title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+    { id: '11', title: "When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.", owner: 'John Diaz-DeCaro', status: 'NEW' },
+    { id: '12', title: 'Waiver wire player "drop" restrictions and collusion prevention. OPTION#1: All players over 10 PPG. OPTION#2: All players above 15 PPG. ', owner: 'Commish', status: 'NEW' },
+    { id: '13', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'HOLD' },
+    { id: '14', title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', owner: 'Commish', status: 'NEW' },
+    { id: '15', title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
+    { id: '16', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
   ];
 
   const previous: Outcome[] = [
