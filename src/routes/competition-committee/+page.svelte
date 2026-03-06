@@ -53,7 +53,7 @@
     { id: '7', title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'YEARLY' },
     { id: '8', title: 'Payout 3rd place runner-up. OPTION#1: $25. OPTION#2: $35. OPTION#3: NO.', owner: 'Commish', status: 'NEW' },
     { id: '9', title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league fee increase). OPTION#2: A bye week for the 1st round of playoffs (would require beginning playoffs WK13 or ending WK18). OPTION#3: 25% of Max yearly FAAB.', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
-    { id: '10', title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+    { id: '10', title: 'Raise dues ($75 → $85 or more); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale. OPTION#1: $85. OPTION#2: $100.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
     { id: '11', title: 'When trading future picks you will need to pay some additional $$$, in addition to regular fees and those fees will go towards that years fees. OPTION#1: YES. OPTION#2: NO.', owner: 'John Diaz-DeCaro', status: 'NEW' },
     { id: '12', title: 'Waiver wire player drop restrictions and collusion prevention. OPTION#1: All players over 10 PPG. OPTION#2: All players above 15 PPG. OPTION#3: NO.', owner: 'Commish', status: 'NEW' },
     { id: '13', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'HOLD' },
