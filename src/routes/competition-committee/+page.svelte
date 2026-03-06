@@ -43,56 +43,39 @@
     if (x === undefined || x === null) return false;
     return String(x).trim().length > 0;
   }
+const proposals: Proposal[] = [
+  { id: '1', title: 'Review league scoring per owner(s) and yearly trends. Also, review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
+  { id: '2', title: 'Allow punt return yards scoring (re-vote). OPTION#1: No. OPTION#2: Yes, the same as RB/WR, 10yrd=1pts (100yrd=10pts). OPTION#3: Yes, but less than RB/WR, 20yrd=1pts (100yrds=5pts). OPTION#4: Yes, but less than RB/WR, 30yrd=1pts (100yrds=3.33pts).', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'REVOTE' },
+  { id: '3', title: 'Player tags, No trade back for top 35 players. Re-evaluate and reduce to OPTION#1: QBs 20- RBs 20- WRs 20- TEs 10. OPTION#5: TOP 100.', owner: 'Commish', status: 'REVOTE' },
+  { id: '4', title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Yes, with clearly defined rules. OPTION#2: NO.', owner: 'Trey Fuentes', notes: 'Section 1.3', status: 'OPEN' },
+  { id: '5', title: 'Allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. Only allow 1 team. Hold an auction, winner gets one entry. OPTION#1: Only allow non-playoff teams. OPTION#2: Allow non-top 3 teams. OPTION#3: NO.', owner: 'Ray Rodriguez', status: 'NEW' },
+  { id: '6', title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction-type bidding.', owner: 'Ray Rodriguez', status: 'NEW' },
+  { id: '7', title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'YEARLY' },
+  { id: '8', title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league fee increase). OPTION#2: A bye week for the 1st round of playoffs (would require beginning playoffs WK13 or ending WK18). OPTION#3: 25% of Max yearly FAAB.', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
+  { id: '9', title: 'Payout for the 3rd place runner-up. OPTION#1: NO. OPTION#2: $25. OPTION#3: $40.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+  { id: '10', title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+  { id: '11', title: "When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.", owner: 'John Diaz-DeCaro', status: 'NEW' },
+  { id: '12', title: 'Waiver wire player "drop" restrictions and collusion prevention. OPTION#1: All players over 10 PPG. OPTION#2: All players above 15 PPG.', owner: 'Commish', status: 'NEW' },
+  { id: '13', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'HOLD' },
+  { id: '14', title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', owner: 'Commish', status: 'NEW' },
+  { id: '15', title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
+  { id: '16', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
+];
 
-  const proposals: Proposal[] = [
-    { id: '1', title: 'Review league scoring per owner(s) and yearly trends. Also, review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
-    { id: '2', title: 'Allow punt return yards scoring (re-vote). OPTION#1: No. OPTION#2: Yes, the same as RB/WR, 10yrd=1pts (100yrd=10pts). OPTION#3: Yes, but less than RB/WR, 20yrd=1pts (100yrds=5pts). OPTION#4: Yes, but less than RB/WR, 30yrd=1pts (100yrds=3.33pts).', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'REVOTE' },
-    { id: '3', title: 'Player tags, No trade back for top 35 players. Re-evaluate and reduce to OPTION#1: QBs 20- RBs 20- WRs 20- TEs 10. OPTION#5: TOP 100.', owner: 'Commish', status: 'REVOTE' },
-    { id: '4', title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Yes, with clearly defined rules. OPTION#2: NO.', owner: 'Trey Fuentes', notes: 'Section 1.3', status: 'OPEN' },
-    { id: '5', title: 'Allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB. Only allow 1 team. Hold aN auction, winner gets one entry. OPTION#1: Only allow non-playoff teams. OPTION#2: Allow non-top 3 teams. OPTION#3: NO.', owner: 'Ray Rodriguez', status: 'NEW' },
-    { id: '6', title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions. OPTION#1: ONLY one winner in a FAAB auction-type bidding.', owner: 'Ray Rodriguez', status: 'NEW' },
-    { id: '7', title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'YEARLY' },
-    { id: '8', title: 'Offer incentives for Divisional Champs. OPTION#1: $25 payout (would require league fee increase). OPTION#2: A bye week for the 1st round of playoffs (would require beginning playoffs WK13 or ending WK18). OPTION#3: 25% of Max yearly FAAB.', owner: 'Jordan Fristoe / Nick Bowens', status: 'NEW' },
-    { id: '9', title: 'Payout for the 3rd place runner-up. OPTION#1: NO. OPTION#2: $25. OPTION#3: $40.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
-    { id: '10', title: 'Raise dues ($75 → $85); 2/3 vote needed to raise fees, 11 owners. Commish to provide rationale.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
-    { id: '11', title: 'When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.' owner: 'John Diaz-DeCaro', status: 'NEW' },
-    { id: '12', title: 'Waiver wire player "drop" restrictions and collusion prevention. OPTION#1: All players over 10 PPG. OPTION#2: All players above 15 PPG. ', owner: 'Commish', status: 'NEW' },
-    { id: '13', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'HOLD' },
-    { id: '14', title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', owner: 'Commish', status: 'NEW' },
-    { id: '15', title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
-    { id: '16', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
-  ];
-
-  const previous: Outcome[] = [
-    // 2026 placeholders (commented)
-    // { id: 1, title: 'Allow punt return yards scoring (re-vote).', notes: 'Section 4.1', status: 'Approved', year: 2026 },
-    // { id: 2, title: 'Player tags, No trade back for top 35 players.', notes: '', status: 'Approved', year: 2026 },
-    // { id: 3, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading.', notes: 'Section 1.3', status: 'Approved', year: 2026 },
-    // { id: 4, title: 'Allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB.', status: 'Approved', year: 2026 },
-    // { id: 5, title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions.', notes: '', status: 'Approved', year: 2026 },
-    // { id: 6, title: 'Offer incentives for Divisional Champs.', status: 'Approved', year: 2026 },
-    // { id: 7, title: 'Payout for the 3rd place runner-up.', notes: 'Section 7.3', status: 'Approved', year: 2026 },
-    // { id: 8, title: 'Raise dues ($75 → $85).', notes: 'Section 7.3', status: 'Approved', year: 2026 },
-    // { id: 9, title: 'When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.', status: 'Approved', year: 2026 },
-    // { id: 10, title: 'Waiver wire player drop restrictions and collusion prevention.', status: 'Approved', year: 2026 },
-    // { id: 11, title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', status: 'Approved', year: 2026 },
-
-    { id: 1, title: 'Change how ping pong balls are eraned. Toilet Bowl rules.', notes: 'Section 3.4', status: 'Approved', year: 2025 },
-    { id: 2, title: 'Add Bonus 0.1 for RBs (40+ yard Rush TD)', notes: 'Section 4.1', status: 'Approved', year: 2025 },
-    { id: 3, title: 'Decide draft order during Comp-Comittee every year..', notes: 'Section 3', status: 'Approved', year: 2025 },
-    { id: 4, title: 'Loser’s punishment – 3 strike rule.', notes: 'Section 6.1', status: 'Approved', year: 2025 },
-    { id: 5, title: 'Trade deadline moved to Wednesday of week 7- @8pm CST. This was approved to revote', notes: 'Section 1.3.3', status: 'Approved', year: 2025 },
-    { id: 6, title: 'Reshuffle divisions every 4 years. Next reshuffle: 2028 offseason', notes: 'Section 1.2.2', status: 'Approved', year: 2025 },
-    { id: 7, title: 'Manager replacement draft priority. New incoming manager may be given #1 draft pick, All 3 commish must approve', notes: 'Section 6.2', status: 'Enacted by Commish', year: 2025 },
-
-    { id: 1, title: 'Top 35 “Pro Bowlers” no trade-back', notes: 'Section 1.3.2', status: 'Approved', year: 2024 },
-    { id: 2, title: '“Best Roster” integrity rule', status: 'Rejected', year: 2024 },
-    { id: 3, title: 'Starting 9 / Bench 10 / Taxi 4/ IR 3 settings', notes: 'Section 1.1', status: 'Approved', year: 2024 },
-    { id: 4, title: 'Taxi squad move rules. Allowed "in/out" for true rookies and "in" for 2nd yr players.', notes: 'Defaulted to Sleeper settings', status: 'Approved', year: 2024 },
-    { id: 5, title: 'Trade deadline moved to Week 7, midseason.', notes: 'Section 1.3.3', status: 'Approved', year: 2024 },
-    { id: 6, title: 'Divisions. Move to a four divisions structure.', notes: 'Section 1.2.1', status: 'Approved', year: 2024 },
-    { id: 7, title: 'Allow special teams (PR. KR) players TDs to count towards scoring.', notes: 'Section 4.1', status: 'Approved', year: 2024 },
-    { id: 7, title: 'Allow special teams (PR. KR) players yards to count towards scoring.', notes: 'Section 4.1', status: 'Rejected', year: 2024 }
+const previous: Outcome[] = [
+  // 2026 placeholders (commented)
+  // { id: 1, title: 'Allow punt return yards scoring (re-vote).', notes: 'Section 4.1', status: 'Approved', year: 2026 },
+  // { id: 2, title: 'Player tags, No trade back for top 35 players.', notes: '', status: 'Approved', year: 2026 },
+  // { id: 3, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading.', notes: 'Section 1.3', status: 'Approved', year: 2026 },
+  // { id: 4, title: 'Allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB.', status: 'Approved', year: 2026 },
+  // { id: 5, title: 'Allow teams to buy by way of FAAB the right to select division when reshuffling divisions.', notes: '', status: 'Approved', year: 2026 },
+  // { id: 6, title: 'Offer incentives for Divisional Champs.', status: 'Approved', year: 2026 },
+  // { id: 7, title: 'Payout for the 3rd place runner-up.', notes: 'Section 7.3', status: 'Approved', year: 2026 },
+  // { id: 8, title: 'Raise dues ($75 → $85).', notes: 'Section 7.3', status: 'Approved', year: 2026 },
+  // { id: 9, title: "When trading future picks you'll need to pay some additional $$$, in addition to regular fees and those fees will go towards that year's fees.", status: 'Approved', year: 2026 },
+  // { id: 10, title: 'Waiver wire player drop restrictions and collusion prevention.', status: 'Approved', year: 2026 },
+  // { id: 11, title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', status: 'Approved', year: 2026 },
+];
   ];
 
   // parse proposals
