@@ -63,8 +63,7 @@
 
   const previous: Outcome[] = [
     // 2026 placeholders (commented)
-    // 2026 placeholders (commented)
-    // { id: 1, title: 'Allow punt return yards scoring (re-vote).', notes: 'Section 4.1', status: 'Approved', year: 2026 },
+    { id: 1, title: 'Allow punt return yards scoring (re-vote).', notes: 'Section 4.1', status: 'Approved', year: 2026 },
     // { id: 2, title: 'Player tags, No trade back for top 35 players.', notes: '', status: 'Approved', year: 2026 },
     // { id: 3, title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading.', notes: 'Section 1.3', status: 'Approved', year: 2026 },
     // { id: 4, title: 'Allow teams to purchase a draft ping-pong entry for the #1 pick by way of FAAB.', status: 'Approved', year: 2026 },
