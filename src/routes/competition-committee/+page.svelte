@@ -76,7 +76,6 @@ const previous: Outcome[] = [
   // { id: 10, title: 'Waiver wire player drop restrictions and collusion prevention.', status: 'Approved', year: 2026 },
   // { id: 11, title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', status: 'Approved', year: 2026 },
 ];
-  ];
 
   // parse proposals
   const parsedProposals = proposals.map((p) => ({
