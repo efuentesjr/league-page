@@ -45,7 +45,7 @@
   }
   const proposals: Proposal[] = [
     { id: '1', title: 'Review league scoring per owner(s) and yearly trends. Also, review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
-    { id: '2', title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season.', owner: 'Commish', status: 'NEW' },
+    { id: '2', title: 'Pay commissioners 25% of the total maximum FAAB allowed for that season. OPTION#1: YES. OPTION#2: NO.', owner: 'Commish', status: 'NEW' },
     { id: '3', title: 'Allow punt return yards scoring (re-vote). OPTION#1: No. OPTION#2: Yes, the same as RB/WR, 10yrd=1pts (100yrd=10pts). OPTION#3: Yes, but less than RB/WR, 20yrd=1pts (100yrds=5pts). OPTION#4: Yes, but less than RB/WR, 30yrd=1pts (100yrds=3.33pts).', owner: 'John Diaz-Decaro', notes: 'Section 4.1', status: 'REVOTE' },
     { id: '4', title: 'Player tags, "No trade back for top 35 players." Re-evaluate and reduce to OPTION#1: QBs 20- RBs 20- WRs 20- TEs 10. OPTION#5: TOP 100.', owner: 'Commish', status: 'REVOTE' },
     { id: '5', title: 'Conditional trade rules. VOTE on whether we should allow or disallow conditional trading. OPTION#1: Yes, with clearly defined rules. OPTION#2: NO.', owner: 'Trey Fuentes', notes: 'Section 1.3', status: 'OPEN' },
