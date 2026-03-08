@@ -134,7 +134,7 @@
 
   <!-- ACTIVE PROPOSALS -->
   <section class="cc-section cc-section--white">
-    <h2 class="cc-section-title">2026 Active Proposed Rule Discussions</h2>
+    <h2 class="cc-section-title">2027 Active Proposed Rule Discussions</h2>
     <div class="cc-grid">
       {#each parsedProposals as p (p.id)}
         <article class="cc-card">
