@@ -392,6 +392,22 @@
 
     .sectionHeading {
       margin-top: 2.4rem;
+      font-size: 1.35rem;
+    }
+
+    .subSectionHeading {
+      font-size: 1.05rem;
+      line-height: 1.35;
+    }
+
+    h4 {
+      font-size: 0.98rem;
+      line-height: 1.35;
+    }
+
+    h5 {
+      font-size: 0.88rem;
+      line-height: 1.35;
     }
 
     .subBlock {
@@ -427,6 +443,7 @@
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneOneOne)}>1.1.1 Position Maximums</h5>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Divisions</h4>
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.2.1 Divisional Structure</h5>
+          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoTwo)}>1.2.2 Divisions Reshuffle</h5>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(oneThree)}>1.3 Trading</h4>
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.3.1 Trade Collusion</h5>
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeTwo)}>1.3.2 Lending Players Prohibition</h5>
@@ -442,13 +459,13 @@
           <h4 class="noUnderscore clickable" on:click={() => goToSection(twoOne)}>2.1 Playoffs</h4>
 
           <h3 class="noUnderscore clickable" on:click={() => goToSection(three)}>Section 3: Drafting</h3>
-          <h4 class="noUnderscore clickable" on:click={() => goToSection(threeOne)}>3.1 Draft Order</h4>
-          <h4 class="noUnderscore clickable" on:click={() => goToSection(threeTwo)}>3.2 Rookie Drafts</h4>
+          <h4 class="noUnderscore clickable" on:click={() => goToSection(threeOne)}>3.1 Drafts</h4>
+          <h4 class="noUnderscore clickable" on:click={() => goToSection(threeTwo)}>3.2 Draft Order</h4>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(threeThree)}>3.3 Draft Day Trades</h4>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(threeFour)}>3.4 Draft Order Determination</h4>
 
           <h3 class="noUnderscore clickable" on:click={() => goToSection(four)}>Section 4: Scoring System</h3>
-          <h4 class="noUnderscore clickable" on:click={() => goToSection(fourOne)}>4.1 Voting on Scoring System</h4>
+          <h4 class="noUnderscore clickable" on:click={() => goToSection(fourOne)}>4.1 Scoring System</h4>
 
           <h3 class="noUnderscore clickable" on:click={() => goToSection(five)}>Section 5: Tanking Policy</h3>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(fiveOne)}>5.1 League Tanking Policy</h4>
@@ -456,7 +473,7 @@
           <h3 class="noUnderscore clickable" on:click={() => goToSection(six)}>Section 6: Replacing Managers</h3>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(sixOne)}>6.1 Removing Managers</h4>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(sixTwo)}>6.2 Replacing Managers</h4>
-          <h4 class="noUnderscore clickable" on:click={() => goToSection(sixThree)}>6.3 Replacement Incentive</h4>
+          <h4 class="noUnderscore clickable" on:click={() => goToSection(sixThree)}>6.3 Quitting/Replacement of Inactive Managers</h4>
 
           <h3 class="noUnderscore clickable" on:click={() => goToSection(seven)}>Section 7: League Finances</h3>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(sevenOne)}>7.1 League Dues</h4>
@@ -483,9 +500,9 @@
       <li>FLEX (RB/WR/TE)</li>
       <li>SUPERFLEX (QB/RB/WR/TE)</li>
     </ul>
-    <p>10 Bench (Expanded by 5 between the competition committee and draft day during the off-season).</p>
-    <p>3 IR Spots (Player must be labeled as IR, Out, or Covid in the Sleeper App).</p>
-    <p>4 Taxi Squad (You may keep 2nd year players in the taxi squad, but only true rookies will be able to move in and out).</p>
+    <p>10 Bench (expanded by 5 between the Competition Committee and draft day during the offseason).</p>
+    <p>3 IR Spots (player must be labeled as IR, Out, or COVID in the Sleeper app).</p>
+    <p>4 Taxi Squad (you may keep 2nd-year players in the taxi squad, but only true rookies will be able to move in and out).</p>
 
     <h4 bind:this={oneOneOne}>1.1.1 Position Maximums</h4>
     <div class="subBlock">
@@ -555,25 +572,25 @@
     <h4 bind:this={oneThreeOne}>1.3.1 Trade Collusion</h4>
     <div class="subBlock">
       <p>
-        If any team managers are suspected of offering or accepting bribes to enhance their own team or another manager’s
-        team via trade, trading assets other than fantasy players, draft picks, or FAAB dollars, or otherwise found guilty of
-        any form of collusion*, all parties involved in the trade will be subject to disciplinary action. Punishments may
-        include the following:
+        If any managers are suspected of offering or accepting bribes to enhance their own team or another manager’s team via
+        trade, trading assets other than fantasy players, draft picks, or FAAB dollars, or are otherwise found guilty of any
+        form of collusion, all parties involved in the trade will be subject to disciplinary action. Punishments may include
+        the following:
       </p>
       <ul>
-        <li>First Offense – Immediate reduction of FAAB budget by 80%</li>
+        <li>First offense – Immediate reduction of FAAB budget by 80%</li>
         <li>
-          Second Offense – An immediate freeze on all transaction types—including trades and waiver wire bids—for the next 17
+          Second offense – An immediate freeze on all transaction types, including trades and waiver wire bids, for the next 17
           weeks of regular season and playoff fantasy football games. This equates to a one-year suspension from all trades and
           waiver wire activity.
         </li>
         <li>
-          Third Offense – A league meeting of all members not involved in any of the improper trades/activity in question will
-          take place to discuss next steps.
+          Third offense – A league meeting of all members not involved in any of the improper trades or activity in question
+          will take place to discuss next steps.
         </li>
       </ul>
       <p>
-        All trades that are found guilty of collusion will be reversed/denied. If the trade had affected the outcome of previous
+        All trades that are found guilty of collusion will be reversed or denied. If the trade affected the outcome of previous
         games, the results of those games will be revised.
       </p>
     </div>
@@ -581,7 +598,7 @@
     <h4 bind:this={oneThreeTwo}>1.3.2 Lending Players Prohibition</h4>
     <div class="subBlock">
       <p>
-        For trades involving any player ranked in the top 35, re-acquisition by the original team is prohibited for two years
+        For trades involving any player ranked in the top 35, reacquisition by the original team is prohibited for two years
         after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this
         rule.
       </p>
@@ -589,27 +606,27 @@
 
     <h4 bind:this={oneThreeThree}>1.3.3 Trade Deadline</h4>
     <div class="subBlock">
-      <p>The trade deadline will be set for the Wednesday of week 7 at 8:00 pm CST.</p>
+      <p>The trade deadline will be set for Wednesday of Week 7 at 8:00 p.m. CST.</p>
     </div>
 
     <h4 bind:this={oneThreeFour}>1.3.4 Trade Restrictions</h4>
     <div class="subBlock">
       <p>
-        You will not be able to trade draft picks that are more than 3 drafts away. For example, during the 2021 season you
-        cannot trade any picks in or after the 2025 draft.
+        You may not trade draft picks that are more than three drafts away. For example, during the 2021 season you cannot
+        trade any picks in or after the 2025 draft.
       </p>
     </div>
 
     <h4 bind:this={oneThreeFive}>1.3.5 Veto/Trade Process</h4>
     <div class="subBlock">
-      <p>Only the Commissioner may veto trades. See Sections "1.2 Trading".</p>
+      <p>Only the Commissioner may veto trades. See Section 1.3 Trading.</p>
     </div>
 
     <h3 bind:this={oneFour}>1.4 Waiver Wire</h3>
     <p>
       Beginning in the 2023 season, MFFL will award bonus FAAB (Free Agent Acquisition Budget) dollars to managers who attend
       and actively participate in the league’s Competition Committee meetings and the in-person draft. Out-of-town managers
-      must follow along and participate live during the draft to qualify—auto-drafting is not allowed.
+      must follow along and participate live during the draft to qualify. Auto-drafting is not allowed.
     </p>
 
     <p>
@@ -618,7 +635,7 @@
       will process every Thursday at 2:00 a.m.
     </p>
 
-    <p>FAAB budgets carry over to the next season, to the maximum amount of $999.</p>
+    <p>FAAB budgets carry over to the next season, up to a maximum of $999.</p>
 
     <h4 bind:this={oneFourOne}>1.4.1 Waiver Wire/FAAB Collusion</h4>
     <div class="subBlock">
@@ -629,14 +646,14 @@
       <ul>
         <li>Pooling FAAB budgets between teams.</li>
         <li>
-          Dropping a player with the intent of allowing a specific team to acquire them, particularly if it’s known that the
+          Dropping a player with the intent of allowing a specific team to acquire them, particularly if it is known that the
           team with the highest FAAB will likely pick up the player.
         </li>
       </ul>
       <p>
         The Commissioner reserves the right to investigate any suspicious bidding or dropping patterns and to take disciplinary
-        action if collusion is suspected. Punishments for FAAB/waiver wire collusion may include FAAB penalties, transaction
-        freezes, or other sanctions as outlined in the league’s collusion policy.
+        action if collusion is suspected. Punishments for FAAB or waiver wire collusion may include FAAB penalties,
+        transaction freezes, or other sanctions as outlined in the league’s collusion policy.
       </p>
     </div>
 
@@ -644,10 +661,10 @@
 
     <h3 bind:this={twoOne}>2.1 Playoffs</h3>
     <p>
-      At the end of the season 8 teams will make the playoffs. The first round of playoffs will commence in week 15. Each team
-      that wins their division, North, South, East & West (4) and the 4 wild card teams that finish with the best records
-      overall from the remaining teams, will receive a playoff berth. Each playoff matchup will only last one week and the
-      winner will advance. Week 18 will not be used.
+      At the end of the season, 8 teams will make the playoffs. The first round of playoffs will commence in Week 15. Each
+      team that wins its division, North, South, East, and West (4), and the 4 wild card teams that finish with the best
+      records overall from the remaining teams, will receive a playoff berth. Each playoff matchup will last one week, and
+      the winner will advance. Week 18 will not be used.
     </p>
     <p>The seed determination is as follows:</p>
     <p>1. Overall record.</p>
@@ -655,8 +672,8 @@
     <p>3. Points Against.</p>
     <p>4. Coin flip (in extreme cases).</p>
     <p>
-      The first-round matchups will be determined by end-of-season seeding | 1-vs-8 | 2-vs-7 | 3-vs-6 | 4-vs-5 |. In the
-      following rounds, each team stays on their side of the bracket as they advance.
+      The first-round matchups will be determined by end-of-season seeding: 1-vs-8, 2-vs-7, 3-vs-6, and 4-vs-5. In the
+      following rounds, each team stays on its side of the bracket as they advance.
     </p>
 
     <div class="bracket-container">
@@ -702,7 +719,7 @@
         <div class="round-title">Finals <br /><small>(Week 17)</small></div>
 
         <div class="matchup">
-          <div class="championship">🏆 Champ</div>
+          <div class="championship">Champ</div>
           <div class="tbd">TBD</div>
           <div class="tbd">TBD</div>
         </div>
@@ -722,7 +739,7 @@
       Committee meeting. These additional spots will be removed shortly after the draft, at which point all teams must reduce
       their rosters to comply with standard roster limits.
     </p>
-    <p>Any spots not filled during the draft can be filled immediately afterwards from the waiver wire.</p>
+    <p>Any spots not filled during the draft can be filled immediately afterward from the waiver wire.</p>
 
     <h3 bind:this={threeTwo}>3.2 Draft Order</h3>
     <p>The draft order each year will be linear.</p>
@@ -748,13 +765,13 @@
     <p>
       If you trade future draft picks, you are required to actively manage your team through the playoffs in those seasons. If
       you fail to do so, the commissioners reserve the right to set your lineup to the best possible lineup each week in order
-      to maintain the integrity of the draft picks.
+      to maintain the integrity of those draft picks.
     </p>
 
     <h3 bind:this={threeThree}>3.3 Draft Day Trades</h3>
     <p>
       If a trade is being negotiated during the draft, either party may request that the Commissioner pause the draft to allow
-      additional time for the trade discussions.
+      additional time for trade discussions.
     </p>
 
     <h3 bind:this={threeFour}>3.4 Draft Order Determination</h3>
@@ -840,7 +857,7 @@
     <h2 class="sectionHeading" bind:this={four}>Section 4 Scoring System</h2>
 
     <h3 bind:this={fourOne}>4.1 Scoring System</h3>
-    <p>For the complete scoring breakdown please see Sleeper fantasy app.</p>
+    <p>For the complete scoring breakdown, please see the Sleeper fantasy app.</p>
 
     <div class="scoring-table">
       <table>
@@ -894,7 +911,7 @@
           </tr>
           <tr>
             <td>40+ Yard Pass TD Bonus</td>
-            <td><input type="text" value=".1" /></td>
+            <td><input type="text" value="0.1" /></td>
           </tr>
           <tr>
             <td>50+ Yard Pass TD Bonus</td>
@@ -1005,15 +1022,15 @@
             <td><input type="text" value="0.4" /></td>
           </tr>
           <tr>
-            <td>Reception bonus - RB</td>
+            <td>Reception Bonus - RB</td>
             <td><input type="text" value="0" /></td>
           </tr>
           <tr>
-            <td>Reception bonus - WR</td>
+            <td>Reception Bonus - WR</td>
             <td><input type="text" value="0" /></td>
           </tr>
           <tr>
-            <td>Reception bonus - TE</td>
+            <td>Reception Bonus - TE</td>
             <td><input type="text" value="0.6" /></td>
           </tr>
         </tbody>
@@ -1050,9 +1067,9 @@
     <h3 bind:this={fiveOne}>5.1 League Tanking Policy</h3>
     <p>
       Tanking may be a strategy that a manager employs to improve the team’s draft position. Please make sure to fully
-      understand the potential consequences of tanking, that may include the following season strength of schedule. Leaving
+      understand the potential consequences of tanking, which may include the following season’s strength of schedule. Leaving
       your lineup empty is not allowed, as this is considered "ghosting" your team. Ghosting will result in the manager being
-      removed from the league. Please notify the commissioner when tanking.
+      removed from the league. Please notify the Commissioner when tanking.
     </p>
 
     <h2 class="sectionHeading" bind:this={six}>Section 6 Replacing Managers</h2>
@@ -1060,37 +1077,42 @@
     <h3 bind:this={sixOne}>6.1 Removing Managers</h3>
     <p>
       A manager can be removed against their will in cases of repeatedly failing to set a valid lineup, confirmed collusion, or
-      lack of participation in the competition committee, in-person draft, league chat, trade offers, or waiver wire. Staying
+      lack of participation in the Competition Committee, in-person draft, league chat, trade offers, or waiver wire. Staying
       active throughout the season is strongly encouraged, as inactivity may be considered grounds for removal.
     </p>
-    <p>⚾ Three Strikes &amp; You're Out Rule ⚾:</p>
+    <p>Three Strikes and You're Out Rule:</p>
     <p>
-      If a manager’s team finishes 14th, 15th or 16th in back-to-back seasons, they must plead their strategy to the commissioner &
-      co-commissioners. If approved, they’ll get one final season—a probation year—where their team must improve as outlined by
-      the commissioners. Failure to do so? Strike three, and you’re out!
+      If a manager’s team finishes 14th, 15th, or 16th in back-to-back seasons, they must plead their strategy to the
+      Commissioner and co-commissioners. If approved, they will get one final season, a probation year, where their team must
+      improve as outlined by the commissioners. Failure to do so means strike three, and they are out.
     </p>
 
     <h3 bind:this={sixTwo}>6.2 Replacing Managers</h3>
     <p>
       When a manager is replaced, the commissioners will try to find a suitable candidate with some connection to at least a
-      portion of the existing managers. A list of potential candidates is maintained by the commissioner. If you know of
-      someone interested in joining, please provide their name to the commissioner. Priority will be given to managers who are
+      portion of the existing managers. A list of potential candidates is maintained by the Commissioner. If you know of
+      someone interested in joining, please provide their name to the Commissioner. Priority will be given to managers who are
       eager to commit to a dynasty league and will be highly active within the league.
     </p>
-    <p>When we have a new incoming manager the Commishiner has the authority to give the #1 draft pick to the incoming manager as compensation for a non-competitive team. All three commishners must vote and agree. In given case that one of the comishners has a conflict of intrest, meaning they might land the #1 pick a substut league manager will vote in his place.
+    <p>
+      When a new manager joins the league, the Commissioner has the authority to award the #1 draft pick to the incoming
+      manager as compensation for taking over a non-competitive team. All three commissioners must vote and agree. In the event
+      that one of the commissioners has a conflict of interest, meaning they might land the #1 pick, a substitute league
+      manager will vote in that commissioner’s place.
     </p>
+
     <h3 bind:this={sixThree}>6.3 Quitting/Replacement of Inactive Managers</h3>
     <p>In the event that a manager chooses to quit the league, the following conditions must be met:</p>
-    <p>1. A reigning champion CANNOT leave the league; they must return to defend or lose their championship!</p>
-    <p>2. If future draft picks are traded, a manager CANNOT leave their team. If you plan on quitting, please keep this in mind.</p>
-    <p>3. Once you leave the MFFL, you can NEVER return. Keep in mind that if you quit or are removed from the league, you will not be invited back.</p>
+    <p>1. A reigning champion cannot leave the league; they must return to defend or forfeit their championship.</p>
+    <p>2. If future draft picks are traded, a manager cannot leave their team. If you plan on quitting, please keep this in mind.</p>
+    <p>3. Once you leave the MFFL, you can never return. Keep in mind that if you quit or are removed from the league, you will not be invited back.</p>
 
-    <p>A FAAB bonus may be added to new incoming managers for the initial season.</p>
+    <p>A FAAB bonus may be added to new incoming managers for their initial season.</p>
 
     <h2 class="sectionHeading" bind:this={seven}>Section 7 League Finances</h2>
 
     <h3 bind:this={sevenOne}>7.1 League Dues</h3>
-    <p>League dues are set at ${dues} and are collected by the commissioner. All managers must be fully paid by draft day of the season.</p>
+    <p>League dues are set at ${dues} and are collected by the Commissioner. All managers must be fully paid by draft day of the season.</p>
 
     <h3 bind:this={sevenTwo}>7.2 Payout</h3>
     <p>League payout is structured as follows:</p>
