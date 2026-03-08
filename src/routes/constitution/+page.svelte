@@ -368,7 +368,7 @@
     margin-top: 0;
   }
 
-  @media (max-width: 700px) {
+   @media (max-width: 700px) {
     .toc-grid {
       grid-template-columns: 1fr;
       gap: 0.9rem;
@@ -443,6 +443,24 @@
       display: block;
       overflow-x: auto;
       white-space: nowrap;
+    }
+
+    .draft-order-table th,
+    .draft-order-table td,
+    .positionMaximums td,
+    table th,
+    table td {
+      padding: 7px 9px;
+      font-size: 0.8rem;
+    }
+
+    .draft-order-table {
+      margin: 0.65rem 0 0.9rem;
+    }
+
+    .total-row td {
+      font-size: 0.76rem;
+      padding: 7px 9px;
     }
   }
 </style>
