@@ -652,7 +652,7 @@
       <p>Only the Commissioner may veto trades. See Section 1.3 Trading.</p>
     </div>
 
-    <h3 bind:this={oneFour}>1.4 Waiver Wire</h3>
+    <h3 class="subSectionHeading" bind:this={oneFour}>1.4 Waiver Wire</h3>
     <p>
       Beginning in the 2023 season, MFFL will award bonus FAAB (Free Agent Acquisition Budget) dollars to managers who attend
       and actively participate in the league’s Competition Committee meetings and the in-person draft. Out-of-town managers
@@ -689,7 +689,7 @@
 
     <h2 class="sectionHeading" bind:this={two}>Section 2 Postseason</h2>
 
-    <h3 bind:this={twoOne}>2.1 Playoffs</h3>
+    <h3 class="subSectionHeading" bind:this={twoOne}>2.1 Playoffs</h3>
     <p>
       At the end of the season, 8 teams will make the playoffs. The first round of playoffs will commence in Week 15. Each
       team that wins its division, North, South, East, and West (4), and the 4 wild card teams that finish with the best
@@ -762,7 +762,7 @@
 
     <h2 class="sectionHeading" bind:this={three}>Section 3 Drafting</h2>
 
-    <h3 bind:this={threeOne}>3.1 Drafts</h3>
+    <h3 class="subSectionHeading" bind:this={threeOne}>3.1 Drafts</h3>
     <p>
       The draft will consist of rookies only and will take place over 5 rounds, with a 5-minute limit per pick. To accommodate
       incoming players, bench sizes will temporarily expand by five spots at the start of the season, following the Competition
@@ -771,7 +771,7 @@
     </p>
     <p>Any spots not filled during the draft can be filled immediately afterward from the waiver wire.</p>
 
-    <h3 bind:this={threeTwo}>3.2 Draft Order</h3>
+    <h3 class="subSectionHeading" bind:this={threeTwo}>3.2 Draft Order</h3>
     <p>The draft order each year will be linear.</p>
 
     <div class="subBlock">
@@ -798,13 +798,13 @@
       to maintain the integrity of those draft picks.
     </p>
 
-    <h3 bind:this={threeThree}>3.3 Draft Day Trades</h3>
+    <h3 class="subSectionHeading" bind:this={threeThree}>3.3 Draft Day Trades</h3>
     <p>
       If a trade is being negotiated during the draft, either party may request that the Commissioner pause the draft to allow
       additional time for trade discussions.
     </p>
 
-    <h3 bind:this={threeFour}>3.4 Draft Order Determination</h3>
+    <h3 class="subSectionHeading" bind:this={threeFour}>3.4 Draft Order Determination</h3>
     <p>
       In an effort to combat tanking during the regular season and encourage managers to stay competitive through the playoffs,
       you can earn ping pong balls based on your regular season record and by placing 1st through 3rd in the Toilet Bowl. See
@@ -886,7 +886,7 @@
 
     <h2 class="sectionHeading" bind:this={four}>Section 4 Scoring System</h2>
 
-    <h3 bind:this={fourOne}>4.1 Scoring System</h3>
+    <h3 class="subSectionHeading" bind:this={fourOne}>4.1 Scoring System</h3>
     <p>For the complete scoring breakdown, please see the Sleeper fantasy app.</p>
 
     <div class="scoring-table">
@@ -1094,7 +1094,7 @@
 
     <h2 class="sectionHeading" bind:this={five}>Section 5 Tanking Policy</h2>
 
-    <h3 bind:this={fiveOne}>5.1 League Tanking Policy</h3>
+    <h3 class="subSectionHeading" bind:this={fiveOne}>5.1 League Tanking Policy</h3>
     <p>
       Tanking may be a strategy that a manager employs to improve the team’s draft position. Please make sure to fully
       understand the potential consequences of tanking, which may include the following season’s strength of schedule. Leaving
@@ -1104,7 +1104,7 @@
 
     <h2 class="sectionHeading" bind:this={six}>Section 6 Replacing Managers</h2>
 
-    <h3 bind:this={sixOne}>6.1 Removing Managers</h3>
+    <h3 class="subSectionHeading" bind:this={sixOne}>6.1 Removing Managers</h3>
     <p>
       A manager can be removed against their will in cases of repeatedly failing to set a valid lineup, confirmed collusion, or
       lack of participation in the Competition Committee, in-person draft, league chat, trade offers, or waiver wire. Staying
@@ -1117,7 +1117,7 @@
       improve as outlined by the commissioners. Failure to do so means strike three, and they are out.
     </p>
 
-    <h3 bind:this={sixTwo}>6.2 Replacing Managers</h3>
+    <h3 class="subSectionHeading" bind:this={sixTwo}>6.2 Replacing Managers</h3>
     <p>
       When a manager is replaced, the commissioners will try to find a suitable candidate with some connection to at least a
       portion of the existing managers. A list of potential candidates is maintained by the Commissioner. If you know of
@@ -1131,7 +1131,7 @@
       manager will vote in that commissioner’s place.
     </p>
 
-    <h3 bind:this={sixThree}>6.3 Quitting/Replacement of Inactive Managers</h3>
+    <h3 class="subSectionHeading" bind:this={sixThree}>6.3 Quitting/Replacement of Inactive Managers</h3>
     <p>In the event that a manager chooses to quit the league, the following conditions must be met:</p>
     <p>1. A reigning champion cannot leave the league; they must return to defend or forfeit their championship.</p>
     <p>2. If future draft picks are traded, a manager cannot leave their team. If you plan on quitting, please keep this in mind.</p>
@@ -1141,10 +1141,10 @@
 
     <h2 class="sectionHeading" bind:this={seven}>Section 7 League Finances</h2>
 
-    <h3 bind:this={sevenOne}>7.1 League Dues</h3>
+    <h3 class="subSectionHeading" bind:this={sevenOne}>7.1 League Dues</h3>
     <p>League dues are set at ${dues} and are collected by the Commissioner. All managers must be fully paid by draft day of the season.</p>
 
-    <h3 bind:this={sevenTwo}>7.2 Payout</h3>
+    <h3 class="subSectionHeading" bind:this={sevenTwo}>7.2 Payout</h3>
     <p>League payout is structured as follows:</p>
 
     <div class="bookkeeping-card">
@@ -1235,7 +1235,7 @@
       </table>
     </div>
 
-    <h3 bind:this={sevenThree}>7.3 Raising Dues</h3>
+    <h3 class="subSectionHeading" bind:this={sevenThree}>7.3 Raising Dues</h3>
     <p>
       A ⅔ majority vote (11) is required in order to raise league dues. In the event that a manager is no longer financially
       comfortable with the buy-in, finding a co-manager to split the cost is recommended.
