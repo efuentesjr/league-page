@@ -22,8 +22,8 @@
 <style>
   :global(body) {
     background:
-      radial-gradient(circle at top, rgba(178, 140, 56, 0.12), transparent 25%),
-      linear-gradient(180deg, #09111f 0%, #0d1728 35%, #111827 100%);
+      radial-gradient(circle at top, rgba(178, 140, 56, 0.08), transparent 24%),
+      linear-gradient(180deg, #09111f 0%, #0c1524 38%, #101826 100%);
     color: #e5e7eb;
   }
 
@@ -34,11 +34,12 @@
   :global(p),
   :global(li) {
     color: #cbd5e1;
-    line-height: 1.7;
+    line-height: 1.75;
   }
 
   :global(ul) {
     padding-left: 1.4rem;
+    margin: 0.65rem 0 1rem;
   }
 
   :global(ul li) {
@@ -47,41 +48,36 @@
 
   :global(hr) {
     border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     margin: 2rem 0;
   }
 
   .constitution-shell {
-    width: min(1100px, 92%);
-    margin: 5rem auto 8rem;
+    width: min(920px, 92%);
+    margin: 4.25rem auto 7rem;
   }
 
   .constitution-hero {
-    background: linear-gradient(135deg, rgba(14, 23, 38, 0.96), rgba(19, 34, 56, 0.92));
-    border: 1px solid rgba(212, 175, 55, 0.22);
-    border-radius: 22px;
-    box-shadow:
-      0 10px 35px rgba(0, 0, 0, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    padding: 2rem 1.5rem 1.75rem;
-    margin-bottom: 1.5rem;
+    padding: 0 0 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
   }
 
   .eyebrow {
     display: inline-block;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: #d4af37;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
     font-weight: 700;
   }
 
   .hero-title {
     margin: 0;
     text-align: center;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.05;
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.08;
     letter-spacing: 0.03em;
   }
 
@@ -90,22 +86,20 @@
     max-width: 760px;
     text-align: center;
     color: #94a3b8;
-    font-size: 0.98rem;
+    font-size: 0.96rem;
+    line-height: 1.6;
   }
 
   .toc-card {
-    margin-top: 1.5rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    padding: 1.25rem 1.1rem;
-    backdrop-filter: blur(4px);
+    margin-top: 1.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .toc-title {
-    margin: 0 0 1.25rem;
+    margin: 0 0 1.2rem;
     text-align: center;
-    font-size: 1rem;
+    font-size: 0.95rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #d4af37;
@@ -114,7 +108,7 @@
   .toc-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.2rem 2rem;
+    gap: 1rem 2rem;
   }
 
   .toc-group h3,
@@ -124,61 +118,58 @@
   }
 
   .toc-group h3 {
-    margin-bottom: 0.6rem;
-    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
     color: #f8fafc;
+    font-weight: 600;
   }
 
   .toc-group h4,
   .toc-group h5 {
-    font-size: 0.92rem;
-    color: #cbd5e1;
-    margin-bottom: 0.45rem;
+    font-size: 0.85rem;
+    color: #9fb3c8;
+    margin-bottom: 0.42rem;
     font-weight: 500;
   }
 
   .constitution-body {
-    margin-top: 1.5rem;
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(17, 24, 39, 0.96));
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 22px;
-    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.28);
-    padding: 2rem 1.4rem 3rem;
+    margin-top: 0;
+    padding: 0;
   }
 
   .sectionHeading {
-    margin: 3.2rem 0 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid rgba(212, 175, 55, 0.24);
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.24);
+    font-size: clamp(1.45rem, 3vw, 1.9rem);
     color: #f8fafc;
   }
 
   .subSectionHeading {
-    margin: 1.8rem 0 0.85rem;
-    font-size: 1.25rem;
+    margin: 1.5rem 0 0.85rem;
+    font-size: 1.18rem;
     color: #dbeafe;
   }
 
   h4 {
-    margin-top: 1.25rem;
-    margin-bottom: 0.6rem;
+    margin-top: 1.15rem;
+    margin-bottom: 0.55rem;
     margin-left: 0;
     text-decoration: none;
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: #f8fafc;
   }
 
   h5 {
     margin-left: 0;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     color: #cbd5e1;
   }
 
   .subBlock {
-    margin-left: 1.2rem;
-    padding-left: 1rem;
-    border-left: 3px solid rgba(212, 175, 55, 0.2);
+    margin-left: 1rem;
+    padding-left: 0.9rem;
+    border-left: 2px solid rgba(212, 175, 55, 0.16);
   }
 
   .underscore {
@@ -216,9 +207,9 @@
     width: 100%;
     border-collapse: collapse;
     font-family: Arial, sans-serif;
-    background: rgba(255, 255, 255, 0.025);
+    background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 14px;
+    border-radius: 12px;
     overflow: hidden;
   }
 
@@ -240,7 +231,7 @@
 
   .table-header,
   table thead tr {
-    background: linear-gradient(180deg, rgba(180, 34, 34, 0.88), rgba(111, 20, 20, 0.88));
+    background: rgba(122, 28, 28, 0.75);
   }
 
   .table-header th,
@@ -265,7 +256,7 @@
   .total-row td {
     font-weight: 700;
     color: #f5d56b;
-    background: rgba(212, 175, 55, 0.08);
+    background: rgba(212, 175, 55, 0.06);
   }
 
   .scoring-table {
@@ -287,6 +278,7 @@
     margin-top: 0.25rem;
   }
 
+  /* Keep bracket visual */
   .bracket-container {
     display: flex;
     gap: 16px;
@@ -364,11 +356,11 @@
 
   .bookkeeping-card {
     width: 100%;
-    margin: 1.5rem 0;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
+    margin: 1.25rem 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
   }
 
   .bookkeeping-card h2,
@@ -379,6 +371,7 @@
   @media (max-width: 700px) {
     .toc-grid {
       grid-template-columns: 1fr;
+      gap: 0.9rem;
     }
 
     .constitution-shell {
@@ -386,10 +379,9 @@
       margin-top: 2rem;
     }
 
-    .constitution-hero,
-    .constitution-body {
-      padding: 1.25rem 1rem 2rem;
-      border-radius: 16px;
+    .constitution-hero {
+      padding-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
     }
 
     .hero-title {
@@ -404,17 +396,17 @@
     }
 
     .toc-title {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       margin-bottom: 1rem;
     }
 
     .toc-group h3 {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
 
     .toc-group h4,
     .toc-group h5 {
-      font-size: 0.86rem;
+      font-size: 0.84rem;
       line-height: 1.35;
     }
 
