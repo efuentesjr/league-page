@@ -99,9 +99,9 @@
   }
 
   .toc-title {
-    margin: 0 0 1rem;
+    margin: 0 0 1.25rem;
     text-align: center;
-    font-size: 1.15rem;
+    font-size: 1rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #d4af37;
@@ -110,7 +110,7 @@
   .toc-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem 2rem;
+    gap: 1.2rem 2rem;
   }
 
   .toc-group h3,
