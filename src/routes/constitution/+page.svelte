@@ -41,6 +41,10 @@
     padding-left: 1.4rem;
   }
 
+  :global(ul li) {
+    margin-bottom: 3px;
+  }
+
   :global(hr) {
     border: none;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -82,7 +86,7 @@
   }
 
   .hero-subtitle {
-    margin: 0.85rem auto 0;
+    margin: 1rem auto 0;
     max-width: 760px;
     text-align: center;
     color: #94a3b8;
@@ -213,7 +217,7 @@
     border-collapse: collapse;
     font-family: Arial, sans-serif;
     background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 14px;
     overflow: hidden;
   }
@@ -229,7 +233,7 @@
   table th,
   table td {
     padding: 12px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     text-align: left;
     color: #e5e7eb;
   }
@@ -372,13 +376,11 @@
     margin-top: 0;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
     .toc-grid {
       grid-template-columns: 1fr;
     }
-  }
 
-  @media (max-width: 700px) {
     .constitution-shell {
       width: min(96%, 96%);
       margin-top: 2rem;
@@ -390,23 +392,51 @@
       border-radius: 16px;
     }
 
+    .hero-title {
+      font-size: 1.7rem;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-top: 0.9rem;
+    }
+
+    .toc-title {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .toc-group h3 {
+      font-size: 0.95rem;
+    }
+
+    .toc-group h4,
+    .toc-group h5 {
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
     .sectionHeading {
-      margin-top: 2.4rem;
-      font-size: 1.35rem;
+      font-size: 1.25rem;
+      margin-top: 1.75rem;
+      padding-bottom: 0.6rem;
     }
 
     .subSectionHeading {
-      font-size: 1.05rem;
+      font-size: 1rem;
+      margin-top: 1rem;
       line-height: 1.35;
     }
 
     h4 {
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       line-height: 1.35;
     }
 
     h5 {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       line-height: 1.35;
     }
 
