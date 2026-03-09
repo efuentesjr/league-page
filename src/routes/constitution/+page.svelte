@@ -3,7 +3,7 @@
 
   let one, oneOne, oneOneOne; // 1.1 Positional Breakdown
   let oneTwo, oneTwoOne, oneTwoTwo; // 1.2 Divisions
-  let oneThree, oneThreeOne, oneThreeTwo, oneThreeThree, oneThreeFour, oneThreeFive; // 1.3 Trading
+  let oneThree, oneThreeOne, oneThreeTwo, oneThreeThree, oneThreeFour, oneThreeFive, oneThreeSix; // 1.3 Trading
   let oneFour, oneFourOne; // 1.4 Waiver Wire
   let two, twoOne; // 2.1 Playoffs
   let three, threeOne, threeTwo, threeThree, threeFour; // 3. Drafting
@@ -460,11 +460,12 @@
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.2.1 Divisional Structure</h5>
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoTwo)}>1.2.2 Divisions Reshuffle</h5>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(oneThree)}>1.3 Trading</h4>
-          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.3.1 Trade Collusion</h5>
-          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeTwo)}>1.3.2 Lending Players Prohibition</h5>
-          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeThree)}>1.3.3 Trade Deadline</h5>
-          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFour)}>1.3.4 Trade Restrictions</h5>
-          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFive)}>1.3.5 Veto/Trade Process</h5>
+          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.3.1 Conditional Trades</h5>
+          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeTwo)}>1.3.2 Trade Collusion</h5>
+          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeThree)}>1.3.3 Lending Players Prohibition</h5>
+          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFour)}>1.3.4 Trade Deadline</h5>
+          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeFive)}>1.3.5 Trade Restrictions</h5>
+          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeSix)}>1.3.6 Veto/Trade Process</h5>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(oneFour)}>1.4 Waiver Wire</h4>
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneFourOne)}>1.4.1 Waiver Wire/FAAB Collusion</h5>
         </div>
@@ -578,10 +579,106 @@
 
     <h3 class="subSectionHeading" bind:this={oneThree}>1.3 Trading</h3>
     <p>
-      Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. 
+      Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted.
     </p>
 
-    <h4 bind:this={oneThreeOne}>1.3.1 Trade Collusion</h4>
+    <h4 bind:this={oneThreeOne}>1.3.1 Conditional Trades</h4>
+    <div class="subBlock">
+      <h5>1. What a Conditional Trade Is</h5>
+      <p>
+        A conditional trade is a deal where part of the compensation, typically a draft pick or FAAB, depends on future
+        objective outcomes involving a player.
+      </p>
+
+      <h5>2. Make Up of Trade</h5>
+      <ul>
+        <li>A conditional trade must involve exactly one player as the primary asset.</li>
+        <li>No multi-player packages are permitted within a condition.</li>
+        <li>The conditional component may only apply to draft picks or FAAB tied to that single player.</li>
+      </ul>
+
+      <h5>3. What Assets Are Allowed</h5>
+      <p><strong>Allowed:</strong></p>
+      <ul>
+        <li>Draft picks</li>
+        <li>FAAB</li>
+      </ul>
+      <p><strong>Not Allowed:</strong></p>
+      <ul>
+        <li>Players may not be used as conditional assets.</li>
+        <li>Players may not be added, removed, or substituted based on conditions.</li>
+        <li>Players may not be the upgraded or downgraded commodity in a conditional trade.</li>
+      </ul>
+
+      <h5>4. What Conditions Are Allowed</h5>
+      <p>Conditions must be:</p>
+      <ul>
+        <li>
+          Objective — The condition must be based on clear, factual criteria that can be verified without opinion, judgment, or
+          interpretation.
+        </li>
+        <li>Statistically measurable.</li>
+        <li>Clearly defined at the time of the trade.</li>
+        <li>Met at the end of that season.</li>
+      </ul>
+      <p>Examples:</p>
+      <ul>
+        <li>Draft pick upgrades if a player plays X% of games, scores X number of TDs, or reaches X number of yards.</li>
+        <li>Pick improves if the player wins the starting position for the remainder of the year.</li>
+        <li>Pick adjusts if the player is on the roster by a specific date.</li>
+      </ul>
+
+      <h5>5. What Is NOT Allowed</h5>
+      <p>Conditions may not be:</p>
+      <ul>
+        <li>Subjective, such as “plays well”.</li>
+        <li>Based on vague voting or opinion, such as “Pro Bowl”.</li>
+        <li>Dependent on renegotiations or future contract changes.</li>
+        <li>Open-ended or undefined.</li>
+      </ul>
+      <p>The league must be able to verify the condition without interpretation.</p>
+
+      <h5>6. Draft Pick Structure Rules</h5>
+      <ul>
+        <li>Conditional picks must be from the same draft year. This means all conditional picks will be locked from future trading.</li>
+        <li>Picks may escalate or downgrade, for example 6th → 4th.</li>
+        <li>Only one final outcome per condition set is allowed.</li>
+        <li>The final pick is determined after the season concludes and will be closed at the next Competition Committee meeting.</li>
+      </ul>
+
+      <h5>7. Timing &amp; Filing</h5>
+      <ul>
+        <li>All conditions must be submitted at trade approval.</li>
+        <li>Conditions cannot be altered once approved.</li>
+        <li>Once resolved, outcomes will be reviewed and processed following the Competition Committee.</li>
+      </ul>
+      <p><strong>Note to Commissioners:</strong></p>
+      <p>
+        All conditional terms must be documented and submitted at the time of trade approval. Any condition not explicitly filed
+        at approval is considered invalid.
+      </p>
+
+      <h5>8. Common Real-World Examples</h5>
+      <ul>
+        <li>“2025 4th becomes a 2nd if player plays 60% of games.”</li>
+        <li>“2026 3rd becomes a 1st if player plays 50%.”</li>
+        <li>“$100 FAAB is incremented if a player reaches 4,500 passing yards for the season.”</li>
+      </ul>
+
+      <h5>9. Why Teams Use Conditional Trades</h5>
+      <ul>
+        <li>Reduces risk on injury-prone or aging players.</li>
+        <li>Protects against short-term rentals.</li>
+        <li>Encourages fair value tied to actual contribution.</li>
+      </ul>
+
+      <h5>Bottom Line</h5>
+      <p>If the condition is clear, measurable, and filed upfront, it is legal.</p>
+      <p>If it requires interpretation or future negotiation, it is not.</p>
+      <p>All conditional trades are subject to approval by a majority vote of the three commissioners.</p>
+    </div>
+
+    <h4 bind:this={oneThreeTwo}>1.3.2 Trade Collusion</h4>
     <div class="subBlock">
       <p>
         If any managers are suspected of offering or accepting bribes to enhance their own team or another manager’s team via
@@ -607,7 +704,7 @@
       </p>
     </div>
 
-    <h4 bind:this={oneThreeTwo}>1.3.2 Lending Players Prohibition</h4>
+    <h4 bind:this={oneThreeThree}>1.3.3 Lending Players Prohibition</h4>
     <div class="subBlock">
       <p>
         For trades involving any player ranked in the top 50, reacquisition by the original team is prohibited for two years
@@ -616,12 +713,12 @@
       </p>
     </div>
 
-    <h4 bind:this={oneThreeThree}>1.3.3 Trade Deadline</h4>
+    <h4 bind:this={oneThreeFour}>1.3.4 Trade Deadline</h4>
     <div class="subBlock">
       <p>The trade deadline will be set for Wednesday of Week 7 at 8:00 p.m. CST.</p>
     </div>
 
-    <h4 bind:this={oneThreeFour}>1.3.4 Trade Restrictions</h4>
+    <h4 bind:this={oneThreeFive}>1.3.5 Trade Restrictions</h4>
     <div class="subBlock">
       <p>
         You may not trade draft picks that are more than three drafts away. For example, during the 2021 season you cannot
@@ -629,7 +726,7 @@
       </p>
     </div>
 
-    <h4 bind:this={oneThreeFive}>1.3.5 Veto/Trade Process</h4>
+    <h4 bind:this={oneThreeSix}>1.3.6 Veto/Trade Process</h4>
     <div class="subBlock">
       <p>Only the Commissioner may veto trades. See Section 1.3 Trading.</p>
     </div>
