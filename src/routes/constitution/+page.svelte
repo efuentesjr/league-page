@@ -821,7 +821,7 @@
     <h3 class="subSectionHeading" bind:this={fourOne}>4.1 Scoring System</h3>
     <p>For the complete scoring breakdown, please see the Sleeper fantasy app.</p>
 
-    <div class="scoring-table">
+    <div class="scoring-table compact-scoring-table">
       <table>
         <tbody>
           <tr>
@@ -883,7 +883,7 @@
       </table>
     </div>
 
-    <div class="scoring-table">
+    <div class="scoring-table compact-scoring-table">
       <table>
         <tbody>
           <tr>
@@ -925,7 +925,7 @@
       </table>
     </div>
 
-    <div class="scoring-table">
+    <div class="scoring-table compact-scoring-table">
       <table>
         <tbody>
           <tr>
@@ -999,7 +999,7 @@
       </table>
     </div>
 
-    <div class="scoring-table">
+    <div class="scoring-table compact-scoring-table">
       <table>
         <tbody>
           <tr>
