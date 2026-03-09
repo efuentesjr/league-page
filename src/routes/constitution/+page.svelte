@@ -22,153 +22,182 @@
 <style>
   :global(body) {
     background:
-      radial-gradient(circle at top, rgba(178,140,56,.08), transparent 24%),
-      linear-gradient(180deg,#09111f 0%,#0c1524 38%,#101826 100%);
-    color:#e5e7eb;
+      radial-gradient(circle at top, rgba(178, 140, 56, 0.08), transparent 24%),
+      linear-gradient(180deg, #09111f 0%, #0c1524 38%, #101826 100%);
+    color: #e5e7eb;
   }
 
   :global(h1, h2, h3, h4, h5) {
-    color:#f8fafc;
+    color: #f8fafc;
   }
 
   :global(p),
   :global(li) {
-    color:#cbd5e1;
-    line-height:1.75;
+    color: #cbd5e1;
+    line-height: 1.75;
   }
 
   :global(ul) {
-    padding-left:1.4rem;
-    margin:.65rem 0 1rem;
+    padding-left: 1.4rem;
+    margin: 0.65rem 0 1rem;
   }
 
   :global(ul li) {
-    margin-bottom:3px;
+    margin-bottom: 3px;
   }
 
   :global(hr) {
-    border:none;
-    border-top:1px solid rgba(255,255,255,.08);
-    margin:2rem 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 2rem 0;
   }
 
   .constitution-shell {
-    width:min(920px,92%);
-    margin:4.25rem auto 7rem;
+    width: min(920px, 92%);
+    margin: 4.25rem auto 7rem;
   }
 
   .constitution-hero {
-    padding:0 0 1.5rem;
-    margin-bottom:2rem;
-    border-bottom:1px solid rgba(212,175,55,.2);
+    padding: 0 0 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  }
+
+  .constitution-body {
+    margin-top: 0;
+    padding: 0;
   }
 
   .eyebrow {
-    display:inline-block;
-    font-size:.75rem;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:#d4af37;
-    margin-bottom:.85rem;
-    font-weight:700;
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #d4af37;
+    margin-bottom: 0.85rem;
+    font-weight: 700;
   }
 
   .hero-title {
-    margin:0;
-    text-align:center;
-    font-size:clamp(2rem,4vw,2.7rem);
-    line-height:1.08;
+    margin: 0;
+    text-align: center;
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.08;
   }
 
   .hero-subtitle {
-    margin:1rem auto 0;
-    max-width:760px;
-    text-align:center;
-    color:#94a3b8;
-    font-size:.96rem;
+    margin: 1rem auto 0;
+    max-width: 760px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.96rem;
   }
 
   .toc-card {
-    margin-top:1.75rem;
-    padding-top:1rem;
-    border-top:1px solid rgba(255,255,255,.08);
+    margin-top: 1.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .toc-title {
-    margin:0 0 1.2rem;
-    text-align:center;
-    font-size:.95rem;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:#d4af37;
+    margin: 0 0 1.2rem;
+    text-align: center;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #d4af37;
   }
 
   .toc-grid {
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:1rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 2rem;
   }
 
   .toc-group h3 {
-    font-size:.95rem;
-    margin-bottom:.5rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
   }
 
   .toc-group h4,
   .toc-group h5 {
-    font-size:.85rem;
-    color:#9fb3c8;
-    margin-bottom:.42rem;
+    font-size: 0.85rem;
+    color: #9fb3c8;
+    margin-bottom: 0.42rem;
   }
 
   .sectionHeading {
-    margin:3rem 0 1rem;
-    padding-bottom:.7rem;
-    border-bottom:1px solid rgba(212,175,55,.24);
-    font-size:clamp(1.45rem,3vw,1.9rem);
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.24);
+    font-size: clamp(1.45rem, 3vw, 1.9rem);
   }
 
   .subSectionHeading {
-    margin:1.5rem 0 .85rem;
-    font-size:1.18rem;
+    margin: 1.5rem 0 0.85rem;
+    font-size: 1.18rem;
   }
 
   h4 {
-    margin-top:1.15rem;
-    margin-bottom:.55rem;
-    font-size:1rem;
+    margin-top: 1.15rem;
+    margin-bottom: 0.55rem;
+    font-size: 1rem;
   }
 
   h5 {
-    font-size:.92rem;
-    color:#cbd5e1;
+    font-size: 0.92rem;
+    color: #cbd5e1;
   }
 
   .subBlock {
-    margin-left:1rem;
-    padding-left:.9rem;
-    border-left:2px solid rgba(212,175,55,.16);
+    margin-left: 1rem;
+    padding-left: 0.9rem;
+    border-left: 2px solid rgba(212, 175, 55, 0.16);
+  }
+
+  .underscore {
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 175, 55, 0.7);
+    text-underline-offset: 3px;
   }
 
   .right {
-    text-align:right;
+    text-align: right;
+  }
+
+  .positionMaximums td {
+    min-width: 3em;
+  }
+
+  .noUnderscore {
+    text-decoration: none;
+  }
+
+  .clickable {
+    cursor: pointer;
+    transition: color 0.18s ease, transform 0.18s ease;
+  }
+
+  .clickable:hover {
+    color: #f5d56b;
+    transform: translateX(2px);
   }
 
   .draft-order-table,
   .scoring-table table,
   .positionMaximums,
   table {
-    width:100%;
-    border-collapse:collapse;
-    font-family:Arial,sans-serif;
-    background:transparent;
-    border:1px solid rgba(255,255,255,.06);
-    border-radius:12px;
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
   }
 
   .draft-order-table {
-    width:min(760px,100%);
-    margin:1rem 0 1.5rem;
+    width: min(760px, 100%);
+    margin: 1rem 0 1.5rem;
   }
 
   .draft-order-table th,
@@ -176,206 +205,239 @@
   .scoring-table td,
   table th,
   table td {
-    padding:12px 14px;
-    border:1px solid rgba(255,255,255,.06);
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .table-header,
   table thead tr {
-    background:rgba(122,28,28,.75);
+    background: rgba(122, 28, 28, 0.75);
   }
 
   .table-header th,
   table thead th {
-    color:#fff;
+    color: #fff;
   }
 
   .total-row td {
-    font-weight:700;
-    color:#f5d56b;
+    font-weight: 700;
+    color: #f5d56b;
   }
 
   /* PLAYOFF BRACKET */
 
   .bracket-container {
-    display:flex;
-    gap:16px;
-    margin:1.5rem 0;
-    padding:1rem;
-    overflow-x:auto;
-    background:rgba(255,255,255,.025);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:18px;
+    display: flex;
+    gap: 16px;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    overflow-x: auto;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
   }
 
   .round {
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    min-width:120px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 120px;
   }
 
   .round-title {
-    font-size:.82rem;
-    color:#d4af37;
-    font-weight:700;
+    font-size: 0.82rem;
+    color: #d4af37;
+    font-weight: 700;
   }
 
   .matchup {
-    background:linear-gradient(180deg,#1e293b,#0f172a);
-    border:1px solid rgba(255,255,255,.08);
-    padding:10px;
-    border-radius:10px;
-    width:110px;
+    background: linear-gradient(180deg, #1e293b, #0f172a);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px;
+    border-radius: 10px;
+    width: 110px;
   }
 
   .team {
-    color:#f8fafc;
-    font-weight:700;
-    font-size:.74rem;
+    color: #f8fafc;
+    font-weight: 700;
+    font-size: 0.74rem;
   }
 
   .tbd {
-    color:#94a3b8;
-    font-size:.74rem;
+    color: #94a3b8;
+    font-size: 0.74rem;
   }
 
   .championship {
-    color:#f5d56b;
-    font-size:.74rem;
+    color: #f5d56b;
+    font-size: 0.74rem;
   }
 
-  /* BOOKKEEPING BLOCK */
+  /* 7.2 LEDGER */
 
-  .compact-bookkeeping {
-    width:100%;
-    margin:1rem 0 1.5rem;
-    padding:.9rem;
-    background:rgba(255,255,255,.025);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:14px;
+  .ledger-wrap {
+    width: 100%;
+    margin: 1rem 0 1.5rem;
+    overflow-x: auto;
   }
 
-  .bookkeeping-main-title {
-    margin:0 0 .85rem;
-    text-align:center;
-    font-size:1.35rem;
+  .ledger-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: #f3f3f3;
+    color: #111;
+    border: 1px solid #222;
   }
 
-  .bookkeeping-section {
-    margin-bottom:.9rem;
+  .ledger-table th,
+  .ledger-table td {
+    border: 1px solid #222;
+    padding: 0.28rem 0.3rem;
+    font-size: 0.94rem;
+    line-height: 1.15;
+    color: #111;
   }
 
-  .bookkeeping-section-title {
-    margin:0 0 .45rem;
-    padding:.45rem .65rem;
-    font-size:.95rem;
-    background:rgba(47,85,151,.95);
-    color:#fff;
+  .ledger-title-row th {
+    background: #9a9a9a;
+    color: #000;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.55rem 0.4rem;
   }
 
-  .bookkeeping-table {
-    width:100%;
-    border-collapse:collapse;
+  .ledger-section-row th {
+    background: #375da3;
+    color: #fff;
+    font-weight: 700;
+    text-align: left;
+    padding: 0.22rem 0.3rem;
   }
 
-  .bookkeeping-table th,
-  .bookkeeping-table td {
-    padding:.5rem .6rem;
-    border:1px solid rgba(255,255,255,.08);
+  .ledger-section-row th:nth-child(2),
+  .ledger-section-row th:nth-child(3) {
+    text-align: center;
   }
 
-  .bookkeeping-highlight td {
-    font-weight:700;
-    color:#f5d56b;
+  .ledger-highlight-row td {
+    background: #375da3;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .ledger-highlight-row .ledger-value {
+    color: #fff;
+  }
+
+  .ledger-table td:first-child,
+  .ledger-table th:first-child {
+    width: 62%;
+  }
+
+  .ledger-currency {
+    width: 8%;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .ledger-value {
+    width: 30%;
+    text-align: right;
+    white-space: nowrap;
   }
 
   /* MOBILE */
 
-  @media (max-width:700px) {
-
+  @media (max-width: 700px) {
     .toc-grid {
-      grid-template-columns:1fr;
-      gap:.9rem;
+      grid-template-columns: 1fr;
+      gap: 0.9rem;
     }
 
     .constitution-shell {
-      width:min(96%,96%);
-      margin-top:2rem;
+      width: min(96%, 96%);
+      margin-top: 2rem;
     }
 
     .hero-title {
-      font-size:1.7rem;
+      font-size: 1.7rem;
     }
 
     .hero-subtitle {
-      font-size:.9rem;
+      font-size: 0.9rem;
     }
 
     .sectionHeading {
-      font-size:1.25rem;
-      margin-top:1.75rem;
+      font-size: 1.25rem;
+      margin-top: 1.75rem;
     }
 
     .subSectionHeading {
-      font-size:1rem;
+      font-size: 1rem;
     }
 
-    h4 { font-size:.95rem; }
-    h5 { font-size:.85rem; }
+    h4 {
+      font-size: 0.95rem;
+    }
+
+    h5 {
+      font-size: 0.85rem;
+    }
 
     .draft-order-table,
     .scoring-table table,
     table {
-      display:block;
-      overflow-x:auto;
-      white-space:nowrap;
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
     }
 
     /* Section 3.4 tables */
 
     .compact-mobile-table th,
     .compact-mobile-table td {
-      padding:3px 5px;
-      font-size:.68rem;
-      line-height:1.05;
+      padding: 3px 5px;
+      font-size: 0.68rem;
+      line-height: 1.05;
     }
 
     /* Section 4.1 scoring */
 
     .compact-scoring-table td {
-      padding:6px 7px;
-      font-size:.74rem;
+      padding: 6px 7px;
+      font-size: 0.74rem;
     }
 
     .compact-scoring-table input {
-      width:52px;
-      font-size:.74rem;
+      width: 52px;
+      font-size: 0.74rem;
     }
 
-    /* Section 7.2 bookkeeping */
+    /* Section 7.2 ledger */
 
-    .compact-bookkeeping {
-      padding:.65rem;
+    .ledger-table th,
+    .ledger-table td {
+      padding: 0.2rem 0.22rem;
+      font-size: 0.62rem;
+      line-height: 1.05;
     }
 
-    .bookkeeping-main-title {
-      font-size:.95rem;
-      margin-bottom:.7rem;
+    .ledger-title-row th {
+      font-size: 0.8rem;
+      padding: 0.35rem 0.2rem;
     }
 
-    .bookkeeping-section-title {
-      font-size:.78rem;
-      padding:.35rem .5rem;
+    .ledger-currency {
+      width: 10%;
     }
 
-    .bookkeeping-table th,
-    .bookkeeping-table td {
-      padding:.32rem .38rem;
-      font-size:.68rem;
+    .ledger-value {
+      width: 28%;
     }
   }
-
 </style>
 
 <div class="constitution-shell">
@@ -1067,111 +1129,111 @@
     <h3 class="subSectionHeading" bind:this={sevenOne}>7.1 League Dues</h3>
     <p>League dues are set at ${dues} and are collected by the Commissioner. All managers must be fully paid by draft day of the season.</p>
 
-<h3 class="subSectionHeading" bind:this={sevenTwo}>7.2 Payout</h3>
-<p>League payout is structured as follows:</p>
+    <h3 class="subSectionHeading" bind:this={sevenTwo}>7.2 Payout</h3>
+    <p>League payout is structured as follows:</p>
 
-<div class="ledger-wrap">
-  <table class="ledger-table">
-    <tbody>
-      <tr class="ledger-title-row">
-        <th colspan="3">2026 League Bookkeeping</th>
-      </tr>
+    <div class="ledger-wrap">
+      <table class="ledger-table">
+        <tbody>
+          <tr class="ledger-title-row">
+            <th colspan="3">2026 League Bookkeeping</th>
+          </tr>
 
-      <tr class="ledger-section-row">
-        <th>Description of Incoming Money</th>
-        <th colspan="2">Amount</th>
-      </tr>
-      <tr>
-        <td>Rolling From 2025</td>
-        <td class="ledger-currency">$</td>
-        <td class="ledger-value">-</td>
-      </tr>
-      <tr>
-        <td>Number of Owners</td>
-        <td class="ledger-currency"></td>
-        <td class="ledger-value">16</td>
-      </tr>
-      <tr>
-        <td>Cost to Play (Fee)</td>
-        <td class="ledger-currency">$</td>
-        <td class="ledger-value">100.00</td>
-      </tr>
-      <tr>
-        <td>Total Collected 2026</td>
-        <td class="ledger-currency">$</td>
-        <td class="ledger-value">1,600.00</td>
-      </tr>
-      <tr>
-        <td>2025 Rolling and 2026 Collect</td>
-        <td class="ledger-currency">$</td>
-        <td class="ledger-value">1,600.00</td>
-      </tr>
+          <tr class="ledger-section-row">
+            <th>Description of Incoming Money</th>
+            <th colspan="2">Amount</th>
+          </tr>
+          <tr>
+            <td>Rolling From 2025</td>
+            <td class="ledger-currency">$</td>
+            <td class="ledger-value">-</td>
+          </tr>
+          <tr>
+            <td>Number of Owners</td>
+            <td class="ledger-currency"></td>
+            <td class="ledger-value">16</td>
+          </tr>
+          <tr>
+            <td>Cost to Play (Fee)</td>
+            <td class="ledger-currency">$</td>
+            <td class="ledger-value">100.00</td>
+          </tr>
+          <tr>
+            <td>Total Collected 2026</td>
+            <td class="ledger-currency">$</td>
+            <td class="ledger-value">1,600.00</td>
+          </tr>
+          <tr>
+            <td>2025 Rolling and 2026 Collect</td>
+            <td class="ledger-currency">$</td>
+            <td class="ledger-value">1,600.00</td>
+          </tr>
 
-      <tr class="ledger-section-row">
-        <th>Description Outgoing Money</th>
-        <th>Amount</th>
-        <th>Balance</th>
-      </tr>
-      <tr>
-        <td>1st Place Payout</td>
-        <td class="ledger-value">$ 1,000.00</td>
-        <td class="ledger-value">$ 600.00</td>
-      </tr>
-      <tr>
-        <td>2nd Place Payout</td>
-        <td class="ledger-value">$ 75.00</td>
-        <td class="ledger-value">$ 525.00</td>
-      </tr>
-      <tr>
-        <td>Division Winners Payout</td>
-        <td class="ledger-value">$ 25.00</td>
-        <td class="ledger-value">$ 500.00</td>
-      </tr>
-      <tr>
-        <td>Trophy Plaque</td>
-        <td class="ledger-value">$ 5.00</td>
-        <td class="ledger-value">$ 495.00</td>
-      </tr>
-      <tr>
-        <td>Trophy Shipment (if needed)</td>
-        <td class="ledger-value">$ 25.00</td>
-        <td class="ledger-value">$ 470.00</td>
-      </tr>
-      <tr>
-        <td>Rings</td>
-        <td class="ledger-value">$ 55.00</td>
-        <td class="ledger-value">$ 415.00</td>
-      </tr>
+          <tr class="ledger-section-row">
+            <th>Description of Outgoing Money</th>
+            <th>Amount</th>
+            <th>Balance</th>
+          </tr>
+          <tr>
+            <td>1st Place Payout</td>
+            <td class="ledger-value">$ 1,000.00</td>
+            <td class="ledger-value">$ 600.00</td>
+          </tr>
+          <tr>
+            <td>2nd Place Payout</td>
+            <td class="ledger-value">$ 75.00</td>
+            <td class="ledger-value">$ 525.00</td>
+          </tr>
+          <tr>
+            <td>Division Winners Payout</td>
+            <td class="ledger-value">$ 25.00</td>
+            <td class="ledger-value">$ 500.00</td>
+          </tr>
+          <tr>
+            <td>Trophy Plaque</td>
+            <td class="ledger-value">$ 5.00</td>
+            <td class="ledger-value">$ 495.00</td>
+          </tr>
+          <tr>
+            <td>Trophy Shipment (if needed)</td>
+            <td class="ledger-value">$ 25.00</td>
+            <td class="ledger-value">$ 470.00</td>
+          </tr>
+          <tr>
+            <td>Rings</td>
+            <td class="ledger-value">$ 55.00</td>
+            <td class="ledger-value">$ 415.00</td>
+          </tr>
 
-      <tr class="ledger-highlight-row">
-        <td>Rolling to 2027</td>
-        <td></td>
-        <td class="ledger-value">$ 415.00</td>
-      </tr>
+          <tr class="ledger-highlight-row">
+            <td>Rolling to 2027</td>
+            <td></td>
+            <td class="ledger-value">$ 415.00</td>
+          </tr>
 
-      <tr class="ledger-section-row">
-        <th>Outstanding Items</th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <td>RING</td>
-        <td></td>
-        <td class="ledger-value">$ 155.00</td>
-      </tr>
-      <tr>
-        <td>Trophy Base</td>
-        <td></td>
-        <td class="ledger-value">$ 150.00</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td class="ledger-value">$ 305.00</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          <tr class="ledger-section-row">
+            <th>Outstanding Items</th>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr>
+            <td>Ring</td>
+            <td></td>
+            <td class="ledger-value">$ 155.00</td>
+          </tr>
+          <tr>
+            <td>Trophy Base</td>
+            <td></td>
+            <td class="ledger-value">$ 150.00</td>
+          </tr>
+          <tr>
+            <td>Total Outstanding</td>
+            <td></td>
+            <td class="ledger-value">$ 305.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <h3 class="subSectionHeading" bind:this={sevenThree}>7.3 Raising Dues</h3>
     <p>
