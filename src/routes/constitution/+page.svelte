@@ -1301,11 +1301,6 @@
             <td class="ledger-value">$ 425.00</td>
           </tr>
           <tr>
-            <td>Commissioner FAAB Compensation</td>
-            <td class="ledger-value">25% Max FAAB</td>
-            <td class="ledger-value">Seasonal</td>
-          </tr>
-          <tr>
             <td>Trophy Plaque</td>
             <td class="ledger-value">$ 5.00</td>
             <td class="ledger-value">$ 420.00</td>
