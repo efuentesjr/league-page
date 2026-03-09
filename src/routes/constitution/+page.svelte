@@ -1335,7 +1335,7 @@
     <p>League payout is structured as follows:</p>
     <p>Each Divisional Champion will receive a $25 payout.</p>
     <p>
-      Commissioners will receive FAAB compensation equal to 25% of the maximum FAAB allowed for that season, split evenly among
+      Commissioners will receive FAAB compensation equal to 25% of the maximum FAAB allowed for that season, evenly among
       all active commissioners.
     </p>
 
