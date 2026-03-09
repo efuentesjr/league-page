@@ -408,6 +408,114 @@
       line-height: 1.1;
       margin-top: 0.12rem;
     }
+  .compact-bookkeeping {
+    width: 100%;
+    margin: 1rem 0 1.5rem;
+    padding: 0.9rem;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+  }
+
+  .bookkeeping-main-title {
+    margin: 0 0 0.85rem;
+    text-align: center;
+    font-size: 1.35rem;
+    line-height: 1.15;
+    color: #f8fafc;
+  }
+
+  .bookkeeping-section {
+    margin-bottom: 0.9rem;
+  }
+
+  .bookkeeping-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .bookkeeping-section-title {
+    margin: 0 0 0.45rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    background: rgba(47, 85, 151, 0.95);
+    color: #fff;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .bookkeeping-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: none;
+    background: transparent;
+  }
+
+  .bookkeeping-table th,
+  .bookkeeping-table td {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+  }
+
+  .bookkeeping-table thead th {
+    background: rgba(47, 85, 151, 0.95);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .bookkeeping-table-3col th:nth-child(1),
+  .bookkeeping-table-3col td:nth-child(1) {
+    width: 54%;
+  }
+
+  .bookkeeping-table-3col th:nth-child(2),
+  .bookkeeping-table-3col td:nth-child(2),
+  .bookkeeping-table-3col th:nth-child(3),
+  .bookkeeping-table-3col td:nth-child(3) {
+    width: 23%;
+  }
+
+  .bookkeeping-table-2col td:nth-child(1) {
+    width: 70%;
+  }
+
+  .bookkeeping-table-2col td:nth-child(2) {
+    width: 30%;
+  }
+
+  .bookkeeping-highlight td {
+    font-weight: 700;
+    color: #f5d56b;
+    background: rgba(47, 85, 151, 0.22);
+  }
+
+  @media (max-width: 700px) {
+    .compact-bookkeeping {
+      padding: 0.65rem;
+      border-radius: 12px;
+    }
+
+    .bookkeeping-main-title {
+      font-size: 0.95rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .bookkeeping-section-title {
+      font-size: 0.78rem;
+      padding: 0.35rem 0.5rem;
+    }
+
+    .bookkeeping-table th,
+    .bookkeeping-table td {
+      padding: 0.32rem 0.38rem;
+      font-size: 0.68rem;
+      line-height: 1.08;
+    }
   }
 </style>
 
@@ -1100,96 +1208,110 @@
     <h3 class="subSectionHeading" bind:this={sevenOne}>7.1 League Dues</h3>
     <p>League dues are set at ${dues} and are collected by the Commissioner. All managers must be fully paid by draft day of the season.</p>
 
-    <h3 class="subSectionHeading" bind:this={sevenTwo}>7.2 Payout</h3>
-    <p>League payout is structured as follows:</p>
+<h3 class="subSectionHeading" bind:this={sevenTwo}>7.2 Payout</h3>
+<p>League payout is structured as follows:</p>
 
-    <div class="bookkeeping-card">
-      <h2 style="text-align: center; background-color: #333333; color: white; padding: 5px; margin: 0;">2025 League Bookkeeping</h2>
+<div class="bookkeeping-card compact-bookkeeping">
+  <h2 class="bookkeeping-main-title">2026 League Bookkeeping</h2>
 
-      <h3 style="background-color: #333333; color: white; padding: 5px; margin: 0;">Incoming Money</h3>
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th style="background-color: #800000; border: 1px solid #333; padding: 5px;">Description</th>
-            <th style="background-color: #800000; border: 1px solid #333; padding: 5px;">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">Rolling From 2024</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 50.00</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">Number of Owners</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">16</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">Cost to Play (Fee)</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 75.00</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">Total Collect</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 1,250.00</td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="bookkeeping-section">
+    <h3 class="bookkeeping-section-title">Description of Incoming Money</h3>
+    <table class="bookkeeping-table">
+      <tbody>
+        <tr>
+          <td>Rolling From 2025</td>
+          <td class="right">$ -</td>
+        </tr>
+        <tr>
+          <td>Number of Owners</td>
+          <td class="right">16</td>
+        </tr>
+        <tr>
+          <td>Cost to Play (Fee)</td>
+          <td class="right">$ 100.00</td>
+        </tr>
+        <tr>
+          <td>Total Collected 2026</td>
+          <td class="right">$ 1,600.00</td>
+        </tr>
+        <tr>
+          <td>2025 Rolling and 2026 Collect</td>
+          <td class="right">$ 1,600.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      <h3 style="background-color: #333333; color: white; padding: 5px; margin: 0;">Outgoing Payments</h3>
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th style="background-color: #800000; border: 1px solid #333; padding: 5px;">Description</th>
-            <th style="background-color: #800000; border: 1px solid #333; padding: 5px;">Amount</th>
-            <th style="background-color: #800000; border: 1px solid #333; padding: 5px;">Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">1st Place Payout</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 1,000.00</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 250.00</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">2nd Place Payout</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 75.00</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 175.00</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">Trophy Plaque</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 5.00</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 170.00</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">Trophy Shipment (Ring JDD)</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 15.00</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 155.00</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">Rings x4 NBow, JRod, GCall, JDD</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 155.00</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 0.00</td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="bookkeeping-section">
+    <h3 class="bookkeeping-section-title">Description Outgoing Money</h3>
+    <table class="bookkeeping-table bookkeeping-table-3col">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1st Place Payout</td>
+          <td class="right">$ 1,000.00</td>
+          <td class="right">$ 600.00</td>
+        </tr>
+        <tr>
+          <td>2nd Place Payout</td>
+          <td class="right">$ 75.00</td>
+          <td class="right">$ 525.00</td>
+        </tr>
+        <tr>
+          <td>Division Winners Payout</td>
+          <td class="right">$ 25.00</td>
+          <td class="right">$ 500.00</td>
+        </tr>
+        <tr>
+          <td>Trophy Plaque</td>
+          <td class="right">$ 5.00</td>
+          <td class="right">$ 495.00</td>
+        </tr>
+        <tr>
+          <td>Trophy Shipment (if needed)</td>
+          <td class="right">$ 25.00</td>
+          <td class="right">$ 470.00</td>
+        </tr>
+        <tr>
+          <td>Rings</td>
+          <td class="right">$ 55.00</td>
+          <td class="right">$ 415.00</td>
+        </tr>
+        <tr class="bookkeeping-highlight">
+          <td>Rolling to 2027</td>
+          <td></td>
+          <td class="right">$ 415.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      <h3 style="background-color: #333333; color: white; padding: 5px; margin: 0;">Rolling Budget</h3>
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th style="background-color: #800000; border: 1px solid #333; padding: 5px;">Description</th>
-            <th style="background-color: #800000; border: 1px solid #333; padding: 5px;">Amount</th>
-            <th style="background-color: #800000; border: 1px solid #333; padding: 5px;">Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="border: 1px solid #333; padding: 5px;">Surplus Budget</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">-</td>
-            <td style="border: 1px solid #333; padding: 5px; text-align: right;">$ 0.00</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="bookkeeping-section">
+    <h3 class="bookkeeping-section-title">Outstanding Items</h3>
+    <table class="bookkeeping-table bookkeeping-table-2col">
+      <tbody>
+        <tr>
+          <td>RING</td>
+          <td class="right">$ 155.00</td>
+        </tr>
+        <tr>
+          <td>Trophy Base</td>
+          <td class="right">$ 150.00</td>
+        </tr>
+        <tr class="bookkeeping-highlight">
+          <td>Total Outstanding</td>
+          <td class="right">$ 305.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
     <h3 class="subSectionHeading" bind:this={sevenThree}>7.3 Raising Dues</h3>
     <p>
