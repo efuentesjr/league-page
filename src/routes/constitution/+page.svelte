@@ -761,12 +761,12 @@
     <h4 bind:this={oneTwoThree}>1.2.3 Division Selection Rights</h4>
     <div class="subBlock">
       <p>
-        At the time divisions are reshuffled, teams may use FAAB to purchase the right to select their division placement.
+        At the time divisions are reshuffled, teams may use FAAB to purchase the right to select their division placement, by way of an auction.
       </p>
       <ul>
         <li>Only one team may purchase this right per reshuffle cycle.</li>
-        <li>The winning team will choose its division before the remaining teams are assigned.</li>
-        <li>The FAAB amount, purchase window, and tiebreak procedure will be announced by the Commissioner before the reshuffle.</li>
+        <li>Three teams will be assigined to each division. leaving one spot open allowing the winning team to choose its division before the remaining teams are assigned.</li>
+        <li>The purchase window, and tiebreak procedure will be a spin-off using the online tool.</li>
         <li>If no team purchases the right, divisions will be assigned according to the league’s standard reshuffle process.</li>
       </ul>
     </div>
