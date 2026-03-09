@@ -501,7 +501,6 @@
   .mobile-cards td:nth-child(4)::before { content: "Pick %"; }
 
   }
-  }
 </style>
 
 <div class="constitution-shell">
