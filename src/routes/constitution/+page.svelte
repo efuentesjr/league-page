@@ -1070,106 +1070,107 @@
 <h3 class="subSectionHeading" bind:this={sevenTwo}>7.2 Payout</h3>
 <p>League payout is structured as follows:</p>
 
-<div class="bookkeeping-card compact-bookkeeping">
-  <h2 class="bookkeeping-main-title">2026 League Bookkeeping</h2>
+<div class="ledger-wrap">
+  <table class="ledger-table">
+    <tbody>
+      <tr class="ledger-title-row">
+        <th colspan="3">2026 League Bookkeeping</th>
+      </tr>
 
-  <div class="bookkeeping-section">
-    <h3 class="bookkeeping-section-title">Description of Incoming Money</h3>
-    <table class="bookkeeping-table">
-      <tbody>
-        <tr>
-          <td>Rolling From 2025</td>
-          <td class="right">$ -</td>
-        </tr>
-        <tr>
-          <td>Number of Owners</td>
-          <td class="right">16</td>
-        </tr>
-        <tr>
-          <td>Cost to Play (Fee)</td>
-          <td class="right">$ 100.00</td>
-        </tr>
-        <tr>
-          <td>Total Collected 2026</td>
-          <td class="right">$ 1,600.00</td>
-        </tr>
-        <tr>
-          <td>2025 Rolling and 2026 Collect</td>
-          <td class="right">$ 1,600.00</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      <tr class="ledger-section-row">
+        <th>Description of Incoming Money</th>
+        <th colspan="2">Amount</th>
+      </tr>
+      <tr>
+        <td>Rolling From 2025</td>
+        <td class="ledger-currency">$</td>
+        <td class="ledger-value">-</td>
+      </tr>
+      <tr>
+        <td>Number of Owners</td>
+        <td class="ledger-currency"></td>
+        <td class="ledger-value">16</td>
+      </tr>
+      <tr>
+        <td>Cost to Play (Fee)</td>
+        <td class="ledger-currency">$</td>
+        <td class="ledger-value">100.00</td>
+      </tr>
+      <tr>
+        <td>Total Collected 2026</td>
+        <td class="ledger-currency">$</td>
+        <td class="ledger-value">1,600.00</td>
+      </tr>
+      <tr>
+        <td>2025 Rolling and 2026 Collect</td>
+        <td class="ledger-currency">$</td>
+        <td class="ledger-value">1,600.00</td>
+      </tr>
 
-  <div class="bookkeeping-section">
-    <h3 class="bookkeeping-section-title">Description Outgoing Money</h3>
-    <table class="bookkeeping-table bookkeeping-table-3col">
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>Amount</th>
-          <th>Balance</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1st Place Payout</td>
-          <td class="right">$ 1,000.00</td>
-          <td class="right">$ 600.00</td>
-        </tr>
-        <tr>
-          <td>2nd Place Payout</td>
-          <td class="right">$ 75.00</td>
-          <td class="right">$ 525.00</td>
-        </tr>
-        <tr>
-          <td>Division Winners Payout</td>
-          <td class="right">$ 25.00</td>
-          <td class="right">$ 500.00</td>
-        </tr>
-        <tr>
-          <td>Trophy Plaque</td>
-          <td class="right">$ 5.00</td>
-          <td class="right">$ 495.00</td>
-        </tr>
-        <tr>
-          <td>Trophy Shipment (if needed)</td>
-          <td class="right">$ 25.00</td>
-          <td class="right">$ 470.00</td>
-        </tr>
-        <tr>
-          <td>Rings</td>
-          <td class="right">$ 55.00</td>
-          <td class="right">$ 415.00</td>
-        </tr>
-        <tr class="bookkeeping-highlight">
-          <td>Rolling to 2027</td>
-          <td></td>
-          <td class="right">$ 415.00</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      <tr class="ledger-section-row">
+        <th>Description Outgoing Money</th>
+        <th>Amount</th>
+        <th>Balance</th>
+      </tr>
+      <tr>
+        <td>1st Place Payout</td>
+        <td class="ledger-value">$ 1,000.00</td>
+        <td class="ledger-value">$ 600.00</td>
+      </tr>
+      <tr>
+        <td>2nd Place Payout</td>
+        <td class="ledger-value">$ 75.00</td>
+        <td class="ledger-value">$ 525.00</td>
+      </tr>
+      <tr>
+        <td>Division Winners Payout</td>
+        <td class="ledger-value">$ 25.00</td>
+        <td class="ledger-value">$ 500.00</td>
+      </tr>
+      <tr>
+        <td>Trophy Plaque</td>
+        <td class="ledger-value">$ 5.00</td>
+        <td class="ledger-value">$ 495.00</td>
+      </tr>
+      <tr>
+        <td>Trophy Shipment (if needed)</td>
+        <td class="ledger-value">$ 25.00</td>
+        <td class="ledger-value">$ 470.00</td>
+      </tr>
+      <tr>
+        <td>Rings</td>
+        <td class="ledger-value">$ 55.00</td>
+        <td class="ledger-value">$ 415.00</td>
+      </tr>
 
-  <div class="bookkeeping-section">
-    <h3 class="bookkeeping-section-title">Outstanding Items</h3>
-    <table class="bookkeeping-table bookkeeping-table-2col">
-      <tbody>
-        <tr>
-          <td>RING</td>
-          <td class="right">$ 155.00</td>
-        </tr>
-        <tr>
-          <td>Trophy Base</td>
-          <td class="right">$ 150.00</td>
-        </tr>
-        <tr class="bookkeeping-highlight">
-          <td>Total Outstanding</td>
-          <td class="right">$ 305.00</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      <tr class="ledger-highlight-row">
+        <td>Rolling to 2027</td>
+        <td></td>
+        <td class="ledger-value">$ 415.00</td>
+      </tr>
+
+      <tr class="ledger-section-row">
+        <th>Outstanding Items</th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>RING</td>
+        <td></td>
+        <td class="ledger-value">$ 155.00</td>
+      </tr>
+      <tr>
+        <td>Trophy Base</td>
+        <td></td>
+        <td class="ledger-value">$ 150.00</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td class="ledger-value">$ 305.00</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
     <h3 class="subSectionHeading" bind:this={sevenThree}>7.3 Raising Dues</h3>
