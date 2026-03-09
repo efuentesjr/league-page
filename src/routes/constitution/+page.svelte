@@ -2,11 +2,11 @@
   import { dues } from '$lib/utils/helper';
 
   let one, oneOne, oneOneOne; // 1.1 Positional Breakdown
-  let oneTwo, oneTwoOne, oneTwoTwo; // 1.2 Divisions
+  let oneTwo, oneTwoOne, oneTwoTwo, oneTwoThree; // 1.2 Divisions
   let oneThree, oneThreeOne, oneThreeTwo, oneThreeThree, oneThreeFour, oneThreeFive, oneThreeSix; // 1.3 Trading
   let oneFour, oneFourOne; // 1.4 Waiver Wire
   let two, twoOne; // 2.1 Playoffs
-  let three, threeOne, threeTwo, threeThree, threeFour; // 3. Drafting
+  let three, threeOne, threeTwo, threeThree, threeFour, threeFive; // 3. Drafting
   let four, fourOne; // 4. Scoring System
   let five, fiveOne; // 5. Tanking Policy
   let six, sixOne, sixTwo, sixThree; // 6. Replacing Managers
@@ -459,6 +459,7 @@
           <h4 class="noUnderscore clickable" on:click={() => goToSection(oneTwo)}>1.2 Divisions</h4>
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoOne)}>1.2.1 Divisional Structure</h5>
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoTwo)}>1.2.2 Divisions Reshuffle</h5>
+          <h5 class="noUnderscore clickable" on:click={() => goToSection(oneTwoThree)}>1.2.3 Division Selection Rights</h5>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(oneThree)}>1.3 Trading</h4>
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeOne)}>1.3.1 Conditional Trades</h5>
           <h5 class="noUnderscore clickable" on:click={() => goToSection(oneThreeTwo)}>1.3.2 Trade Collusion</h5>
@@ -479,6 +480,7 @@
           <h4 class="noUnderscore clickable" on:click={() => goToSection(threeTwo)}>3.2 Draft Order</h4>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(threeThree)}>3.3 Draft Day Trades</h4>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(threeFour)}>3.4 Draft Order Determination</h4>
+          <h4 class="noUnderscore clickable" on:click={() => goToSection(threeFive)}>3.5 Draft Lottery FAAB Entry</h4>
 
           <h3 class="noUnderscore clickable" on:click={() => goToSection(four)}>Section 4: Scoring System</h3>
           <h4 class="noUnderscore clickable" on:click={() => goToSection(fourOne)}>4.1 Scoring System</h4>
@@ -575,6 +577,19 @@
         The league will reshuffle divisions every four years to keep competition fresh and balanced. The next reshuffle is
         scheduled for the 2027–2028 offseason or the start of the 2028 season.
       </p>
+    </div>
+
+    <h4 bind:this={oneTwoThree}>1.2.3 Division Selection Rights</h4>
+    <div class="subBlock">
+      <p>
+        At the time divisions are reshuffled, teams may use FAAB to purchase the right to select their division placement.
+      </p>
+      <ul>
+        <li>Only one team may purchase this right per reshuffle cycle.</li>
+        <li>The winning team will choose its division before the remaining teams are assigned.</li>
+        <li>The FAAB amount, purchase window, and tiebreak procedure will be announced by the Commissioner before the reshuffle.</li>
+        <li>If no team purchases the right, divisions will be assigned according to the league’s standard reshuffle process.</li>
+      </ul>
     </div>
 
     <h3 class="subSectionHeading" bind:this={oneThree}>1.3 Trading</h3>
@@ -963,6 +978,20 @@
       drawn randomly to ensure fairness.
     </p>
 
+    <h3 class="subSectionHeading" bind:this={threeFive}>3.5 Draft Lottery FAAB Entry</h3>
+    <p>
+      Non-playoff teams may use FAAB to purchase one additional ping-pong entry for the #1 overall pick lottery.
+    </p>
+    <div class="subBlock">
+      <ul>
+        <li>Only non-playoff teams are eligible to purchase an entry.</li>
+        <li>Each eligible team may purchase no more than one additional entry.</li>
+        <li>The FAAB cost and purchase deadline will be announced by the Commissioner before the lottery is finalized.</li>
+        <li>Purchased entries apply only to the lottery for the #1 overall pick and do not affect other draft positions unless otherwise stated by league rule.</li>
+        <li>If a team does not have sufficient FAAB, it may not purchase an entry.</li>
+      </ul>
+    </div>
+
     <h2 class="sectionHeading" bind:this={four}>Section 4 Scoring System</h2>
 
     <h3 class="subSectionHeading" bind:this={fourOne}>4.1 Scoring System</h3>
@@ -1225,6 +1254,11 @@
 
     <h3 class="subSectionHeading" bind:this={sevenTwo}>7.2 Payout</h3>
     <p>League payout is structured as follows:</p>
+    <p>Each Divisional Champion will receive a $25 payout.</p>
+    <p>
+      Commissioners will receive FAAB compensation equal to 25% of the maximum FAAB allowed for that season, split evenly among
+      all active commissioners.
+    </p>
 
     <div class="ledger-wrap">
       <table class="ledger-table">
@@ -1280,29 +1314,34 @@
           </tr>
           <tr>
             <td>Division Winners Payout</td>
-            <td class="ledger-value">$ 25.00</td>
-            <td class="ledger-value">$ 500.00</td>
+            <td class="ledger-value">$ 100.00</td>
+            <td class="ledger-value">$ 425.00</td>
+          </tr>
+          <tr>
+            <td>Commissioner FAAB Compensation</td>
+            <td class="ledger-value">25% Max FAAB</td>
+            <td class="ledger-value">Seasonal</td>
           </tr>
           <tr>
             <td>Trophy Plaque</td>
             <td class="ledger-value">$ 5.00</td>
-            <td class="ledger-value">$ 495.00</td>
+            <td class="ledger-value">$ 420.00</td>
           </tr>
           <tr>
             <td>Trophy Shipment (if needed)</td>
             <td class="ledger-value">$ 25.00</td>
-            <td class="ledger-value">$ 470.00</td>
+            <td class="ledger-value">$ 395.00</td>
           </tr>
           <tr>
             <td>Rings</td>
             <td class="ledger-value">$ 55.00</td>
-            <td class="ledger-value">$ 415.00</td>
+            <td class="ledger-value">$ 340.00</td>
           </tr>
 
           <tr class="ledger-highlight-row">
             <td>Rolling to 2027</td>
             <td></td>
-            <td class="ledger-value">$ 415.00</td>
+            <td class="ledger-value">$ 340.00</td>
           </tr>
 
           <tr class="ledger-section-row">
