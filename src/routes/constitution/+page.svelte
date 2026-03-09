@@ -1296,7 +1296,7 @@
             <td class="ledger-value">$ 525.00</td>
           </tr>
           <tr>
-            <td>Division Winners Payout</td>
+            <td>Division Winners Payout (4x$25)</td>
             <td class="ledger-value">$ 100.00</td>
             <td class="ledger-value">$ 425.00</td>
           </tr>
