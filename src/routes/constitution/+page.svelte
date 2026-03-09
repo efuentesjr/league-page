@@ -746,20 +746,20 @@
 
     <h4 bind:this={oneThreeOne}>1.3.1 Conditional Trades</h4>
     <div class="subBlock">
-      <h5>1. What a Conditional Trade Is</h5>
+      <h5>What a Conditional Trade Is</h5>
       <p>
         A conditional trade is a deal where part of the compensation, typically a draft pick or FAAB, depends on future
         objective outcomes involving a player.
       </p>
 
-      <h5>2. Make Up of Trade</h5>
+      <h5>Make Up of Trade</h5>
       <ul>
         <li>A conditional trade must involve exactly one player as the primary asset.</li>
         <li>No multi-player packages are permitted within a condition.</li>
         <li>The conditional component may only apply to draft picks or FAAB tied to that single player.</li>
       </ul>
 
-      <h5>3. What Assets Are Allowed</h5>
+      <h5>What Assets Are Allowed</h5>
       <p><strong>Allowed:</strong></p>
       <ul>
         <li>Draft picks</li>
@@ -772,7 +772,7 @@
         <li>Players may not be the upgraded or downgraded commodity in a conditional trade.</li>
       </ul>
 
-      <h5>4. What Conditions Are Allowed</h5>
+      <h5>What Conditions Are Allowed</h5>
       <p>Conditions must be:</p>
       <ul>
         <li>
@@ -790,7 +790,7 @@
         <li>Pick adjusts if the player is on the roster by a specific date.</li>
       </ul>
 
-      <h5>5. What Is NOT Allowed</h5>
+      <h5>What Is NOT Allowed</h5>
       <p>Conditions may not be:</p>
       <ul>
         <li>Subjective, such as “plays well”.</li>
@@ -800,7 +800,7 @@
       </ul>
       <p>The league must be able to verify the condition without interpretation.</p>
 
-      <h5>6. Draft Pick Structure Rules</h5>
+      <h5>Draft Pick Structure Rules</h5>
       <ul>
         <li>Conditional picks must be from the same draft year. This means all conditional picks will be locked from future trading.</li>
         <li>Picks may escalate or downgrade, for example 6th → 4th.</li>
@@ -808,7 +808,7 @@
         <li>The final pick is determined after the season concludes and will be closed at the next Competition Committee meeting.</li>
       </ul>
 
-      <h5>7. Timing &amp; Filing</h5>
+      <h5>iming &amp; Filing</h5>
       <ul>
         <li>All conditions must be submitted at trade approval.</li>
         <li>Conditions cannot be altered once approved.</li>
@@ -820,14 +820,14 @@
         at approval is considered invalid.
       </p>
 
-      <h5>8. Common Real-World Examples</h5>
+      <h5>Common Real-World Examples</h5>
       <ul>
         <li>“2025 4th becomes a 2nd if player plays 60% of games.”</li>
         <li>“2026 3rd becomes a 1st if player plays 50%.”</li>
         <li>“$100 FAAB is incremented if a player reaches 4,500 passing yards for the season.”</li>
       </ul>
 
-      <h5>9. Why Teams Use Conditional Trades</h5>
+      <h5>Why Teams Use Conditional Trades</h5>
       <ul>
         <li>Reduces risk on injury-prone or aging players.</li>
         <li>Protects against short-term rentals.</li>
