@@ -298,7 +298,6 @@
     color: #f5d56b;
   }
 
-  /* vertical centering offsets so rounds line up like a bracket */
   .round:nth-child(2) {
     gap: 72px;
   }
@@ -307,7 +306,6 @@
     justify-content: center;
   }
 
-  /* simple connector lines */
   .round:nth-child(1) .matchup::after,
   .round:nth-child(2) .matchup::after {
     content: '';
@@ -325,6 +323,55 @@
     top: 50%;
     width: 12px;
     border-top: 1px solid rgba(212, 175, 55, 0.45);
+  }
+
+  /* 4.1 SCORING GRID */
+
+  .scoring-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem 1rem;
+    align-items: start;
+    margin: 1rem 0 1.25rem;
+  }
+
+  .scoring-table {
+    margin: 0;
+  }
+
+  .scoring-table table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .scoring-table td {
+    padding: 6px 8px;
+    font-size: 0.82rem;
+    line-height: 1.2;
+    vertical-align: middle;
+  }
+
+  .scoring-table td:first-child {
+    width: 62%;
+  }
+
+  .scoring-table input {
+    width: 46px;
+    padding: 2px 4px;
+    font-size: 0.78rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    background: rgba(2, 6, 23, 0.65);
+    color: #f8fafc;
+  }
+
+  .description {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-top: 0.15rem;
+    line-height: 1.1;
   }
 
   /* 7.2 LEDGER */
@@ -407,7 +454,29 @@
   @media (max-width: 700px) {
     .toc-grid {
       grid-template-columns: 1fr;
-      gap: 0.9rem;
+      gap: 0.2rem;
+    }
+
+    .toc-title {
+      margin-bottom: 0.7rem;
+    }
+
+    .toc-group h3,
+    .toc-group h4,
+    .toc-group h5 {
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .toc-group h3 {
+      font-size: 0.92rem;
+      margin-bottom: 0.14rem;
+    }
+
+    .toc-group h4,
+    .toc-group h5 {
+      font-size: 0.84rem;
+      margin-bottom: 0.1rem;
     }
 
     .constitution-shell {
@@ -441,14 +510,11 @@
     }
 
     .draft-order-table,
-    .scoring-table table,
     table {
       display: block;
       overflow-x: auto;
       white-space: nowrap;
     }
-
-    /* Section 3.4 tables */
 
     .compact-mobile-table th,
     .compact-mobile-table td {
@@ -457,19 +523,47 @@
       line-height: 1.05;
     }
 
-    /* Section 4.1 scoring */
+    .bracket-container {
+      justify-content: flex-start;
+      padding: 1rem 0.75rem;
+      gap: 16px;
+    }
+
+    .round {
+      min-width: 118px;
+    }
+
+    .matchup {
+      width: 108px;
+      min-height: 54px;
+      padding: 8px;
+    }
+
+    .round:nth-child(2) {
+      gap: 54px;
+    }
+
+    .scoring-grid {
+      grid-template-columns: 1fr;
+      gap: 0.7rem;
+    }
 
     .compact-scoring-table td {
-      padding: 6px 7px;
-      font-size: 0.74rem;
+      padding: 4px 6px;
+      font-size: 0.7rem;
+      line-height: 1.1;
     }
 
     .compact-scoring-table input {
-      width: 52px;
-      font-size: 0.74rem;
+      width: 40px;
+      font-size: 0.68rem;
+      padding: 2px;
     }
 
-    /* Section 7.2 ledger */
+    .compact-scoring-table .description {
+      font-size: 0.62rem;
+      line-height: 1.05;
+    }
 
     .ledger-table th,
     .ledger-table td {
@@ -489,32 +583,6 @@
 
     .ledger-value {
       width: 28%;
-    }
-    .toc-grid {
-      grid-template-columns: 1fr;
-      gap: 0.2rem;
-    }
-
-    .toc-title {
-      margin-bottom: 0.7rem;
-    }
-
-    .toc-group h3,
-    .toc-group h4,
-    .toc-group h5 {
-      margin: 0;
-      line-height: 1.15;
-    }
-
-    .toc-group h3 {
-      font-size: 0.92rem;
-      margin-bottom: 0.14rem;
-    }
-
-    .toc-group h4,
-    .toc-group h5 {
-      font-size: 0.84rem;
-      margin-bottom: 0.1rem;
     }
   }
 </style>
@@ -1076,205 +1144,207 @@
     <h3 class="subSectionHeading" bind:this={fourOne}>4.1 Scoring System</h3>
     <p>For the complete scoring breakdown, please see the Sleeper fantasy app.</p>
 
-    <div class="scoring-table compact-scoring-table">
-      <table>
-        <tbody>
-          <tr>
-            <td>Passing Yards</td>
-            <td>
-              <input type="text" value="30" /> yards
-              <div class="description">(1 point every 30 yards)</div>
-            </td>
-          </tr>
-          <tr>
-            <td>Passing TD</td>
-            <td><input type="text" value="4" /></td>
-          </tr>
-          <tr>
-            <td>Passing 1st Down</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>2-Pt Conversion</td>
-            <td><input type="text" value="2" /></td>
-          </tr>
-          <tr>
-            <td>Pass Intercepted</td>
-            <td><input type="text" value="-1" /></td>
-          </tr>
-          <tr>
-            <td>Pick 6 Thrown</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>Pass Completed</td>
-            <td><input type="text" value="0.3" /></td>
-          </tr>
-          <tr>
-            <td>Incomplete Pass</td>
-            <td><input type="text" value="-0.3" /></td>
-          </tr>
-          <tr>
-            <td>Pass Attempts</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>QB Sacked</td>
-            <td><input type="text" value="-0.2" /></td>
-          </tr>
-          <tr>
-            <td>40+ Yard Completion Bonus</td>
-            <td><input type="text" value="0.1" /></td>
-          </tr>
-          <tr>
-            <td>40+ Yard Pass TD Bonus</td>
-            <td><input type="text" value="0.1" /></td>
-          </tr>
-          <tr>
-            <td>50+ Yard Pass TD Bonus</td>
-            <td><input type="text" value="0.3" /></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="scoring-grid">
+      <div class="scoring-table compact-scoring-table">
+        <table>
+          <tbody>
+            <tr>
+              <td>Passing Yards</td>
+              <td>
+                <input type="text" value="30" /> yards
+                <div class="description">(1 point every 30 yards)</div>
+              </td>
+            </tr>
+            <tr>
+              <td>Passing TD</td>
+              <td><input type="text" value="4" /></td>
+            </tr>
+            <tr>
+              <td>Passing 1st Down</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>2-Pt Conversion</td>
+              <td><input type="text" value="2" /></td>
+            </tr>
+            <tr>
+              <td>Pass Intercepted</td>
+              <td><input type="text" value="-1" /></td>
+            </tr>
+            <tr>
+              <td>Pick 6 Thrown</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>Pass Completed</td>
+              <td><input type="text" value="0.3" /></td>
+            </tr>
+            <tr>
+              <td>Incomplete Pass</td>
+              <td><input type="text" value="-0.3" /></td>
+            </tr>
+            <tr>
+              <td>Pass Attempts</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>QB Sacked</td>
+              <td><input type="text" value="-0.2" /></td>
+            </tr>
+            <tr>
+              <td>40+ Yard Completion Bonus</td>
+              <td><input type="text" value="0.1" /></td>
+            </tr>
+            <tr>
+              <td>40+ Yard Pass TD Bonus</td>
+              <td><input type="text" value="0.1" /></td>
+            </tr>
+            <tr>
+              <td>50+ Yard Pass TD Bonus</td>
+              <td><input type="text" value="0.3" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <div class="scoring-table compact-scoring-table">
-      <table>
-        <tbody>
-          <tr>
-            <td>Rushing Yards</td>
-            <td>
-              <input type="text" value="10" /> yards
-              <div class="description">(1 point every 10 yards)</div>
-            </td>
-          </tr>
-          <tr>
-            <td>Rushing TD</td>
-            <td><input type="text" value="6" /></td>
-          </tr>
-          <tr>
-            <td>Rushing 1st Down</td>
-            <td><input type="text" value="1" /></td>
-          </tr>
-          <tr>
-            <td>2-Pt Conversion</td>
-            <td><input type="text" value="2" /></td>
-          </tr>
-          <tr>
-            <td>Rush Attempts</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>40+ Yard Rush Bonus</td>
-            <td><input type="text" value="0.3" /></td>
-          </tr>
-          <tr>
-            <td>40+ Yard Rush TD Bonus</td>
-            <td><input type="text" value="0.1" /></td>
-          </tr>
-          <tr>
-            <td>50+ Yard Rush TD Bonus</td>
-            <td><input type="text" value="0.3" /></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="scoring-table compact-scoring-table">
+        <table>
+          <tbody>
+            <tr>
+              <td>Rushing Yards</td>
+              <td>
+                <input type="text" value="10" /> yards
+                <div class="description">(1 point every 10 yards)</div>
+              </td>
+            </tr>
+            <tr>
+              <td>Rushing TD</td>
+              <td><input type="text" value="6" /></td>
+            </tr>
+            <tr>
+              <td>Rushing 1st Down</td>
+              <td><input type="text" value="1" /></td>
+            </tr>
+            <tr>
+              <td>2-Pt Conversion</td>
+              <td><input type="text" value="2" /></td>
+            </tr>
+            <tr>
+              <td>Rush Attempts</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>40+ Yard Rush Bonus</td>
+              <td><input type="text" value="0.3" /></td>
+            </tr>
+            <tr>
+              <td>40+ Yard Rush TD Bonus</td>
+              <td><input type="text" value="0.1" /></td>
+            </tr>
+            <tr>
+              <td>50+ Yard Rush TD Bonus</td>
+              <td><input type="text" value="0.3" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <div class="scoring-table compact-scoring-table">
-      <table>
-        <tbody>
-          <tr>
-            <td>Reception</td>
-            <td><input type="text" value="1" /></td>
-          </tr>
-          <tr>
-            <td>Receiving Yards</td>
-            <td>
-              <input type="text" value="10" /> yards
-              <div class="description">(1 point every 10 yards)</div>
-            </td>
-          </tr>
-          <tr>
-            <td>Receiving TD</td>
-            <td><input type="text" value="6" /></td>
-          </tr>
-          <tr>
-            <td>Receiving 1st Down</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>2-Pt Conversion</td>
-            <td><input type="text" value="2" /></td>
-          </tr>
-          <tr>
-            <td>0-4 Yard Reception Bonus</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>5-9 Yard Reception Bonus</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>10-19 Yard Reception Bonus</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>20-29 Yard Reception Bonus</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>30-39 Yard Reception Bonus</td>
-            <td><input type="text" value="0.1" /></td>
-          </tr>
-          <tr>
-            <td>40+ Yard Reception Bonus</td>
-            <td><input type="text" value="0.2" /></td>
-          </tr>
-          <tr>
-            <td>40+ Yard Reception TD Bonus</td>
-            <td><input type="text" value="0.1" /></td>
-          </tr>
-          <tr>
-            <td>50+ Yard Reception TD Bonus</td>
-            <td><input type="text" value="0.4" /></td>
-          </tr>
-          <tr>
-            <td>Reception Bonus - RB</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>Reception Bonus - WR</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>Reception Bonus - TE</td>
-            <td><input type="text" value="0.6" /></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="scoring-table compact-scoring-table">
+        <table>
+          <tbody>
+            <tr>
+              <td>Reception</td>
+              <td><input type="text" value="1" /></td>
+            </tr>
+            <tr>
+              <td>Receiving Yards</td>
+              <td>
+                <input type="text" value="10" /> yards
+                <div class="description">(1 point every 10 yards)</div>
+              </td>
+            </tr>
+            <tr>
+              <td>Receiving TD</td>
+              <td><input type="text" value="6" /></td>
+            </tr>
+            <tr>
+              <td>Receiving 1st Down</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>2-Pt Conversion</td>
+              <td><input type="text" value="2" /></td>
+            </tr>
+            <tr>
+              <td>0-4 Yard Reception Bonus</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>5-9 Yard Reception Bonus</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>10-19 Yard Reception Bonus</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>20-29 Yard Reception Bonus</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>30-39 Yard Reception Bonus</td>
+              <td><input type="text" value="0.1" /></td>
+            </tr>
+            <tr>
+              <td>40+ Yard Reception Bonus</td>
+              <td><input type="text" value="0.2" /></td>
+            </tr>
+            <tr>
+              <td>40+ Yard Reception TD Bonus</td>
+              <td><input type="text" value="0.1" /></td>
+            </tr>
+            <tr>
+              <td>50+ Yard Reception TD Bonus</td>
+              <td><input type="text" value="0.4" /></td>
+            </tr>
+            <tr>
+              <td>Reception Bonus - RB</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>Reception Bonus - WR</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>Reception Bonus - TE</td>
+              <td><input type="text" value="0.6" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <div class="scoring-table compact-scoring-table">
-      <table>
-        <tbody>
-          <tr>
-            <td>1st Down Bonus - TE</td>
-            <td><input type="text" value="1" /></td>
-          </tr>
-          <tr>
-            <td>Fumble</td>
-            <td><input type="text" value="0" /></td>
-          </tr>
-          <tr>
-            <td>Fumble Lost</td>
-            <td><input type="text" value="-2" /></td>
-          </tr>
-          <tr>
-            <td>Fumble Recovery TD</td>
-            <td><input type="text" value="6" /></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="scoring-table compact-scoring-table">
+        <table>
+          <tbody>
+            <tr>
+              <td>1st Down Bonus - TE</td>
+              <td><input type="text" value="1" /></td>
+            </tr>
+            <tr>
+              <td>Fumble</td>
+              <td><input type="text" value="0" /></td>
+            </tr>
+            <tr>
+              <td>Fumble Lost</td>
+              <td><input type="text" value="-2" /></td>
+            </tr>
+            <tr>
+              <td>Fumble Recovery TD</td>
+              <td><input type="text" value="6" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <p>The scoring system will never change without a majority league vote; 9 minimum votes are required.</p>
