@@ -462,6 +462,45 @@
       font-size: 0.76rem;
       padding: 7px 9px;
     }
+  .mobile-cards thead {
+    display: none;
+  }
+
+  .mobile-cards,
+  .mobile-cards tbody,
+  .mobile-cards tr,
+  .mobile-cards td {
+    display: block;
+    width: 100%;
+  }
+
+  .mobile-cards tr {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+  }
+
+  .mobile-cards td {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border: none;
+    font-size: 0.78rem;
+  }
+
+  .mobile-cards td::before {
+    font-weight: 600;
+    color: #94a3b8;
+  }
+
+  .mobile-cards td:nth-child(1)::before { content: "Name"; }
+  .mobile-cards td:nth-child(2)::before { content: "Seed"; }
+  .mobile-cards td:nth-child(3)::before { content: "Balls"; }
+  .mobile-cards td:nth-child(4)::before { content: "Pick %"; }
+
+  }
   }
 </style>
 
@@ -822,7 +861,7 @@
     </p>
 
     <div class="subBlock">
-      <table class="draft-order-table">
+      <table class="draft-order-table mobile-cards">
         <thead>
           <tr class="table-header">
             <th>Name</th>
