@@ -578,10 +578,7 @@
 
     <h3 class="subSectionHeading" bind:this={oneThree}>1.3 Trading</h3>
     <p>
-      Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. For example, a
-      manager may trade for a quarterback who is speculated to be benched. The condition could be as follows: Team A trades a
-      quarterback to Team B for a first-round pick, with the condition that the quarterback starts for the rest of the season
-      (barring injury). If the quarterback is benched, the draft pick is reduced to a second-round pick instead.
+      Tradable assets include players, draft picks, and FAAB dollars. Conditional trades are also permitted. 
     </p>
 
     <h4 bind:this={oneThreeOne}>1.3.1 Trade Collusion</h4>
@@ -613,7 +610,7 @@
     <h4 bind:this={oneThreeTwo}>1.3.2 Lending Players Prohibition</h4>
     <div class="subBlock">
       <p>
-        For trades involving any player ranked in the top 35, reacquisition by the original team is prohibited for two years
+        For trades involving any player ranked in the top 50, reacquisition by the original team is prohibited for two years
         after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this
         rule.
       </p>
