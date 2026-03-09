@@ -18,203 +18,157 @@
     window.scrollTo({ left: 0, top, behavior: 'smooth' });
   };
 </script>
+
 <style>
   :global(body) {
     background:
-      radial-gradient(circle at top, rgba(178, 140, 56, 0.08), transparent 24%),
-      linear-gradient(180deg, #09111f 0%, #0c1524 38%, #101826 100%);
-    color: #e5e7eb;
+      radial-gradient(circle at top, rgba(178,140,56,.08), transparent 24%),
+      linear-gradient(180deg,#09111f 0%,#0c1524 38%,#101826 100%);
+    color:#e5e7eb;
   }
 
   :global(h1, h2, h3, h4, h5) {
-    color: #f8fafc;
+    color:#f8fafc;
   }
 
   :global(p),
   :global(li) {
-    color: #cbd5e1;
-    line-height: 1.75;
+    color:#cbd5e1;
+    line-height:1.75;
   }
 
   :global(ul) {
-    padding-left: 1.4rem;
-    margin: 0.65rem 0 1rem;
+    padding-left:1.4rem;
+    margin:.65rem 0 1rem;
   }
 
   :global(ul li) {
-    margin-bottom: 3px;
+    margin-bottom:3px;
   }
 
   :global(hr) {
-    border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin: 2rem 0;
+    border:none;
+    border-top:1px solid rgba(255,255,255,.08);
+    margin:2rem 0;
   }
 
   .constitution-shell {
-    width: min(920px, 92%);
-    margin: 4.25rem auto 7rem;
+    width:min(920px,92%);
+    margin:4.25rem auto 7rem;
   }
 
   .constitution-hero {
-    padding: 0 0 1.5rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    padding:0 0 1.5rem;
+    margin-bottom:2rem;
+    border-bottom:1px solid rgba(212,175,55,.2);
   }
 
   .eyebrow {
-    display: inline-block;
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #d4af37;
-    margin-bottom: 0.85rem;
-    font-weight: 700;
+    display:inline-block;
+    font-size:.75rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#d4af37;
+    margin-bottom:.85rem;
+    font-weight:700;
   }
 
   .hero-title {
-    margin: 0;
-    text-align: center;
-    font-size: clamp(2rem, 4vw, 2.7rem);
-    line-height: 1.08;
-    letter-spacing: 0.03em;
+    margin:0;
+    text-align:center;
+    font-size:clamp(2rem,4vw,2.7rem);
+    line-height:1.08;
   }
 
   .hero-subtitle {
-    margin: 1rem auto 0;
-    max-width: 760px;
-    text-align: center;
-    color: #94a3b8;
-    font-size: 0.96rem;
-    line-height: 1.6;
+    margin:1rem auto 0;
+    max-width:760px;
+    text-align:center;
+    color:#94a3b8;
+    font-size:.96rem;
   }
 
   .toc-card {
-    margin-top: 1.75rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top:1.75rem;
+    padding-top:1rem;
+    border-top:1px solid rgba(255,255,255,.08);
   }
 
   .toc-title {
-    margin: 0 0 1.2rem;
-    text-align: center;
-    font-size: 0.95rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #d4af37;
+    margin:0 0 1.2rem;
+    text-align:center;
+    font-size:.95rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#d4af37;
   }
 
   .toc-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem 2rem;
-  }
-
-  .toc-group h3,
-  .toc-group h4,
-  .toc-group h5 {
-    margin: 0;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:1rem 2rem;
   }
 
   .toc-group h3 {
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-    color: #f8fafc;
-    font-weight: 600;
+    font-size:.95rem;
+    margin-bottom:.5rem;
   }
 
   .toc-group h4,
   .toc-group h5 {
-    font-size: 0.85rem;
-    color: #9fb3c8;
-    margin-bottom: 0.42rem;
-    font-weight: 500;
-  }
-
-  .constitution-body {
-    margin-top: 0;
-    padding: 0;
+    font-size:.85rem;
+    color:#9fb3c8;
+    margin-bottom:.42rem;
   }
 
   .sectionHeading {
-    margin: 3rem 0 1rem;
-    padding-bottom: 0.7rem;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.24);
-    font-size: clamp(1.45rem, 3vw, 1.9rem);
-    color: #f8fafc;
+    margin:3rem 0 1rem;
+    padding-bottom:.7rem;
+    border-bottom:1px solid rgba(212,175,55,.24);
+    font-size:clamp(1.45rem,3vw,1.9rem);
   }
 
   .subSectionHeading {
-    margin: 1.5rem 0 0.85rem;
-    font-size: 1.18rem;
-    color: #dbeafe;
+    margin:1.5rem 0 .85rem;
+    font-size:1.18rem;
   }
 
   h4 {
-    margin-top: 1.15rem;
-    margin-bottom: 0.55rem;
-    margin-left: 0;
-    text-decoration: none;
-    font-size: 1rem;
-    color: #f8fafc;
+    margin-top:1.15rem;
+    margin-bottom:.55rem;
+    font-size:1rem;
   }
 
   h5 {
-    margin-left: 0;
-    font-size: 0.92rem;
-    color: #cbd5e1;
+    font-size:.92rem;
+    color:#cbd5e1;
   }
 
   .subBlock {
-    margin-left: 1rem;
-    padding-left: 0.9rem;
-    border-left: 2px solid rgba(212, 175, 55, 0.16);
-  }
-
-  .underscore {
-    text-decoration: underline;
-    text-decoration-color: rgba(212, 175, 55, 0.7);
-    text-underline-offset: 3px;
+    margin-left:1rem;
+    padding-left:.9rem;
+    border-left:2px solid rgba(212,175,55,.16);
   }
 
   .right {
-    text-align: right;
-  }
-
-  .positionMaximums td {
-    min-width: 3em;
-  }
-
-  .noUnderscore {
-    text-decoration: none;
-  }
-
-  .clickable {
-    cursor: pointer;
-    transition: color 0.18s ease, transform 0.18s ease;
-  }
-
-  .clickable:hover {
-    color: #f5d56b;
-    transform: translateX(2px);
+    text-align:right;
   }
 
   .draft-order-table,
   .scoring-table table,
   .positionMaximums,
   table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 12px;
-    overflow: hidden;
+    width:100%;
+    border-collapse:collapse;
+    font-family:Arial,sans-serif;
+    background:transparent;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
   }
 
   .draft-order-table {
-    width: min(760px, 100%);
-    margin: 1rem 0 1.5rem;
+    width:min(760px,100%);
+    margin:1rem 0 1.5rem;
   }
 
   .draft-order-table th,
@@ -222,301 +176,206 @@
   .scoring-table td,
   table th,
   table td {
-    padding: 12px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    text-align: left;
-    color: #e5e7eb;
+    padding:12px 14px;
+    border:1px solid rgba(255,255,255,.06);
   }
 
   .table-header,
   table thead tr {
-    background: rgba(122, 28, 28, 0.75);
+    background:rgba(122,28,28,.75);
   }
 
   .table-header th,
   table thead th {
-    color: #fff;
+    color:#fff;
   }
 
   .total-row td {
-    font-weight: 700;
-    color: #f5d56b;
-    background: rgba(212, 175, 55, 0.06);
-  }
-
-  .scoring-table {
-    margin: 1rem 0 1.25rem;
-  }
-
-  .scoring-table input {
-    width: 70px;
-    padding: 0.45rem 0.5rem;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(2, 6, 23, 0.65);
-    color: #f8fafc;
-  }
-
-  .description {
-    font-size: 0.82rem;
-    color: #94a3b8;
-    margin-top: 0.25rem;
+    font-weight:700;
+    color:#f5d56b;
   }
 
   /* PLAYOFF BRACKET */
 
   .bracket-container {
-    display: flex;
-    gap: 16px;
-    margin: 1.5rem 0;
-    padding: 1rem;
-    justify-content: flex-start;
-    overflow-x: auto;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
+    display:flex;
+    gap:16px;
+    margin:1.5rem 0;
+    padding:1rem;
+    overflow-x:auto;
+    background:rgba(255,255,255,.025);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
   }
 
   .round {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-    min-width: 120px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    min-width:120px;
   }
 
   .round-title {
-    font-size: 0.82rem;
-    color: #d4af37;
-    font-weight: 700;
+    font-size:.82rem;
+    color:#d4af37;
+    font-weight:700;
   }
 
   .matchup {
-    background: linear-gradient(180deg, #1e293b, #0f172a);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 10px;
-    border-radius: 10px;
-    width: 110px;
-  }
-
-  .team,
-  .tbd,
-  .championship {
-    font-weight: 700;
-    font-size: 0.74rem;
+    background:linear-gradient(180deg,#1e293b,#0f172a);
+    border:1px solid rgba(255,255,255,.08);
+    padding:10px;
+    border-radius:10px;
+    width:110px;
   }
 
   .team {
-    color: #f8fafc;
+    color:#f8fafc;
+    font-weight:700;
+    font-size:.74rem;
   }
 
   .tbd {
-    color: #94a3b8;
+    color:#94a3b8;
+    font-size:.74rem;
   }
 
   .championship {
-    color: #f5d56b;
+    color:#f5d56b;
+    font-size:.74rem;
   }
 
-  /* MOBILE */
+  /* BOOKKEEPING BLOCK */
 
-  @media (max-width: 700px) {
-    .toc-grid {
-      grid-template-columns: 1fr;
-      gap: 0.9rem;
-    }
-
-    .constitution-shell {
-      width: min(96%, 96%);
-      margin-top: 2rem;
-    }
-
-    .hero-title {
-      font-size: 1.7rem;
-    }
-
-    .hero-subtitle {
-      font-size: 0.9rem;
-    }
-
-    .sectionHeading {
-      font-size: 1.25rem;
-      margin-top: 1.75rem;
-    }
-
-    .subSectionHeading {
-      font-size: 1rem;
-    }
-
-    h4 {
-      font-size: 0.95rem;
-    }
-
-    h5 {
-      font-size: 0.85rem;
-    }
-
-    .draft-order-table,
-    .scoring-table table,
-    table {
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-
-    /* COMPACT TABLES FOR SECTION 3.4 ONLY */
-
-    .compact-mobile-table {
-      display: table;
-      width: 100%;
-      margin: 0.5rem 0 0.7rem;
-    }
-
-    .compact-mobile-table th,
-    .compact-mobile-table td {
-      padding: 3px 5px;
-      font-size: 0.68rem;
-      line-height: 1.05;
-    }
-
-    .compact-mobile-table .total-row td {
-      padding: 4px 5px;
-      font-size: 0.66rem;
-      line-height: 1.05;
-    }
-    .compact-scoring-table table {
-      display: table;
-      width: 100%;
-      white-space: normal;
-    }
-
-    .compact-scoring-table td {
-      padding: 6px 7px;
-      font-size: 0.74rem;
-      line-height: 1.08;
-      vertical-align: middle;
-    }
-
-    .compact-scoring-table input {
-      width: 52px;
-      padding: 0.22rem 0.34rem;
-      font-size: 0.74rem;
-    }
-
-    .compact-scoring-table .description {
-      font-size: 0.66rem;
-      line-height: 1.1;
-      margin-top: 0.12rem;
-    }
   .compact-bookkeeping {
-    width: 100%;
-    margin: 1rem 0 1.5rem;
-    padding: 0.9rem;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
+    width:100%;
+    margin:1rem 0 1.5rem;
+    padding:.9rem;
+    background:rgba(255,255,255,.025);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
   }
 
   .bookkeeping-main-title {
-    margin: 0 0 0.85rem;
-    text-align: center;
-    font-size: 1.35rem;
-    line-height: 1.15;
-    color: #f8fafc;
+    margin:0 0 .85rem;
+    text-align:center;
+    font-size:1.35rem;
   }
 
   .bookkeeping-section {
-    margin-bottom: 0.9rem;
-  }
-
-  .bookkeeping-section:last-child {
-    margin-bottom: 0;
+    margin-bottom:.9rem;
   }
 
   .bookkeeping-section-title {
-    margin: 0 0 0.45rem;
-    padding: 0.45rem 0.65rem;
-    font-size: 0.95rem;
-    line-height: 1.2;
-    background: rgba(47, 85, 151, 0.95);
-    color: #fff;
-    border-radius: 8px 8px 0 0;
+    margin:0 0 .45rem;
+    padding:.45rem .65rem;
+    font-size:.95rem;
+    background:rgba(47,85,151,.95);
+    color:#fff;
   }
 
   .bookkeeping-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    margin: 0;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-top: none;
-    background: transparent;
+    width:100%;
+    border-collapse:collapse;
   }
 
   .bookkeeping-table th,
   .bookkeeping-table td {
-    padding: 0.5rem 0.6rem;
-    font-size: 0.95rem;
-    line-height: 1.2;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #e5e7eb;
-  }
-
-  .bookkeeping-table thead th {
-    background: rgba(47, 85, 151, 0.95);
-    color: #fff;
-    font-weight: 700;
-  }
-
-  .bookkeeping-table-3col th:nth-child(1),
-  .bookkeeping-table-3col td:nth-child(1) {
-    width: 54%;
-  }
-
-  .bookkeeping-table-3col th:nth-child(2),
-  .bookkeeping-table-3col td:nth-child(2),
-  .bookkeeping-table-3col th:nth-child(3),
-  .bookkeeping-table-3col td:nth-child(3) {
-    width: 23%;
-  }
-
-  .bookkeeping-table-2col td:nth-child(1) {
-    width: 70%;
-  }
-
-  .bookkeeping-table-2col td:nth-child(2) {
-    width: 30%;
+    padding:.5rem .6rem;
+    border:1px solid rgba(255,255,255,.08);
   }
 
   .bookkeeping-highlight td {
-    font-weight: 700;
-    color: #f5d56b;
-    background: rgba(47, 85, 151, 0.22);
+    font-weight:700;
+    color:#f5d56b;
   }
 
-  @media (max-width: 700px) {
+  /* MOBILE */
+
+  @media (max-width:700px) {
+
+    .toc-grid {
+      grid-template-columns:1fr;
+      gap:.9rem;
+    }
+
+    .constitution-shell {
+      width:min(96%,96%);
+      margin-top:2rem;
+    }
+
+    .hero-title {
+      font-size:1.7rem;
+    }
+
+    .hero-subtitle {
+      font-size:.9rem;
+    }
+
+    .sectionHeading {
+      font-size:1.25rem;
+      margin-top:1.75rem;
+    }
+
+    .subSectionHeading {
+      font-size:1rem;
+    }
+
+    h4 { font-size:.95rem; }
+    h5 { font-size:.85rem; }
+
+    .draft-order-table,
+    .scoring-table table,
+    table {
+      display:block;
+      overflow-x:auto;
+      white-space:nowrap;
+    }
+
+    /* Section 3.4 tables */
+
+    .compact-mobile-table th,
+    .compact-mobile-table td {
+      padding:3px 5px;
+      font-size:.68rem;
+      line-height:1.05;
+    }
+
+    /* Section 4.1 scoring */
+
+    .compact-scoring-table td {
+      padding:6px 7px;
+      font-size:.74rem;
+    }
+
+    .compact-scoring-table input {
+      width:52px;
+      font-size:.74rem;
+    }
+
+    /* Section 7.2 bookkeeping */
+
     .compact-bookkeeping {
-      padding: 0.65rem;
-      border-radius: 12px;
+      padding:.65rem;
     }
 
     .bookkeeping-main-title {
-      font-size: 0.95rem;
-      margin-bottom: 0.7rem;
+      font-size:.95rem;
+      margin-bottom:.7rem;
     }
 
     .bookkeeping-section-title {
-      font-size: 0.78rem;
-      padding: 0.35rem 0.5rem;
+      font-size:.78rem;
+      padding:.35rem .5rem;
     }
 
     .bookkeeping-table th,
     .bookkeeping-table td {
-      padding: 0.32rem 0.38rem;
-      font-size: 0.68rem;
-      line-height: 1.08;
+      padding:.32rem .38rem;
+      font-size:.68rem;
     }
   }
+
 </style>
 
 <div class="constitution-shell">
