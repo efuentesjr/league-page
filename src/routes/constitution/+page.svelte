@@ -94,13 +94,13 @@
   }
 
   .toc-card {
-    margin-top: 1.75rem;
-    padding-top: 1rem;
+    margin-top: 1.1rem;
+    padding-top: 0.75rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .toc-title {
-    margin: 0 0 1.2rem;
+    margin: 0 0 0.85rem;
     text-align: center;
     font-size: 0.95rem;
     letter-spacing: 0.08em;
@@ -111,19 +111,27 @@
   .toc-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem 2rem;
+    gap: 0.35rem 1.4rem;
+    align-items: start;
+  }
+
+  .toc-group h3,
+  .toc-group h4,
+  .toc-group h5 {
+    margin: 0;
+    line-height: 1.2;
   }
 
   .toc-group h3 {
     font-size: 0.95rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
   }
 
   .toc-group h4,
   .toc-group h5 {
     font-size: 0.85rem;
     color: #9fb3c8;
-    margin-bottom: 0.42rem;
+    margin-bottom: 0.16rem;
   }
 
   .sectionHeading {
@@ -436,6 +444,32 @@
 
     .ledger-value {
       width: 28%;
+    }
+    .toc-grid {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+
+    .toc-title {
+      margin-bottom: 0.7rem;
+    }
+
+    .toc-group h3,
+    .toc-group h4,
+    .toc-group h5 {
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .toc-group h3 {
+      font-size: 0.92rem;
+      margin-bottom: 0.14rem;
+    }
+
+    .toc-group h4,
+    .toc-group h5 {
+      font-size: 0.84rem;
+      margin-bottom: 0.1rem;
     }
   }
 </style>
