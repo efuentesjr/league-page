@@ -384,6 +384,30 @@
       font-size: 0.66rem;
       line-height: 1.05;
     }
+    .compact-scoring-table table {
+      display: table;
+      width: 100%;
+      white-space: normal;
+    }
+
+    .compact-scoring-table td {
+      padding: 6px 7px;
+      font-size: 0.74rem;
+      line-height: 1.08;
+      vertical-align: middle;
+    }
+
+    .compact-scoring-table input {
+      width: 52px;
+      padding: 0.22rem 0.34rem;
+      font-size: 0.74rem;
+    }
+
+    .compact-scoring-table .description {
+      font-size: 0.66rem;
+      line-height: 1.1;
+      margin-top: 0.12rem;
+    }
   }
 </style>
 
