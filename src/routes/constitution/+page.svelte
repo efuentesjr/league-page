@@ -236,9 +236,11 @@
 
   .bracket-container {
     display: flex;
-    gap: 16px;
-    margin: 1.5rem 0;
-    padding: 1rem;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    margin: 1.75rem auto;
+    padding: 1.25rem 1rem;
     overflow-x: auto;
     background: rgba(255, 255, 255, 0.025);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -248,38 +250,81 @@
   .round {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    min-width: 120px;
+    justify-content: center;
+    gap: 18px;
+    min-width: 130px;
+    position: relative;
   }
 
   .round-title {
     font-size: 0.82rem;
     color: #d4af37;
     font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.35rem;
   }
 
   .matchup {
+    position: relative;
     background: linear-gradient(180deg, #1e293b, #0f172a);
     border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 10px;
     border-radius: 10px;
-    width: 110px;
+    width: 120px;
+    min-height: 58px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .team,
+  .tbd,
+  .championship {
+    font-weight: 700;
+    font-size: 0.74rem;
+    line-height: 1.2;
   }
 
   .team {
     color: #f8fafc;
-    font-weight: 700;
-    font-size: 0.74rem;
   }
 
   .tbd {
     color: #94a3b8;
-    font-size: 0.74rem;
   }
 
   .championship {
     color: #f5d56b;
-    font-size: 0.74rem;
+  }
+
+  /* vertical centering offsets so rounds line up like a bracket */
+  .round:nth-child(2) {
+    gap: 72px;
+  }
+
+  .round:nth-child(3) {
+    justify-content: center;
+  }
+
+  /* simple connector lines */
+  .round:nth-child(1) .matchup::after,
+  .round:nth-child(2) .matchup::after {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    width: 12px;
+    border-top: 1px solid rgba(212, 175, 55, 0.45);
+  }
+
+  .round:nth-child(2) .matchup::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    width: 12px;
+    border-top: 1px solid rgba(212, 175, 55, 0.45);
   }
 
   /* 7.2 LEDGER */
