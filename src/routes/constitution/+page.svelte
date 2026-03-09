@@ -777,7 +777,7 @@
         </tbody>
       </table>
 
-      <table class="draft-order-table">
+      <table class="draft-order-table compact-mobile-table">
         <thead>
           <tr class="table-header">
             <th>Name</th>
