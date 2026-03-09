@@ -448,6 +448,32 @@
     text-align: right;
     white-space: nowrap;
   }
+  /* 1.2.1 DIVISIONAL STRUCTURE */
+
+  .division-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem 1rem;
+    margin-top: 0.4rem;
+  }
+
+  .division-card h4 {
+    margin-top: 0;
+    margin-bottom: 0.3rem;
+    font-size: 0.92rem;
+    line-height: 1.15;
+  }
+
+  .division-card .subBlock {
+    margin-left: 0;
+    padding-left: 0.65rem;
+  }
+
+  .division-card .subBlock p {
+    margin: 0.12rem 0;
+    line-height: 1.25;
+    font-size: 0.82rem;
+  }
 
   /* MOBILE */
 
@@ -584,6 +610,25 @@
     .ledger-value {
       width: 28%;
     }
+    .division-grid {
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+    }
+
+    .division-card h4 {
+      font-size: 0.86rem;
+      margin-bottom: 0.22rem;
+    }
+
+    .division-card .subBlock {
+      padding-left: 0.55rem;
+    }
+
+    .division-card .subBlock p {
+      font-size: 0.74rem;
+      line-height: 1.15;
+      margin: 0.08rem 0;
+    }
   }
 </style>
 
@@ -684,37 +729,45 @@
     <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Divisions</h3>
     <h4 bind:this={oneTwoOne}>1.2.1 Divisional Structure</h4>
 
-    <div>
-      <h4>North Division:</h4>
-      <div class="subBlock">
-        <p>Team 1</p>
-        <p>Team 2</p>
-        <p>Team 3</p>
-        <p>Team 4</p>
+    <div class="division-grid">
+      <div class="division-card">
+        <h4>North Division</h4>
+        <div class="subBlock">
+          <p>Team 1</p>
+          <p>Team 2</p>
+          <p>Team 3</p>
+          <p>Team 4</p>
+        </div>
       </div>
 
-      <h4>South Division:</h4>
-      <div class="subBlock">
-        <p>Team 5</p>
-        <p>Team 6</p>
-        <p>Team 7</p>
-        <p>Team 8</p>
+      <div class="division-card">
+        <h4>South Division</h4>
+        <div class="subBlock">
+          <p>Team 5</p>
+          <p>Team 6</p>
+          <p>Team 7</p>
+          <p>Team 8</p>
+        </div>
       </div>
 
-      <h4>East Division:</h4>
-      <div class="subBlock">
-        <p>Team 9</p>
-        <p>Team 10</p>
-        <p>Team 11</p>
-        <p>Team 12</p>
+      <div class="division-card">
+        <h4>East Division</h4>
+        <div class="subBlock">
+          <p>Team 9</p>
+          <p>Team 10</p>
+          <p>Team 11</p>
+          <p>Team 12</p>
+        </div>
       </div>
 
-      <h4>West Division:</h4>
-      <div class="subBlock">
-        <p>Team 13</p>
-        <p>Team 14</p>
-        <p>Team 15</p>
-        <p>Team 16</p>
+      <div class="division-card">
+        <h4>West Division</h4>
+        <div class="subBlock">
+          <p>Team 13</p>
+          <p>Team 14</p>
+          <p>Team 15</p>
+          <p>Team 16</p>
+        </div>
       </div>
     </div>
 
