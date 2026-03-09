@@ -19,360 +19,372 @@
   };
 </script>
 <style>
-
-:global(body) {
-  background:
-    radial-gradient(circle at top, rgba(178,140,56,.08), transparent 24%),
-    linear-gradient(180deg,#09111f 0%,#0c1524 38%,#101826 100%);
-  color:#e5e7eb;
-}
-
-:global(h1,h2,h3,h4,h5){
-  color:#f8fafc;
-}
-
-:global(p),
-:global(li){
-  color:#cbd5e1;
-  line-height:1.75;
-}
-
-:global(ul){
-  padding-left:1.4rem;
-  margin:.65rem 0 1rem;
-}
-
-:global(ul li){
-  margin-bottom:3px;
-}
-
-:global(hr){
-  border:none;
-  border-top:1px solid rgba(255,255,255,.08);
-  margin:2rem 0;
-}
-
-.constitution-shell{
-  width:min(920px,92%);
-  margin:4.25rem auto 7rem;
-}
-
-.constitution-hero{
-  padding:0 0 1.5rem;
-  margin-bottom:2rem;
-  border-bottom:1px solid rgba(212,175,55,.2);
-}
-
-.eyebrow{
-  display:inline-block;
-  font-size:.75rem;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:#d4af37;
-  margin-bottom:.85rem;
-  font-weight:700;
-}
-
-.hero-title{
-  margin:0;
-  text-align:center;
-  font-size:clamp(2rem,4vw,2.7rem);
-  line-height:1.08;
-  letter-spacing:.03em;
-}
-
-.hero-subtitle{
-  margin:1rem auto 0;
-  max-width:760px;
-  text-align:center;
-  color:#94a3b8;
-  font-size:.96rem;
-  line-height:1.6;
-}
-
-.toc-card{
-  margin-top:1.75rem;
-  padding-top:1rem;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-
-.toc-title{
-  margin:0 0 1.2rem;
-  text-align:center;
-  font-size:.95rem;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:#d4af37;
-}
-
-.toc-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:1rem 2rem;
-}
-
-.toc-group h3,
-.toc-group h4,
-.toc-group h5{
-  margin:0;
-}
-
-.toc-group h3{
-  margin-bottom:.5rem;
-  font-size:.95rem;
-  color:#f8fafc;
-  font-weight:600;
-}
-
-.toc-group h4,
-.toc-group h5{
-  font-size:.85rem;
-  color:#9fb3c8;
-  margin-bottom:.42rem;
-  font-weight:500;
-}
-
-.constitution-body{
-  margin-top:0;
-  padding:0;
-}
-
-.sectionHeading{
-  margin:3rem 0 1rem;
-  padding-bottom:.7rem;
-  border-bottom:1px solid rgba(212,175,55,.24);
-  font-size:clamp(1.45rem,3vw,1.9rem);
-  color:#f8fafc;
-}
-
-.subSectionHeading{
-  margin:1.5rem 0 .85rem;
-  font-size:1.18rem;
-  color:#dbeafe;
-}
-
-h4{
-  margin-top:1.15rem;
-  margin-bottom:.55rem;
-  margin-left:0;
-  text-decoration:none;
-  font-size:1rem;
-  color:#f8fafc;
-}
-
-h5{
-  margin-left:0;
-  font-size:.92rem;
-  color:#cbd5e1;
-}
-
-.subBlock{
-  margin-left:1rem;
-  padding-left:.9rem;
-  border-left:2px solid rgba(212,175,55,.16);
-}
-
-.underscore{
-  text-decoration:underline;
-  text-decoration-color:rgba(212,175,55,.7);
-  text-underline-offset:3px;
-}
-
-.right{
-  text-align:right;
-}
-
-.positionMaximums td{
-  min-width:3em;
-}
-
-.noUnderscore{
-  text-decoration:none;
-}
-
-.clickable{
-  cursor:pointer;
-  transition:color .18s ease, transform .18s ease;
-}
-
-.clickable:hover{
-  color:#f5d56b;
-  transform:translateX(2px);
-}
-
-.draft-order-table,
-.scoring-table table,
-.positionMaximums,
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-family:Arial,sans-serif;
-  background:transparent;
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:12px;
-  overflow:hidden;
-}
-
-.draft-order-table{
-  width:min(760px,100%);
-  margin:1rem 0 1.5rem;
-}
-
-.draft-order-table th,
-.draft-order-table td,
-.scoring-table td,
-table th,
-table td{
-  padding:12px 14px;
-  border:1px solid rgba(255,255,255,.06);
-  text-align:left;
-  color:#e5e7eb;
-}
-
-.table-header,
-table thead tr{
-  background:rgba(122,28,28,.75);
-}
-
-.table-header th,
-table thead th{
-  color:#fff;
-}
-
-.total-row td{
-  font-weight:700;
-  color:#f5d56b;
-  background:rgba(212,175,55,.06);
-}
-
-.scoring-table{
-  margin:1rem 0 1.25rem;
-}
-
-.scoring-table input{
-  width:70px;
-  padding:.45rem .5rem;
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(2,6,23,.65);
-  color:#f8fafc;
-}
-
-.description{
-  font-size:.82rem;
-  color:#94a3b8;
-  margin-top:.25rem;
-}
-
-/* PLAYOFF BRACKET */
-
-.bracket-container{
-  display:flex;
-  gap:16px;
-  margin:1.5rem 0;
-  padding:1rem;
-  justify-content:flex-start;
-  overflow-x:auto;
-  background:rgba(255,255,255,.025);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
-}
-
-.round{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  align-items:flex-start;
-  min-width:120px;
-}
-
-.round-title{
-  font-size:.82rem;
-  color:#d4af37;
-  font-weight:700;
-}
-
-.matchup{
-  background:linear-gradient(180deg,#1e293b,#0f172a);
-  border:1px solid rgba(255,255,255,.08);
-  padding:10px;
-  border-radius:10px;
-  width:110px;
-}
-
-.team,
-.tbd,
-.championship{
-  font-weight:700;
-  font-size:.74rem;
-}
-
-.team{color:#f8fafc}
-.tbd{color:#94a3b8}
-.championship{color:#f5d56b}
-
-/* MOBILE */
-
-@media (max-width:700px){
-
-  .toc-grid{
-    grid-template-columns:1fr;
-    gap:.9rem;
+  :global(body) {
+    background:
+      radial-gradient(circle at top, rgba(178, 140, 56, 0.08), transparent 24%),
+      linear-gradient(180deg, #09111f 0%, #0c1524 38%, #101826 100%);
+    color: #e5e7eb;
   }
 
-  .constitution-shell{
-    width:min(96%,96%);
-    margin-top:2rem;
+  :global(h1, h2, h3, h4, h5) {
+    color: #f8fafc;
   }
 
-  .hero-title{
-    font-size:1.7rem;
+  :global(p),
+  :global(li) {
+    color: #cbd5e1;
+    line-height: 1.75;
   }
 
-  .hero-subtitle{
-    font-size:.9rem;
+  :global(ul) {
+    padding-left: 1.4rem;
+    margin: 0.65rem 0 1rem;
   }
 
-  .sectionHeading{
-    font-size:1.25rem;
-    margin-top:1.75rem;
+  :global(ul li) {
+    margin-bottom: 3px;
   }
 
-  .subSectionHeading{
-    font-size:1rem;
+  :global(hr) {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 2rem 0;
   }
 
-  h4{font-size:.95rem}
-  h5{font-size:.85rem}
+  .constitution-shell {
+    width: min(920px, 92%);
+    margin: 4.25rem auto 7rem;
+  }
+
+  .constitution-hero {
+    padding: 0 0 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #d4af37;
+    margin-bottom: 0.85rem;
+    font-weight: 700;
+  }
+
+  .hero-title {
+    margin: 0;
+    text-align: center;
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.08;
+    letter-spacing: 0.03em;
+  }
+
+  .hero-subtitle {
+    margin: 1rem auto 0;
+    max-width: 760px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.96rem;
+    line-height: 1.6;
+  }
+
+  .toc-card {
+    margin-top: 1.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .toc-title {
+    margin: 0 0 1.2rem;
+    text-align: center;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #d4af37;
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 2rem;
+  }
+
+  .toc-group h3,
+  .toc-group h4,
+  .toc-group h5 {
+    margin: 0;
+  }
+
+  .toc-group h3 {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: #f8fafc;
+    font-weight: 600;
+  }
+
+  .toc-group h4,
+  .toc-group h5 {
+    font-size: 0.85rem;
+    color: #9fb3c8;
+    margin-bottom: 0.42rem;
+    font-weight: 500;
+  }
+
+  .constitution-body {
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .sectionHeading {
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.24);
+    font-size: clamp(1.45rem, 3vw, 1.9rem);
+    color: #f8fafc;
+  }
+
+  .subSectionHeading {
+    margin: 1.5rem 0 0.85rem;
+    font-size: 1.18rem;
+    color: #dbeafe;
+  }
+
+  h4 {
+    margin-top: 1.15rem;
+    margin-bottom: 0.55rem;
+    margin-left: 0;
+    text-decoration: none;
+    font-size: 1rem;
+    color: #f8fafc;
+  }
+
+  h5 {
+    margin-left: 0;
+    font-size: 0.92rem;
+    color: #cbd5e1;
+  }
+
+  .subBlock {
+    margin-left: 1rem;
+    padding-left: 0.9rem;
+    border-left: 2px solid rgba(212, 175, 55, 0.16);
+  }
+
+  .underscore {
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 175, 55, 0.7);
+    text-underline-offset: 3px;
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .positionMaximums td {
+    min-width: 3em;
+  }
+
+  .noUnderscore {
+    text-decoration: none;
+  }
+
+  .clickable {
+    cursor: pointer;
+    transition: color 0.18s ease, transform 0.18s ease;
+  }
+
+  .clickable:hover {
+    color: #f5d56b;
+    transform: translateX(2px);
+  }
 
   .draft-order-table,
   .scoring-table table,
-  table{
-    display:block;
-    overflow-x:auto;
-    white-space:nowrap;
+  .positionMaximums,
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    overflow: hidden;
   }
 
-  /* COMPACT TABLES FOR SECTION 3.4 */
-
-  .compact-mobile-table th,
-  .compact-mobile-table td{
-    padding:3px 5px;
-    font-size:.68rem;
-    line-height:1.05;
+  .draft-order-table {
+    width: min(760px, 100%);
+    margin: 1rem 0 1.5rem;
   }
 
-  .compact-mobile-table{
-    margin:.5rem 0 .7rem;
+  .draft-order-table th,
+  .draft-order-table td,
+  .scoring-table td,
+  table th,
+  table td {
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: left;
+    color: #e5e7eb;
   }
 
-  .compact-mobile-table .total-row td{
-    padding:4px 5px;
-    font-size:.66rem;
+  .table-header,
+  table thead tr {
+    background: rgba(122, 28, 28, 0.75);
   }
 
-}
+  .table-header th,
+  table thead th {
+    color: #fff;
+  }
 
+  .total-row td {
+    font-weight: 700;
+    color: #f5d56b;
+    background: rgba(212, 175, 55, 0.06);
+  }
+
+  .scoring-table {
+    margin: 1rem 0 1.25rem;
+  }
+
+  .scoring-table input {
+    width: 70px;
+    padding: 0.45rem 0.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(2, 6, 23, 0.65);
+    color: #f8fafc;
+  }
+
+  .description {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+  }
+
+  /* PLAYOFF BRACKET */
+
+  .bracket-container {
+    display: flex;
+    gap: 16px;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    justify-content: flex-start;
+    overflow-x: auto;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+  }
+
+  .round {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    min-width: 120px;
+  }
+
+  .round-title {
+    font-size: 0.82rem;
+    color: #d4af37;
+    font-weight: 700;
+  }
+
+  .matchup {
+    background: linear-gradient(180deg, #1e293b, #0f172a);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px;
+    border-radius: 10px;
+    width: 110px;
+  }
+
+  .team,
+  .tbd,
+  .championship {
+    font-weight: 700;
+    font-size: 0.74rem;
+  }
+
+  .team {
+    color: #f8fafc;
+  }
+
+  .tbd {
+    color: #94a3b8;
+  }
+
+  .championship {
+    color: #f5d56b;
+  }
+
+  /* MOBILE */
+
+  @media (max-width: 700px) {
+    .toc-grid {
+      grid-template-columns: 1fr;
+      gap: 0.9rem;
+    }
+
+    .constitution-shell {
+      width: min(96%, 96%);
+      margin-top: 2rem;
+    }
+
+    .hero-title {
+      font-size: 1.7rem;
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+    }
+
+    .sectionHeading {
+      font-size: 1.25rem;
+      margin-top: 1.75rem;
+    }
+
+    .subSectionHeading {
+      font-size: 1rem;
+    }
+
+    h4 {
+      font-size: 0.95rem;
+    }
+
+    h5 {
+      font-size: 0.85rem;
+    }
+
+    .draft-order-table,
+    .scoring-table table,
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    /* COMPACT TABLES FOR SECTION 3.4 ONLY */
+
+    .compact-mobile-table {
+      display: table;
+      width: 100%;
+      margin: 0.5rem 0 0.7rem;
+    }
+
+    .compact-mobile-table th,
+    .compact-mobile-table td {
+      padding: 3px 5px;
+      font-size: 0.68rem;
+      line-height: 1.05;
+    }
+
+    .compact-mobile-table .total-row td {
+      padding: 4px 5px;
+      font-size: 0.66rem;
+      line-height: 1.05;
+    }
+  }
 </style>
 
 <div class="constitution-shell">
@@ -732,7 +744,7 @@ table thead th{
     </p>
 
     <div class="subBlock">
-      <table class="draft-order-table mobile-cards">
+      <table class="draft-order-table compact-mobile-table">
         <thead>
           <tr class="table-header">
             <th>Name</th>
