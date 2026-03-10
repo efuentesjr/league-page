@@ -62,8 +62,10 @@ export const managers = [
     "philosophy": "Try and stay a playoff conterder, While trying to trade for younger players",
     "tradingScale": 8,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
+    "totalEarnings": 1000,
+    "earnings": [
+    { year: 2024, amount: 1000 }
+    ]
   },
   {
     "roster": 13,
