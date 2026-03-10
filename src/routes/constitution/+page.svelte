@@ -1363,7 +1363,7 @@
             <tr>
               <td>Rolling From 2025</td>
               <td class="ledger-currency"></td>
-              <td class="ledger-value">$-</td>
+              <td class="ledger-value">$    -</td>
             </tr>
             <tr>
               <td>Number of Owners</td>
@@ -1373,17 +1373,17 @@
             <tr>
               <td>Cost to Play (Fee)</td>
               <td class="ledger-currency"></td>
-              <td class="ledger-value">$100.00</td>
+              <td class="ledger-value">$  100.00</td>
             </tr>
             <tr>
               <td>Total Collected 2026</td>
               <td class="ledger-currency"></td>
-              <td class="ledger-value">$1,600.00</td>
+              <td class="ledger-value">$ 1,600.00</td>
             </tr>
             <tr>
               <td>2025 Rolling and 2026 Collect</td>
-              <td class="ledger-currency">$</td>
-              <td class="ledger-value">1,600.00</td>
+              <td class="ledger-currency"></td>
+              <td class="ledger-value">$ 1,600.00</td>
             </tr>
 
             <tr class="ledger-section-row">
