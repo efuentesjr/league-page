@@ -1,9 +1,11 @@
+/*   STEP 1   */
 export const leagueID = "1328167060034834432"; // your league ID
 export const leagueName = ""; // your league name
 export const dues = 75; // (optional) used in template constitution page
 export const dynasty = true; // true for dynasty leagues, false for redraft and keeper
 export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VITE_CONTENTFUL_SPACE environment variables
 
+/*   STEP 2   */
 export const homepageText = `
   <div style="text-align: center;">
     <p style="font-size: 18px;"></p>
@@ -13,19 +15,28 @@ export const homepageText = `
 <p style="font-size: 14px;"></p>
 `;
 
+/*   STEP 3   */
+/*
+3 managers as an example. Uncomment (remove the //) before each line to make it live code
+If you're having trouble, reference the Training Wheels' Manager Section
+https://github.com/nmelhado/league-page/blob/master/TRAINING_WHEELS.md#ii-adding-managers-and-changing-the-homepage-text
+*/
+
+// To omit an optional field, set it's value to null
+
 export const managers = [
   {
-    "roster": 1,
-    "managerID": "844760551790858240",
-    "slug": "brute-force-attack",
+    "roster": 1,  // ID of the roster that the manager manages (look at the order of the power rankings graph)
+    "managerID": "844760551790858240",           // <-- add Sleeper user_id
+    "slug": "brute-force-attack",                // <-- add site/team slug
     "name": "Eddie Fuentes Jr",
-    "tookOver": 2014,
-    "location": "Manor TX",
+    "tookOver": 2014,              // ✅ THIS FIXES “In the league since”
+    "location": "Manor TX", // (optional)
     "bio": "Da Bears! Bears Down! 🐻⬇️",
-    "photo": "/managers/EFJ.jpg",
-    "fantasyStart": 2014,
-    "favoriteTeam": "chi",
-    "mode": "Win Now",
+    "photo": "/managers/EFJ.jpg", // square ratio recommended (no larger than 500x500)
+    "fantasyStart": 2014, // (optional) when did the manager start playing fantasy football
+    "favoriteTeam": "chi", // (optional) favorite NFL team, (follows convention: nyj, sea, mia, etc.) MUST BE LOWERCASE
+    "mode": "Win Now", // (optional) 'Win Now', 'Dynasty', or 'Rebuild'
     "rival": {
       name: "Cee Dees TDs",
       link: 12,
@@ -35,37 +46,8 @@ export const managers = [
     "valuePosition": "RB",
     "rookieOrVets": "Rookies",
     "philosophy": "Relentless. No tanking, no excuses—just a drive to win. If the path gets rough, it’s all about fighting through and clinching that playoff spot, because once we're there, it’s anyone's game. Every matchup, every play, every trade, waiver pick-up, it’s all about finding a way to the top!",
-    "tradingScale": 6,
+    "tradingScale": 4,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
-  },
-  {
-    "roster": 2,
-    "managerID": "791852794729598976",
-    "slug": "comeback-kid",
-    "name": "Joshua Romero",
-    "location": "Manor TX",
-    "bio": "Go with your gut when it comes to trades, starting or sitting players, Because it could elevate your team. Stay confident in your team no matter the situation",
-    "photo": "/managers/JR.jpg",
-    "fantasyStart": 2014,
-    "favoriteTeam": "was",
-    "mode": "Dynasty",
-    "rival": {
-      name: "CeeDees TDs",
-      link: 12,
-      image: "/managers/NB.jpg",
-    },
-    "favoritePlayer": 4034,
-    "valuePosition": "QB",
-    "rookieOrVets": "Vets",
-    "philosophy": "Try and stay a playoff conterder, While trying to trade for younger players",
-    "tradingScale": 8,
-    "preferredContact": "Sleeper",
-    "totalEarnings": 1000,
-    "earnings": [
-    { year: 2024, amount: 1000 }
-    ]
   },
   {
     "roster": 13,
@@ -89,8 +71,6 @@ export const managers = [
     "philosophy": "Your fantasy team's philosophy",
     "tradingScale": 8,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 4,
@@ -115,8 +95,6 @@ export const managers = [
     "philosophy": "Your fantasy team's philosophy",
     "tradingScale": 1,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 8,
@@ -141,8 +119,6 @@ export const managers = [
     "philosophy": "We are here to WIN, the BEST player WILL PLAY!",
     "tradingScale": 8,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 6,
@@ -166,8 +142,6 @@ export const managers = [
     "philosophy": "If you drop a pass, you run a mile. If you miss a first down, you run a mile. If you fumble the ball, I will break my foot off in your John Brown hind parts.... Let's go to work!",
     "tradingScale": 6,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 5,
@@ -190,9 +164,7 @@ export const managers = [
     "rookieOrVets": "Rookies",
     "philosophy": "Be like water!",
     "tradingScale": 3,
-    "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
+    "preferredContact": "Sleeper"
   },
   {
     "roster": 9,
@@ -216,8 +188,6 @@ export const managers = [
     "philosophy": "Try to have homegrown players!",
     "tradingScale": 4,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 3,
@@ -241,8 +211,6 @@ export const managers = [
     "philosophy": "no philosophy",
     "tradingScale": 5,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 11,
@@ -266,8 +234,6 @@ export const managers = [
     "philosophy": "Simply winning is not the key to success, winning physically and mentally is!",
     "tradingScale": 3,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 12,
@@ -291,8 +257,6 @@ export const managers = [
     "philosophy": "Behind dynasty fantasy football is one of long-term thinking, player development, and value assessment. Building a dynasty requires patience, startegic decision-making, and a deep understanding of player trends, age curves, and league dynamics.",
     "tradingScale": 7,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 10,
@@ -316,8 +280,6 @@ export const managers = [
     "philosophy": "All gas NO brakes!!",
     "tradingScale": 7,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 15,
@@ -341,8 +303,6 @@ export const managers = [
     "philosophy": "We will be PERFECT...in every aspect of the game. You drop a pass, you cut. Miss a blocking assignment, you're traded. You fumble the football and I'm sending you to the worst team in the league.",
     "tradingScale": 8,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 14,
@@ -366,8 +326,6 @@ export const managers = [
     "philosophy": "Teach yo man how to squabble",
     "tradingScale": 7,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 7,
@@ -391,8 +349,6 @@ export const managers = [
     "philosophy": "Raaaaaiiddderrrrrrss",
     "tradingScale": 7,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
   },
   {
     "roster": 16,
@@ -416,22 +372,44 @@ export const managers = [
     "philosophy": "It's always 50/50. You either win or lose. Don't look at the odds.",
     "tradingScale": 7,
     "preferredContact": "Sleeper",
-    "totalEarnings": 0,
-    "earnings": []
+    },
+    {
+    "roster": 2,
+    "managerID": "791852794729598976",
+    "slug": "comeback-kid",
+    "name": "Joshua Romero",
+    "location": "Manor TX",
+    "bio": "Go with your gut when it comes to trades, starting or sitting players, Because it could elevate your team. Stay confident in your team no matter the situation",
+    "photo": "/managers/JR.jpg",
+    "fantasyStart": 2014,
+    "favoriteTeam": "was",
+    "mode": "Dynasty",
+    "rival": {
+      name: "CeeDees TDs",
+      link: 12,
+      image: "/managers/NB.jpg",
+    },
+    "favoritePlayer": 4034,
+    "valuePosition": "QB",
+    "rookieOrVets": "Vets",
+    "philosophy": "Try and stay a playoff conterder, While trying to trade for younger players",
+    "tradingScale": 8,
+    "preferredContact": "Sleeper",
   },
 ];
 
+
 /*   !!  !!  IMPORTANT  !!  !! */
 /*
-Below is the most up-to-date version of a manager. Please leave this commented out
+Below is the most up to-date version of a manager. Please leave this commented out
 and don't delete it. This will be updated if any fields are added, removed or changed
 and will allow updates without causing merge conflicts
 */
 
 // {
-//   "roster": 3,
-//   "managerID": "12345678",
-//   "slug": "your-team-slug",
+//   "roster": 3,  // (DEPRECATED! Don't use this anymore)
+//   "managerID": "12345678",  // the user's manager ID, go to https://api.sleeper.app/v1/league/<your_league_id>/users
+//   "slug": "your-team-slug", // must match /team/<slug> and projections JSON
 //   "name": "Your Name",
 //   "tookOver": 2020,
 //   "location": "Brooklyn",
@@ -451,9 +429,4 @@ and will allow updates without causing merge conflicts
 //   "philosophy": "Your fantasy team's philosophy",
 //   "tradingScale": 10,
 //   "preferredContact": "Text",
-//   "totalEarnings": 0,
-//   "earnings": [
-//     { "year": 2024, "amount": 100 },
-//     { "year": 2025, "amount": 25 }
-//   ],
 // },
