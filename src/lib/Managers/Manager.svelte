@@ -38,6 +38,11 @@
         ? leagueTeamManagers.users[viewManager.managerID].is_owner
         : false;
 
+    $: managerEarnings = viewManager?.earnings ?? [];
+    $: managerTotalEarnings = Number(viewManager?.totalEarnings ?? 0);
+
+    const formatMoney = (value) => `$${Number(value || 0).toLocaleString()}`;
+
     let players, playersInfo;
     let loading = true;
 
@@ -183,6 +188,70 @@
         color: #fff;
     }
 
+    .managerEarnings {
+        width: min(520px, 92%);
+        margin: 0 auto 1.5em;
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .managerEarningsHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .managerEarningsTitle {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #9ca3af;
+    }
+
+    .managerEarningsTotal {
+        font-size: 18px;
+        font-weight: 700;
+        color: #f5d56b;
+    }
+
+    .managerEarningsTableWrap {
+        overflow-x: auto;
+    }
+
+    .managerEarningsTable {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .managerEarningsTable th {
+        text-align: left;
+        font-size: 12px;
+        color: #94a3b8;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .managerEarningsTable td {
+        padding: 7px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        color: #e5e7eb;
+    }
+
+    .managerEarningsTable tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .managerEarningsEmpty {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 13px;
+    }
+
     /* media queries */
 
     @media (max-width: 505px) {
@@ -209,6 +278,20 @@
 
         .infoTeam {
             height: 30px;
+        }
+
+        .managerEarnings {
+            width: min(94%, 94%);
+            padding: 12px 14px;
+        }
+
+        .managerEarningsTotal {
+            font-size: 16px;
+        }
+
+        .managerEarningsTable th,
+        .managerEarningsTable td {
+            font-size: 13px;
         }
     }
 
@@ -245,17 +328,14 @@
                 <span class="seperator">|</span>
 
                 {#if viewManager.fantasyStart}
-                    <!-- Use manager config for "league since" for everyone -->
                     <span class="infoChild">
                         EST '{viewManager.fantasyStart.toString().substr(2)}
                     </span>
                 {:else if datesActive.end}
-                    <!-- Fallback: show date range if they left -->
                     <span class="infoChild">
                         In the league from '{datesActive.start.toString().substr(2)} to '{datesActive.end.toString().substr(2)}
                     </span>
                 {:else}
-                    <!-- Fallback: computed active start -->
                     <span class="infoChild">
                         In the league since '{datesActive.start.toString().substr(2)}
                     </span>
@@ -263,7 +343,6 @@
             {/if}
 
             {#if viewManager.preferredContact}
-                <!-- preferredContact is an optional field -->
                 <span class="seperator">|</span>
                 <span class="infoChild">
                     {viewManager.preferredContact}
@@ -272,7 +351,6 @@
             {/if}
 
             {#if viewManager.favoriteTeam}
-                <!-- favoriteTeam is an optional field -->
                 <span class="seperator">|</span>
                 <img
                     class="infoChild infoTeam"
@@ -286,6 +364,36 @@
                 <div class="infoChild commissionerBadge">
                     <span>C</span>
                 </div>
+            {/if}
+        </div>
+
+        <div class="managerEarnings">
+            <div class="managerEarningsHeader">
+                <span class="managerEarningsTitle">Earnings</span>
+                <span class="managerEarningsTotal">{formatMoney(managerTotalEarnings)}</span>
+            </div>
+
+            {#if managerEarnings.length}
+                <div class="managerEarningsTableWrap">
+                    <table class="managerEarningsTable">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#each managerEarnings as item}
+                                <tr>
+                                    <td>{item.year}</td>
+                                    <td>{formatMoney(item.amount)}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
+                </div>
+            {:else}
+                <div class="managerEarningsEmpty">No winnings recorded</div>
             {/if}
         </div>
 
@@ -338,14 +446,12 @@
         <p class="bio">{@html viewManager.bio}</p>
 
         {#if viewManager.philosophy}
-            <!-- philosophy is an optional field -->
             <h3>Team Philosophy</h3>
             <p class="philosophy">{@html viewManager.philosophy}</p>
         {/if}
     </div>
 
     {#if !loading}
-        <!-- Favorite player -->
         <ManagerFantasyInfo {viewManager} {players} {changeManager} />
     {/if}
 
@@ -359,7 +465,6 @@
     />
 
     {#if loading}
-        <!-- promise is pending -->
         <div class="loading">
             <p>Retrieving players...</p>
             <LinearProgress indeterminate />
@@ -379,7 +484,6 @@
     <h3>Team Transactions</h3>
     <div class="managerConstrained">
         {#if loading}
-            <!-- promise is pending -->
             <div class="loading">
                 <p>Retrieving players...</p>
                 <LinearProgress indeterminate />
