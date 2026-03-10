@@ -38,16 +38,16 @@
   }
 
   :global(p) {
-    margin: 0.55rem 0 0.8rem;
+    margin: 0.6rem 0 0.9rem;
   }
 
   :global(ul) {
-    padding-left: 1.25rem;
-    margin: 0.45rem 0 0.9rem;
+    padding-left: 1.15rem;
+    margin: 0.5rem 0 0.95rem;
   }
 
   :global(ul li) {
-    margin-bottom: 0.22rem;
+    margin-bottom: 0.28rem;
   }
 
   :global(hr) {
@@ -99,13 +99,15 @@
   }
 
   .toc-card {
-    margin-top: 1.05rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 1.15rem;
+    padding: 1rem 1rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
   }
 
   .toc-title {
-    margin: 0 0 0.75rem;
+    margin: 0 0 0.85rem;
     text-align: center;
     font-size: 0.95rem;
     letter-spacing: 0.08em;
@@ -116,46 +118,50 @@
   .toc-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.45rem 1.35rem;
+    gap: 0.8rem 1rem;
     align-items: start;
+  }
+
+  .toc-group {
+    padding: 0.2rem 0 0.5rem;
   }
 
   .toc-group h3,
   .toc-group h4,
   .toc-group h5 {
     margin: 0;
-    line-height: 1.18;
+    line-height: 1.2;
   }
 
   .toc-group h3 {
     font-size: 0.95rem;
-    margin-bottom: 0.18rem;
+    margin-bottom: 0.35rem;
   }
 
   .toc-group h4,
   .toc-group h5 {
     font-size: 0.85rem;
     color: #9fb3c8;
-    margin-bottom: 0.14rem;
+    margin-bottom: 0.28rem;
   }
 
   .sectionHeading {
-    margin: 2.5rem 0 0.9rem;
-    padding-bottom: 0.6rem;
+    margin: 2.6rem 0 1rem;
+    padding-bottom: 0.65rem;
     border-bottom: 1px solid rgba(212, 175, 55, 0.24);
     font-size: clamp(1.45rem, 3vw, 1.9rem);
     line-height: 1.2;
   }
 
   .subSectionHeading {
-    margin: 1.35rem 0 0.7rem;
+    margin: 1.5rem 0 0.8rem;
     font-size: 1.18rem;
     line-height: 1.22;
   }
 
   h4 {
     margin-top: 1rem;
-    margin-bottom: 0.42rem;
+    margin-bottom: 0.45rem;
     font-size: 1rem;
     line-height: 1.22;
   }
@@ -164,14 +170,16 @@
     font-size: 0.92rem;
     color: #cbd5e1;
     margin-top: 0.85rem;
-    margin-bottom: 0.28rem;
+    margin-bottom: 0.3rem;
     line-height: 1.2;
   }
 
   .subBlock {
-    margin: 0.35rem 0 0.95rem 0.9rem;
-    padding-left: 0.8rem;
-    border-left: 2px solid rgba(212, 175, 55, 0.16);
+    margin: 0.45rem 0 1rem;
+    padding: 0.85rem 0.95rem;
+    border-left: 3px solid rgba(212, 175, 55, 0.2);
+    background: rgba(255, 255, 255, 0.025);
+    border-radius: 0 12px 12px 0;
   }
 
   .subBlock p:last-child,
@@ -214,13 +222,14 @@
     border-collapse: collapse;
     font-family: Arial, sans-serif;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
+    overflow: hidden;
   }
 
   .draft-order-table {
     width: min(760px, 100%);
-    margin: 0.7rem 0 1.1rem;
+    margin: 0.75rem 0 1.15rem;
   }
 
   .draft-order-table th,
@@ -229,6 +238,7 @@
   table td {
     padding: 12px 14px;
     border: 1px solid rgba(255, 255, 255, 0.06);
+    vertical-align: top;
   }
 
   .table-header,
@@ -245,8 +255,6 @@
     font-weight: 700;
     color: #f5d56b;
   }
-
-  /* PLAYOFF BRACKET */
 
   .bracket-container {
     display: flex;
@@ -339,16 +347,16 @@
     border-top: 1px solid rgba(212, 175, 55, 0.45);
   }
 
-  /* 7.2 LEDGER */
-
   .ledger-wrap {
     width: 100%;
-    margin: 0.9rem 0 1.3rem;
+    margin: 1rem 0 1.3rem;
     overflow-x: auto;
+    border-radius: 14px;
   }
 
   .ledger-table {
     width: 100%;
+    min-width: 620px;
     border-collapse: collapse;
     table-layout: fixed;
     background: #f3f3f3;
@@ -359,9 +367,9 @@
   .ledger-table th,
   .ledger-table td {
     border: 1px solid #222;
-    padding: 0.28rem 0.3rem;
+    padding: 0.45rem 0.4rem;
     font-size: 0.94rem;
-    line-height: 1.15;
+    line-height: 1.2;
     color: #111;
   }
 
@@ -371,7 +379,7 @@
     font-size: 1.05rem;
     font-weight: 700;
     text-align: center;
-    padding: 0.55rem 0.4rem;
+    padding: 0.6rem 0.45rem;
   }
 
   .ledger-section-row th {
@@ -379,7 +387,7 @@
     color: #fff;
     font-weight: 700;
     text-align: left;
-    padding: 0.22rem 0.3rem;
+    padding: 0.35rem 0.4rem;
   }
 
   .ledger-section-row th:nth-child(2),
@@ -414,13 +422,11 @@
     white-space: nowrap;
   }
 
-  /* 1.2.1 DIVISIONAL STRUCTURE */
-
   .division-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.8rem 1rem;
-    margin: 0.55rem 0 1rem;
+    gap: 0.9rem 1rem;
+    margin: 0.6rem 0 1rem;
     align-items: stretch;
   }
 
@@ -429,184 +435,233 @@
     flex-direction: column;
     justify-content: flex-start;
     min-height: 132px;
-    padding: 0.7rem 0.8rem 0.75rem;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 12px;
+    padding: 0.9rem;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
   }
 
   .division-card h4 {
-    margin: 0 0 0.4rem;
-    font-size: 0.92rem;
+    margin: 0 0 0.45rem;
+    font-size: 0.95rem;
     line-height: 1.15;
   }
 
   .division-card .subBlock {
     margin: 0;
-    padding-left: 0.65rem;
+    padding: 0.65rem 0.75rem;
     border-left: 2px solid rgba(212, 175, 55, 0.16);
+    background: transparent;
+    border-radius: 0;
   }
 
   .division-card .subBlock p {
-    margin: 0.18rem 0;
-    line-height: 1.28;
-    font-size: 0.82rem;
+    margin: 0.22rem 0;
+    line-height: 1.3;
+    font-size: 0.84rem;
   }
 
-  /* MOBILE */
-
   @media (max-width: 700px) {
-    .toc-grid {
-      grid-template-columns: 1fr;
-      gap: 0.2rem;
+    .constitution-shell {
+      width: min(100% - 1rem, 100%);
+      margin: 1.4rem auto 4rem;
+    }
+
+    .constitution-hero {
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+    }
+
+    .eyebrow {
+      display: block;
+      text-align: center;
+      margin-bottom: 0.55rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+    }
+
+    .hero-title {
+      font-size: 1.45rem;
+      line-height: 1.15;
+    }
+
+    .hero-subtitle {
+      margin-top: 0.7rem;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      padding: 0 0.2rem;
+    }
+
+    .toc-card {
+      padding: 0.9rem 0.8rem;
+      border-radius: 14px;
     }
 
     .toc-title {
-      margin-bottom: 0.7rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.82rem;
     }
 
-    .toc-group h3,
-    .toc-group h4,
-    .toc-group h5 {
-      margin: 0;
-      line-height: 1.15;
+    .toc-grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .toc-group {
+      padding: 0.7rem 0.75rem;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
     }
 
     .toc-group h3 {
       font-size: 0.92rem;
-      margin-bottom: 0.14rem;
+      margin-bottom: 0.35rem;
     }
 
     .toc-group h4,
     .toc-group h5 {
-      font-size: 0.84rem;
-      margin-bottom: 0.1rem;
-    }
-
-    .constitution-shell {
-      width: min(96%, 96%);
-      margin-top: 2rem;
-    }
-
-    .hero-title {
-      font-size: 1.7rem;
-    }
-
-    .hero-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.24rem;
+      line-height: 1.25;
     }
 
     .sectionHeading {
-      font-size: 1.25rem;
-      margin-top: 1.9rem;
-      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      margin-top: 1.75rem;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.5rem;
     }
 
     .subSectionHeading {
       font-size: 1rem;
-      margin-top: 1.1rem;
+      margin-top: 1.15rem;
       margin-bottom: 0.6rem;
+      line-height: 1.28;
     }
 
     h4 {
-      font-size: 0.95rem;
-      margin-top: 0.85rem;
-      margin-bottom: 0.35rem;
+      font-size: 0.92rem;
+      margin-top: 0.95rem;
+      margin-bottom: 0.38rem;
+      line-height: 1.28;
     }
 
     h5 {
-      font-size: 0.85rem;
-      margin-top: 0.7rem;
-      margin-bottom: 0.22rem;
+      font-size: 0.82rem;
+      margin-top: 0.75rem;
+      margin-bottom: 0.26rem;
+      line-height: 1.28;
+    }
+
+    :global(p),
+    :global(li) {
+      font-size: 0.9rem;
+      line-height: 1.55;
     }
 
     :global(p) {
-      margin: 0.42rem 0 0.68rem;
+      margin: 0.5rem 0 0.8rem;
+    }
+
+    :global(ul) {
+      margin: 0.45rem 0 0.85rem;
+      padding-left: 1rem;
     }
 
     .subBlock {
-      margin: 0.25rem 0 0.8rem 0.5rem;
-      padding-left: 0.65rem;
+      margin: 0.45rem 0 0.9rem;
+      padding: 0.75rem 0.8rem;
+      border-left-width: 3px;
+      border-radius: 0 10px 10px 0;
     }
 
     .draft-order-table,
+    .positionMaximums,
     table {
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
+      min-width: 560px;
+    }
+
+    .draft-order-table th,
+    .draft-order-table td,
+    table th,
+    table td {
+      padding: 9px 10px;
+      font-size: 0.78rem;
+      line-height: 1.2;
     }
 
     .compact-mobile-table th,
     .compact-mobile-table td {
-      padding: 3px 5px;
-      font-size: 0.68rem;
-      line-height: 1.05;
+      padding: 8px 9px;
+      font-size: 0.76rem;
+      line-height: 1.15;
     }
 
     .bracket-container {
       justify-content: flex-start;
-      padding: 1rem 0.75rem;
+      padding: 0.9rem 0.75rem;
       gap: 16px;
+      border-radius: 14px;
     }
 
     .round {
-      min-width: 118px;
+      min-width: 112px;
     }
 
     .matchup {
-      width: 108px;
-      min-height: 54px;
+      width: 104px;
+      min-height: 52px;
       padding: 8px;
     }
 
     .round:nth-child(2) {
-      gap: 54px;
+      gap: 52px;
+    }
+
+    .team,
+    .tbd,
+    .championship {
+      font-size: 0.7rem;
     }
 
     .ledger-table th,
     .ledger-table td {
-      padding: 0.2rem 0.22rem;
-      font-size: 0.62rem;
-      line-height: 1.05;
+      padding: 0.38rem 0.34rem;
+      font-size: 0.76rem;
+      line-height: 1.15;
     }
 
     .ledger-title-row th {
-      font-size: 0.8rem;
-      padding: 0.35rem 0.2rem;
-    }
-
-    .ledger-currency {
-      width: 10%;
-    }
-
-    .ledger-value {
-      width: 28%;
+      font-size: 0.9rem;
+      padding: 0.45rem 0.3rem;
     }
 
     .division-grid {
       grid-template-columns: 1fr;
-      gap: 0.6rem;
+      gap: 0.7rem;
       margin: 0.45rem 0 0.9rem;
     }
 
     .division-card {
       min-height: auto;
-      padding: 0.6rem 0.7rem 0.65rem;
+      padding: 0.8rem;
+      border-radius: 12px;
     }
 
     .division-card h4 {
-      font-size: 0.88rem;
-      margin-bottom: 0.3rem;
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
     }
 
     .division-card .subBlock {
-      padding-left: 0.55rem;
+      padding: 0.55rem 0.65rem;
     }
 
     .division-card .subBlock p {
-      font-size: 0.76rem;
-      line-height: 1.18;
-      margin: 0.12rem 0;
+      font-size: 0.8rem;
+      line-height: 1.25;
+      margin: 0.16rem 0;
     }
   }
 </style>
@@ -1084,7 +1139,7 @@
       below:
     </p>
 
-    <div class="subBlock">
+    <div class="ledger-wrap">
       <table class="draft-order-table compact-mobile-table">
         <thead>
           <tr class="table-header">
