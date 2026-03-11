@@ -252,7 +252,7 @@
         font-size: 16px;
         font-weight: 700;
         color: #f5d56b;
-        margin: 2px 0 6px;
+        margin: 2px 0 2px;
     }
 
     .earningsBar {
