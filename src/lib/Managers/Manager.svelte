@@ -216,8 +216,8 @@
     }
 
     .moneyIcon {
-        width: 18px;
-        height: 18px;
+        width: 54px;
+        height: 54px;
         object-fit: contain;
     }
 
