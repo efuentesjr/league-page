@@ -248,10 +248,32 @@ h3 {
 }
 
 .earningsBarFill {
+    position: relative;
     height: 100%;
     background: linear-gradient(90deg,#f5d56b,#ffd700);
     box-shadow: 0 0 10px rgba(245,213,107,.45);
     transition: width .4s ease;
+}
+
+.championBar::after {
+    content:"";
+    position:absolute;
+    top:0;
+    left:-40%;
+    width:40%;
+    height:100%;
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.6),
+        transparent
+    );
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { left:-40%; }
+    100% { left:120%; }
 }
 
 .managerEarningsTable {
@@ -338,7 +360,11 @@ src="https://sleepercdn.com/images/team_logos/nfl/{viewManager.favoriteTeam}.png
 <div class="careerEarningsValue">{formatMoney(managerTotalEarnings)}</div>
 
 <div class="earningsBar">
-<div class="earningsBarFill" style="width:{earningsPercent}%"></div>
+<div
+class="earningsBarFill"
+class:championBar={isChampion}
+style="width:{earningsPercent}%"
+></div>
 </div>
 
 {#if managerEarnings.length}
