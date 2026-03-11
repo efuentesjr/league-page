@@ -81,6 +81,7 @@
 </script>
 
 <style>
+
 .managerContainer {
     width: 100%;
     margin: 2em 0 5em;
@@ -210,6 +211,27 @@ h3 {
     color: #f5d56b;
 }
 
+.careerEarningsTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.careerEarningsLabelWrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.moneyIcon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter:
+        drop-shadow(0 0 4px rgba(245,213,107,0.45))
+        drop-shadow(0 0 8px rgba(245,213,107,0.25));
+}
+
 .careerEarningsLabel {
     font-size: 11px;
     letter-spacing: .08em;
@@ -268,8 +290,6 @@ h3 {
 .earningsSecond td:last-child { color:#c0c0c0; }
 .earningsThird td:last-child { color:#cd7f32; }
 
-/* Mobile */
-
 @media (max-width:450px){
     .managerEarnings{
         width:min(94%,94%);
@@ -281,6 +301,7 @@ h3 {
     .managerEarningsTable th,
     .managerEarningsTable td{ font-size:12px; }
 }
+
 </style>
 
 <div class="managerContainer">
@@ -328,7 +349,13 @@ src="https://sleepercdn.com/images/team_logos/nfl/{viewManager.favoriteTeam}.png
 
 <div class="managerEarnings">
 
+<div class="careerEarningsTop">
+<div class="careerEarningsLabelWrap">
+<img src="/Money.png" alt="Money" class="moneyIcon" />
 <div class="careerEarningsLabel">Career Earnings</div>
+</div>
+</div>
+
 <div class="careerEarningsValue">{formatMoney(managerTotalEarnings)}</div>
 
 <div class="earningsBar">
