@@ -165,6 +165,10 @@ export const managers = [
     "philosophy": "If you drop a pass, you run a mile. If you miss a first down, you run a mile. If you fumble the ball, I will break my foot off in your John Brown hind parts.... Let's go to work!",
     "tradingScale": 6,
     "preferredContact": "Sleeper",
+    "totalEarnings": 1000,
+    "earnings": [
+      { "year": 2022, "amount": 1000, "title": "Champion" }
+    ]
   },
   {
     "roster": 5,
@@ -188,6 +192,10 @@ export const managers = [
     "philosophy": "Be like water!",
     "tradingScale": 3,
     "preferredContact": "Sleeper"
+    "totalEarnings": 1000,
+    "earnings": [
+      { "year": 2025, "amount": 1000, "title": "Champion" }
+    ]
   },
   {
     "roster": 9,
@@ -303,6 +311,10 @@ export const managers = [
     "philosophy": "We will be PERFECT...in every aspect of the game. You drop a pass, you cut. Miss a blocking assignment, you're traded. You fumble the football and I'm sending you to the worst team in the league.",
     "tradingScale": 8,
     "preferredContact": "Sleeper",
+    "totalEarnings": 1000,
+    "earnings": [
+      { "year": 2024, "amount": 1000, "title": "Champion" }
+    ]
   },
   {
     "roster": 14,
@@ -397,7 +409,7 @@ export const managers = [
     "preferredContact": "Sleeper",
     "totalEarnings": 1000,
     "earnings": [
-      { "year": 2022, "amount": 1000 }
+      { "year": 2023, "amount": 1000, "title": "Champion" }
     ]
   },
 ];
