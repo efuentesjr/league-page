@@ -198,8 +198,8 @@ export const managers = [
     "preferredContact": "Sleeper",
     "totalEarnings": 1075,
     "earnings": [
-      { "year": 2024, "amount": 75, "title": "Runner-up" },
       { "year": 2025, "amount": 1000, "title": "Champion" },
+      { "year": 2024, "amount": 75, "title": "Runner-up" },
     ]
   },
   {
@@ -318,8 +318,8 @@ export const managers = [
     "preferredContact": "Sleeper",
     "totalEarnings": 1075,
     "earnings": [
-      { "year": 2023, "amount": 75, "title": "Runner-up" },
       { "year": 2024, "amount": 1000, "title": "Champion" },
+      { "year": 2023, "amount": 75, "title": "Runner-up" },
     ]
   },
   {
