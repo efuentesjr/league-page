@@ -345,7 +345,7 @@
         }
 
         .careerEarningsValue {
-            font-size: 15px;
+            font-size: 20px;
         }
 
         .managerEarningsTable th,
