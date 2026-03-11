@@ -328,11 +328,6 @@ src="https://sleepercdn.com/images/team_logos/nfl/{viewManager.favoriteTeam}.png
 
 <div class="managerEarnings">
 
-<div class="managerEarningsHeader">
-<span class="managerEarningsTitle">Earnings</span>
-<span class="managerEarningsTotal">{formatMoney(managerTotalEarnings)}</span>
-</div>
-
 <div class="careerEarningsLabel">Career Earnings</div>
 <div class="careerEarningsValue">{formatMoney(managerTotalEarnings)}</div>
 
