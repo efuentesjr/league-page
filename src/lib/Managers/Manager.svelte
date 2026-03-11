@@ -179,10 +179,10 @@ h3 {
 /* Earnings card */
 
 .managerEarnings {
-    width: min(520px, 92%);
+    width: min(520px, 90%);
     margin: 0 auto 1.1em;
-    padding: 8px 10px 8px;
-    border-radius: 14px;
+    padding: 6px 8px 6px;
+    border-radius: 10px;
     background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.018));
     border: 1px solid rgba(255,255,255,0.12);
     box-shadow:
