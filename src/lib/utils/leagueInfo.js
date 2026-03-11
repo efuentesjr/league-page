@@ -71,6 +71,10 @@ export const managers = [
     "philosophy": "Your fantasy team's philosophy",
     "tradingScale": 8,
     "preferredContact": "Sleeper",
+    "totalEarnings": 150,
+    "earnings": [
+      { "year": 2022, "amount": 150, "title": "Runner-up" },
+      ]
   },
     {
     "roster": 3,
@@ -184,7 +188,7 @@ export const managers = [
     "rival": {
       "name": "Cee Dee's TD's",
       "link": 0,
-      "image": "/managers/EF.jpg"
+      "image": "/managers/EF.jpg",
     },
     "favoritePlayer": 7564,
     "valuePosition": "WR",
@@ -192,8 +196,9 @@ export const managers = [
     "philosophy": "Be like water!",
     "tradingScale": 3,
     "preferredContact": "Sleeper",
-    "totalEarnings": 1000,
+    "totalEarnings": 1075,
     "earnings": [
+      { "year": 2024, "amount": 75, "title": "Runner-up" }
       { "year": 2025, "amount": 1000, "title": "Champion" }
     ]
   },
@@ -311,8 +316,9 @@ export const managers = [
     "philosophy": "We will be PERFECT...in every aspect of the game. You drop a pass, you cut. Miss a blocking assignment, you're traded. You fumble the football and I'm sending you to the worst team in the league.",
     "tradingScale": 8,
     "preferredContact": "Sleeper",
-    "totalEarnings": 1000,
+    "totalEarnings": 1075,
     "earnings": [
+      { "year": 2023, "amount": 75, "title": "Runner-up" }
       { "year": 2024, "amount": 1000, "title": "Champion" }
     ]
   },
@@ -408,7 +414,7 @@ export const managers = [
     "tradingScale": 8,
     "preferredContact": "Sleeper",
     "totalEarnings": 1000,
-    "totalEarnings": 1250,
+    "totalEarnings": 1000,
     "earnings": [
       { "year": 2023, "amount": 1000, "title": "Champion" },
       ]
