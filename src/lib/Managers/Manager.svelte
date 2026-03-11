@@ -181,7 +181,7 @@ h3 {
 .managerEarnings {
     width: min(520px, 92%);
     margin: 0 auto 1.1em;
-    padding: 10px 14px 12px;
+    padding: 8px 14px 12px;
     border-radius: 14px;
     background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.018));
     border: 1px solid rgba(255,255,255,0.12);
