@@ -41,6 +41,9 @@
     $: managerEarnings = viewManager?.earnings ?? [];
     $: managerTotalEarnings = Number(viewManager?.totalEarnings ?? 0);
 
+    /* Detect Champion */
+    $: isChampion = managerEarnings.some(e => e.title === 'Champion');
+
     const formatMoney = (value) => `$${Number(value || 0).toLocaleString()}`;
 
     const maxPossibleEarnings = 5000;
@@ -182,7 +185,7 @@ h3 {
 .managerEarnings {
     width: min(520px, 90%);
     margin: 0 auto 1.1em;
-    padding: 6px 8px 6px;
+    padding: 10px 12px;
     border-radius: 10px;
     background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.018));
     border: 1px solid rgba(255,255,255,0.12);
@@ -192,44 +195,10 @@ h3 {
         0 12px 30px rgba(0,0,0,0.45);
 }
 
-.managerEarningsHeader {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-
-.managerEarningsTitle {
-    font-size: 11px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: #9ca3af;
-}
-
-.managerEarningsTotal {
-    font-size: 15px;
-    font-weight: 700;
-    color: #f5d56b;
-}
-
 .careerEarningsTop {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-}
-
-.careerEarningsLabelWrap {
-    display: flex;
     align-items: center;
-    gap: 8px;
-}
-
-.moneyIcon {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
-    filter:
-        drop-shadow(0 0 4px rgba(245,213,107,0.45))
-        drop-shadow(0 0 8px rgba(245,213,107,0.25));
 }
 
 .careerEarningsLabel {
@@ -237,6 +206,30 @@ h3 {
     letter-spacing: .08em;
     text-transform: uppercase;
     color: #9ca3af;
+}
+
+.moneyIcon {
+    width: 18px;
+    height: 18px;
+}
+
+.champGlow {
+    animation: goldPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes goldPulse {
+    0% {
+        filter: drop-shadow(0 0 2px rgba(255,215,0,0.3));
+        transform: scale(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 10px rgba(255,215,0,0.9));
+        transform: scale(1.08);
+    }
+    100% {
+        filter: drop-shadow(0 0 2px rgba(255,215,0,0.3));
+        transform: scale(1);
+    }
 }
 
 .careerEarningsValue {
@@ -290,18 +283,6 @@ h3 {
 .earningsSecond td:last-child { color:#c0c0c0; }
 .earningsThird td:last-child { color:#cd7f32; }
 
-@media (max-width:450px){
-    .managerEarnings{
-        width:min(94%,94%);
-        padding:10px 12px 11px;
-    }
-
-    .careerEarningsValue{ font-size:15px; }
-
-    .managerEarningsTable th,
-    .managerEarningsTable td{ font-size:12px; }
-}
-
 </style>
 
 <div class="managerContainer">
@@ -350,10 +331,8 @@ src="https://sleepercdn.com/images/team_logos/nfl/{viewManager.favoriteTeam}.png
 <div class="managerEarnings">
 
 <div class="careerEarningsTop">
-<div class="careerEarningsLabelWrap">
-<img src="/Money.png" alt="Money" class="moneyIcon" />
 <div class="careerEarningsLabel">Career Earnings</div>
-</div>
+<img src="/Money.png" alt="Money" class="moneyIcon" class:champGlow={isChampion} />
 </div>
 
 <div class="careerEarningsValue">{formatMoney(managerTotalEarnings)}</div>
@@ -390,92 +369,6 @@ class:earningsThird={item.title==='3rd Place'}
 <div class="managerEarningsEmpty">No winnings recorded</div>
 {/if}
 
-</div>
-
-<div class="managerNav upper">
-<Group variant="outlined">
-
-<Button class="selectionButtons"
-onclick={() => changeManager(parseInt(manager)-1,true)}
-variant="outlined">
-<Label>Previous Manager</Label>
-</Button>
-
-<Button class="selectionButtons"
-onclick={() => goto('/managers')}
-variant="outlined">
-<Label>All Managers</Label>
-</Button>
-
-<Button class="selectionButtons"
-onclick={() => changeManager(parseInt(manager)+1,true)}
-variant="outlined">
-<Label>Next Manager</Label>
-</Button>
-
-</Group>
-</div>
-
-<p class="bio">{@html viewManager.bio}</p>
-
-{#if viewManager.philosophy}
-<h3>Team Philosophy</h3>
-<p class="philosophy">{@html viewManager.philosophy}</p>
-{/if}
-
-</div>
-
-{#if !loading}
-<ManagerFantasyInfo {viewManager} {players} {changeManager}/>
-{/if}
-
-<ManagerAwards
-{leagueTeamManagers}
-tookOver={viewManager.tookOver}
-{awards}
-{records}
-{rosterID}
-managerID={viewManager.managerID}
-/>
-
-{#if loading}
-<div class="loading">
-<p>Retrieving players...</p>
-<LinearProgress indeterminate />
-</div>
-{:else}
-<Roster
-division="1"
-expanded={false}
-{rosterPositions}
-{roster}
-{leagueTeamManagers}
-{players}
-{startersAndReserve}
-/>
-{/if}
-
-<h3>Team Transactions</h3>
-
-<div class="managerConstrained">
-{#if loading}
-<div class="loading">
-<p>Retrieving players...</p>
-<LinearProgress indeterminate />
-</div>
-{:else}
-
-<TransactionsPage
-{playersInfo}
-transactions={teamTransactions}
-{leagueTeamManagers}
-show="both"
-query=""
-page={0}
-perPage={5}
-/>
-
-{/if}
 </div>
 
 </div>
