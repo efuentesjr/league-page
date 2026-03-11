@@ -191,7 +191,7 @@ export const managers = [
     "rookieOrVets": "Rookies",
     "philosophy": "Be like water!",
     "tradingScale": 3,
-    "preferredContact": "Sleeper"
+    "preferredContact": "Sleeper",
     "totalEarnings": 1000,
     "earnings": [
       { "year": 2025, "amount": 1000, "title": "Champion" }
