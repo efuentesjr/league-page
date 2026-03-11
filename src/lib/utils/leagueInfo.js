@@ -408,10 +408,11 @@ export const managers = [
     "tradingScale": 8,
     "preferredContact": "Sleeper",
     "totalEarnings": 1000,
+    "totalEarnings": 1250,
     "earnings": [
-      { "year": 2023, "amount": 1000, "title": "Champion" }
-    ]
-  },
+      { "year": 2023, "amount": 1000, "title": "Champion" },
+      ]
+    },
 ];
 
 
