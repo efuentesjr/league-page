@@ -184,10 +184,11 @@ h3 {
     padding: 10px 14px 12px;
     border-radius: 14px;
     background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.018));
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
     box-shadow:
-        0 0 18px rgba(255,255,255,0.06),
-        0 10px 24px rgba(0,0,0,0.18);
+        0 0 35px rgba(255,255,255,0.06),
+        0 0px 28px rgba(255,255,255,0.35),
+        0 12px 30px rgba(0,0,0,0.45);
 }
 
 .managerEarningsHeader {
