@@ -43,6 +43,13 @@
 
     const formatMoney = (value) => `$${Number(value || 0).toLocaleString()}`;
 
+    const maxPossibleEarnings = 5000;
+
+    $: earningsPercent = Math.min(
+        100,
+        Math.round((managerTotalEarnings / maxPossibleEarnings) * 100)
+    );
+
     let players, playersInfo;
     let loading = true;
 
@@ -218,6 +225,38 @@
         color: #f5d56b;
     }
 
+    .careerEarningsContainer {
+        margin-bottom: 16px;
+    }
+
+    .careerEarningsLabel {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #9ca3af;
+    }
+
+    .careerEarningsValue {
+        font-size: 22px;
+        font-weight: 700;
+        color: #f5d56b;
+        margin: 4px 0 8px;
+    }
+
+    .earningsBar {
+        width: 100%;
+        height: 12px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+    }
+
+    .earningsBarFill {
+        height: 100%;
+        background: linear-gradient(90deg, #f5d56b, #ffd700);
+        transition: width 0.4s ease;
+    }
+
     .managerEarningsTableWrap {
         overflow-x: auto;
     }
@@ -244,6 +283,22 @@
 
     .managerEarningsTable tbody tr:last-child td {
         border-bottom: none;
+    }
+
+    .managerEarningsTable td:last-child {
+        font-weight: 600;
+    }
+
+    .earningsChampion td:last-child {
+        color: #f5d56b;
+    }
+
+    .earningsSecond td:last-child {
+        color: #c0c0c0;
+    }
+
+    .earningsThird td:last-child {
+        color: #cd7f32;
     }
 
     .managerEarningsEmpty {
@@ -287,6 +342,10 @@
 
         .managerEarningsTotal {
             font-size: 16px;
+        }
+
+        .careerEarningsValue {
+            font-size: 18px;
         }
 
         .managerEarningsTable th,
@@ -373,6 +432,18 @@
                 <span class="managerEarningsTotal">{formatMoney(managerTotalEarnings)}</span>
             </div>
 
+            <div class="careerEarningsContainer">
+                <div class="careerEarningsLabel">Career Earnings</div>
+                <div class="careerEarningsValue">{formatMoney(managerTotalEarnings)}</div>
+
+                <div class="earningsBar">
+                    <div
+                        class="earningsBarFill"
+                        style="width: {earningsPercent}%"
+                    ></div>
+                </div>
+            </div>
+
             {#if managerEarnings.length}
                 <div class="managerEarningsTableWrap">
                     <table class="managerEarningsTable">
@@ -380,13 +451,19 @@
                             <tr>
                                 <th>Year</th>
                                 <th>Amount</th>
+                                <th>Result</th>
                             </tr>
                         </thead>
                         <tbody>
                             {#each managerEarnings as item}
-                                <tr>
+                                <tr
+                                    class:earningsChampion={item.title === 'Champion'}
+                                    class:earningsSecond={item.title === '2nd Place'}
+                                    class:earningsThird={item.title === '3rd Place'}
+                                >
                                     <td>{item.year}</td>
                                     <td>{formatMoney(item.amount)}</td>
+                                    <td>{item.title}</td>
                                 </tr>
                             {/each}
                         </tbody>
