@@ -480,8 +480,6 @@
             </Group>
         </div>
 
-        <p class="bio">{@html viewManager.bio}</p>
-
         {#if viewManager.philosophy}
             <h3>Team Philosophy</h3>
             <p class="philosophy">{@html viewManager.philosophy}</p>
