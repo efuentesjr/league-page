@@ -145,8 +145,11 @@
 
     .bio,
     .philosophy {
-        margin: 2em 1.5em;
-        text-indent: 4em;
+        margin: 1em 1.2em;
+        text-indent: 1.5em;
+        font-size: 0.95em;
+        line-height: 1.4;
+        text-align: center;
     }
 
     .loading {
