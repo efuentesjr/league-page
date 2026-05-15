@@ -2,6 +2,12 @@
   // Replace with your real Cloudflare R2 public URLs
   const VIDEOS = [
     {
+      key: '2026',
+      title: '2026 MFFL Schedule Release',
+      src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2025.mp4',
+      poster: ''
+    },    
+    {
       key: '2024',
       title: '2024 Cee Dees TDs - The Dynasty Begins',
       src:  'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2024-Cee-Dees-TDs-web.mp4',
