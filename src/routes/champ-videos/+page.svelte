@@ -5,7 +5,7 @@
       key: '2026',
       title: '2026 MFFL Schedule Release',
       src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2025.mp4',
-      poster: ''
+      poster: '/videos/11.png'
     },    
     {
       key: '2024',
