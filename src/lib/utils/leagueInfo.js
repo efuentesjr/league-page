@@ -316,8 +316,9 @@ export const managers = [
     "philosophy": "We will be PERFECT...in every aspect of the game. You drop a pass, you cut. Miss a blocking assignment, you're traded. You fumble the football and I'm sending you to the worst team in the league.",
     "tradingScale": 8,
     "preferredContact": "Sleeper",
-    "totalEarnings": 1075,
+    "totalEarnings": 1150,
     "earnings": [
+      { "year": 2025, "amount": 75, "title": "Runner-up" },
       { "year": 2024, "amount": 1000, "title": "Champion" },
       { "year": 2023, "amount": 75, "title": "Runner-up" },
     ]
