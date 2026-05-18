@@ -123,7 +123,7 @@
   {#each draftRow as draftCol, col}
     {#if !previous || draftCol}
       <Cell class="draftCell{draftCol ? ' changedHands' : ''}{previous ? ` prev${players[draftCol.player].pos}` : ''}">
-        <!-- First-round mock draft overlay (Upcoming only) -->
+        <!-- First-round mock draft overlay (Upcoming only) 
         {#if !previous && row === 1}
           <img
             class="mockDraftImg"
@@ -132,6 +132,7 @@
             on:error={(e) => (e.currentTarget.style.display = 'none')}
           />
         {/if}
+        -->
 
         <span class="draftPos{previous ? 'Prev' : ''}">
           {#if draftType == "auction" && previous}
