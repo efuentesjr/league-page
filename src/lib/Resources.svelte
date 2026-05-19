@@ -11,7 +11,15 @@ import { dynasty } from './utils/helper';
             premium: false,
             separator: true,
             dynastyOnly: false,
-        },        
+        },
+        {
+            name: "Dynasty Daddy",
+            url: "https://dynasty-daddy.com/",
+            icon: "sports_football",
+            premium: false,
+            separator: true,
+            dynastyOnly: true,
+            },
         {
             name: "FTN Fantasy",
             url: "https://www.ftnfantasy.com/nfl",
