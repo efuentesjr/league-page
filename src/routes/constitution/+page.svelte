@@ -1427,7 +1427,8 @@
               <th></th>
             </tr>
             <tr>
-              <td>Rings:GC2017,TF2019,JR2020,MA2021</td>
+              <td>Rings</td>
+              <td class="ledger-value">GC2017, TF2019, JR2020, MA2021</td>
               <td></td>
               <td class="ledger-value">$ 147.46</td>
             </tr>
