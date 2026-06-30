@@ -1417,17 +1417,10 @@
               <td class="ledger-value">$ 395.00</td>
             </tr>
             <tr>
-              <td>Rings</td>
-              <td class="ledger-value">$ 55.00</td>
-              <td class="ledger-value">$ 340.00</td>
+              <td>Current Champion Ring</td>
+              <td class="ledger-value">$ 42.74</td>
+              <td class="ledger-value">$ 352.26</td>
             </tr>
-
-            <tr class="ledger-highlight-row">
-              <td>Rolling to 2027</td>
-              <td></td>
-              <td class="ledger-value">$ 340.00</td>
-            </tr>
-
             <tr class="ledger-section-row">
               <th>Outstanding Items</th>
               <th></th>
@@ -1436,7 +1429,7 @@
             <tr>
               <td>Ring</td>
               <td></td>
-              <td class="ledger-value">$ 155.00</td>
+              <td class="ledger-value">$ 147.46</td>
             </tr>
             <tr>
               <td>Trophy Base</td>
@@ -1447,6 +1440,11 @@
               <td>Total Outstanding</td>
               <td></td>
               <td class="ledger-value">$ 305.00</td>
+            </tr>
+            <tr class="ledger-highlight-row">
+              <td>Rolling to 2027</td>
+              <td></td>
+              <td class="ledger-value">$ 47.26</td>
             </tr>
           </tbody>
         </table>
