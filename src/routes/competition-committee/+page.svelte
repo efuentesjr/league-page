@@ -45,12 +45,13 @@
   }
   const proposals: Proposal[] = [
     { id: '1', title: 'League announcements.', owner: 'Commish', status: 'YEARLY' },
-    { id: '3', title: 'Review league scoring per owner(s) and yearly trends. Also, review players scoring, QB, RB, WR, TE', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
-    { id: '9', title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'YEARLY' },
-    { id: '12', title: 'Raise dues ($100). OPTION#1: Review.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
-    { id: '15', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'HOLD' },
-    { id: '16', title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
-    { id: '17', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
+    { id: '2', title: 'Review league scoring per owner(s) and yearly trends. Also, review players scoring, QB, RB, WR, TE... Specifically review QB interceptions and sacks', owner: 'Commish', notes: 'Section 4.1', status: 'YEARLY' },
+    { id: '3', title: 'Review bookkeeping (dues, winnings, etc.)', owner: 'Commish', notes: 'Section 7.2, 7.3', status: 'YEARLY' },
+    { id: '4', title: 'Raise dues ($100). OPTION#1: We agreed to review it again and decide whether we should leave it as is or decrease it.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
+    { id: '5', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'HOLD' },
+    { id: '6', title: 'League expansion analysis report', owner: 'Commish, John David', status: 'NEW' },
+    { id: '7', title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
+    { id: '8', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
   ];
 
   const previous: Outcome[] = [
