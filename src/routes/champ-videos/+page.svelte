@@ -3,7 +3,7 @@
   const VIDEOS = [
     {
       key: '2025',
-      title: '2025 People's Champ - The Mark of A Fighter',
+      title: '2025 Peoples Champ - The Mark of A Fighter',
       src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/PC2026.mp4',
       poster: '/videos/2026PC'
     },
