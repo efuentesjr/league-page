@@ -284,6 +284,26 @@
 
 					<div class="vs">
 						VS
+
+						{#if games[currentGame].h2h}
+							<div class="h2h-test">
+								H2H TEST<br />
+
+								{games[currentGame].h2h.winsAway}
+								-
+								{games[currentGame].h2h.winsHome}
+
+								<br />
+
+								{games[currentGame].h2h.pointsAway.toFixed(2)}
+								-
+								{games[currentGame].h2h.pointsHome.toFixed(2)}
+							</div>
+						{:else}
+							<div class="h2h-test">
+								H2H DATA NOT FOUND
+							</div>
+						{/if}
 					</div>
 
 					<div class="team">
@@ -581,6 +601,20 @@
 		letter-spacing: 4px;
 
 		color: #777;
+	}
+
+	.h2h-test {
+		margin-top: 12px;
+
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 1px;
+
+		line-height: 1.6;
+
+		color: #00aaff;
+
+		white-space: nowrap;
 	}
 
 	.game-number {
