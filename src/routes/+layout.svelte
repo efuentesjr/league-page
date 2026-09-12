@@ -1,7 +1,6 @@
 <!-- __layout.svelte -->
 <script>
   import { Nav, Footer } from "$lib/components";
-  import ScoreTicker from "$lib/ScoreTicker.svelte";
   import { dev } from '$app/environment';
   import { injectAnalytics } from '@vercel/analytics/sveltekit';
   import { onMount } from 'svelte';
@@ -21,7 +20,6 @@
 
 <main>
   <Nav />
-  <ScoreTicker />
   <slot />
   <Footer />
 </main>
