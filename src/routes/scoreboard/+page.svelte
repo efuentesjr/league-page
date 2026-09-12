@@ -384,10 +384,6 @@
 
 				</div>
 
-				<div class="game-number">
-					{currentGame + 1} / {games.length}
-				</div>
-
 			</div>
 
 		</div>
