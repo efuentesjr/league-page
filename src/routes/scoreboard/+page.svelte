@@ -605,10 +605,10 @@
 	}
 
 	.logo {
-		width: clamp(130px, 15vw, 220px);
-		height: clamp(130px, 15vw, 220px);
+		width: clamp(110px, 12vw, 180px);
+		height: clamp(110px, 12vw, 180px);
 
-		margin-bottom: 28px;
+		margin-bottom: 18px;
 
 		border-radius: 50%;
 
