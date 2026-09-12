@@ -73,7 +73,7 @@ onMount(async () => {
 			error = '';
 
 			const [matchupsData, teamManagersData] = await Promise.all([
-				getLeagueMatchups(),
+				getLeagueMatchups(true),
 				getLeagueTeamManagers()
 			]);
 
