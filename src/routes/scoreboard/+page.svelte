@@ -532,12 +532,33 @@
 	}
 
 .matchup-card {
-	width: 92%;
-	max-width: 1400px;
+	position: relative;
+
+	width: 100%;
+	max-width: 1500px;
 
 	padding: 12px 25px 14px;
 
 	text-align: center;
+
+	background: transparent;
+
+	border: none;
+
+	box-shadow: none;
+
+	animation: enter 0.9s ease both;
+}
+
+.matchup-card::before {
+	content: '';
+
+	position: absolute;
+
+	top: 45px;
+	left: 0;
+	right: 0;
+	bottom: 25px;
 
 	background:
 		linear-gradient(
@@ -553,7 +574,14 @@
 		0 12px 35px rgba(0, 0, 0, 0.55),
 		inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
-	animation: enter 0.9s ease both;
+	z-index: 0;
+
+	pointer-events: none;
+}
+
+.matchup-card > * {
+	position: relative;
+	z-index: 1;
 }
 
 	.matchup-card.transitioning {
