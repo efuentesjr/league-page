@@ -3,7 +3,8 @@
 	import {
 		getLeagueMatchups,
 		getLeagueTeamManagers,
-		getTeamFromTeamManagers
+		getTeamFromTeamManagers,
+		getRivalryMatchups
 	} from '$lib/utils/helper';
 
 	const title = 'MFFL LIVE SCOREBOARD';
@@ -19,7 +20,7 @@
 	let currentGame = 0;
 	let transitioning = false;
 
-	const buildGames = (matchupsData, teamManagersData) => {
+	const buildGames = async (matchupsData, teamManagersData) => {
 		const weekData = matchupsData?.matchupWeeks?.find(
 			(item) => Number(item.week) === weekNumber
 		);
@@ -30,51 +31,98 @@
 
 		const matchupList = Object.entries(weekData.matchups || {});
 
-		return matchupList.map(([matchupId, teams], index) => {
-			const away = teams[0];
-			const home = teams[1];
+		const games = await Promise.all(
+			matchupList.map(async ([matchupId, teams], index) => {
+				const away = teams[0];
+				const home = teams[1];
 
-			const awayTeam = getTeamFromTeamManagers(
-				teamManagersData,
-				away.roster_id,
-				matchupsData.year
-			);
+				const awayTeam = getTeamFromTeamManagers(
+					teamManagersData,
+					away.roster_id,
+					matchupsData.year
+				);
 
-			const homeTeam = getTeamFromTeamManagers(
-				teamManagersData,
-				home.roster_id,
-				matchupsData.year
-			);
+				const homeTeam = getTeamFromTeamManagers(
+					teamManagersData,
+					home.roster_id,
+					matchupsData.year
+				);
 
-			return {
-				matchupId,
-				gameNumber: index + 1,
+				// Get the manager IDs for each current roster
+				const yearManagers =
+					teamManagersData.teamManagersMap[matchupsData.year];
 
-				away: {
-					name: awayTeam?.name || 'Unknown Team',
-					logo: awayTeam?.avatar || '',
-					score: Array.isArray(away.points)
-						? away.points.reduce(
-								(total, points) => total + Number(points || 0),
-								0
-							)
-						: Number(away.points || 0)
-				},
+				const awayManagers =
+					yearManagers?.[away.roster_id]?.managers || [];
 
-				home: {
-					name: homeTeam?.name || 'Unknown Team',
-					logo: homeTeam?.avatar || '',
-					score: Array.isArray(home.points)
-						? home.points.reduce(
-								(total, points) => total + Number(points || 0),
-								0
-							)
-						: Number(home.points || 0)
-				},
+				const homeManagers =
+					yearManagers?.[home.roster_id]?.managers || [];
 
-				status: 'LIVE'
-			};
-		});
+				const awayManagerID = awayManagers[0];
+				const homeManagerID = homeManagers[0];
+
+				// Pull the existing Rivalry H2H calculation
+				let h2h = null;
+
+				if (awayManagerID && homeManagerID) {
+					try {
+						const rivalry = await getRivalryMatchups(
+							awayManagerID,
+							homeManagerID
+						);
+
+						if (rivalry) {
+							h2h = {
+								winsAway: rivalry.wins.one,
+								winsHome: rivalry.wins.two,
+								pointsAway: Number(rivalry.points.one || 0),
+								pointsHome: Number(rivalry.points.two || 0)
+							};
+						}
+					} catch (err) {
+						console.error(
+							`[scoreboard] H2H failed for ${awayTeam?.name} vs ${homeTeam?.name}:`,
+							err
+						);
+					}
+				}
+
+				return {
+					matchupId,
+					gameNumber: index + 1,
+
+					away: {
+						name: awayTeam?.name || 'Unknown Team',
+						logo: awayTeam?.avatar || '',
+						score: Array.isArray(away.points)
+							? away.points.reduce(
+									(total, points) =>
+										total + Number(points || 0),
+									0
+								)
+							: Number(away.points || 0)
+					},
+
+					home: {
+						name: homeTeam?.name || 'Unknown Team',
+						logo: homeTeam?.avatar || '',
+						score: Array.isArray(home.points)
+							? home.points.reduce(
+									(total, points) =>
+										total + Number(points || 0),
+									0
+								)
+							: Number(home.points || 0)
+					},
+
+					h2h,
+
+					status: 'LIVE'
+				};
+			})
+		);
+
+		return games;
 	};
 
 	const loadScores = async () => {
@@ -86,7 +134,10 @@
 				getLeagueTeamManagers()
 			]);
 
-			const newGames = buildGames(matchupsData, teamManagersData);
+			const newGames = await buildGames(
+				matchupsData,
+				teamManagersData
+			);
 
 			games = newGames;
 
