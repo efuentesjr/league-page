@@ -48,13 +48,17 @@
 				away: {
 					name: awayTeam?.name || 'Unknown Team',
 					logo: awayTeam?.avatar || '',
-					score: Number(away.points || 0)
+					score: Array.isArray(away.points)
+						? away.points.reduce((total, points) => total + Number(points || 0), 0)
+						: Number(away.points || 0)
 				},
 
 				home: {
 					name: homeTeam?.name || 'Unknown Team',
 					logo: homeTeam?.avatar || '',
-					score: Number(home.points || 0)
+					score: Array.isArray(home.points)
+						? home.points.reduce((total, points) => total + Number(points || 0), 0)
+						: Number(home.points || 0)
 				},
 
 				status: 'LIVE'
