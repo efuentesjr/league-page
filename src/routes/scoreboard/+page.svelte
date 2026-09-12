@@ -66,7 +66,8 @@
 		});
 	};
 
-	onMount(async () => {
+onMount(async () => {
+	const loadScores = async () => {
 		try {
 			loading = true;
 			error = '';
@@ -83,7 +84,16 @@
 		} finally {
 			loading = false;
 		}
-	});
+	};
+
+	await loadScores();
+
+	const refreshTimer = setInterval(loadScores, 60000);
+
+	return () => {
+		clearInterval(refreshTimer);
+	};
+});
 </script>
 
 <svelte:head>
