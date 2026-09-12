@@ -668,90 +668,90 @@
 		color: #777;
 	}
 
-	.h2h-panel {
-		width: 220px;
+.h2h-panel {
+	width: 220px;
 
-		margin-top: 16px;
-		padding: 10px 0 8px;
+	margin-top: 16px;
+	padding: 8px 0 6px;
 
-		background: rgba(0, 0, 0, 0.28);
+	background: transparent;
 
-		border-top: 1px solid #3b4249;
-		border-bottom: 1px solid #3b4249;
-	}
+	border-top: 2px solid #3b4249;
+	border-bottom: 2px solid #3b4249;
+}
 
-	.h2h-title {
-		margin-bottom: 7px;
+.h2h-title {
+	margin-bottom: 6px;
 
-		font-size: 10px;
-		font-weight: 900;
-		letter-spacing: 3px;
+	font-size: 10px;
+	font-weight: 900;
+	letter-spacing: 3px;
 
-		color: #8f98a1;
-	}
+	color: #aab2ba;
+}
 
-	.h2h-line {
-		width: 70%;
+.h2h-line {
+	width: 85%;
 
-		height: 1px;
+	height: 1px;
 
-		margin: 0 auto 8px;
+	margin: 0 auto 7px;
 
-		background: #30363d;
-	}
+	background: #30363d;
+}
 
-	.h2h-wins,
-	.h2h-points {
-		display: grid;
-		grid-template-columns: 1fr 20px 1fr;
-		align-items: center;
-	}
+.h2h-wins,
+.h2h-points {
+	display: grid;
+	grid-template-columns: 1fr 20px 1fr;
+	align-items: center;
+}
 
-	.h2h-wins {
-		margin-bottom: 7px;
-	}
+.h2h-wins {
+	margin-bottom: 6px;
+}
 
-	.h2h-side {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
+.h2h-side {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
 
-	.h2h-number {
-		font-size: 22px;
-		font-weight: 900;
+.h2h-number {
+	font-size: 24px;
+	font-weight: 900;
 
-		line-height: 1;
+	line-height: 1;
 
-		color: #fff;
-	}
+	color: #fff;
+}
 
-	.h2h-points-number {
-		font-size: 13px;
-		font-weight: 800;
+.h2h-points-number {
+	font-size: 13px;
+	font-weight: 800;
 
-		font-variant-numeric: tabular-nums;
+	font-variant-numeric: tabular-nums;
 
-		color: #c4c9ce;
-	}
+	color: #c4c9ce;
+}
 
-	.h2h-label {
-		margin-top: 3px;
+.h2h-label {
+	margin-top: 3px;
 
-		font-size: 7px;
-		font-weight: 800;
-		letter-spacing: 2px;
+	font-size: 7px;
+	font-weight: 800;
+	letter-spacing: 2px;
 
-		color: #777;
-	}
+	color: #777;
+}
 
-	.h2h-divider {
-		font-size: 14px;
-		font-weight: 700;
+.h2h-divider {
+	font-size: 13px;
+	font-weight: 700;
 
-		color: #555;
-	}
+	color: #555;
+}
 
 	.game-number {
 		margin-top: 40px;
