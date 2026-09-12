@@ -199,27 +199,6 @@
 
 <div class="scoreboard">
 
-	<header class="top-bar">
-
-		<div class="league-name">
-			MFFL
-		</div>
-
-		<div class="header-center">
-			<h1>{title}</h1>
-
-			<div class="season">
-				{season} <span>•</span> WEEK {weekNumber}
-			</div>
-		</div>
-
-		<div class="live-indicator">
-			<span class="dot"></span>
-			LIVE
-		</div>
-
-	</header>
-
 	{#if loading}
 
 		<div class="message">
@@ -247,15 +226,16 @@
 				class="matchup-card"
 			>
 
+				<div class="season-label">
+					{season}
+					<span>•</span>
+					WEEK {weekNumber}
+				</div>
+
 				<div class="game-label">
 					GAME {games[currentGame].gameNumber}
 					<span>•</span>
 					{games.length} MATCHUPS
-				</div>
-
-				<div class="status-label">
-					<span class="status-dot"></span>
-					{games[currentGame].status}
 				</div>
 
 				<div class="teams">
@@ -415,6 +395,7 @@
 	}
 
 	@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700;800;900&display=swap');
+
 	.scoreboard {
 		position: fixed;
 		inset: 0;
@@ -441,184 +422,108 @@
 		overflow: hidden;
 	}
 
-	.top-bar {
-		height: 90px;
-		min-height: 90px;
+	.matchup-stage {
+		flex: 1;
+		min-height: 0;
 
-		display: grid;
-		grid-template-columns: 200px 1fr 200px;
-		align-items: center;
-
-		padding: 0 40px;
-
-		background: rgba(0, 0, 0, 0.88);
-
-		border-bottom: 2px solid #30363d;
-	}
-
-	.league-name {
-		font-size: 38px;
-		font-weight: 900;
-		letter-spacing: 6px;
-	}
-
-	.header-center {
-		text-align: center;
-	}
-
-	h1 {
-		margin: 0;
-
-		font-size: 34px;
-		font-weight: 900;
-		letter-spacing: 5px;
-	}
-
-	.season {
-		margin-top: 7px;
-
-		font-size: 16px;
-		font-weight: 700;
-		letter-spacing: 5px;
-
-		color: #aaa;
-	}
-
-	.season span {
-		padding: 0 10px;
-		color: #777;
-	}
-
-	.live-indicator {
 		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 10px;
+		align-items: flex-start;
+		justify-content: center;
 
-		font-size: 18px;
-		font-weight: 900;
-		letter-spacing: 3px;
+		padding: 18px 50px 10px;
 	}
 
-	.dot,
-	.status-dot {
-		display: inline-block;
+	.matchup-card {
+		position: relative;
 
-		border-radius: 50%;
+		width: 100%;
+		max-width: 1500px;
 
-		background: #e21b23;
+		padding: 8px 25px 8px;
 
-		box-shadow: 0 0 12px rgba(226, 27, 35, 0.8);
+		text-align: center;
+
+		background: transparent;
+
+		border: none;
+
+		box-shadow: none;
+
+		animation: enter 0.9s ease both;
 	}
 
-	.dot {
-		width: 12px;
-		height: 12px;
+	.matchup-card::before {
+		content: '';
+
+		position: absolute;
+
+		top: 38px;
+		left: 0;
+		right: 0;
+		bottom: 10px;
+
+		background:
+			linear-gradient(
+				135deg,
+				rgba(25, 31, 39, 0.88),
+				rgba(5, 8, 12, 0.94)
+			);
+
+		border: 4px solid #3a424b;
+		border-radius: 12px;
+
+		box-shadow:
+			0 12px 35px rgba(0, 0, 0, 0.55),
+			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+		z-index: 0;
+
+		pointer-events: none;
 	}
 
-.matchup-stage {
-	flex: 1;
-	min-height: 0;
-
-	display: flex;
-	align-items: flex-start;
-	justify-content: center;
-
-	padding: 55px 60px 20px;
-}
-
-.matchup-card {
-	position: relative;
-
-	width: 100%;
-	max-width: 1500px;
-
-	padding: 12px 25px 14px;
-
-	text-align: center;
-
-	background: transparent;
-
-	border: none;
-
-	box-shadow: none;
-
-	animation: enter 0.9s ease both;
-}
-
-.matchup-card::before {
-	content: '';
-
-	position: absolute;
-
-	top: 45px;
-	left: 0;
-	right: 0;
-	bottom: 25px;
-
-	background:
-		linear-gradient(
-			135deg,
-			rgba(25, 31, 39, 0.88),
-			rgba(5, 8, 12, 0.94)
-		);
-
-	border: 4px solid #3a424b;
-	border-radius: 12px;
-
-	box-shadow:
-		0 12px 35px rgba(0, 0, 0, 0.55),
-		inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
-	z-index: 0;
-
-	pointer-events: none;
-}
-
-.matchup-card > * {
-	position: relative;
-	z-index: 1;
-}
+	.matchup-card > * {
+		position: relative;
+		z-index: 1;
+	}
 
 	.matchup-card.transitioning {
 		animation: exit 0.9s ease both;
 	}
 
-.game-label {
-	height: 30px;
+	.season-label {
+		height: 24px;
 
-	margin-bottom: 10px;
+		margin-bottom: 4px;
 
-	font-size: 24px;
-	font-weight: 800;
-	letter-spacing: 5px;
-	line-height: 30px;
+		font-size: 16px;
+		font-weight: 800;
+		letter-spacing: 5px;
+		line-height: 24px;
 
-	color: #999;
-}
+		color: #a5abb1;
+	}
+
+	.season-label span {
+		padding: 0 9px;
+		color: #555;
+	}
+
+	.game-label {
+		height: 30px;
+
+		margin-bottom: 8px;
+
+		font-size: 24px;
+		font-weight: 900;
+		letter-spacing: 5px;
+		line-height: 30px;
+
+		color: #aab0b6;
+	}
 
 	.game-label span {
 		padding: 0 10px;
 		color: #555;
-	}
-
-	.status-label {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-
-		margin-bottom: 35px;
-
-		font-size: 19px;
-		font-weight: 900;
-		letter-spacing: 4px;
-
-		color: #ddd;
-	}
-
-	.status-dot {
-		width: 9px;
-		height: 9px;
 	}
 
 	.teams {
@@ -648,10 +553,10 @@
 	}
 
 	.logo {
-		width: clamp(110px, 12vw, 180px);
-		height: clamp(110px, 12vw, 180px);
+		width: clamp(105px, 11vw, 165px);
+		height: clamp(105px, 11vw, 165px);
 
-		margin-bottom: 18px;
+		margin-bottom: 12px;
 
 		border-radius: 50%;
 
@@ -662,7 +567,7 @@
 		border: 3px solid #3f464d;
 
 		box-shadow:
-			0 15px 40px rgba(0, 0, 0, 0.55);
+			0 12px 30px rgba(0, 0, 0, 0.55);
 	}
 
 	.logo.placeholder {
@@ -670,7 +575,7 @@
 		align-items: center;
 		justify-content: center;
 
-		font-size: 60px;
+		font-size: 50px;
 		font-weight: 900;
 		color: #555;
 	}
@@ -679,10 +584,10 @@
 		width: 100%;
 		max-width: 90%;
 
-		font-size: clamp(26px, 3vw, 48px);
+		font-size: clamp(24px, 2.8vw, 44px);
 		font-weight: 900;
 		letter-spacing: 1px;
-		line-height: 1.15;
+		line-height: 1.1;
 
 		white-space: normal;
 		overflow: visible;
@@ -693,108 +598,110 @@
 	}
 
 	.score {
-		margin-top: 15px;
+		margin-top: 8px;
 
-		font-size: clamp(55px, 6vw, 90px);
+		font-size: clamp(50px, 5.5vw, 82px);
 		font-weight: 900;
 
 		font-variant-numeric: tabular-nums;
 
-		line-height: 1;
+		line-height: 0.95;
 	}
 
 	.vs {
-		font-size: 40px;
+		font-size: 38px;
 		font-weight: 900;
 		letter-spacing: 4px;
 
 		color: #777;
+
+		margin-bottom: 2px;
 	}
 
-.h2h-panel {
-	width: 220px;
+	.h2h-panel {
+		width: 220px;
 
-	margin-top: 16px;
-	padding: 8px 0 6px;
+		margin-top: 4px;
+		padding: 7px 0 5px;
 
-	background: transparent;
+		background: transparent;
 
-	border-top: 2px solid #3b4249;
-	border-bottom: 2px solid #3b4249;
-}
+		border-top: 2px solid #3b4249;
+		border-bottom: 2px solid #3b4249;
+	}
 
-.h2h-title {
-	margin-bottom: 6px;
+	.h2h-title {
+		margin-bottom: 5px;
 
-	font-size: 13px;
-	font-weight: 900;
-	letter-spacing: 3px;
+		font-size: 13px;
+		font-weight: 900;
+		letter-spacing: 3px;
 
-	color: #aab2ba;
-}
+		color: #aab2ba;
+	}
 
-.h2h-line {
-	width: 85%;
+	.h2h-line {
+		width: 85%;
 
-	height: 1px;
+		height: 1px;
 
-	margin: 0 auto 7px;
+		margin: 0 auto 6px;
 
-	background: #30363d;
-}
+		background: #30363d;
+	}
 
-.h2h-wins,
-.h2h-points {
-	display: grid;
-	grid-template-columns: 1fr 20px 1fr;
-	align-items: center;
-}
+	.h2h-wins,
+	.h2h-points {
+		display: grid;
+		grid-template-columns: 1fr 20px 1fr;
+		align-items: center;
+	}
 
-.h2h-wins {
-	margin-bottom: 6px;
-}
+	.h2h-wins {
+		margin-bottom: 5px;
+	}
 
-.h2h-side {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-}
+	.h2h-side {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
 
-.h2h-number {
-	font-size: 30px;
-	font-weight: 900;
+	.h2h-number {
+		font-size: 29px;
+		font-weight: 900;
 
-	line-height: 1;
+		line-height: 1;
 
-	color: #fff;
-}
+		color: #fff;
+	}
 
-.h2h-points-number {
-	font-size: 16px;
-	font-weight: 800;
+	.h2h-points-number {
+		font-size: 16px;
+		font-weight: 800;
 
-	font-variant-numeric: tabular-nums;
+		font-variant-numeric: tabular-nums;
 
-	color: #c4c9ce;
-}
+		color: #c4c9ce;
+	}
 
-.h2h-label {
-	margin-top: 3px;
+	.h2h-label {
+		margin-top: 2px;
 
-	font-size: 9px;
-	font-weight: 800;
-	letter-spacing: 2px;
+		font-size: 9px;
+		font-weight: 800;
+		letter-spacing: 2px;
 
-	color: #777;
-}
+		color: #777;
+	}
 
-.h2h-divider {
-	font-size: 13px;
-	font-weight: 700;
+	.h2h-divider {
+		font-size: 13px;
+		font-weight: 700;
 
-	color: #555;
-}
+		color: #555;
+	}
 
 	.message {
 		flex: 1;
