@@ -199,6 +199,27 @@
 
 <div class="scoreboard">
 
+	<header class="top-bar">
+
+		<div class="league-name">
+			MFFL
+		</div>
+
+		<div class="header-center">
+			<h1>{title}</h1>
+
+			<div class="season">
+				{season} <span>•</span> WEEK {weekNumber}
+			</div>
+		</div>
+
+		<div class="live-indicator">
+			<span class="dot"></span>
+			LIVE
+		</div>
+
+	</header>
+
 	{#if loading}
 
 		<div class="message">
@@ -226,16 +247,15 @@
 				class="matchup-card"
 			>
 
-				<div class="season-label">
-					{season}
-					<span>•</span>
-					WEEK {weekNumber}
-				</div>
-
 				<div class="game-label">
 					GAME {games[currentGame].gameNumber}
 					<span>•</span>
 					{games.length} MATCHUPS
+				</div>
+
+				<div class="status-label">
+					<span class="status-dot"></span>
+					{games[currentGame].status}
 				</div>
 
 				<div class="teams">
@@ -364,6 +384,10 @@
 
 				</div>
 
+				<div class="game-number">
+					{currentGame + 1} / {games.length}
+				</div>
+
 			</div>
 
 		</div>
@@ -422,6 +446,81 @@
 		overflow: hidden;
 	}
 
+	.top-bar {
+		height: 90px;
+		min-height: 90px;
+
+		display: grid;
+		grid-template-columns: 200px 1fr 200px;
+		align-items: center;
+
+		padding: 0 40px;
+
+		background: rgba(0, 0, 0, 0.88);
+
+		border-bottom: 2px solid #30363d;
+	}
+
+	.league-name {
+		font-size: 38px;
+		font-weight: 900;
+		letter-spacing: 6px;
+	}
+
+	.header-center {
+		text-align: center;
+	}
+
+	h1 {
+		margin: 0;
+
+		font-size: 34px;
+		font-weight: 900;
+		letter-spacing: 5px;
+	}
+
+	.season {
+		margin-top: 7px;
+
+		font-size: 16px;
+		font-weight: 700;
+		letter-spacing: 5px;
+
+		color: #aaa;
+	}
+
+	.season span {
+		padding: 0 10px;
+		color: #777;
+	}
+
+	.live-indicator {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 10px;
+
+		font-size: 18px;
+		font-weight: 900;
+		letter-spacing: 3px;
+	}
+
+	.dot,
+	.status-dot {
+		display: inline-block;
+
+		border-radius: 50%;
+
+		background: #e21b23;
+
+		box-shadow: 0 0 12px rgba(226, 27, 35, 0.8);
+	}
+
+	.dot {
+		width: 12px;
+		height: 12px;
+	}
+
 	.matchup-stage {
 		flex: 1;
 		min-height: 0;
@@ -430,7 +529,7 @@
 		align-items: flex-start;
 		justify-content: center;
 
-		padding: 18px 50px 10px;
+		padding: 55px 60px 20px;
 	}
 
 	.matchup-card {
@@ -439,7 +538,7 @@
 		width: 100%;
 		max-width: 1500px;
 
-		padding: 8px 25px 8px;
+		padding: 12px 25px 14px;
 
 		text-align: center;
 
@@ -457,10 +556,10 @@
 
 		position: absolute;
 
-		top: 38px;
+		top: 45px;
 		left: 0;
 		right: 0;
-		bottom: 10px;
+		bottom: 25px;
 
 		background:
 			linear-gradient(
@@ -490,40 +589,41 @@
 		animation: exit 0.9s ease both;
 	}
 
-	.season-label {
-		height: 24px;
-
-		margin-bottom: 4px;
-
-		font-size: 16px;
-		font-weight: 800;
-		letter-spacing: 5px;
-		line-height: 24px;
-
-		color: #a5abb1;
-	}
-
-	.season-label span {
-		padding: 0 9px;
-		color: #555;
-	}
-
 	.game-label {
 		height: 30px;
 
-		margin-bottom: 8px;
+		margin-bottom: 10px;
 
 		font-size: 24px;
-		font-weight: 900;
+		font-weight: 800;
 		letter-spacing: 5px;
 		line-height: 30px;
 
-		color: #aab0b6;
+		color: #999;
 	}
 
 	.game-label span {
 		padding: 0 10px;
 		color: #555;
+	}
+
+	.status-label {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+
+		margin-bottom: 35px;
+
+		font-size: 19px;
+		font-weight: 900;
+		letter-spacing: 4px;
+
+		color: #ddd;
+	}
+
+	.status-dot {
+		width: 9px;
+		height: 9px;
 	}
 
 	.teams {
@@ -553,10 +653,10 @@
 	}
 
 	.logo {
-		width: clamp(105px, 11vw, 165px);
-		height: clamp(105px, 11vw, 165px);
+		width: clamp(110px, 12vw, 180px);
+		height: clamp(110px, 12vw, 180px);
 
-		margin-bottom: 12px;
+		margin-bottom: 18px;
 
 		border-radius: 50%;
 
@@ -567,7 +667,7 @@
 		border: 3px solid #3f464d;
 
 		box-shadow:
-			0 12px 30px rgba(0, 0, 0, 0.55);
+			0 15px 40px rgba(0, 0, 0, 0.55);
 	}
 
 	.logo.placeholder {
@@ -575,7 +675,7 @@
 		align-items: center;
 		justify-content: center;
 
-		font-size: 50px;
+		font-size: 60px;
 		font-weight: 900;
 		color: #555;
 	}
@@ -584,10 +684,10 @@
 		width: 100%;
 		max-width: 90%;
 
-		font-size: clamp(24px, 2.8vw, 44px);
+		font-size: clamp(26px, 3vw, 48px);
 		font-weight: 900;
 		letter-spacing: 1px;
-		line-height: 1.1;
+		line-height: 1.15;
 
 		white-space: normal;
 		overflow: visible;
@@ -598,31 +698,29 @@
 	}
 
 	.score {
-		margin-top: 8px;
+		margin-top: 15px;
 
-		font-size: clamp(50px, 5.5vw, 82px);
+		font-size: clamp(55px, 6vw, 90px);
 		font-weight: 900;
 
 		font-variant-numeric: tabular-nums;
 
-		line-height: 0.95;
+		line-height: 1;
 	}
 
 	.vs {
-		font-size: 38px;
+		font-size: 40px;
 		font-weight: 900;
 		letter-spacing: 4px;
 
 		color: #777;
-
-		margin-bottom: 2px;
 	}
 
 	.h2h-panel {
 		width: 220px;
 
-		margin-top: 4px;
-		padding: 7px 0 5px;
+		margin-top: 16px;
+		padding: 8px 0 6px;
 
 		background: transparent;
 
@@ -631,7 +729,7 @@
 	}
 
 	.h2h-title {
-		margin-bottom: 5px;
+		margin-bottom: 6px;
 
 		font-size: 13px;
 		font-weight: 900;
@@ -645,7 +743,7 @@
 
 		height: 1px;
 
-		margin: 0 auto 6px;
+		margin: 0 auto 7px;
 
 		background: #30363d;
 	}
@@ -658,7 +756,7 @@
 	}
 
 	.h2h-wins {
-		margin-bottom: 5px;
+		margin-bottom: 6px;
 	}
 
 	.h2h-side {
@@ -669,7 +767,7 @@
 	}
 
 	.h2h-number {
-		font-size: 29px;
+		font-size: 30px;
 		font-weight: 900;
 
 		line-height: 1;
@@ -687,7 +785,7 @@
 	}
 
 	.h2h-label {
-		margin-top: 2px;
+		margin-top: 3px;
 
 		font-size: 9px;
 		font-weight: 800;
@@ -701,6 +799,16 @@
 		font-weight: 700;
 
 		color: #555;
+	}
+
+	.game-number {
+		margin-top: 40px;
+
+		font-size: 13px;
+		font-weight: 800;
+		letter-spacing: 4px;
+
+		color: #666;
 	}
 
 	.message {
