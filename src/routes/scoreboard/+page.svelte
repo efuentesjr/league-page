@@ -69,7 +69,6 @@
 onMount(async () => {
 	const loadScores = async () => {
 		try {
-			loading = true;
 			error = '';
 
 			const [matchupsData, teamManagersData] = await Promise.all([
