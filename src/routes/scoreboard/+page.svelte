@@ -550,7 +550,7 @@
 		top: 45px;
 		left: 0;
 		right: 0;
-		bottom: 25px;
+		bottom: 0px;
 
 		background:
 			linear-gradient(
