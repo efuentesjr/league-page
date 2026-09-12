@@ -458,11 +458,16 @@
 		border-bottom: 2px solid #30363d;
 	}
 
-	.league-name {
-		font-size: 38px;
-		font-weight: 900;
-		letter-spacing: 6px;
-	}
+.league-name {
+	display: flex;
+	align-items: center;
+}
+
+.league-name img {
+	width: 72px;
+	height: 72px;
+	object-fit: contain;
+}
 
 	.header-center {
 		text-align: center;
