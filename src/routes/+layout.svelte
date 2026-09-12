@@ -20,7 +20,10 @@
 </script>
 
 <main>
-  <Nav />
+  {#if $page.url.pathname !== '/scoreboard'}
+    <Nav />
+  {/if}
+
   <slot />
 
   {#if $page.url.pathname !== '/scoreboard'}
