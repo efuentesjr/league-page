@@ -282,28 +282,82 @@
 
 					</div>
 
-					<div class="vs">
-						VS
+					<div class="center-column">
+
+						<div class="vs">
+							VS
+						</div>
 
 						{#if games[currentGame].h2h}
-							<div class="h2h-test">
-								H2H TEST<br />
 
-								{games[currentGame].h2h.winsAway}
-								-
-								{games[currentGame].h2h.winsHome}
+							<div class="h2h-panel">
 
-								<br />
+								<div class="h2h-title">
+									HEAD TO HEAD
+								</div>
 
-								{games[currentGame].h2h.pointsAway.toFixed(2)}
-								-
-								{games[currentGame].h2h.pointsHome.toFixed(2)}
+								<div class="h2h-line"></div>
+
+								<div class="h2h-wins">
+
+									<div class="h2h-side">
+										<div class="h2h-number">
+											{games[currentGame].h2h.winsAway}
+										</div>
+
+										<div class="h2h-label">
+											WINS
+										</div>
+									</div>
+
+									<div class="h2h-divider">
+										-
+									</div>
+
+									<div class="h2h-side">
+										<div class="h2h-number">
+											{games[currentGame].h2h.winsHome}
+										</div>
+
+										<div class="h2h-label">
+											WINS
+										</div>
+									</div>
+
+								</div>
+
+								<div class="h2h-points">
+
+									<div class="h2h-side">
+										<div class="h2h-points-number">
+											{games[currentGame].h2h.pointsAway.toFixed(2)}
+										</div>
+
+										<div class="h2h-label">
+											POINTS
+										</div>
+									</div>
+
+									<div class="h2h-divider">
+										-
+									</div>
+
+									<div class="h2h-side">
+										<div class="h2h-points-number">
+											{games[currentGame].h2h.pointsHome.toFixed(2)}
+										</div>
+
+										<div class="h2h-label">
+											POINTS
+										</div>
+									</div>
+
+								</div>
+
 							</div>
-						{:else}
-							<div class="h2h-test">
-								H2H DATA NOT FOUND
-							</div>
+
 						{/if}
+
 					</div>
 
 					<div class="team">
@@ -524,13 +578,22 @@
 
 	.teams {
 		display: grid;
-		grid-template-columns: 1fr 120px 1fr;
+		grid-template-columns: 1fr 240px 1fr;
 		align-items: center;
 
 		width: 100%;
 	}
 
 	.team {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		min-width: 0;
+	}
+
+	.center-column {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -603,22 +666,93 @@
 		color: #777;
 	}
 
-	.h2h-test {
-		margin-top: 12px;
+	.h2h-panel {
+		width: 220px;
 
-		font-size: 12px;
+		margin-top: 16px;
+		padding: 10px 0 8px;
+
+		background: rgba(0, 0, 0, 0.28);
+
+		border-top: 1px solid #3b4249;
+		border-bottom: 1px solid #3b4249;
+	}
+
+	.h2h-title {
+		margin-bottom: 7px;
+
+		font-size: 10px;
+		font-weight: 900;
+		letter-spacing: 3px;
+
+		color: #8f98a1;
+	}
+
+	.h2h-line {
+		width: 70%;
+
+		height: 1px;
+
+		margin: 0 auto 8px;
+
+		background: #30363d;
+	}
+
+	.h2h-wins,
+	.h2h-points {
+		display: grid;
+		grid-template-columns: 1fr 20px 1fr;
+		align-items: center;
+	}
+
+	.h2h-wins {
+		margin-bottom: 7px;
+	}
+
+	.h2h-side {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.h2h-number {
+		font-size: 22px;
+		font-weight: 900;
+
+		line-height: 1;
+
+		color: #fff;
+	}
+
+	.h2h-points-number {
+		font-size: 13px;
+		font-weight: 800;
+
+		font-variant-numeric: tabular-nums;
+
+		color: #c4c9ce;
+	}
+
+	.h2h-label {
+		margin-top: 3px;
+
+		font-size: 7px;
+		font-weight: 800;
+		letter-spacing: 2px;
+
+		color: #777;
+	}
+
+	.h2h-divider {
+		font-size: 14px;
 		font-weight: 700;
-		letter-spacing: 1px;
 
-		line-height: 1.6;
-
-		color: #00aaff;
-
-		white-space: nowrap;
+		color: #555;
 	}
 
 	.game-number {
-		margin-top: 50px;
+		margin-top: 40px;
 
 		font-size: 13px;
 		font-weight: 800;
