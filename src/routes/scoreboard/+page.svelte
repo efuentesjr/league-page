@@ -588,15 +588,18 @@
 		animation: exit 0.9s ease both;
 	}
 
-	.game-label {
-		margin-bottom: 14px;
+.game-label {
+	height: 30px;
 
-		font-size: 24px;
-		font-weight: 800;
-		letter-spacing: 5px;
+	margin-bottom: 10px;
 
-		color: #999;
-	}
+	font-size: 24px;
+	font-weight: 800;
+	letter-spacing: 5px;
+	line-height: 30px;
+
+	color: #999;
+}
 
 	.game-label span {
 		padding: 0 10px;
