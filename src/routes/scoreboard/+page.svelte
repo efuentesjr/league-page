@@ -531,11 +531,11 @@
 		padding: 20px 60px;
 	}
 
-	.matchup-card {
+.matchup-card {
 	width: 100%;
 	max-width: 1500px;
 
-	padding: 35px 45px 30px;
+	padding: 18px 30px 18px;
 
 	text-align: center;
 
@@ -546,15 +546,15 @@
 			rgba(5, 8, 12, 0.96)
 		);
 
-	border: 1px solid #3a424b;
-	border-radius: 18px;
+	border: 3px solid #3a424b;
+	border-radius: 14px;
 
 	box-shadow:
-		0 20px 60px rgba(0, 0, 0, 0.55),
-		inset 0 1px 0 rgba(255, 255, 255, 0.04);
+		0 15px 40px rgba(0, 0, 0, 0.55),
+		inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
 	animation: enter 0.9s ease both;
-	}
+}
 
 	.matchup-card.transitioning {
 		animation: exit 0.9s ease both;
