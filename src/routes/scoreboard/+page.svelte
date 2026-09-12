@@ -532,25 +532,25 @@
 	}
 
 .matchup-card {
-	width: 100%;
-	max-width: 1500px;
+	width: 92%;
+	max-width: 1400px;
 
-	padding: 18px 30px 18px;
+	padding: 12px 25px 14px;
 
 	text-align: center;
 
 	background:
 		linear-gradient(
 			135deg,
-			rgba(25, 31, 39, 0.92),
-			rgba(5, 8, 12, 0.96)
+			rgba(25, 31, 39, 0.88),
+			rgba(5, 8, 12, 0.94)
 		);
 
-	border: 3px solid #3a424b;
-	border-radius: 14px;
+	border: 4px solid #3a424b;
+	border-radius: 12px;
 
 	box-shadow:
-		0 15px 40px rgba(0, 0, 0, 0.55),
+		0 12px 35px rgba(0, 0, 0, 0.55),
 		inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
 	animation: enter 0.9s ease both;
