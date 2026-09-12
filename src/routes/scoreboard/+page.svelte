@@ -418,6 +418,7 @@
 		overflow: hidden;
 	}
 
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700;800;900&display=swap');
 	.scoreboard {
 		position: fixed;
 		inset: 0;
@@ -436,6 +437,7 @@
 		color: #fff;
 
 		font-family:
+			'Roboto Condensed',
 			Arial,
 			Helvetica,
 			sans-serif;
