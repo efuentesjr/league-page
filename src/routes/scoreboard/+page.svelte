@@ -520,16 +520,16 @@
 		height: 12px;
 	}
 
-	.matchup-stage {
-		flex: 1;
-		min-height: 0;
+.matchup-stage {
+	flex: 1;
+	min-height: 0;
 
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
 
-		padding: 20px 60px;
-	}
+	padding: 20px 60px;
+}
 
 .matchup-card {
 	position: relative;
