@@ -201,9 +201,9 @@
 
 	<header class="top-bar">
 
-		<div class="league-name">
-			MFFL
-		</div>
+<div class="league-name">
+	<img src="/badge.png" alt="MFFL" />
+</div>
 
 		<div class="header-center">
 			<h1>{title}</h1>
