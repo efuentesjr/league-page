@@ -498,14 +498,16 @@
 
 	.team-name {
 		width: 100%;
+		max-width: 90%;
 
-		font-size: clamp(28px, 3.2vw, 52px);
+		font-size: clamp(26px, 3vw, 48px);
 		font-weight: 900;
 		letter-spacing: 1px;
+		line-height: 1.15;
 
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		white-space: normal;
+		overflow: visible;
+		text-align: center;
 
 		text-shadow:
 			0 3px 10px rgba(0, 0, 0, 0.8);
