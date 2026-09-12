@@ -10,9 +10,14 @@
 	const season = '2026 SEASON';
 	const weekNumber = 1;
 
+	const HOLD_TIME = 5000;
+	const SLIDE_TIME = 900;
+
 	let games = [];
 	let loading = true;
 	let error = '';
+	let currentGame = 0;
+	let transitioning = false;
 
 	const buildGames = (matchupsData, teamManagersData) => {
 		const weekData = matchupsData?.matchupWeeks?.find(
@@ -49,7 +54,10 @@
 					name: awayTeam?.name || 'Unknown Team',
 					logo: awayTeam?.avatar || '',
 					score: Array.isArray(away.points)
-						? away.points.reduce((total, points) => total + Number(points || 0), 0)
+						? away.points.reduce(
+								(total, points) => total + Number(points || 0),
+								0
+							)
 						: Number(away.points || 0)
 				},
 
@@ -57,7 +65,10 @@
 					name: homeTeam?.name || 'Unknown Team',
 					logo: homeTeam?.avatar || '',
 					score: Array.isArray(home.points)
-						? home.points.reduce((total, points) => total + Number(points || 0), 0)
+						? home.points.reduce(
+								(total, points) => total + Number(points || 0),
+								0
+							)
 						: Number(home.points || 0)
 				},
 
@@ -66,7 +77,6 @@
 		});
 	};
 
-onMount(async () => {
 	const loadScores = async () => {
 		try {
 			error = '';
@@ -76,7 +86,13 @@ onMount(async () => {
 				getLeagueTeamManagers()
 			]);
 
-			games = buildGames(matchupsData, teamManagersData);
+			const newGames = buildGames(matchupsData, teamManagersData);
+
+			games = newGames;
+
+			if (currentGame >= newGames.length) {
+				currentGame = 0;
+			}
 		} catch (err) {
 			console.error('[scoreboard] Failed to load:', err);
 			error = 'Unable to load MFFL matchup data.';
@@ -85,14 +101,45 @@ onMount(async () => {
 		}
 	};
 
-	await loadScores();
+	const nextGame = () => {
+		if (games.length <= 1) return;
 
-	const refreshTimer = setInterval(loadScores, 60000);
+		transitioning = true;
 
-	return () => {
-		clearInterval(refreshTimer);
+		setTimeout(() => {
+			currentGame = (currentGame + 1) % games.length;
+			transitioning = false;
+		}, SLIDE_TIME);
 	};
-});
+
+	onMount(async () => {
+		await loadScores();
+
+		const refreshTimer = setInterval(loadScores, 60000);
+
+		let rotationTimer;
+		let stopped = false;
+
+		const rotate = () => {
+			if (stopped || games.length <= 1) return;
+
+			rotationTimer = setTimeout(() => {
+				nextGame();
+
+				setTimeout(() => {
+					if (!stopped) rotate();
+				}, SLIDE_TIME);
+			}, HOLD_TIME);
+		};
+
+		rotate();
+
+		return () => {
+			stopped = true;
+			clearInterval(refreshTimer);
+			clearTimeout(rotationTimer);
+		};
+	});
 </script>
 
 <svelte:head>
@@ -134,77 +181,89 @@ onMount(async () => {
 			{error}
 		</div>
 
+	{:else if games.length === 0}
+
+		<div class="message">
+			NO MATCHUPS FOUND
+		</div>
+
 	{:else}
 
-		<div class="games">
+		<div class="matchup-stage">
 
-			{#each games as game}
+			<div
+				class:transitioning
+				class="matchup-card"
+			>
 
-				<section class="game-card">
+				<div class="game-label">
+					GAME {games[currentGame].gameNumber}
+					<span>•</span>
+					{games.length} MATCHUPS
+				</div>
 
-					<div class="game-header">
-						<span>GAME {game.gameNumber}</span>
+				<div class="status-label">
+					<span class="status-dot"></span>
+					{games[currentGame].status}
+				</div>
 
-						<span class="status">
-							{game.status}
-						</span>
-					</div>
+				<div class="teams">
 
-					<div class="team-row">
+					<div class="team">
 
-						<div class="team">
+						{#if games[currentGame].away.logo}
+							<img
+								src={games[currentGame].away.logo}
+								alt={games[currentGame].away.name}
+								class="logo"
+							/>
+						{:else}
+							<div class="logo placeholder">?</div>
+						{/if}
 
-							{#if game.away.logo}
-								<img
-									src={game.away.logo}
-									alt={game.away.name}
-									class="logo"
-								/>
-							{:else}
-								<div class="logo">?</div>
-							{/if}
-
-							<div class="team-name">
-								{game.away.name}
-							</div>
-
+						<div class="team-name">
+							{games[currentGame].away.name}
 						</div>
 
 						<div class="score">
-							{game.away.score.toFixed(2)}
+							{games[currentGame].away.score.toFixed(2)}
 						</div>
 
 					</div>
 
-					<div class="team-row">
+					<div class="vs">
+						VS
+					</div>
 
-						<div class="team">
+					<div class="team">
 
-							{#if game.home.logo}
-								<img
-									src={game.home.logo}
-									alt={game.home.name}
-									class="logo"
-								/>
-							{:else}
-								<div class="logo">?</div>
-							{/if}
+						{#if games[currentGame].home.logo}
+							<img
+								src={games[currentGame].home.logo}
+								alt={games[currentGame].home.name}
+								class="logo"
+							/>
+						{:else}
+							<div class="logo placeholder">?</div>
+						{/if}
 
-							<div class="team-name">
-								{game.home.name}
-							</div>
-
+						<div class="team-name">
+							{games[currentGame].home.name}
 						</div>
 
 						<div class="score">
-							{game.home.score.toFixed(2)}
+							{games[currentGame].home.score.toFixed(2)}
 						</div>
 
 					</div>
 
-				</section>
+				</div>
 
-			{/each}
+				<div class="game-number">
+					{currentGame + 1} / {games.length}
+				</div>
+
+			</div>
 
 		</div>
 
@@ -237,16 +296,15 @@ onMount(async () => {
 	.scoreboard {
 		position: fixed;
 		inset: 0;
-		z-index: 9999;
 
 		display: flex;
 		flex-direction: column;
 
 		background:
 			radial-gradient(
-				circle at top center,
-				#18202a 0%,
-				#080b0f 42%,
+				ellipse at center,
+				#1b222b 0%,
+				#0a0d11 55%,
 				#000 100%
 			);
 
@@ -265,20 +323,20 @@ onMount(async () => {
 		min-height: 90px;
 
 		display: grid;
-		grid-template-columns: 180px 1fr 180px;
+		grid-template-columns: 200px 1fr 200px;
 		align-items: center;
 
-		padding: 0 35px;
+		padding: 0 40px;
 
-		background: rgba(0, 0, 0, 0.9);
+		background: rgba(0, 0, 0, 0.88);
 
-		border-bottom: 2px solid #333;
+		border-bottom: 2px solid #30363d;
 	}
 
 	.league-name {
-		font-size: 34px;
+		font-size: 38px;
 		font-weight: 900;
-		letter-spacing: 5px;
+		letter-spacing: 6px;
 	}
 
 	.header-center {
@@ -288,23 +346,24 @@ onMount(async () => {
 	h1 {
 		margin: 0;
 
-		font-size: 32px;
+		font-size: 34px;
 		font-weight: 900;
 		letter-spacing: 5px;
 	}
 
 	.season {
-		margin-top: 6px;
+		margin-top: 7px;
 
-		font-size: 15px;
+		font-size: 16px;
 		font-weight: 700;
-		letter-spacing: 4px;
+		letter-spacing: 5px;
 
 		color: #aaa;
 	}
 
 	.season span {
-		padding: 0 8px;
+		padding: 0 10px;
+		color: #777;
 	}
 
 	.live-indicator {
@@ -315,149 +374,170 @@ onMount(async () => {
 
 		font-size: 18px;
 		font-weight: 900;
-		letter-spacing: 2px;
+		letter-spacing: 3px;
 	}
 
-	.dot {
-		width: 12px;
-		height: 12px;
+	.dot,
+	.status-dot {
+		display: inline-block;
 
 		border-radius: 50%;
 
 		background: #e21b23;
 
-		box-shadow:
-			0 0 12px rgba(226, 27, 35, 0.8);
+		box-shadow: 0 0 12px rgba(226, 27, 35, 0.8);
 	}
 
-	.games {
+	.dot {
+		width: 12px;
+		height: 12px;
+	}
+
+	.matchup-stage {
 		flex: 1;
 		min-height: 0;
-
-		display: grid;
-
-		grid-template-columns: repeat(4, minmax(0, 1fr));
-		grid-template-rows: repeat(2, minmax(0, 1fr));
-
-		gap: 14px;
-
-		padding: 16px 22px;
-	}
-
-	.game-card {
-		display: flex;
-		flex-direction: column;
-
-		min-width: 0;
-		min-height: 0;
-
-		background:
-			linear-gradient(
-				180deg,
-				#171b20 0%,
-				#0d1014 100%
-			);
-
-		border: 1px solid #353b42;
-
-		border-radius: 8px;
-
-		overflow: hidden;
-
-		box-shadow:
-			0 4px 15px rgba(0, 0, 0, 0.5);
-	}
-
-	.game-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-
-		padding: 9px 14px;
-
-		background: #20252b;
-
-		border-bottom: 1px solid #383e45;
-
-		font-size: 12px;
-		font-weight: 800;
-		letter-spacing: 2px;
-
-		color: #999;
-	}
-
-	.status {
-		color: #bbb;
-	}
-
-	.team-row {
-		flex: 1;
-		min-height: 0;
-
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-
-		padding: 12px 18px;
-
-		border-bottom: 1px solid #292e34;
-	}
-
-	.team-row:last-child {
-		border-bottom: none;
-	}
-
-	.team {
-		display: flex;
-		align-items: center;
-		gap: 14px;
-
-		min-width: 0;
-	}
-
-	.logo {
-		width: 42px;
-		height: 42px;
 
 		display: flex;
 		align-items: center;
 		justify-content: center;
 
-		flex-shrink: 0;
+		padding: 20px 60px;
+	}
 
-		border: 1px solid #555;
+	.matchup-card {
+		width: 100%;
+		max-width: 1500px;
+
+		text-align: center;
+
+		animation: enter 0.9s ease both;
+	}
+
+	.matchup-card.transitioning {
+		animation: exit 0.9s ease both;
+	}
+
+	.game-label {
+		margin-bottom: 14px;
+
+		font-size: 18px;
+		font-weight: 800;
+		letter-spacing: 5px;
+
+		color: #999;
+	}
+
+	.game-label span {
+		padding: 0 10px;
+		color: #555;
+	}
+
+	.status-label {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+
+		margin-bottom: 35px;
+
+		font-size: 15px;
+		font-weight: 900;
+		letter-spacing: 4px;
+
+		color: #ddd;
+	}
+
+	.status-dot {
+		width: 9px;
+		height: 9px;
+	}
+
+	.teams {
+		display: grid;
+		grid-template-columns: 1fr 120px 1fr;
+		align-items: center;
+
+		width: 100%;
+	}
+
+	.team {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		min-width: 0;
+	}
+
+	.logo {
+		width: clamp(130px, 15vw, 220px);
+		height: clamp(130px, 15vw, 220px);
+
+		margin-bottom: 28px;
+
 		border-radius: 50%;
+
+		object-fit: cover;
 
 		background: #111;
 
-		font-size: 18px;
-		font-weight: 900;
-		color: #777;
+		border: 3px solid #3f464d;
 
-		object-fit: cover;
+		box-shadow:
+			0 15px 40px rgba(0, 0, 0, 0.55);
+	}
+
+	.logo.placeholder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		font-size: 60px;
+		font-weight: 900;
+		color: #555;
 	}
 
 	.team-name {
-		overflow: hidden;
+		width: 100%;
 
-		font-size: 17px;
-		font-weight: 800;
-
-		letter-spacing: 0.5px;
+		font-size: clamp(28px, 3.2vw, 52px);
+		font-weight: 900;
+		letter-spacing: 1px;
 
 		white-space: nowrap;
+		overflow: hidden;
 		text-overflow: ellipsis;
+
+		text-shadow:
+			0 3px 10px rgba(0, 0, 0, 0.8);
 	}
 
 	.score {
-		margin-left: 10px;
+		margin-top: 15px;
 
-		font-size: 30px;
+		font-size: clamp(55px, 6vw, 90px);
 		font-weight: 900;
 
 		font-variant-numeric: tabular-nums;
 
-		white-space: nowrap;
+		line-height: 1;
+	}
+
+	.vs {
+		font-size: 30px;
+		font-weight: 900;
+		letter-spacing: 4px;
+
+		color: #777;
+	}
+
+	.game-number {
+		margin-top: 50px;
+
+		font-size: 13px;
+		font-weight: 800;
+		letter-spacing: 4px;
+
+		color: #666;
 	}
 
 	.message {
@@ -467,9 +547,9 @@ onMount(async () => {
 		align-items: center;
 		justify-content: center;
 
-		font-size: 24px;
+		font-size: 25px;
 		font-weight: 800;
-		letter-spacing: 3px;
+		letter-spacing: 4px;
 
 		color: #aaa;
 	}
@@ -479,14 +559,14 @@ onMount(async () => {
 	}
 
 	.bottom-bar {
-		height: 35px;
-		min-height: 35px;
+		height: 38px;
+		min-height: 38px;
 
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 
-		padding: 0 25px;
+		padding: 0 30px;
 
 		background: #050505;
 
@@ -496,6 +576,37 @@ onMount(async () => {
 		font-weight: 700;
 		letter-spacing: 2px;
 
-		color: #777;
+		color: #666;
+	}
+
+	@keyframes enter {
+		from {
+			opacity: 0;
+			transform: translateX(100px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+
+	@keyframes exit {
+		from {
+			opacity: 1;
+			transform: translateX(0);
+		}
+
+		to {
+			opacity: 0;
+			transform: translateX(-100px);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.matchup-card,
+		.matchup-card.transitioning {
+			animation: none;
+		}
 	}
 </style>
