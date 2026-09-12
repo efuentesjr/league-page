@@ -255,7 +255,10 @@
 
 				<div class="teams">
 
-					<div class="team">
+					<div
+						class="team"
+						class:winning={games[currentGame].away.score > games[currentGame].home.score}
+					>
 
 						{#if games[currentGame].away.logo}
 							<img
@@ -355,7 +358,10 @@
 
 					</div>
 
-					<div class="team">
+					<div
+						class="team"
+						class:winning={games[currentGame].home.score > games[currentGame].away.score}
+					>
 
 						{#if games[currentGame].home.logo}
 							<img
@@ -697,6 +703,22 @@
 		font-variant-numeric: tabular-nums;
 
 		line-height: 1;
+	}
+
+	.team.winning .logo,
+	.team.winning .score {
+		animation: winnerGlow 1.8s ease-in-out infinite;
+	}
+
+	@keyframes winnerGlow {
+		0%,
+		100% {
+			filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.25));
+		}
+
+		50% {
+			filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.85));
+		}
 	}
 
 	.vs {
