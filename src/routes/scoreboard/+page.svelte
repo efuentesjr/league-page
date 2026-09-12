@@ -796,16 +796,6 @@
 	color: #555;
 }
 
-	.game-number {
-		margin-top: 40px;
-
-		font-size: 17px;
-		font-weight: 800;
-		letter-spacing: 4px;
-
-		color: #666;
-	}
-
 	.message {
 		flex: 1;
 
