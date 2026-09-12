@@ -253,11 +253,6 @@
 					{games.length} MATCHUPS
 				</div>
 
-				<div class="status-label">
-					<span class="status-dot"></span>
-					{games[currentGame].status}
-				</div>
-
 				<div class="teams">
 
 					<div class="team">
