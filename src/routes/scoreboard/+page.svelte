@@ -558,7 +558,7 @@
 
 		position: absolute;
 
-		top: 45px;
+		top: 20px;
 		left: -3%;
 		right: -3%;
 		bottom: -80px;
