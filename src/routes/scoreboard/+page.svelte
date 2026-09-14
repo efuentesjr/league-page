@@ -570,9 +570,6 @@
 				rgba(5, 8, 12, 0.94)
 			);
 
-		border: 4px solid #3a424b;
-		border-radius: 12px;
-
 		box-shadow:
 			0 12px 35px rgba(0, 0, 0, 0.55),
 			inset 0 1px 0 rgba(255, 255, 255, 0.05);
