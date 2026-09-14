@@ -558,10 +558,10 @@
 
 		position: absolute;
 
-		top: 45px;
-		left: 0;
-		right: 0;
-		bottom: 0px;
+		top: 20px;
+		left: -3%;
+		right: -3%;
+		bottom: -20px;
 
 		background:
 			linear-gradient(
