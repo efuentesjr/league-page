@@ -608,12 +608,12 @@
 	}
 
 	.game-label {
-		height: 24px;
+		height: 30px;
 
     	margin-top: -12px;
     	margin-bottom: 10px;
 
-		font-size: 24px;
+		font-size: 22px;
 		font-weight: 800;
 		letter-spacing: 5px;
 		line-height: 30px;
