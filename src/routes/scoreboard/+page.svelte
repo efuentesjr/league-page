@@ -23,10 +23,14 @@
 		let transitioning = false;
 
 		const buildGames = async (matchupsData, teamManagersData) => {
-		const nflGames = await getNflGames(2026, weekNumber);
+  			const nflGames = await getNflGames(2026, weekNumber);
 
-		const weekData = matchupsData?.matchupWeeks?.find(
-			(item) => Number(item.week) === weekNumber
+  		const isLive = nflGames.some(
+		    (game) => game.status === 'in_progress'
+  		);
+		
+		  const weekData = matchupsData?.matchupWeeks?.find(
+		    (item) => Number(item.week) === weekNumber
 		);
 
 		if (!weekData) {
