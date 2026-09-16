@@ -819,7 +819,7 @@
 
 		line-height: 1;
 
-		color: #fff;
+		color: #000;
 	}
 
 	.h2h-points-number {
@@ -839,14 +839,6 @@
 		letter-spacing: 2px;
 
 		color: #777;
-	}
-
-	.h2h-wins .h2h-label {
-    	color: #000;
-	}
-
-	.h2h-points .h2h-label {
-    	color: #777;
 	}
 
 	.h2h-divider {
