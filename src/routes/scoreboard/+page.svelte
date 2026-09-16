@@ -283,24 +283,23 @@
   					class:completed={games[currentGame].allPlayersDone}
 				>
 
-						{#if games[currentGame].away.logo}
-							<img
-								src={games[currentGame].away.logo}
-								alt={games[currentGame].away.name}
-								class="logo"
-							/>
-						{:else}
-							<div class="logo placeholder">?</div>
-						{/if}
+				<div class="team-name">
+    				{games[currentGame].away.name}
+				</div>
 
-						<div class="team-name">
-							{games[currentGame].away.name}
-						</div>
+				{#if games[currentGame].away.logo}
+    				<img
+        				src={games[currentGame].away.logo}
+        				alt={games[currentGame].away.name}
+        				class="logo"
+   					/>
+				{:else}
+    				<div class="logo placeholder">?</div>
+				{/if}
 
-						<div class="score">
-							{games[currentGame].away.score.toFixed(2)}
-						</div>
-
+				<div class="score">
+    				{games[currentGame].away.score.toFixed(2)}
+				</div>
 					</div>
 
 					<div class="center-column">
