@@ -5,6 +5,7 @@
 		getLeagueTeamManagers,
 		getTeamFromTeamManagers,
 		getRivalryMatchups
+		getNflGames
 	} from '$lib/utils/helper';
 
 	const title = 'MFFL LIVE SCOREBOARD';
