@@ -819,7 +819,7 @@
 
 		line-height: 1;
 
-		color: #666;
+		color: #777;
 	}
 
 	.h2h-points-number {
