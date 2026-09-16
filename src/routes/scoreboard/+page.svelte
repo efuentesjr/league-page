@@ -233,10 +233,12 @@
 			</div>
 		</div>
 
-		<div class="live-indicator">
-			<span class="dot"></span>
-			LIVE
-		</div>
+		{#if games[currentGame]?.isLive}
+			<div class="live-indicator">
+    			<span class="dot"></span>
+    			LIVE
+  			</div>
+{/if}
 
 	</header>
 
