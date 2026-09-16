@@ -365,10 +365,11 @@
 
 					</div>
 
-					<div
-						class="team"
-						class:winning={games[currentGame].home.score > games[currentGame].away.score}
-					>
+						<div
+  							class="team"
+  							class:winning={games[currentGame].home.score > games[currentGame].away.score}
+  							class:completed={games[currentGame].allPlayersDone}
+						>
 
 						{#if games[currentGame].home.logo}
 							<img
