@@ -138,9 +138,15 @@
 		try {
 			error = '';
 
+			const nflState = await getNflState();
+
+			if (nflState?.week) {
+  				weekNumber = Number(nflState.week);
+			}
+
 			const [matchupsData, teamManagersData] = await Promise.all([
-				getLeagueMatchups(true),
-				getLeagueTeamManagers()
+  				getLeagueMatchups(true),
+  				getLeagueTeamManagers()
 			]);
 
 			const newGames = await buildGames(
