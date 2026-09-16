@@ -4,7 +4,7 @@
 		getLeagueMatchups,
 		getLeagueTeamManagers,
 		getTeamFromTeamManagers,
-		getRivalryMatchups
+		getRivalryMatchups,
 		getNflGames
 	} from '$lib/utils/helper';
 
