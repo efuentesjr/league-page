@@ -608,7 +608,7 @@
 	}
 
 	.game-label {
-		height: 30px;
+		height: 24px;
 
     	margin-top: -12px;
     	margin-bottom: 10px;
