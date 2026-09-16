@@ -89,10 +89,11 @@
 						);
 					}
 				}
+				const allPlayersDone = true;
 
 				return {
-					matchupId,
-					gameNumber: index + 1,
+  					matchupId,
+  					gameNumber: index + 1,
 
 					away: {
 						name: awayTeam?.name || 'Unknown Team',
