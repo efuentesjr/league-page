@@ -22,6 +22,8 @@
 	let transitioning = false;
 
 	const buildGames = async (matchupsData, teamManagersData) => {
+		const nflGames = await getNflGames(2026, weekNumber);
+
 		const weekData = matchupsData?.matchupWeeks?.find(
 			(item) => Number(item.week) === weekNumber
 		);
