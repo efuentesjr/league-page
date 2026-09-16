@@ -588,11 +588,7 @@
 		bottom: -80px;
 
 		background:
-			linear-gradient(
-				135deg,
-				rgba(150, 155, 160, 0.88),
-				rgba(90, 95, 100, 0.94)
-			);
+		background: url('/steel-background.jpg') center center / cover no-repeat;
 
 		box-shadow:
 			0 12px 35px rgba(0, 0, 0, 0.55),
