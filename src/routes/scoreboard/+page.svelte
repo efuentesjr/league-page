@@ -89,11 +89,13 @@
 						);
 					}
 				}
-				const allPlayersDone = true;
+					const allPlayersDone =
+	 					nflGames.length > 0 &&
+  						nflGames.every((game) => game.status === 'complete');
 
-				return {
-  					matchupId,
-  					gameNumber: index + 1,
+					return {
+					  	matchupId,
+					  	gameNumber: index + 1,
 
 					away: {
 						name: awayTeam?.name || 'Unknown Team',
