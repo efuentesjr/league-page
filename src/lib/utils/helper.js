@@ -27,6 +27,7 @@ export {
     getLeagueData,
     getLeagueTransactions,
     getNflState, 
+    getNflGames,
     getLeagueRosters,
     getLeagueTeamManagers,
     getLeagueMatchups,
