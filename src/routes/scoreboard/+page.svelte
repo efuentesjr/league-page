@@ -558,14 +558,14 @@
 		padding: 20px 4vw;
 	}
 
-	.matchup-card {
-		position: relative;
+.matchup-card {
+    position: relative;
+    top: -20px;
 
-		width: 100%;
-		max-width: 1500px;
+    width: 100%;
+    max-width: 1500px;
 
-		padding: 0 25px 14px;
-
+    padding: 0 25px 14px;
 		text-align: center;
 
 		background: transparent;
