@@ -564,7 +564,7 @@
 		width: 100%;
 		max-width: 1500px;
 
-		padding: 12px 25px 14px;
+		padding: 0 25px 14px;
 
 		text-align: center;
 
