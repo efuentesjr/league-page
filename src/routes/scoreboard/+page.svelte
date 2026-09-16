@@ -610,7 +610,8 @@
 	.game-label {
 		height: 30px;
 
-		margin-bottom: 10px;
+    	margin-top: -18px;
+    	margin-bottom: 10px;
 
 		font-size: 24px;
 		font-weight: 800;
