@@ -261,10 +261,11 @@
 
 				<div class="teams">
 
-					<div
-						class="team"
-						class:winning={games[currentGame].away.score > games[currentGame].home.score}
-					>
+				<div
+  					class="team"
+					class:winning={games[currentGame].away.score > games[currentGame].home.score}
+  					class:completed={games[currentGame].allPlayersDone}
+				>
 
 						{#if games[currentGame].away.logo}
 							<img
