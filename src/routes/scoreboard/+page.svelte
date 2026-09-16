@@ -1,27 +1,28 @@
 <script>
-	import { onMount } from 'svelte';
-	import {
-		getLeagueMatchups,
-		getLeagueTeamManagers,
-		getTeamFromTeamManagers,
-		getRivalryMatchups,
-		getNflGames
-	} from '$lib/utils/helper';
+		import { onMount } from 'svelte';
+		import {
+  		getLeagueMatchups,
+  		getLeagueTeamManagers,
+  		getTeamFromTeamManagers,
+  		getRivalryMatchups,
+  		getNflGames,
+  		getNflState
+		} from '$lib/utils/helper';
 
-	const title = 'MFFL LIVE SCOREBOARD';
-	const season = '2026 SEASON';
-	let weekNumber = 1;
+		const title = 'MFFL LIVE SCOREBOARD';
+		const season = '2026 SEASON';
+		let weekNumber = 1;
 
-	const HOLD_TIME = 5000;
-	const SLIDE_TIME = 900;
+		const HOLD_TIME = 5000;
+		const SLIDE_TIME = 900;
 
-	let games = [];
-	let loading = true;
-	let error = '';
-	let currentGame = 0;
-	let transitioning = false;
+		let games = [];
+		let loading = true;
+		let error = '';
+		let currentGame = 0;
+		let transitioning = false;
 
-	const buildGames = async (matchupsData, teamManagersData) => {
+		const buildGames = async (matchupsData, teamManagersData) => {
 		const nflGames = await getNflGames(2026, weekNumber);
 
 		const weekData = matchupsData?.matchupWeeks?.find(
