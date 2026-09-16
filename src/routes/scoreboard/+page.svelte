@@ -711,7 +711,7 @@
 		font-weight: 900;
 		letter-spacing: 1px;
 		line-height: 1.15;
-		margin-bottom: 30px;
+		margin-bottom: 50px;
 
 		white-space: normal;
 		overflow: visible;
