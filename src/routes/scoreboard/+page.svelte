@@ -716,9 +716,20 @@
 		line-height: 1;
 	}
 
-	.team.winning .logo,
-	.team.winning .score {
-		animation: winnerGlow 1.8s ease-in-out infinite;
+	.team.winning.completed .logo,
+	.team.winning.completed .score {
+	  animation: winnerGlowGold 1.8s ease-in-out infinite;
+	}
+
+	@keyframes winnerGlowGold {
+	  0%,
+	  100% {
+    	filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.25));
+  	}
+
+  	50% {
+    	filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.95));
+  	}
 	}
 
 	@keyframes winnerGlow {
