@@ -590,8 +590,8 @@
 		background:
 			linear-gradient(
 				135deg,
-				rgba(25, 31, 39, 0.88),
-				rgba(5, 8, 12, 0.94)
+				rgba(75, 80, 86, 0.88),
+				rgba(35, 40, 45, 0.94)
 			);
 
 		box-shadow:
