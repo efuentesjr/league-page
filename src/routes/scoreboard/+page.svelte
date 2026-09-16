@@ -386,19 +386,19 @@
   							class:completed={games[currentGame].allPlayersDone}
 						>
 
-						{#if games[currentGame].home.logo}
-							<img
-								src={games[currentGame].home.logo}
-								alt={games[currentGame].home.name}
-								class="logo"
-							/>
-						{:else}
-							<div class="logo placeholder">?</div>
-						{/if}
+					<div class="team-name">
+    					{games[currentGame].home.name}
+					</div>
 
-						<div class="team-name">
-							{games[currentGame].home.name}
-						</div>
+					{#if games[currentGame].home.logo}
+					    <img
+					        src={games[currentGame].home.logo}
+					        alt={games[currentGame].home.name}
+					        class="logo"
+					    />
+					{:else}
+					    <div class="logo placeholder">?</div>
+					{/if}
 
 						<div class="score">
 							{games[currentGame].home.score.toFixed(2)}
