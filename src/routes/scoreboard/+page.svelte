@@ -125,10 +125,11 @@
 								)
 							: Number(home.points || 0)
 					},
-
 					h2h,
 
 					allPlayersDone,
+
+					isLive,
 
 					status: 'LIVE'
 				};
