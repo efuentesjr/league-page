@@ -708,7 +708,7 @@
 		width: 100%;
 		max-width: 90%;
 
-		font-size: clamp(22px, 2vw, 40px);
+		font-size: clamp(18px, 1.5vw, 36px);
 		font-weight: 900;
 		letter-spacing: 1px;
 		line-height: 1.15;
