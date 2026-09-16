@@ -819,7 +819,7 @@
 
 		line-height: 1;
 
-		color: #000;
+		color: #666;
 	}
 
 	.h2h-points-number {
@@ -828,7 +828,7 @@
 
 		font-variant-numeric: tabular-nums;
 
-		color: #c4c9ce;
+		color: #666;
 	}
 
 	.h2h-label {
