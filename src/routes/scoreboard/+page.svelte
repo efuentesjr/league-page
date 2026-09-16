@@ -121,6 +121,8 @@
 
 					h2h,
 
+					allPlayersDone,
+
 					status: 'LIVE'
 				};
 			})
