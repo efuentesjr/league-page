@@ -552,7 +552,7 @@
 		min-height: 0;
 
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: center;
 
 		padding: 0px 4vw;
