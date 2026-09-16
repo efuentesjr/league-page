@@ -841,6 +841,14 @@
 		color: #777;
 	}
 
+	.h2h-wins .h2h-label {
+    	color: #000;
+	}
+
+	.h2h-points .h2h-label {
+    	color: #777;
+	}
+
 	.h2h-divider {
 		font-size: 13px;
 		font-weight: 700;
