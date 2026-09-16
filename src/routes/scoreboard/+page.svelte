@@ -555,7 +555,7 @@
 		align-items: center;
 		justify-content: center;
 
-		padding: 20px 4vw;
+		padding: 0px 4vw;
 	}
 
 .matchup-card {
