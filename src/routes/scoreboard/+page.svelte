@@ -10,7 +10,7 @@
 
 	const title = 'MFFL LIVE SCOREBOARD';
 	const season = '2026 SEASON';
-	const weekNumber = 1;
+	let weekNumber = 1;
 
 	const HOLD_TIME = 5000;
 	const SLIDE_TIME = 900;
