@@ -587,7 +587,6 @@
 		right: -3%;
 		bottom: -80px;
 
-		background:
 		background: url('/steel-background.jpg') center center / cover no-repeat;
 
 		box-shadow:
