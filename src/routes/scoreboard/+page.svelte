@@ -424,13 +424,14 @@
 		display: flex;
 		flex-direction: column;
 
-		background:
-			radial-gradient(
-				ellipse at center,
-				#1b222b 0%,
-				#0a0d11 55%,
-				#000 100%
-			);
+	background:
+		radial-gradient(
+			ellipse at 50% 42%,
+			rgba(20, 55, 85, 0.55) 0%,
+			rgba(10, 25, 40, 0.32) 30%,
+			rgba(5, 10, 16, 0.9) 65%,
+			#000 100%
+	);
 
 		color: #fff;
 
