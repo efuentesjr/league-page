@@ -1,12 +1,15 @@
 <script>
   import {
     getTeamFromTeamManagers,
-    getAvatarFromTeamManagers,
-    gotoManager,
     round,
     predictScores,
     loadPlayers
   } from '$lib/utils/helper';
+
+  import {
+    getAvatarFromTeamManagers,
+    gotoManager
+  } from '$lib/utils/helperFunctions/universalFunctions';
 
   export let nflState;
   export let rostersData;
