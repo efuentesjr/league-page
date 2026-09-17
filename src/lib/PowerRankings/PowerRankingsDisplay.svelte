@@ -26,24 +26,30 @@
   let players = playersInfo.players;
 
   // Existing MFFL team color variables
-  const colors = [
-    '--barChartOne',
-    '--barChartTwo',
-    '--barChartThree',
-    '--barChartFour',
-    '--barChartFive',
-    '--barChartSix',
-    '--barChartSeven',
-    '--barChartEight',
-    '--barChartNine',
-    '--barChartTen',
-    '--barChartEleven',
-    '--barChartTwelve',
-    '--barChartThirteen',
-    '--barChartFourteen',
-    '--barChartFifteen',
-    '--barChartSixteen'
-  ];
+const teamColors = {
+  "The People's Champ": '#7B2D2D',
+  "CeeDees TDs": '#003594',
+  "Chosen One": '#8C1D40',
+  "Child Support": '#C60C30',
+  "Bay Area Party Supplies": '#AA0000',
+  "Brute Force Attack": '#C8102E',
+  "SlickBears": '#B3995D',
+  "TexasTimeshifts": '#BF5700',
+  "Do it to them": '#006847',
+  "Blue BaLLers": '#003DA5',
+  "Remember the raiders": '#A5ACAF',
+  "DemBoyz": '#041E42',
+  "Vick2times": '#FB4F14',
+  "Blue Tent All-Stars": '#0085CA',
+  "Loud and Stroud": '#0085CA',
+  "The Comeback Kid": '#AA0000'
+};
+
+function getTeamColor(team) {
+  const name = team?.manager?.name || '';
+
+  return teamColors[name] || '#34495E';
+}
 
   const buildRankings = () => {
     const rosterPowers = [];
@@ -116,14 +122,14 @@
     }
 
     // Highest power score = #1
-    rankings = rosterPowers
-      .sort((a, b) => b.powerScore - a.powerScore)
-      .map((team, index) => ({
-        ...team,
-        rank: index + 1,
-        movement: '—',
-        color: colors[index % colors.length]
-      }));
+rankings = rosterPowers
+  .sort((a, b) => b.powerScore - a.powerScore)
+  .map((team, index) => ({
+    ...team,
+    rank: index + 1,
+    movement: '—',
+    color: getTeamColor(team)
+  }));
   };
 
   buildRankings();
@@ -240,186 +246,141 @@
      RANK NUMBER
      ================================ */
 
-  .rankNumber {
-    padding-left: 10px;
+.rankNumber {
+  padding-left: 10px;
 
-    color: #f0f0f0;
-    font-family: Arial, sans-serif;
-    font-size: 1.45rem;
-    font-weight: 900;
-    line-height: 1;
-    text-align: left;
+  color: #fff;
 
-    text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.7);
-  }
+  font-family: Arial, sans-serif;
+  font-size: 1.65rem;
+  font-weight: 900;
 
-  .rankNumber.topThree {
-    color: #e3b45a;
-  }
+  line-height: 1;
+
+  text-shadow:
+    1px 2px 3px rgba(0, 0, 0, 0.8);
+}
+
+.rankNumber.topThree {
+  color: #fff;
+}
 
   /* ================================
      AVATAR
      ================================ */
 
-  .avatar {
-    width: 38px;
-    height: 38px;
+.avatar {
+  width: 52px;
+  height: 52px;
 
-    object-fit: cover;
-    border-radius: 50%;
+  object-fit: contain;
 
-    border: 2px solid var(--teamColor);
-    background: #fff;
+  border-radius: 50%;
 
-    cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.75);
 
-    box-shadow:
-      0 2px 5px rgba(0, 0, 0, 0.55);
-  }
+  background: rgba(255, 255, 255, 0.95);
+
+  cursor: pointer;
+
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.65);
+
+  z-index: 5;
+}
 
   /* ================================
      TEAM NAME
      ================================ */
 
-  .teamInfo {
-    min-width: 0;
-    padding: 0 8px;
-    cursor: pointer;
-  }
+.teamName {
+  overflow: hidden;
 
-  .teamName {
-    overflow: hidden;
+  color: #fff;
 
-    color: #fff;
-    font-family: Arial, sans-serif;
-    font-size: 0.88rem;
-    font-weight: 700;
+  font-family: Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
 
-    line-height: 1.15;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  line-height: 1.1;
 
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-  }
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
-  .movement {
-    margin-top: 3px;
-
-    color: #888;
-    font-size: 0.68rem;
-    font-weight: 700;
-  }
+  text-shadow:
+    1px 2px 3px rgba(0, 0, 0, 0.8);
+}
 
   /* ================================
      SCORE
      ================================ */
 
-  .score {
-    min-width: 58px;
-    padding-right: 10px;
+.score {
+  min-width: 70px;
+  padding-right: 12px;
 
-    color: #fff;
+  color: #fff;
 
-    font-family: Arial, sans-serif;
-    font-size: 0.9rem;
-    font-weight: 800;
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
 
-    text-align: right;
+  text-align: right;
 
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-  }
+  text-shadow:
+    1px 2px 3px rgba(0, 0, 0, 0.8);
+}
 
   /* ================================
      TOP 3
      ================================ */
 
-  .rankingCard:nth-child(1),
-  .rankingCard:nth-child(2),
-  .rankingCard:nth-child(3) {
-    min-height: 62px;
-  }
 
-  .rankingCard:nth-child(1) {
-    background:
-      linear-gradient(
-        90deg,
-        rgba(218, 165, 70, 0.20),
-        rgba(255, 255, 255, 0.025)
-      );
-  }
-
-  .rankingCard:nth-child(2) {
-    background:
-      linear-gradient(
-        90deg,
-        rgba(190, 190, 190, 0.16),
-        rgba(255, 255, 255, 0.025)
-      );
-  }
-
-  .rankingCard:nth-child(3) {
-    background:
-      linear-gradient(
-        90deg,
-        rgba(145, 95, 55, 0.16),
-        rgba(255, 255, 255, 0.025)
-      );
-  }
 
   /* ================================
      MOBILE
      ================================ */
 
-  @media (max-width: 700px) {
-    .powerRankings {
-      padding-left: 8px;
-      padding-right: 8px;
-    }
-
-    .rankingGrid {
-      grid-template-columns: 1fr;
-      gap: 6px;
-    }
-
-    /*
-     * On mobile keep all 16 teams in one ranking,
-     * rather than splitting them into separate columns.
-     */
-    .rankingColumn {
-      gap: 6px;
-    }
-
-    .rankingColumn:nth-child(2) {
-      margin-top: 0;
-    }
-
-    .rankingCard {
-      min-height: 54px;
-      grid-template-columns: 42px 38px minmax(0, 1fr) auto;
-    }
-
-    .rankingTitle {
-      font-size: 1.35rem;
-    }
-
-    .avatar {
-      width: 34px;
-      height: 34px;
-    }
-
-    .rankNumber {
-      font-size: 1.25rem;
-    }
-
-    .teamName {
-      font-size: 0.82rem;
-    }
-
-    .score {
-      font-size: 0.82rem;
-      min-width: 52px;
-    }
+@media (max-width: 700px) {
+  .powerRankings {
+    padding-left: 6px;
+    padding-right: 6px;
   }
+
+  .rankingGrid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .rankingCard {
+    min-height: 62px;
+
+    grid-template-columns:
+      46px
+      50px
+      minmax(0, 1fr)
+      62px;
+  }
+
+  .avatar {
+    width: 46px;
+    height: 46px;
+  }
+
+  .rankNumber {
+    font-size: 1.35rem;
+  }
+
+  .teamName {
+    font-size: 0.84rem;
+  }
+
+  .score {
+    min-width: 62px;
+    padding-right: 8px;
+    font-size: 0.85rem;
+  }
+}
 </style>
 
 {#if validGraph && !seasonOver}
