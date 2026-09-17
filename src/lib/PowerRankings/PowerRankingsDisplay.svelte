@@ -387,7 +387,7 @@
     linear-gradient(
       90deg,
       var(--teamColor) 0%,
-      var(--teamColor) 42%,
+      var(--teamColor) 55%,
       var(--teamDark) 100%
     );
 
