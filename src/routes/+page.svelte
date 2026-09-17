@@ -213,30 +213,33 @@
     line-height: 0;
   }
 
-  .the-beat-link img {
-    display: block;
-    width: 350px;
-    height: auto;
-    cursor: pointer;
-    transition: transform 0.15s ease, opacity 0.15s ease;
-  }
+.the-beat-link img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
 
   .the-beat-link:hover img {
     transform: scale(1.04);
     opacity: 0.9;
   }
 
-  /* ===== Mobile ===== */
-  @media (max-width: 700px) {
-    .the-beat-link {
-      margin: 6px auto 12px;
-    }
-
-    .the-beat-link img {
-      width: 250px;
-    }
+/* ===== Mobile ===== */
+@media (max-width: 700px) {
+  .the-beat-link {
+    margin: 6px auto 12px;
+    max-width: 90%;
   }
-</style>
+
+  .the-beat-link img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+  }
+}
 
 <!-- ===== Hero video block ===== -->
 {#if HERO_VIDEO.src || HERO_VIDEO.poster}
