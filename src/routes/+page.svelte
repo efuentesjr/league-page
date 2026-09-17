@@ -230,7 +230,7 @@
   /* ===== Mobile ===== */
   @media (max-width: 700px) {
     .the-beat-link {
-      margin: 6px auto 12px;
+      margin: 6px auto 40px;
       max-width: 90%;
     }
 
