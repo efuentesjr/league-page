@@ -351,57 +351,59 @@
      RANKING ROW
      ============================================================ */
 
-  .rankingCard {
-    --teamColor: #34495e;
-    --teamDark: #151d24;
+.rankingCard {
+  --teamColor: #34495e;
+  --teamDark: #151d24;
 
-    position: relative;
+  position: relative;
 
-    display: grid;
+  display: grid;
 
-    /*
-     * Rank | Team | Score | Logo
-     */
-    grid-template-columns:
-      54px
-      minmax(0, 1fr)
-      62px
-      78px;
+  /*
+   * Rank | Team | Score | Logo
+   */
+  grid-template-columns:
+    54px
+    minmax(0, 1fr)
+    62px
+    78px;
 
-    align-items: center;
+  align-items: center;
 
-    height: 66px;
-    min-height: 66px;
+  height: 66px;
+  min-height: 66px;
 
-    overflow: hidden;
+  overflow: hidden;
 
-    background:
-      linear-gradient(
-        90deg,
-        var(--teamColor) 0%,
-        var(--teamColor) 42%,
-        var(--teamDark) 100%
-      );
+  background:
+    linear-gradient(
+      90deg,
+      var(--teamColor) 0%,
+      var(--teamColor) 42%,
+      var(--teamDark) 100%
+    );
 
-    border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.16);
 
-    box-shadow:
-      0 3px 7px rgba(0, 0, 0, 0.45),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 3px 7px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 
-    box-sizing: border-box;
+  box-sizing: border-box;
 
-    cursor: pointer;
+  width: 100%;
 
-    transition:
-      transform 0.15s ease,
-      filter 0.15s ease;
-  }
+  cursor: pointer;
 
-  .rankingCard:hover {
-    transform: translateX(3px);
-    filter: brightness(1.08);
-  }
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+.rankingCard:hover {
+  transform: translateX(3px);
+  filter: brightness(1.08);
+}
 
   /* ============================================================
      RANK BOX
