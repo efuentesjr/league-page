@@ -322,25 +322,30 @@
      TWO COLUMN LAYOUT
      ============================================================ */
 
-  .rankingGrid {
-    display: grid;
+.rankingGrid {
+  display: grid;
 
-    grid-template-columns:
-      minmax(0, 1fr)
-      minmax(0, 1fr);
+  grid-template-columns: 1fr 1fr;
 
-    gap: 9px 12px;
+  gap: 9px 12px;
 
-    width: 100%;
-  }
+  width: 100%;
+  align-items: stretch;
+}
 
-  .rankingColumn {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+.rankingColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 
-    min-width: 0;
-  }
+  min-width: 0;
+  width: 100%;
+}
+
+.rankingCard {
+  width: 100%;
+  box-sizing: border-box;
+}
 
   /* ============================================================
      RANKING ROW
