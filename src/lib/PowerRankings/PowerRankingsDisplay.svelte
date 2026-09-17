@@ -623,83 +623,80 @@ function normalizeTeamName(name) {
     padding-right: 0;
   }
 
-    .rankingTitle {
-      font-size: 1.4rem;
-      letter-spacing: 1px;
-    }
-
-    .rankingSubtitle {
-      font-size: 0.7rem;
-    }
-
-    /*
-     * One column on phones.
-     */
-    .rankingGrid {
-      grid-template-columns: 1fr;
-      gap: 6px;
-    }
-
-    .rankingColumn {
-      gap: 6px;
-    }
-
-    .rankingCard {
-      grid-template-columns:
-        48px
-        minmax(0, 1fr)
-        58px
-        68px;
-
-      height: 60px;
-      min-height: 60px;
-    }
-
-    .rankingCard.topRank {
-      height: 64px;
-      min-height: 64px;
-    }
-
-    .rankNumber {
-      font-size: 1.3rem;
-    }
-
-    .topRank .rankNumber {
-      font-size: 1.45rem;
-    }
-
-    .teamInfo {
-      padding-left: 9px;
-    }
-
-    .teamName {
-      font-size: 0.82rem;
-    }
-
-    .movement {
-      font-size: 0.58rem;
-    }
-
-    .score {
-      font-size: 0.82rem;
-      padding-right: 5px;
-    }
-
-    .teamLogo {
-      width: 68px;
-      height: 68px;
-      right: -2px;
-    }
-
-    .topRank .teamLogo {
-      width: 74px;
-      height: 74px;
-    }
-
-    .logoFade {
-      width: 90px;
-    }
+  .rankingTitle {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
   }
+
+  .rankingSubtitle {
+    font-size: 0.7rem;
+  }
+
+  .rankingGrid {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .rankingColumn {
+    gap: 5px;
+  }
+
+  .rankingCard {
+    grid-template-columns:
+      44px
+      minmax(0, 1fr)
+      54px
+      62px;
+
+    height: 54px;
+    min-height: 54px;
+  }
+
+  .rankingCard.topRank {
+    height: 58px;
+    min-height: 58px;
+  }
+
+  .rankNumber {
+    font-size: 1.2rem;
+  }
+
+  .topRank .rankNumber {
+    font-size: 1.35rem;
+  }
+
+  .teamInfo {
+    padding-left: 8px;
+  }
+
+  .teamName {
+    font-size: 0.78rem;
+  }
+
+  .movement {
+    font-size: 0.55rem;
+  }
+
+  .score {
+    font-size: 0.78rem;
+    padding-right: 4px;
+  }
+
+  .teamLogo {
+    width: 62px;
+    height: 62px;
+    right: -2px;
+  }
+
+  .topRank .teamLogo {
+    width: 68px;
+    height: 68px;
+  }
+
+  .logoFade {
+    width: 82px;
+  }
+}
 
   /* ============================================================
      VERY SMALL PHONES
