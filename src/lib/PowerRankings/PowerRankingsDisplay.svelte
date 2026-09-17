@@ -125,13 +125,15 @@
    * Normalize names so small capitalization differences
    * don't prevent the team color from being found.
    */
-  function normalizeTeamName(name) {
-    return (name || '')
-      .toLowerCase()
-      .replace(/[’']/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-  }
+
+function normalizeTeamName(name) {
+  return (name || '')
+    .toLowerCase()
+    .replace(/[’']/g, '')
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
   function getTeamColor(team) {
     const name = normalizeTeamName(team?.manager?.name);
