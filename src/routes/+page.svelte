@@ -215,7 +215,7 @@
 
   .the-beat-link img {
     display: block;
-    width: 250px;
+    width: 350px;
     height: auto;
     cursor: pointer;
     transition: transform 0.15s ease, opacity 0.15s ease;
@@ -233,7 +233,7 @@
     }
 
     .the-beat-link img {
-      width: 115px;
+      width: 250px;
     }
   }
 </style>
