@@ -318,38 +318,40 @@
     text-transform: uppercase;
   }
 
-  /* ============================================================
-     TWO COLUMN LAYOUT
-     ============================================================ */
+/* ============================================================
+   TWO COLUMN LAYOUT
+   ============================================================ */
 
 .rankingGrid {
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  gap: 9px 12px;
+  column-gap: 12px;
+  row-gap: 7px;
 
   width: 100%;
-  align-items: stretch;
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  align-items: start;
 }
 
 .rankingColumn {
   display: flex;
   flex-direction: column;
-  gap: 7px;
 
+  width: 100%;
   min-width: 0;
-  width: 100%;
+
+  gap: 7px;
 }
 
-.rankingCard {
-  width: 100%;
-  box-sizing: border-box;
-}
 
-  /* ============================================================
-     RANKING ROW
-     ============================================================ */
+/* ============================================================
+   RANKING ROW
+   ============================================================ */
 
 .rankingCard {
   --teamColor: #34495e;
@@ -360,13 +362,16 @@
   display: grid;
 
   /*
-   * Rank | Team | Score | Logo
+   * Rank | Team Name | Score | Logo
    */
   grid-template-columns:
     54px
     minmax(0, 1fr)
     62px
     78px;
+
+  width: 100%;
+  box-sizing: border-box;
 
   align-items: center;
 
@@ -388,10 +393,6 @@
   box-shadow:
     0 3px 7px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
-
-  box-sizing: border-box;
-
-  width: 100%;
 
   cursor: pointer;
 
