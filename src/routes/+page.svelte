@@ -26,9 +26,9 @@
   const podiumsData = getAwards();
   const leagueTeamManagersData = getLeagueTeamManagers();
 
-  // ✅ Hero video (Cloudflare R2)
+  // ===== Hero video (Cloudflare R2) =====
   const HERO_VIDEO = {
-  //  src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2025.mp4',
+    // src: 'https://pub-0888a19df3f14ac9b6edcc4f6f3a9547.r2.dev/2025.mp4',
   };
 
   // Accessibility: detect reduced motion
@@ -40,7 +40,7 @@
 
   // Dynamic aspect ratio
   let heroEl;
-  let heroAspect = '16 / 9'; // fallback
+  let heroAspect = '16 / 9';
 
   function onLoadedMetadata() {
     if (!heroEl) return;
@@ -59,7 +59,6 @@
   .hero-video {
     position: relative;
     width: 100vw;
-    /* aspect-ratio is set inline from Svelte */
     background: #000;
     overflow: hidden;
     left: 50%;
@@ -73,7 +72,7 @@
     width: 100%;
     height: 100%;
     display: block;
-    object-fit: contain; /* keep original ratio, add letterboxing if needed */
+    object-fit: contain;
     background: #000;
   }
 
@@ -118,6 +117,7 @@
       width: 100%;
       box-shadow: none;
     }
+
     #home {
       flex-wrap: wrap;
     }
@@ -128,9 +128,11 @@
     width: 95%;
     margin: 10px auto;
   }
+
   .center {
     text-align: center;
   }
+
   h6 {
     text-align: center;
   }
@@ -143,7 +145,7 @@
     font-size: 1.5em;
   }
 
-  /* champ styling */
+  /* ===== Current Champion ===== */
   #currentChamp {
     padding: 25px 0;
     background-color: var(--f3f3f3);
@@ -202,9 +204,41 @@
     color: #bbb;
     font-style: italic;
   }
+
+  /* ===== The Beat Shortcut ===== */
+  .the-beat-link {
+    display: block;
+    width: fit-content;
+    margin: 8px auto 15px;
+    line-height: 0;
+  }
+
+  .the-beat-link img {
+    display: block;
+    width: 140px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .the-beat-link:hover img {
+    transform: scale(1.04);
+    opacity: 0.9;
+  }
+
+  /* ===== Mobile ===== */
+  @media (max-width: 700px) {
+    .the-beat-link {
+      margin: 6px auto 12px;
+    }
+
+    .the-beat-link img {
+      width: 115px;
+    }
+  }
 </style>
 
-<!-- ===== Hero video block (renders ONLY if a src or poster is provided) ===== -->
+<!-- ===== Hero video block ===== -->
 {#if HERO_VIDEO.src || HERO_VIDEO.poster}
   <div class="hero-video" style="aspect-ratio: {heroAspect}">
     {#if HERO_VIDEO.src && !prefersReducedMotion}
@@ -231,11 +265,26 @@
   <div id="main">
     <div class="text">
       <h4>{leagueName}</h4>
-      {@html homepageText }
+
+      {@html homepageText}
+
       {#if enableBlog}
         <HomePost />
       {/if}
     </div>
+
+    <!-- ===== The Beat Shortcut ===== -->
+    <a
+      class="the-beat-link"
+      href="https://jdiazdecaro.github.io/MFFL/beat.html"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="The Beat - MFFL League Pulse"
+      title="The Beat - MFFL League Pulse"
+    >
+      <img src="/The Beat.png" alt="The Beat" />
+    </a>
+
     <PowerRankings />
   </div>
 
@@ -247,6 +296,7 @@
       {:then nflStateData}
         <div class="center">
           NFL {nflStateData.season}
+
           {#if nflStateData.season_type == 'pre'}
             Preseason
           {:else if nflStateData.season_type == 'post'}
@@ -256,7 +306,9 @@
           {/if}
         </div>
       {:catch error}
-        <div class="center">Something went wrong: {error.message}</div>
+        <div class="center">
+          Something went wrong: {error.message}
+        </div>
       {/await}
     </div>
 
@@ -267,6 +319,7 @@
       {:then [podiums, leagueTeamManagers]}
         {#if podiums[0]}
           <h4>{podiums[0].year} Fantasy Champ</h4>
+
           <div
             id="champ"
             on:click={() => {
@@ -279,12 +332,22 @@
             }}
           >
             <img
-              src="{getAvatarFromTeamManagers(leagueTeamManagers, podiums[0].champion, podiums[0].year)}"
+              src="{getAvatarFromTeamManagers(
+                leagueTeamManagers,
+                podiums[0].champion,
+                podiums[0].year
+              )}"
               class="first"
               alt="champion"
             />
-            <img src="/laurel.png" class="laurel" alt="laurel" />
+
+            <img
+              src="/laurel.png"
+              class="laurel"
+              alt="laurel"
+            />
           </div>
+
           <span
             class="label"
             on:click={() =>
@@ -293,12 +356,13 @@
                 leagueTeamManagers,
                 rosterID: parseInt(podiums[0].champion)
               })}
-            >{getTeamFromTeamManagers(
+          >
+            {getTeamFromTeamManagers(
               leagueTeamManagers,
               podiums[0].champion,
               podiums[0].year
-            ).name}</span
-          >
+            ).name}
+          </span>
         {:else}
           <p class="center">No former champs.</p>
         {/if}
