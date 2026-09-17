@@ -213,33 +213,34 @@
     line-height: 0;
   }
 
-.the-beat-link img {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-}
+  .the-beat-link img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
 
   .the-beat-link:hover img {
     transform: scale(1.04);
     opacity: 0.9;
   }
 
-/* ===== Mobile ===== */
-@media (max-width: 700px) {
-  .the-beat-link {
-    margin: 6px auto 12px;
-    max-width: 90%;
-  }
+  /* ===== Mobile ===== */
+  @media (max-width: 700px) {
+    .the-beat-link {
+      margin: 6px auto 12px;
+      max-width: 90%;
+    }
 
-  .the-beat-link img {
-    width: auto;
-    max-width: 100%;
-    height: auto;
+    .the-beat-link img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+    }
   }
-}
+</style>
 
 <!-- ===== Hero video block ===== -->
 {#if HERO_VIDEO.src || HERO_VIDEO.poster}
@@ -370,7 +371,9 @@
           <p class="center">No former champs.</p>
         {/if}
       {:catch error}
-        <p class="center">Something went wrong: {error.message}</p>
+        <p class="center">
+          Something went wrong: {error.message}
+        </p>
       {/await}
     </div>
 
