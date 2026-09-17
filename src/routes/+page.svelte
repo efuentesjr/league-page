@@ -209,7 +209,7 @@
   .the-beat-link {
     display: block;
     width: fit-content;
-    margin: 8px auto 15px;
+    margin: 8px auto 50px;
     line-height: 0;
   }
 
