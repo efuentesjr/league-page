@@ -25,31 +25,134 @@
 
   let players = playersInfo.players;
 
-  // Existing MFFL team color variables
-const teamColors = {
-  "The People's Champ": '#7B2D2D',
-  "CeeDees TDs": '#003594',
-  "Chosen One": '#8C1D40',
-  "Child Support": '#C60C30',
-  "Bay Area Party Supplies": '#AA0000',
-  "Brute Force Attack": '#C8102E',
-  "SlickBears": '#B3995D',
-  "TexasTimeshifts": '#BF5700',
-  "Do it to them": '#006847',
-  "Blue BaLLers": '#003DA5',
-  "Remember the raiders": '#A5ACAF',
-  "DemBoyz": '#041E42',
-  "Vick2times": '#FB4F14',
-  "Blue Tent All-Stars": '#0085CA',
-  "Loud and Stroud": '#0085CA',
-  "The Comeback Kid": '#AA0000'
-};
+  /*
+   * ============================================================
+   * MFFL TEAM COLORS
+   * ============================================================
+   *
+   * These are used for the ranking strips.
+   * Each team has a primary and darker color.
+   */
 
-function getTeamColor(team) {
-  const name = team?.manager?.name || '';
+  const teamColors = {
+    "the people's champ": {
+      primary: '#5B0F18',
+      dark: '#26070B'
+    },
 
-  return teamColors[name] || '#34495E';
-}
+    "ceedee tds": {
+      primary: '#003594',
+      dark: '#001B4D'
+    },
+
+    "chosen one": {
+      primary: '#8C1D40',
+      dark: '#3F0D20'
+    },
+
+    "child support": {
+      primary: '#C60C30',
+      dark: '#550514'
+    },
+
+    "bay area party supplies": {
+      primary: '#AA0000',
+      dark: '#470000'
+    },
+
+    "brute force attack": {
+      primary: '#C8102E',
+      dark: '#520411'
+    },
+
+    "slickbears": {
+      primary: '#B3995D',
+      dark: '#4C4122'
+    },
+
+    "texastimeshifts": {
+      primary: '#BF5700',
+      dark: '#4C2200'
+    },
+
+    "do it to them": {
+      primary: '#006847',
+      dark: '#00291C'
+    },
+
+    "blue ballers": {
+      primary: '#003DA5',
+      dark: '#001A49'
+    },
+
+    "remember the raiders": {
+      primary: '#6D7378',
+      dark: '#292C2F'
+    },
+
+    "dem boyz": {
+      primary: '#041E42',
+      dark: '#010C1B'
+    },
+
+    "demoboyz": {
+      primary: '#041E42',
+      dark: '#010C1B'
+    },
+
+    "vick2times": {
+      primary: '#FB4F14',
+      dark: '#642008'
+    },
+
+    "blue tent all-stars": {
+      primary: '#0085CA',
+      dark: '#00364F'
+    },
+
+    "loud and stroud": {
+      primary: '#0085CA',
+      dark: '#00364F'
+    },
+
+    "the comeback kid": {
+      primary: '#AA0000',
+      dark: '#470000'
+    }
+  };
+
+  /*
+   * Normalize names so small capitalization differences
+   * don't prevent the team color from being found.
+   */
+  function normalizeTeamName(name) {
+    return (name || '')
+      .toLowerCase()
+      .replace(/[’']/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function getTeamColor(team) {
+    const name = normalizeTeamName(team?.manager?.name);
+
+    return (
+      teamColors[name] || {
+        primary: '#34495E',
+        dark: '#151D24'
+      }
+    );
+  }
+
+  /*
+   * ============================================================
+   * BUILD POWER RANKINGS
+   * ============================================================
+   *
+   * The actual power-ranking calculation remains the same:
+   * future projected scores are calculated, then normalized
+   * against the highest scoring roster.
+   */
 
   const buildRankings = () => {
     const rosterPowers = [];
@@ -73,7 +176,6 @@ function getTeamColor(team) {
       const rosterPlayers = [];
 
       for (const rosterPlayer of roster.players) {
-        // Fixed typo from original component: contnue -> continue
         if (!players[rosterPlayer]) continue;
 
         rosterPlayers.push({
@@ -113,7 +215,9 @@ function getTeamColor(team) {
       rosterPowers.push(rosterPower);
     }
 
-    // Normalize to 0–100
+    /*
+     * Normalize the highest team to 100.
+     */
     for (const rosterPower of rosterPowers) {
       rosterPower.powerScore =
         max > 0
@@ -121,18 +225,31 @@ function getTeamColor(team) {
           : 0;
     }
 
-    // Highest power score = #1
-rankings = rosterPowers
-  .sort((a, b) => b.powerScore - a.powerScore)
-  .map((team, index) => ({
-    ...team,
-    rank: index + 1,
-    movement: '—',
-    color: getTeamColor(team)
-  }));
+    /*
+     * Sort highest score to lowest score and assign rank.
+     */
+    rankings = rosterPowers
+      .sort((a, b) => b.powerScore - a.powerScore)
+      .map((team, index) => {
+        const colors = getTeamColor(team);
+
+        return {
+          ...team,
+          rank: index + 1,
+          movement: '—',
+          color: colors.primary,
+          darkColor: colors.dark
+        };
+      });
   };
 
   buildRankings();
+
+  /*
+   * ============================================================
+   * REFRESH PLAYERS
+   * ============================================================
+   */
 
   const refreshPlayers = async () => {
     const newPlayersInfo = await loadPlayers(null, true);
@@ -148,295 +265,533 @@ rankings = rosterPowers
 </script>
 
 <style>
+  /* ============================================================
+     MAIN CONTAINER
+     ============================================================ */
+
   .powerRankings {
     width: 100%;
     max-width: 1000px;
-    margin: 20px auto 0;
-    padding: 0 12px 30px;
+    margin: 22px auto 0;
+    padding: 0 10px 30px;
     box-sizing: border-box;
   }
 
-  /* ================================
+  /* ============================================================
      HEADER
-     ================================ */
+     ============================================================ */
 
   .rankingHeader {
     text-align: center;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }
 
   .rankingTitle {
     margin: 0;
-    color: #d8a84e;
-    font-family: Arial, sans-serif;
-    font-size: 1.65rem;
-    font-weight: 800;
+
+    color: #d9a441;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+
     letter-spacing: 1.5px;
+    line-height: 1.1;
+
     text-transform: uppercase;
+
+    text-shadow:
+      0 2px 3px rgba(0, 0, 0, 0.7);
   }
 
   .rankingSubtitle {
-    margin-top: 4px;
+    margin-top: 5px;
+
     color: #aaa;
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 1px;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+
     text-transform: uppercase;
   }
 
-  /* ================================
-     TWO-COLUMN BOARD
-     ================================ */
+  /* ============================================================
+     TWO COLUMN LAYOUT
+     ============================================================ */
 
   .rankingGrid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px 14px;
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+
+    gap: 9px 12px;
+
+    width: 100%;
   }
 
   .rankingColumn {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
+
+    min-width: 0;
   }
 
-  /* ================================
-     INDIVIDUAL RANKING
-     ================================ */
+  /* ============================================================
+     RANKING ROW
+     ============================================================ */
 
   .rankingCard {
+    --teamColor: #34495e;
+    --teamDark: #151d24;
+
     position: relative;
+
     display: grid;
-    grid-template-columns: 45px 42px minmax(0, 1fr) auto;
+
+    /*
+     * Rank | Team | Score | Logo
+     */
+    grid-template-columns:
+      54px
+      minmax(0, 1fr)
+      62px
+      78px;
+
     align-items: center;
-    min-height: 58px;
+
+    height: 66px;
+    min-height: 66px;
+
     overflow: hidden;
 
     background:
       linear-gradient(
         90deg,
-        rgba(255, 255, 255, 0.055),
-        rgba(255, 255, 255, 0.018)
+        var(--teamColor) 0%,
+        var(--teamColor) 42%,
+        var(--teamDark) 100%
       );
 
-    border: 1px solid rgba(255, 255, 255, 0.13);
-    border-left: 5px solid var(--teamColor);
+    border: 1px solid rgba(255, 255, 255, 0.16);
 
     box-shadow:
-      0 2px 5px rgba(0, 0, 0, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      0 3px 7px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+    box-sizing: border-box;
+
+    cursor: pointer;
 
     transition:
       transform 0.15s ease,
-      background 0.15s ease;
+      filter 0.15s ease;
   }
 
   .rankingCard:hover {
-    transform: translateX(2px);
+    transform: translateX(3px);
+    filter: brightness(1.08);
+  }
+
+  /* ============================================================
+     RANK BOX
+     ============================================================ */
+
+  .rankBox {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.18),
+        rgba(0, 0, 0, 0.22)
+      );
+
+    border-right:
+      1px solid rgba(255, 255, 255, 0.20);
+
+    box-sizing: border-box;
+
+    z-index: 2;
+  }
+
+  .rankNumber {
+    color: #fff;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.55rem;
+    font-weight: 900;
+
+    line-height: 1;
+
+    text-shadow:
+      1px 2px 3px rgba(0, 0, 0, 0.85);
+  }
+
+  /* ============================================================
+     TEAM INFORMATION
+     ============================================================ */
+
+  .teamInfo {
+    min-width: 0;
+
+    padding-left: 12px;
+    padding-right: 4px;
+
+    z-index: 3;
+
+    box-sizing: border-box;
+  }
+
+  .teamName {
+    overflow: hidden;
+
+    color: #fff;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 900;
+
+    line-height: 1.1;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    text-shadow:
+      1px 2px 3px rgba(0, 0, 0, 0.9);
+  }
+
+  .movement {
+    margin-top: 3px;
+
+    color: rgba(255, 255, 255, 0.70);
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+
+    line-height: 1;
+  }
+
+  /* ============================================================
+     SCORE
+     ============================================================ */
+
+  .score {
+    position: relative;
+
+    color: #fff;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 900;
+
+    line-height: 1;
+
+    text-align: right;
+
+    padding-right: 8px;
+
+    text-shadow:
+      1px 2px 3px rgba(0, 0, 0, 0.9);
+
+    z-index: 4;
+  }
+
+  /* ============================================================
+     LARGE TEAM LOGO
+     ============================================================ */
+
+  .teamLogo {
+    position: absolute;
+
+    right: -2px;
+    top: 50%;
+
+    width: 76px;
+    height: 76px;
+
+    transform: translateY(-50%);
+
+    object-fit: contain;
+
+    /*
+     * Important:
+     * No circular crop.
+     * No white background.
+     * No border.
+     *
+     * This allows the logo to visually extend
+     * toward/over the edge like the NFL graphic.
+     */
+    border: none;
+    border-radius: 0;
+
+    background: transparent;
+
+    filter:
+      drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.75));
+
+    z-index: 5;
+
+    pointer-events: none;
+  }
+
+  /*
+   * Slight dark fade behind the logo so it remains readable.
+   */
+  .logoFade {
+    position: absolute;
+
+    right: 0;
+    top: 0;
+
+    width: 105px;
+    height: 100%;
 
     background:
       linear-gradient(
         90deg,
-        rgba(255, 255, 255, 0.09),
-        rgba(255, 255, 255, 0.025)
+        transparent 0%,
+        rgba(0, 0, 0, 0.05) 30%,
+        rgba(0, 0, 0, 0.38) 100%
       );
+
+    pointer-events: none;
+
+    z-index: 1;
   }
 
-  /* ================================
-     RANK NUMBER
-     ================================ */
-
-.rankNumber {
-  padding-left: 10px;
-
-  color: #fff;
-
-  font-family: Arial, sans-serif;
-  font-size: 1.65rem;
-  font-weight: 900;
-
-  line-height: 1;
-
-  text-shadow:
-    1px 2px 3px rgba(0, 0, 0, 0.8);
-}
-
-.rankNumber.topThree {
-  color: #fff;
-}
-
-  /* ================================
-     AVATAR
-     ================================ */
-
-.avatar {
-  width: 52px;
-  height: 52px;
-
-  object-fit: contain;
-
-  border-radius: 50%;
-
-  border: 2px solid rgba(255, 255, 255, 0.75);
-
-  background: rgba(255, 255, 255, 0.95);
-
-  cursor: pointer;
-
-  box-shadow:
-    0 2px 5px rgba(0, 0, 0, 0.65);
-
-  z-index: 5;
-}
-
-  /* ================================
-     TEAM NAME
-     ================================ */
-
-.teamName {
-  overflow: hidden;
-
-  color: #fff;
-
-  font-family: Arial, sans-serif;
-  font-size: 0.95rem;
-  font-weight: 800;
-
-  line-height: 1.1;
-
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-  text-shadow:
-    1px 2px 3px rgba(0, 0, 0, 0.8);
-}
-
-  /* ================================
-     SCORE
-     ================================ */
-
-.score {
-  min-width: 70px;
-  padding-right: 12px;
-
-  color: #fff;
-
-  font-family: Arial, sans-serif;
-  font-size: 1rem;
-  font-weight: 900;
-
-  text-align: right;
-
-  text-shadow:
-    1px 2px 3px rgba(0, 0, 0, 0.8);
-}
-
-  /* ================================
+  /* ============================================================
      TOP 3
-     ================================ */
+     ============================================================ */
 
+  .rankingCard.topRank {
+    height: 70px;
+    min-height: 70px;
 
+    border-color:
+      rgba(255, 255, 255, 0.28);
 
-  /* ================================
+    box-shadow:
+      0 4px 9px rgba(0, 0, 0, 0.50),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  .topRank .rankNumber {
+    font-size: 1.7rem;
+  }
+
+  .topRank .teamLogo {
+    width: 82px;
+    height: 82px;
+  }
+
+  /* ============================================================
      MOBILE
-     ================================ */
+     ============================================================ */
 
-@media (max-width: 700px) {
-  .powerRankings {
-    padding-left: 6px;
-    padding-right: 6px;
+  @media (max-width: 700px) {
+    .powerRankings {
+      margin-top: 15px;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    .rankingTitle {
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+    }
+
+    .rankingSubtitle {
+      font-size: 0.7rem;
+    }
+
+    /*
+     * One column on phones.
+     */
+    .rankingGrid {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .rankingColumn {
+      gap: 6px;
+    }
+
+    .rankingCard {
+      grid-template-columns:
+        48px
+        minmax(0, 1fr)
+        58px
+        68px;
+
+      height: 60px;
+      min-height: 60px;
+    }
+
+    .rankingCard.topRank {
+      height: 64px;
+      min-height: 64px;
+    }
+
+    .rankNumber {
+      font-size: 1.3rem;
+    }
+
+    .topRank .rankNumber {
+      font-size: 1.45rem;
+    }
+
+    .teamInfo {
+      padding-left: 9px;
+    }
+
+    .teamName {
+      font-size: 0.82rem;
+    }
+
+    .movement {
+      font-size: 0.58rem;
+    }
+
+    .score {
+      font-size: 0.82rem;
+      padding-right: 5px;
+    }
+
+    .teamLogo {
+      width: 68px;
+      height: 68px;
+      right: -2px;
+    }
+
+    .topRank .teamLogo {
+      width: 74px;
+      height: 74px;
+    }
+
+    .logoFade {
+      width: 90px;
+    }
   }
 
-  .rankingGrid {
-    grid-template-columns: 1fr;
-    gap: 6px;
+  /* ============================================================
+     VERY SMALL PHONES
+     ============================================================ */
+
+  @media (max-width: 380px) {
+    .rankingCard {
+      grid-template-columns:
+        42px
+        minmax(0, 1fr)
+        54px
+        58px;
+    }
+
+    .rankNumber {
+      font-size: 1.15rem;
+    }
+
+    .teamName {
+      font-size: 0.75rem;
+    }
+
+    .score {
+      font-size: 0.75rem;
+    }
+
+    .teamLogo {
+      width: 60px;
+      height: 60px;
+    }
   }
 
-  .rankingCard {
-    min-height: 62px;
+  /* ============================================================
+     REDUCED MOTION
+     ============================================================ */
 
-    grid-template-columns:
-      46px
-      50px
-      minmax(0, 1fr)
-      62px;
+  @media (prefers-reduced-motion: reduce) {
+    .rankingCard {
+      transition: none;
+    }
   }
-
-  .avatar {
-    width: 46px;
-    height: 46px;
-  }
-
-  .rankNumber {
-    font-size: 1.35rem;
-  }
-
-  .teamName {
-    font-size: 0.84rem;
-  }
-
-  .score {
-    min-width: 62px;
-    padding-right: 8px;
-    font-size: 0.85rem;
-  }
-}
 </style>
 
 {#if validGraph && !seasonOver}
   <section class="powerRankings">
 
+    <!-- HEADER -->
     <div class="rankingHeader">
-      <h2 class="rankingTitle">MFFL Power Rankings</h2>
+      <h2 class="rankingTitle">
+        MFFL Power Rankings
+      </h2>
 
       <div class="rankingSubtitle">
         {leagueData.season} Season • Week {nflState.week || 1}
       </div>
     </div>
 
+    <!-- RANKINGS -->
     <div class="rankingGrid">
 
-      <!-- #1–#8 -->
+      <!-- =====================================================
+           #1–#8
+           ===================================================== -->
+
       <div class="rankingColumn">
+
         {#each rankings.slice(0, 8) as team}
+
           <div
+            class:topRank={team.rank <= 3}
             class="rankingCard"
-            style="--teamColor: var({team.color});"
+            style="
+              --teamColor: {team.color};
+              --teamDark: {team.darkColor};
+            "
+            role="button"
+            tabindex="0"
+            on:click={() =>
+              gotoManager({
+                year: leagueData.season,
+                leagueTeamManagers,
+                rosterID: parseInt(team.rosterID)
+              })
+            }
+            on:keydown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+
+                gotoManager({
+                  year: leagueData.season,
+                  leagueTeamManagers,
+                  rosterID: parseInt(team.rosterID)
+                });
+              }
+            }}
           >
-            <div
-              class="rankNumber"
-              class:topThree={team.rank <= 3}
-            >
-              #{team.rank}
+
+            <!-- RANK -->
+            <div class="rankBox">
+              <span class="rankNumber">
+                #{team.rank}
+              </span>
             </div>
 
-            <img
-              class="avatar"
-              src={getAvatarFromTeamManagers(
-                leagueTeamManagers,
-                team.rosterID,
-                leagueData.season
-              )}
-              alt="Team avatar"
-              on:click={() =>
-                gotoManager({
-                  year: leagueData.season,
-                  leagueTeamManagers,
-                  rosterID: parseInt(team.rosterID)
-                })
-              }
-            />
-
-            <div
-              class="teamInfo"
-              on:click={() =>
-                gotoManager({
-                  year: leagueData.season,
-                  leagueTeamManagers,
-                  rosterID: parseInt(team.rosterID)
-                })
-              }
-            >
+            <!-- TEAM NAME -->
+            <div class="teamInfo">
               <div class="teamName">
                 {team.manager?.name || 'Unknown Team'}
               </div>
@@ -446,54 +801,78 @@ rankings = rosterPowers
               </div>
             </div>
 
+            <!-- SCORE -->
             <div class="score">
               {team.powerScore}
             </div>
+
+            <!-- LOGO BACKGROUND -->
+            <div class="logoFade"></div>
+
+            <!-- TEAM LOGO -->
+            <img
+              class="teamLogo"
+              src={getAvatarFromTeamManagers(
+                leagueTeamManagers,
+                team.rosterID,
+                leagueData.season
+              )}
+              alt=""
+            />
+
           </div>
+
         {/each}
+
       </div>
 
-      <!-- #9–#16 -->
+
+      <!-- =====================================================
+           #9–#16
+           ===================================================== -->
+
       <div class="rankingColumn">
+
         {#each rankings.slice(8, 16) as team}
+
           <div
+            class:topRank={team.rank <= 3}
             class="rankingCard"
-            style="--teamColor: var({team.color});"
+            style="
+              --teamColor: {team.color};
+              --teamDark: {team.darkColor};
+            "
+            role="button"
+            tabindex="0"
+            on:click={() =>
+              gotoManager({
+                year: leagueData.season,
+                leagueTeamManagers,
+                rosterID: parseInt(team.rosterID)
+              })
+            }
+            on:keydown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+
+                gotoManager({
+                  year: leagueData.season,
+                  leagueTeamManagers,
+                  rosterID: parseInt(team.rosterID)
+                });
+              }
+            }}
           >
-            <div
-              class="rankNumber"
-              class:topThree={team.rank <= 3}
-            >
-              #{team.rank}
+
+            <!-- RANK -->
+            <div class="rankBox">
+              <span class="rankNumber">
+                #{team.rank}
+              </span>
             </div>
 
-            <img
-              class="avatar"
-              src={getAvatarFromTeamManagers(
-                leagueTeamManagers,
-                team.rosterID,
-                leagueData.season
-              )}
-              alt="Team avatar"
-              on:click={() =>
-                gotoManager({
-                  year: leagueData.season,
-                  leagueTeamManagers,
-                  rosterID: parseInt(team.rosterID)
-                })
-              }
-            />
-
-            <div
-              class="teamInfo"
-              on:click={() =>
-                gotoManager({
-                  year: leagueData.season,
-                  leagueTeamManagers,
-                  rosterID: parseInt(team.rosterID)
-                })
-              }
-            >
+            <!-- TEAM NAME -->
+            <div class="teamInfo">
               <div class="teamName">
                 {team.manager?.name || 'Unknown Team'}
               </div>
@@ -503,13 +882,32 @@ rankings = rosterPowers
               </div>
             </div>
 
+            <!-- SCORE -->
             <div class="score">
               {team.powerScore}
             </div>
+
+            <!-- LOGO BACKGROUND -->
+            <div class="logoFade"></div>
+
+            <!-- TEAM LOGO -->
+            <img
+              class="teamLogo"
+              src={getAvatarFromTeamManagers(
+                leagueTeamManagers,
+                team.rosterID,
+                leagueData.season
+              )}
+              alt=""
+            />
+
           </div>
+
         {/each}
+
       </div>
 
     </div>
+
   </section>
 {/if}
