@@ -271,11 +271,11 @@
 
 .powerRankings {
   width: 100%;
-  max-width: 1150px;
+  max-width: 1000px;
 
   margin: 22px auto 0;
 
-  padding: 0 18px 30px;
+  padding: 0 10px 30px;
 
   box-sizing: border-box;
 }
@@ -330,15 +330,25 @@
 
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  column-gap: 14px;
+  column-gap: 12px;
   row-gap: 7px;
 
   width: 100%;
-  max-width: none;
+  max-width: 900px;
 
   margin: 0 auto;
 
   align-items: start;
+}
+
+.rankingColumn {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  min-width: 0;
+
+  gap: 7px;
 }
 
 
