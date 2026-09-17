@@ -615,12 +615,13 @@ function normalizeTeamName(name) {
      MOBILE
      ============================================================ */
 
-  @media (max-width: 700px) {
-    .powerRankings {
-      margin-top: 15px;
-      padding-left: 6px;
-      padding-right: 6px;
-    }
+@media (max-width: 700px) {
+  .powerRankings {
+    width: 94%;
+    margin: 15px auto 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
 
     .rankingTitle {
       font-size: 1.4rem;
