@@ -36,8 +36,8 @@
 
   const teamColors = {
     "the people's champ": {
-      primary: '#5B0F18',
-      dark: '#26070B'
+      primary: '#5B2A86',
+      dark: '#006847'
     },
 
     "ceedee tds": {
@@ -45,29 +45,29 @@
       dark: '#001B4D'
     },
 
-    "chosen one": {
-      primary: '#8C1D40',
-      dark: '#3F0D20'
-    },
+"chosen one": {
+  primary: '#6A1B9A',
+  dark: '#5A0F24'
+},
 
-    "child support": {
-      primary: '#C60C30',
-      dark: '#550514'
-    },
+"child support": {
+  primary: '#D4AF37',
+  dark: '#006400'
+},
 
     "bay area party supplies": {
       primary: '#AA0000',
       dark: '#470000'
     },
 
-    "brute force attack": {
-      primary: '#C8102E',
-      dark: '#520411'
-    },
+"brute force attack": {
+  primary: '#0B162A',
+  dark: '#C83803'
+},
 
     "slickbears": {
-      primary: '#B3995D',
-      dark: '#4C4122'
+      primary: '#C83803',
+      dark: '#0B162A'
     },
 
     "texastimeshifts": {
@@ -110,15 +110,15 @@
       dark: '#00364F'
     },
 
-    "loud and stroud": {
-      primary: '#0085CA',
-      dark: '#00364F'
-    },
+"loud and stroud": {
+  primary: '#03202F',
+  dark: '#A71930'
+},
 
-    "the comeback kid": {
-      primary: '#AA0000',
-      dark: '#470000'
-    }
+"the comeback kid": {
+  primary: '#BF5700',
+  dark: '#7C2D00'
+},
   };
 
   /*
