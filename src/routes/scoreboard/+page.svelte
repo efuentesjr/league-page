@@ -1,36 +1,36 @@
 <script>
-		import { onMount } from 'svelte';
-		import {
-  		getLeagueMatchups,
-  		getLeagueTeamManagers,
-  		getTeamFromTeamManagers,
-  		getRivalryMatchups,
-  		getNflGames,
-  		getNflState
-		} from '$lib/utils/helper';
+	import { onMount } from 'svelte';
+	import {
+		getLeagueMatchups,
+		getLeagueTeamManagers,
+		getTeamFromTeamManagers,
+		getRivalryMatchups,
+		getNflGames,
+		getNflState
+	} from '$lib/utils/helper';
 
-		const title = 'MFFL LIVE SCOREBOARD';
-		const season = '2026 SEASON';
-		let weekNumber = 1;
+	const title = 'MFFL LIVE SCOREBOARD';
+	const season = '2026 SEASON';
+	let weekNumber = 1;
 
-		const HOLD_TIME = 5000;
-		const SLIDE_TIME = 900;
+	const HOLD_TIME = 5000;
+	const SLIDE_TIME = 900;
 
-		let games = [];
-		let loading = true;
-		let error = '';
-		let currentGame = 0;
-		let transitioning = false;
+	let games = [];
+	let loading = true;
+	let error = '';
+	let currentGame = 0;
+	let transitioning = false;
 
-		const buildGames = async (matchupsData, teamManagersData) => {
-  			const nflGames = await getNflGames(2026, weekNumber);
+	const buildGames = async (matchupsData, teamManagersData) => {
+		const nflGames = await getNflGames(2026, weekNumber);
 
-  		const isLive = nflGames.some(
-		    (game) => game.status === 'in_progress'
-  		);
-		
-		  const weekData = matchupsData?.matchupWeeks?.find(
-		    (item) => Number(item.week) === weekNumber
+		const isLive = nflGames.some(
+			(game) => game.status === 'in_progress'
+		);
+
+		const weekData = matchupsData?.matchupWeeks?.find(
+			(item) => Number(item.week) === weekNumber
 		);
 
 		if (!weekData) {
@@ -94,13 +94,14 @@
 						);
 					}
 				}
-					const allPlayersDone =
-	 					nflGames.length > 0 &&
-  						nflGames.every((game) => game.status === 'complete');
 
-					return {
-					  	matchupId,
-					  	gameNumber: index + 1,
+				const allPlayersDone =
+					nflGames.length > 0 &&
+					nflGames.every((game) => game.status === 'complete');
+
+				return {
+					matchupId,
+					gameNumber: index + 1,
 
 					away: {
 						name: awayTeam?.name || 'Unknown Team',
@@ -125,12 +126,10 @@
 								)
 							: Number(home.points || 0)
 					},
+
 					h2h,
-
 					allPlayersDone,
-
 					isLive,
-
 					status: 'LIVE'
 				};
 			})
@@ -146,12 +145,12 @@
 			const nflState = await getNflState();
 
 			if (nflState?.week) {
-  				weekNumber = Number(nflState.week);
+				weekNumber = Number(nflState.week);
 			}
 
 			const [matchupsData, teamManagersData] = await Promise.all([
-  				getLeagueMatchups(true),
-  				getLeagueTeamManagers()
+				getLeagueMatchups(true),
+				getLeagueTeamManagers()
 			]);
 
 			const newGames = await buildGames(
@@ -221,9 +220,9 @@
 
 	<header class="top-bar">
 
-<div class="league-name">
-	<img src="/badge.png" alt="MFFL" />
-</div>
+		<div class="league-name">
+			<img src="/badge.png" alt="MFFL" />
+		</div>
 
 		<div class="header-center">
 			<h1>{title}</h1>
@@ -235,10 +234,10 @@
 
 		{#if games[currentGame]?.isLive}
 			<div class="live-indicator">
-    			<span class="dot"></span>
-    			LIVE
-  			</div>
-{/if}
+				<span class="dot"></span>
+				LIVE
+			</div>
+		{/if}
 
 	</header>
 
@@ -277,29 +276,30 @@
 
 				<div class="teams">
 
-				<div
-  					class="team"
-					class:winning={games[currentGame].away.score > games[currentGame].home.score}
-  					class:completed={games[currentGame].allPlayersDone}
-				>
+					<div
+						class="team"
+						class:winning={games[currentGame].away.score > games[currentGame].home.score}
+						class:completed={games[currentGame].allPlayersDone}
+					>
 
-				<div class="team-name">
-    				{games[currentGame].away.name}
-				</div>
+						<div class="team-name">
+							{games[currentGame].away.name}
+						</div>
 
-				{#if games[currentGame].away.logo}
-    				<img
-        				src={games[currentGame].away.logo}
-        				alt={games[currentGame].away.name}
-        				class="logo"
-   					/>
-				{:else}
-    				<div class="logo placeholder">?</div>
-				{/if}
+						{#if games[currentGame].away.logo}
+							<img
+								src={games[currentGame].away.logo}
+								alt={games[currentGame].away.name}
+								class="logo"
+							/>
+						{:else}
+							<div class="logo placeholder">?</div>
+						{/if}
 
-				<div class="score">
-    				{games[currentGame].away.score.toFixed(2)}
-				</div>
+						<div class="score">
+							{games[currentGame].away.score.toFixed(2)}
+						</div>
+
 					</div>
 
 					<div class="center-column">
@@ -380,25 +380,25 @@
 
 					</div>
 
-						<div
-  							class="team"
-  							class:winning={games[currentGame].home.score > games[currentGame].away.score}
-  							class:completed={games[currentGame].allPlayersDone}
-						>
+					<div
+						class="team"
+						class:winning={games[currentGame].home.score > games[currentGame].away.score}
+						class:completed={games[currentGame].allPlayersDone}
+					>
 
-					<div class="team-name">
-    					{games[currentGame].home.name}
-					</div>
+						<div class="team-name">
+							{games[currentGame].home.name}
+						</div>
 
-					{#if games[currentGame].home.logo}
-					    <img
-					        src={games[currentGame].home.logo}
-					        alt={games[currentGame].home.name}
-					        class="logo"
-					    />
-					{:else}
-					    <div class="logo placeholder">?</div>
-					{/if}
+						{#if games[currentGame].home.logo}
+							<img
+								src={games[currentGame].home.logo}
+								alt={games[currentGame].home.name}
+								class="logo"
+							/>
+						{:else}
+							<div class="logo placeholder">?</div>
+						{/if}
 
 						<div class="score">
 							{games[currentGame].home.score.toFixed(2)}
@@ -447,14 +447,14 @@
 		display: flex;
 		flex-direction: column;
 
-	background:
-		radial-gradient(
-			ellipse at 50% 42%,
-			rgba(20, 55, 85, 0.55) 0%,
-			rgba(10, 25, 40, 0.32) 30%,
-			rgba(5, 10, 16, 0.9) 65%,
-			#000 100%
-	);
+		background:
+			radial-gradient(
+				ellipse at 50% 42%,
+				rgba(20, 55, 85, 0.55) 0%,
+				rgba(10, 25, 40, 0.32) 30%,
+				rgba(5, 10, 16, 0.9) 65%,
+				#000 100%
+			);
 
 		color: #fff;
 
@@ -482,16 +482,16 @@
 		border-bottom: 2px solid #30363d;
 	}
 
-.league-name {
-	display: flex;
-	align-items: center;
-}
+	.league-name {
+		display: flex;
+		align-items: center;
+	}
 
-.league-name img {
-	width: 72px;
-	height: 72px;
-	object-fit: contain;
-}
+	.league-name img {
+		width: 72px;
+		height: 72px;
+		object-fit: contain;
+	}
 
 	.header-center {
 		text-align: center;
@@ -558,14 +558,15 @@
 		padding: 0px 4vw;
 	}
 
-.matchup-card {
-    position: relative;
-    top: -20px;
+	.matchup-card {
+		position: relative;
+		top: -20px;
 
-    width: 100%;
-    max-width: 1500px;
+		width: 100%;
+		max-width: 1500px;
 
-    padding: 0 25px 14px;
+		padding: 0 25px 14px;
+
 		text-align: center;
 
 		background: transparent;
@@ -610,8 +611,8 @@
 	.game-label {
 		height: 30px;
 
-    	margin-top: -12px;
-    	margin-bottom: 10px;
+		margin-top: -12px;
+		margin-bottom: 10px;
 
 		font-size: 22px;
 		font-weight: 800;
@@ -728,34 +729,52 @@
 		line-height: 1;
 	}
 
+	/* LIVE LEADER — WHITE GLOW */
 	.team.winning .logo {
-	  animation: winnerGlow 1.8s ease-in-out infinite;
+		animation: winnerGlow 1.8s ease-in-out infinite !important;
 	}
 
+	/* COMPLETED WINNER — GOLD GLOW */
 	.team.winning.completed .logo,
 	.team.winning.completed .score {
-	  animation: winnerGlowGold 1.8s ease-in-out infinite;
+		animation: winnerGlowGold 1.8s ease-in-out infinite !important;
 	}
 
-	@keyframes winnerGlowGold {
-	  0%,
-	  100% {
-    	filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.25));
-  	}
-
-  	50% {
-    	filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.95));
-  	}
-	}
-
+	/* WHITE PULSING GLOW */
 	@keyframes winnerGlow {
 		0%,
 		100% {
-			filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.25));
+			box-shadow:
+				0 0 5px rgba(255, 255, 255, 0.35),
+				0 0 12px rgba(255, 255, 255, 0.25),
+				0 15px 40px rgba(0, 0, 0, 0.55);
 		}
 
 		50% {
-			filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.85));
+			box-shadow:
+				0 0 12px rgba(255, 255, 255, 0.95),
+				0 0 30px rgba(255, 255, 255, 0.8),
+				0 0 55px rgba(255, 255, 255, 0.55),
+				0 15px 40px rgba(0, 0, 0, 0.55);
+		}
+	}
+
+	/* GOLD PULSING GLOW */
+	@keyframes winnerGlowGold {
+		0%,
+		100% {
+			box-shadow:
+				0 0 5px rgba(255, 215, 0, 0.35),
+				0 0 12px rgba(255, 215, 0, 0.25),
+				0 15px 40px rgba(0, 0, 0, 0.55);
+		}
+
+		50% {
+			box-shadow:
+				0 0 12px rgba(255, 215, 0, 1),
+				0 0 30px rgba(255, 215, 0, 0.9),
+				0 0 55px rgba(255, 215, 0, 0.65),
+				0 15px 40px rgba(0, 0, 0, 0.55);
 		}
 	}
 
