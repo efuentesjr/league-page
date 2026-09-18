@@ -56,7 +56,6 @@
 					matchupsData.year
 				);
 
-				// Get the manager IDs for each current roster
 				const yearManagers =
 					teamManagersData.teamManagersMap[matchupsData.year];
 
@@ -69,7 +68,6 @@
 				const awayManagerID = awayManagers[0];
 				const homeManagerID = homeManagers[0];
 
-				// Pull the existing Rivalry H2H calculation
 				let h2h = null;
 
 				if (awayManagerID && homeManagerID) {
@@ -108,10 +106,10 @@
 						logo: awayTeam?.avatar || '',
 						score: Array.isArray(away.points)
 							? away.points.reduce(
-									(total, points) =>
-										total + Number(points || 0),
-									0
-								)
+								(total, points) =>
+									total + Number(points || 0),
+								0
+							)
 							: Number(away.points || 0)
 					},
 
@@ -120,10 +118,10 @@
 						logo: homeTeam?.avatar || '',
 						score: Array.isArray(home.points)
 							? home.points.reduce(
-									(total, points) =>
-										total + Number(points || 0),
-									0
-								)
+								(total, points) =>
+									total + Number(points || 0),
+								0
+							)
 							: Number(home.points || 0)
 					},
 
@@ -276,14 +274,12 @@
 
 				<div class="teams">
 
+					<!-- AWAY TEAM -->
 					<div
 						class="team"
-						class:liveLeading={
-							games[currentGame].away.score > games[currentGame].home.score &&
-							!games[currentGame].allPlayersDone
-						}
 						class:winning={
-							games[currentGame].away.score > games[currentGame].home.score
+							games[currentGame].away.score >
+							games[currentGame].home.score
 						}
 						class:completed={games[currentGame].allPlayersDone}
 					>
@@ -308,6 +304,7 @@
 
 					</div>
 
+					<!-- CENTER -->
 					<div class="center-column">
 
 						<div class="vs">
@@ -386,14 +383,12 @@
 
 					</div>
 
+					<!-- HOME TEAM -->
 					<div
 						class="team"
-						class:liveLeading={
-							games[currentGame].home.score > games[currentGame].away.score &&
-							!games[currentGame].allPlayersDone
-						}
 						class:winning={
-							games[currentGame].home.score > games[currentGame].away.score
+							games[currentGame].home.score >
+							games[currentGame].away.score
 						}
 						class:completed={games[currentGame].allPlayersDone}
 					>
@@ -741,25 +736,17 @@
 		line-height: 1;
 	}
 
-	/*
-	 * LIVE LEADER
-	 *
-	 * Uses the actual score comparison rather than relying on
-	 * the NFL API live-status value.
-	 *
-	 * This means the team currently ahead gets the white glow
-	 * while the matchup is still in progress.
-	 */
-	.team.liveLeading .logo {
+	/* LIVE LEADER — WHITE PULSING GLOW */
+	.team.winning:not(.completed) .logo {
 		animation: liveLeaderGlow 1.8s ease-in-out infinite !important;
+
+		filter:
+			drop-shadow(0 0 5px rgba(255, 255, 255, 0.45))
+			drop-shadow(0 0 14px rgba(255, 255, 255, 0.8))
+			drop-shadow(0 0 28px rgba(255, 255, 255, 0.6));
 	}
 
-	/*
-	 * COMPLETED WINNER
-	 *
-	 * This comes after the live rule so a completed winner
-	 * switches from white to gold.
-	 */
+	/* COMPLETED WINNER — GOLD PULSING GLOW */
 	.team.winning.completed .logo,
 	.team.winning.completed .score {
 		animation: completedWinnerGlow 1.8s ease-in-out infinite !important;
@@ -767,33 +754,35 @@
 
 	/* WHITE LIVE LEADER */
 	@keyframes liveLeaderGlow {
-		0%,
-		100% {
-			filter: drop-shadow(
-				0 0 4px rgba(255, 255, 255, 0.25)
-			);
+		0%, 100% {
+			filter:
+				drop-shadow(0 0 4px rgba(255, 255, 255, 0.25))
+				drop-shadow(0 0 10px rgba(255, 255, 255, 0.35));
 		}
 
 		50% {
-			filter: drop-shadow(
-				0 0 18px rgba(255, 255, 255, 0.95)
-			);
+			filter:
+				drop-shadow(0 0 8px rgba(255, 255, 255, 1))
+				drop-shadow(0 0 20px rgba(255, 255, 255, 1))
+				drop-shadow(0 0 40px rgba(255, 255, 255, 0.85));
 		}
 	}
 
 	/* GOLD COMPLETED WINNER */
 	@keyframes completedWinnerGlow {
-		0%,
-		100% {
-			filter: drop-shadow(
-				0 0 4px rgba(255, 215, 0, 0.25)
-			);
+		0%, 100% {
+			box-shadow:
+				0 0 5px rgba(255, 215, 0, 0.35),
+				0 0 12px rgba(255, 215, 0, 0.25),
+				0 15px 40px rgba(0, 0, 0, 0.55);
 		}
 
 		50% {
-			filter: drop-shadow(
-				0 0 18px rgba(255, 215, 0, 0.95)
-			);
+			box-shadow:
+				0 0 12px rgba(255, 215, 0, 1),
+				0 0 30px rgba(255, 215, 0, 0.95),
+				0 0 55px rgba(255, 215, 0, 0.75),
+				0 15px 40px rgba(0, 0, 0, 0.55);
 		}
 	}
 
