@@ -278,7 +278,13 @@
 
 					<div
 						class="team"
-						class:winning={games[currentGame].away.score > games[currentGame].home.score}
+						class:liveLeading={
+							games[currentGame].isLive &&
+							games[currentGame].away.score > games[currentGame].home.score
+						}
+						class:winning={
+							games[currentGame].away.score > games[currentGame].home.score
+						}
 						class:completed={games[currentGame].allPlayersDone}
 					>
 
@@ -382,7 +388,13 @@
 
 					<div
 						class="team"
-						class:winning={games[currentGame].home.score > games[currentGame].away.score}
+						class:liveLeading={
+							games[currentGame].isLive &&
+							games[currentGame].home.score > games[currentGame].away.score
+						}
+						class:winning={
+							games[currentGame].home.score > games[currentGame].away.score
+						}
 						class:completed={games[currentGame].allPlayersDone}
 					>
 
@@ -730,7 +742,7 @@
 	}
 
 	/* LIVE LEADER — WHITE GLOW */
-	.team.winning .logo {
+	.team.liveLeading .logo {
 		animation: winnerGlow 1.8s ease-in-out infinite !important;
 	}
 
@@ -742,39 +754,31 @@
 
 	/* WHITE PULSING GLOW */
 	@keyframes winnerGlow {
-		0%,
-		100% {
-			box-shadow:
-				0 0 5px rgba(255, 255, 255, 0.35),
-				0 0 12px rgba(255, 255, 255, 0.25),
-				0 15px 40px rgba(0, 0, 0, 0.55);
+		0%, 100% {
+			filter:
+				drop-shadow(0 0 4px rgba(255, 255, 255, 0.25))
+				drop-shadow(0 0 10px rgba(255, 255, 255, 0.15));
 		}
-
 		50% {
-			box-shadow:
-				0 0 12px rgba(255, 255, 255, 0.95),
-				0 0 30px rgba(255, 255, 255, 0.8),
-				0 0 55px rgba(255, 255, 255, 0.55),
-				0 15px 40px rgba(0, 0, 0, 0.55);
+			filter:
+				drop-shadow(0 0 10px rgba(255, 255, 255, 0.95))
+				drop-shadow(0 0 24px rgba(255, 255, 255, 0.75))
+				drop-shadow(0 0 40px rgba(255, 255, 255, 0.45));
 		}
 	}
 
 	/* GOLD PULSING GLOW */
 	@keyframes winnerGlowGold {
-		0%,
-		100% {
-			box-shadow:
-				0 0 5px rgba(255, 215, 0, 0.35),
-				0 0 12px rgba(255, 215, 0, 0.25),
-				0 15px 40px rgba(0, 0, 0, 0.55);
+		0%, 100% {
+			filter:
+				drop-shadow(0 0 4px rgba(255, 215, 0, 0.25))
+				drop-shadow(0 0 10px rgba(255, 215, 0, 0.15));
 		}
-
 		50% {
-			box-shadow:
-				0 0 12px rgba(255, 215, 0, 1),
-				0 0 30px rgba(255, 215, 0, 0.9),
-				0 0 55px rgba(255, 215, 0, 0.65),
-				0 15px 40px rgba(0, 0, 0, 0.55);
+			filter:
+				drop-shadow(0 0 10px rgba(255, 215, 0, 1))
+				drop-shadow(0 0 24px rgba(255, 215, 0, 0.85))
+				drop-shadow(0 0 40px rgba(255, 215, 0, 0.55));
 		}
 	}
 
