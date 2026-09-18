@@ -279,8 +279,8 @@
 					<div
 						class="team"
 						class:liveLeading={
-							games[currentGame].isLive &&
-							games[currentGame].away.score > games[currentGame].home.score
+							games[currentGame].away.score > games[currentGame].home.score &&
+							!games[currentGame].allPlayersDone
 						}
 						class:winning={
 							games[currentGame].away.score > games[currentGame].home.score
@@ -389,8 +389,8 @@
 					<div
 						class="team"
 						class:liveLeading={
-							games[currentGame].isLive &&
-							games[currentGame].home.score > games[currentGame].away.score
+							games[currentGame].home.score > games[currentGame].away.score &&
+							!games[currentGame].allPlayersDone
 						}
 						class:winning={
 							games[currentGame].home.score > games[currentGame].away.score
@@ -741,51 +741,59 @@
 		line-height: 1;
 	}
 
-	/* LIVE LEADER — WHITE PULSING GLOW */
+	/*
+	 * LIVE LEADER
+	 *
+	 * Uses the actual score comparison rather than relying on
+	 * the NFL API live-status value.
+	 *
+	 * This means the team currently ahead gets the white glow
+	 * while the matchup is still in progress.
+	 */
 	.team.liveLeading .logo {
-		animation: liveLeaderGlow 1.6s ease-in-out infinite !important;
-		box-shadow:
-			0 0 14px rgba(255, 255, 255, 0.95),
-			0 0 30px rgba(255, 255, 255, 0.65) !important;
+		animation: liveLeaderGlow 1.8s ease-in-out infinite !important;
 	}
 
-	/* COMPLETED WINNER — GOLD PULSING GLOW */
+	/*
+	 * COMPLETED WINNER
+	 *
+	 * This comes after the live rule so a completed winner
+	 * switches from white to gold.
+	 */
 	.team.winning.completed .logo,
 	.team.winning.completed .score {
-		animation: completedWinnerGlow 1.6s ease-in-out infinite !important;
+		animation: completedWinnerGlow 1.8s ease-in-out infinite !important;
 	}
 
 	/* WHITE LIVE LEADER */
 	@keyframes liveLeaderGlow {
-		0%, 100% {
-			box-shadow:
-				0 0 5px rgba(255, 255, 255, 0.35),
-				0 0 12px rgba(255, 255, 255, 0.25),
-				0 15px 40px rgba(0, 0, 0, 0.55);
+		0%,
+		100% {
+			filter: drop-shadow(
+				0 0 4px rgba(255, 255, 255, 0.25)
+			);
 		}
+
 		50% {
-			box-shadow:
-				0 0 12px rgba(255, 255, 255, 1),
-				0 0 30px rgba(255, 255, 255, 0.95),
-				0 0 55px rgba(255, 255, 255, 0.75),
-				0 15px 40px rgba(0, 0, 0, 0.55);
+			filter: drop-shadow(
+				0 0 18px rgba(255, 255, 255, 0.95)
+			);
 		}
 	}
 
 	/* GOLD COMPLETED WINNER */
 	@keyframes completedWinnerGlow {
-		0%, 100% {
-			box-shadow:
-				0 0 5px rgba(255, 215, 0, 0.35),
-				0 0 12px rgba(255, 215, 0, 0.25),
-				0 15px 40px rgba(0, 0, 0, 0.55);
+		0%,
+		100% {
+			filter: drop-shadow(
+				0 0 4px rgba(255, 215, 0, 0.25)
+			);
 		}
+
 		50% {
-			box-shadow:
-				0 0 12px rgba(255, 215, 0, 1),
-				0 0 30px rgba(255, 215, 0, 0.95),
-				0 0 55px rgba(255, 215, 0, 0.75),
-				0 15px 40px rgba(0, 0, 0, 0.55);
+			filter: drop-shadow(
+				0 0 18px rgba(255, 215, 0, 0.95)
+			);
 		}
 	}
 
