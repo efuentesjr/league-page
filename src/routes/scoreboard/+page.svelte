@@ -741,44 +741,51 @@
 		line-height: 1;
 	}
 
-	/* LIVE LEADER — WHITE GLOW */
+	/* LIVE LEADER — WHITE PULSING GLOW */
 	.team.liveLeading .logo {
-		animation: winnerGlow 1.8s ease-in-out infinite !important;
+		animation: liveLeaderGlow 1.6s ease-in-out infinite !important;
+		box-shadow:
+			0 0 14px rgba(255, 255, 255, 0.95),
+			0 0 30px rgba(255, 255, 255, 0.65) !important;
 	}
 
-	/* COMPLETED WINNER — GOLD GLOW */
+	/* COMPLETED WINNER — GOLD PULSING GLOW */
 	.team.winning.completed .logo,
 	.team.winning.completed .score {
-		animation: winnerGlowGold 1.8s ease-in-out infinite !important;
+		animation: completedWinnerGlow 1.6s ease-in-out infinite !important;
 	}
 
-	/* WHITE PULSING GLOW */
-	@keyframes winnerGlow {
+	/* WHITE LIVE LEADER */
+	@keyframes liveLeaderGlow {
 		0%, 100% {
-			filter:
-				drop-shadow(0 0 4px rgba(255, 255, 255, 0.25))
-				drop-shadow(0 0 10px rgba(255, 255, 255, 0.15));
+			box-shadow:
+				0 0 5px rgba(255, 255, 255, 0.35),
+				0 0 12px rgba(255, 255, 255, 0.25),
+				0 15px 40px rgba(0, 0, 0, 0.55);
 		}
 		50% {
-			filter:
-				drop-shadow(0 0 10px rgba(255, 255, 255, 0.95))
-				drop-shadow(0 0 24px rgba(255, 255, 255, 0.75))
-				drop-shadow(0 0 40px rgba(255, 255, 255, 0.45));
+			box-shadow:
+				0 0 12px rgba(255, 255, 255, 1),
+				0 0 30px rgba(255, 255, 255, 0.95),
+				0 0 55px rgba(255, 255, 255, 0.75),
+				0 15px 40px rgba(0, 0, 0, 0.55);
 		}
 	}
 
-	/* GOLD PULSING GLOW */
-	@keyframes winnerGlowGold {
+	/* GOLD COMPLETED WINNER */
+	@keyframes completedWinnerGlow {
 		0%, 100% {
-			filter:
-				drop-shadow(0 0 4px rgba(255, 215, 0, 0.25))
-				drop-shadow(0 0 10px rgba(255, 215, 0, 0.15));
+			box-shadow:
+				0 0 5px rgba(255, 215, 0, 0.35),
+				0 0 12px rgba(255, 215, 0, 0.25),
+				0 15px 40px rgba(0, 0, 0, 0.55);
 		}
 		50% {
-			filter:
-				drop-shadow(0 0 10px rgba(255, 215, 0, 1))
-				drop-shadow(0 0 24px rgba(255, 215, 0, 0.85))
-				drop-shadow(0 0 40px rgba(255, 215, 0, 0.55));
+			box-shadow:
+				0 0 12px rgba(255, 215, 0, 1),
+				0 0 30px rgba(255, 215, 0, 0.95),
+				0 0 55px rgba(255, 215, 0, 0.75),
+				0 15px 40px rgba(0, 0, 0, 0.55);
 		}
 	}
 
