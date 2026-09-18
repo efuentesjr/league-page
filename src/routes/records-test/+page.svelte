@@ -21,8 +21,7 @@
             rankings = calculateManagerLineupIQ(leagueManagerRecords);
 
             /*
-             * Build a simple manager lookup so we can display
-             * manager names instead of Sleeper IDs.
+             * Build manager lookup.
              */
             managerMap = {};
 
@@ -55,8 +54,7 @@
     <h1>Manager Lineup IQ — Sandbox</h1>
 
     <p class="description">
-        Experimental Manager Lineup IQ calculation.
-        This page does not modify the existing Records calculation.
+        Experimental calculation — the live Records page has not been changed.
     </p>
 
     {#if loading}
@@ -74,20 +72,27 @@
     {:else if rankings.length}
 
         <div class="summary">
+
             <div>
                 <strong>Managers:</strong>
                 {rankings.length}
             </div>
 
             <div>
-                <strong>Baseline Potential PPG:</strong>
+                <strong>Median Potential PPG:</strong>
                 {rankings[0].medianPotentialPPG}
             </div>
 
             <div>
-                <strong>Weighting:</strong>
-                70% Efficiency / 30% Roster Strength
+                <strong>Efficiency Weight:</strong>
+                70%
             </div>
+
+            <div>
+                <strong>Roster Strength Weight:</strong>
+                30%
+            </div>
+
         </div>
 
         <div class="table-wrapper">
@@ -100,9 +105,9 @@
                         <th>Manager</th>
                         <th>Manager IQ</th>
                         <th>Current IQ</th>
-                        <th>Efficiency</th>
                         <th>Potential PPG</th>
                         <th>Roster Strength</th>
+                        <th>Adjustment</th>
                         <th>Points</th>
                         <th>Potential</th>
                         <th>Games</th>
@@ -132,15 +137,15 @@
                             </td>
 
                             <td>
-                                {manager.efficiency}%
-                            </td>
-
-                            <td>
                                 {manager.potentialPPG}
                             </td>
 
                             <td>
                                 {manager.rosterStrength}
+                            </td>
+
+                            <td>
+                                {manager.adjustmentFactor}
                             </td>
 
                             <td>
@@ -167,10 +172,10 @@
 
         <div class="formula">
 
-            <h2>How the test score is calculated</h2>
+            <h2>Test Formula</h2>
 
             <p>
-                <strong>Efficiency</strong> =
+                <strong>Current IQ</strong> =
                 Actual Points ÷ Potential Points
             </p>
 
@@ -181,12 +186,17 @@
 
             <p>
                 <strong>Roster Strength</strong> =
-                Manager Potential PPG ÷ League Median Potential PPG
+                Potential PPG ÷ League Median Potential PPG
             </p>
 
             <p>
-                <strong>Manager Lineup IQ</strong> =
-                Efficiency × (0.70 + 0.30 × Roster Strength)
+                <strong>Adjustment Factor</strong> =
+                0.70 + (0.30 × Roster Strength)
+            </p>
+
+            <p>
+                <strong>Manager IQ</strong> =
+                Current IQ × Adjustment Factor
             </p>
 
         </div>
@@ -237,7 +247,7 @@
 
     table {
         width: 100%;
-        min-width: 1050px;
+        min-width: 1100px;
         border-collapse: collapse;
     }
 
