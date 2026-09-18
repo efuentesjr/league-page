@@ -728,6 +728,10 @@
 		line-height: 1;
 	}
 
+	.team.winning:not(.completed) .logo {
+	  animation: winnerGlow 1.8s ease-in-out infinite;
+	}
+
 	.team.winning.completed .logo,
 	.team.winning.completed .score {
 	  animation: winnerGlowGold 1.8s ease-in-out infinite;
