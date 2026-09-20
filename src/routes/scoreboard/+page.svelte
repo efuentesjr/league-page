@@ -26,7 +26,7 @@
 		const nflGames = await getNflGames(2026, weekNumber);
 
 		const isLive = nflGames.some(
-			(game) => game.status === 'in_progress'
+			(game) => game.status === 'in_game'
 		);
 
 		console.log('[scoreboard] NFL games:', nflGames);
