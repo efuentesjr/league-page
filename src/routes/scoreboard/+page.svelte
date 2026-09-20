@@ -799,7 +799,7 @@
 	}
 
 	.vs {
-		font-size: 40px;
+		font-size: 46px;
 		font-weight: 900;
 		letter-spacing: 4px;
 
@@ -807,7 +807,7 @@
 	}
 
 	.h2h-panel {
-		width: 220px;
+		width: 240px;
 
 		margin-top: 16px;
 		padding: 8px 0 6px;
@@ -821,7 +821,7 @@
 	.h2h-title {
 		margin-bottom: 6px;
 
-		font-size: 13px;
+		font-size: 20px;
 		font-weight: 900;
 		letter-spacing: 3px;
 
@@ -857,7 +857,7 @@
 	}
 
 	.h2h-number {
-		font-size: 30px;
+		font-size: 40px;
 		font-weight: 900;
 
 		line-height: 1;
@@ -866,7 +866,7 @@
 	}
 
 	.h2h-points-number {
-		font-size: 16px;
+		font-size: 20px;
 		font-weight: 800;
 
 		font-variant-numeric: tabular-nums;
@@ -877,7 +877,7 @@
 	.h2h-label {
 		margin-top: 3px;
 
-		font-size: 9px;
+		font-size: 16px;
 		font-weight: 800;
 		letter-spacing: 2px;
 
@@ -894,7 +894,7 @@
 	.game-number {
 		margin-top: 40px;
 
-		font-size: 13px;
+		font-size: 20px;
 		font-weight: 800;
 		letter-spacing: 4px;
 
