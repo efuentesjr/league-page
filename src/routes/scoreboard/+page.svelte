@@ -29,6 +29,22 @@
 			(game) => game.status === 'in_progress'
 		);
 
+const isLive = nflGames.some(
+	(game) => game.status === 'in_progress'
+);
+
+console.log('[scoreboard] NFL games:', nflGames);
+console.log(
+	'[scoreboard] LIVE statuses:',
+	nflGames.map((game) => ({
+		game_id: game.game_id,
+		status: game.status,
+		home: game.home,
+		away: game.away,
+		week: game.week
+	}))
+);
+
 		const weekData = matchupsData?.matchupWeeks?.find(
 			(item) => Number(item.week) === weekNumber
 		);
