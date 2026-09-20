@@ -29,21 +29,17 @@
 			(game) => game.status === 'in_progress'
 		);
 
-const isLive = nflGames.some(
-	(game) => game.status === 'in_progress'
-);
-
-console.log('[scoreboard] NFL games:', nflGames);
-console.log(
-	'[scoreboard] LIVE statuses:',
-	nflGames.map((game) => ({
-		game_id: game.game_id,
-		status: game.status,
-		home: game.home,
-		away: game.away,
-		week: game.week
-	}))
-);
+		console.log('[scoreboard] NFL games:', nflGames);
+		console.log(
+			'[scoreboard] LIVE statuses:',
+			nflGames.map((game) => ({
+				game_id: game.game_id,
+				status: game.status,
+				home: game.home,
+				away: game.away,
+				week: game.week
+			}))
+		);
 
 		const weekData = matchupsData?.matchupWeeks?.find(
 			(item) => Number(item.week) === weekNumber
@@ -122,10 +118,10 @@ console.log(
 						logo: awayTeam?.avatar || '',
 						score: Array.isArray(away.points)
 							? away.points.reduce(
-								(total, points) =>
-									total + Number(points || 0),
-								0
-							)
+									(total, points) =>
+										total + Number(points || 0),
+									0
+								)
 							: Number(away.points || 0)
 					},
 
@@ -134,10 +130,10 @@ console.log(
 						logo: homeTeam?.avatar || '',
 						score: Array.isArray(home.points)
 							? home.points.reduce(
-								(total, points) =>
-									total + Number(points || 0),
-								0
-							)
+									(total, points) =>
+										total + Number(points || 0),
+									0
+								)
 							: Number(home.points || 0)
 					},
 
@@ -752,37 +748,37 @@ console.log(
 		line-height: 1;
 	}
 
-/* LIVE LEADER — BLACK PULSING GLOW */
-.team.winning:not(.completed) .logo {
-	animation: liveLeaderGlow 1.8s ease-in-out infinite !important;
+	/* LIVE LEADER — BLACK PULSING GLOW */
+	.team.winning:not(.completed) .logo {
+		animation: liveLeaderGlow 1.8s ease-in-out infinite !important;
 
-	filter:
-		drop-shadow(0 0 5px rgba(0, 0, 0, 0.6))
-		drop-shadow(0 0 14px rgba(0, 0, 0, 0.8))
-		drop-shadow(0 0 28px rgba(0, 0, 0, 0.7));
-}
-
-/* COMPLETED WINNER — GOLD PULSING GLOW */
-.team.winning.completed .logo,
-.team.winning.completed .score {
-	animation: completedWinnerGlow 1.8s ease-in-out infinite !important;
-}
-
-/* BLACK LIVE LEADER */
-@keyframes liveLeaderGlow {
-	0%, 100% {
 		filter:
-			drop-shadow(0 0 4px rgba(0, 0, 0, 0.4))
-			drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+			drop-shadow(0 0 5px rgba(0, 0, 0, 0.6))
+			drop-shadow(0 0 14px rgba(0, 0, 0, 0.8))
+			drop-shadow(0 0 28px rgba(0, 0, 0, 0.7));
 	}
 
-	50% {
-		filter:
-			drop-shadow(0 0 8px rgba(0, 0, 0, 1))
-			drop-shadow(0 0 20px rgba(0, 0, 0, 1))
-			drop-shadow(0 0 40px rgba(0, 0, 0, 0.9));
+	/* COMPLETED WINNER — GOLD PULSING GLOW */
+	.team.winning.completed .logo,
+	.team.winning.completed .score {
+		animation: completedWinnerGlow 1.8s ease-in-out infinite !important;
 	}
-}
+
+	/* BLACK LIVE LEADER */
+	@keyframes liveLeaderGlow {
+		0%, 100% {
+			filter:
+				drop-shadow(0 0 4px rgba(0, 0, 0, 0.4))
+				drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+		}
+
+		50% {
+			filter:
+				drop-shadow(0 0 8px rgba(0, 0, 0, 1))
+				drop-shadow(0 0 20px rgba(0, 0, 0, 1))
+				drop-shadow(0 0 40px rgba(0, 0, 0, 0.9));
+		}
+	}
 
 	/* GOLD COMPLETED WINNER */
 	@keyframes completedWinnerGlow {
