@@ -734,9 +734,12 @@ const nextGame = () => {
 	}
 
 	.all-scores-title {
-		margin-bottom: 16px;
+    	position: relative;
+    	top: 4px;
 
-		font-size: 24px;
+    	margin-bottom: 16px;
+
+		font-size: 16px;
 		font-weight: 900;
 		letter-spacing: 5px;
 
