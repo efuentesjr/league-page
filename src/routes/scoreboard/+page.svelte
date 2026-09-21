@@ -918,7 +918,7 @@ const nextGame = () => {
 	.game-label {
 		height: 30px;
 
-		margin-top: 0px;
+		margin-top: 25px;
 		margin-bottom: 10px;
 
 		font-size: 22px;
