@@ -301,6 +301,84 @@ const nextGame = () => {
 
 	{:else}
 
+		{#if showAllScores}
+
+			<div class="matchup-stage">
+				<div class="all-scores-card">
+
+					<div class="all-scores-title">
+						ALL SCORES
+						<span>•</span>
+						{games.length} MATCHUPS
+					</div>
+
+					<div class="all-scores-grid">
+
+						{#each games as game}
+
+							<div class="score-summary">
+
+								<div class="summary-game">
+									GAME {game.gameNumber}
+								</div>
+
+								<div
+									class="summary-team"
+									class:winning={game.away.score > game.home.score}
+								>
+									{#if game.away.logo}
+										<img
+											src={game.away.logo}
+										alt={game.away.name}
+										class="summary-logo"
+										/>
+									{/if}
+
+									<span class="summary-name">
+										{game.away.name}
+									</span>
+
+									<span class="summary-score">
+										{game.away.score.toFixed(2)}
+									</span>
+								</div>
+
+								<div class="summary-vs">
+									VS
+								</div>
+
+								<div
+									class="summary-team"
+									class:winning={game.home.score > game.away.score}
+								>
+									{#if game.home.logo}
+										<img
+										src={game.home.logo}
+										alt={game.home.name}
+										class="summary-logo"
+										/>
+									{/if}
+
+									<span class="summary-name">
+										{game.home.name}
+									</span>
+
+									<span class="summary-score">
+										{game.home.score.toFixed(2)}
+									</span>
+								</div>
+
+							</div>
+
+						{/each}
+
+					</div>
+
+				</div>
+			</div>
+
+		{:else}
+
 		<div class="matchup-stage">
 
 			<div
@@ -461,6 +539,8 @@ const nextGame = () => {
 
 		</div>
 
+		{/if}
+
 	{/if}
 
 	<footer class="bottom-bar">
@@ -605,6 +685,184 @@ const nextGame = () => {
 		justify-content: center;
 
 		padding: 0px 4vw;
+	}
+
+	.all-scores-card {
+		position: relative;
+		top: -20px;
+
+		width: 100%;
+		max-width: 1500px;
+
+		padding: 24px 25px 28px;
+
+		text-align: center;
+
+		background: transparent;
+
+		border: none;
+
+		box-shadow: none;
+
+		animation: enter 0.9s ease both;
+	}
+
+	.all-scores-card::before {
+		content: '';
+
+		position: absolute;
+
+		top: -55px;
+		left: -3%;
+		right: -3%;
+		bottom: -65px;
+
+		background: url('/steel-background.jpg') center center / cover no-repeat;
+
+		box-shadow:
+			0 12px 35px rgba(0, 0, 0, 0.55),
+			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+		z-index: 0;
+
+		pointer-events: none;
+	}
+
+	.all-scores-card > * {
+		position: relative;
+		z-index: 1;
+	}
+
+	.all-scores-title {
+		margin-bottom: 16px;
+
+		font-size: 24px;
+		font-weight: 900;
+		letter-spacing: 5px;
+
+		color: #222;
+
+		text-shadow:
+			0 1px 1px rgba(255, 255, 255, 0.55);
+	}
+
+	.all-scores-title span {
+		padding: 0 10px;
+		color: #555;
+	}
+
+	.all-scores-grid {
+		display: grid;
+
+		grid-template-columns: 1fr 1fr;
+
+		gap: 12px 24px;
+
+		width: 100%;
+	}
+
+	.score-summary {
+		display: grid;
+
+		grid-template-columns: 68px minmax(0, 1fr) 28px minmax(0, 1fr);
+
+		align-items: center;
+
+		min-height: 70px;
+
+		padding: 7px 12px;
+
+		background: rgba(255, 255, 255, 0.20);
+
+		border-top: 1px solid rgba(255, 255, 255, 0.45);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+
+		box-shadow:
+			inset 0 1px 0 rgba(255, 255, 255, 0.10),
+			0 5px 15px rgba(0, 0, 0, 0.25);
+	}
+
+	.summary-game {
+		font-size: 13px;
+		font-weight: 900;
+		letter-spacing: 1.5px;
+
+		color: #555;
+	}
+
+	.summary-team {
+		display: grid;
+
+		grid-template-columns: 34px minmax(0, 1fr) auto;
+
+		align-items: center;
+
+		min-width: 0;
+
+		padding: 0 5px;
+
+		color: #222;
+
+		text-align: left;
+	}
+
+	.summary-team.winning {
+		font-weight: 900;
+	}
+
+	.summary-team.winning .summary-logo {
+		animation: summaryWinnerGlow 1.8s ease-in-out infinite;
+	}
+
+	.summary-logo {
+		width: 30px;
+		height: 30px;
+
+		border-radius: 50%;
+
+		object-fit: cover;
+
+		background: #111;
+
+		border: 2px solid #3f464d;
+
+		box-shadow:
+			0 4px 12px rgba(0, 0, 0, 0.5);
+	}
+
+	.summary-name {
+		min-width: 0;
+
+		padding: 0 6px;
+
+		font-size: 16px;
+		font-weight: 800;
+		line-height: 1.05;
+
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		text-shadow:
+			0 1px 2px rgba(255, 255, 255, 0.35);
+	}
+
+	.summary-score {
+		padding-left: 4px;
+
+		font-size: 19px;
+		font-weight: 900;
+
+		font-variant-numeric: tabular-nums;
+
+		color: #000;
+	}
+
+	.summary-vs {
+		font-size: 13px;
+		font-weight: 900;
+
+		color: #555;
 	}
 
 	.matchup-card {
@@ -807,6 +1065,20 @@ const nextGame = () => {
 				drop-shadow(0 0 8px rgba(0, 0, 0, 1))
 				drop-shadow(0 0 20px rgba(0, 0, 0, 1))
 				drop-shadow(0 0 40px rgba(0, 0, 0, 0.9));
+		}
+	}
+
+	@keyframes summaryWinnerGlow {
+		0%, 100% {
+			filter:
+				drop-shadow(0 0 3px rgba(255, 215, 0, 0.35))
+				drop-shadow(0 0 8px rgba(255, 215, 0, 0.20));
+		}
+
+		50% {
+			filter:
+				drop-shadow(0 0 7px rgba(255, 215, 0, 0.95))
+				drop-shadow(0 0 16px rgba(255, 215, 0, 0.75));
 		}
 	}
 
