@@ -691,7 +691,7 @@ const rotate = () => {
 
 	.all-scores-card {
 		position: relative;
-		top: -40px;
+		top: -20px;
 
 		width: 100%;
 		max-width: 1500px;
@@ -756,15 +756,14 @@ const rotate = () => {
 		color: #555;
 	}
 
-	.all-scores-grid {
-		display: grid;
-
-		grid-template-columns: 1fr 1fr;
-
-		gap: 12px 24px;
-
-		width: 100%;
-	}
+.all-scores-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  width: 100%;
+  position: relative;
+  top: -20px;
+}
 
 	.score-summary {
 		display: grid;
