@@ -758,7 +758,7 @@ const rotate = () => {
   gap: 12px 24px;
   width: 100%;
   position: relative;
-  top: 0px;
+  top: -10px;
 }
 
 	.score-summary {
