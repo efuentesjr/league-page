@@ -737,7 +737,7 @@ const rotate = () => {
 
 .all-scores-title {
   position: relative;
-  top: -0px;
+  top: -12px;
   margin-bottom: 16px;
   font-size: 24px;
   font-weight: 900;
@@ -758,7 +758,7 @@ const rotate = () => {
   gap: 12px 24px;
   width: 100%;
   position: relative;
-  top: -px;
+  top: -8px;
 }
 
 	.score-summary {
