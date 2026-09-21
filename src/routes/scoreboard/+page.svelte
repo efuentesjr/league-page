@@ -773,7 +773,7 @@ const rotate = () => {
 
 		align-items: center;
 
-		min-height:	100px;
+		min-height:	75px;
 
 		padding: 7px 12px;
 
