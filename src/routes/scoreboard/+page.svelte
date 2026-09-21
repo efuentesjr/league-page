@@ -184,16 +184,43 @@ const isLive = nflGames.some(
 		}
 	};
 
-	const nextGame = () => {
-		if (games.length <= 1) return;
+const nextGame = () => {
+	if (games.length <= 1) return;
 
-		transitioning = true;
+	console.log(
+		'[scoreboard] ROTATION:',
+		'currentGame =',
+		currentGame,
+		'showAllScores =',
+		showAllScores,
+		'games =',
+		games.length
+	);
 
-		setTimeout(() => {
-			currentGame = (currentGame + 1) % games.length;
-			transitioning = false;
-		}, SLIDE_TIME);
-	};
+	transitioning = true;
+
+	setTimeout(() => {
+		if (showAllScores) {
+			console.log('[scoreboard] ALL SCORES → GAME 1');
+
+			showAllScores = false;
+			currentGame = 0;
+		} else if (currentGame === games.length - 1) {
+			console.log('[scoreboard] LAST GAME → ALL SCORES');
+
+			showAllScores = true;
+		} else {
+			console.log(
+				'[scoreboard] NEXT GAME →',
+				currentGame + 2
+			);
+
+			currentGame += 1;
+		}
+
+		transitioning = false;
+	}, SLIDE_TIME);
+};
 
 	onMount(async () => {
 		await loadScores();
