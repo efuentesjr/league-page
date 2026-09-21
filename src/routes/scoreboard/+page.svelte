@@ -773,11 +773,11 @@ const rotate = () => {
 
 		align-items: center;
 
-		min-height:	90px;
+		min-height:	200px;
 
 		padding: 7px 12px;
 
-		background: rgba(255, 255, 255, 0.20);
+		background: rgba(255, 255, 255, 0.60);
 
 		border-top: 1px solid rgba(255, 255, 255, 0.45);
 		border-bottom: 1px solid rgba(0, 0, 0, 0.35);
