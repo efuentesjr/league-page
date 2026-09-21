@@ -691,7 +691,7 @@ const rotate = () => {
 
 	.all-scores-card {
 		position: relative;
-		top: -50px;
+		top: -70px;
 
 		width: 100%;
 		max-width: 1500px;
