@@ -230,17 +230,19 @@ const nextGame = () => {
 		let rotationTimer;
 		let stopped = false;
 
-		const rotate = () => {
-			if (stopped || games.length <= 1) return;
+const rotate = () => {
+    if (stopped || games.length <= 1) return;
 
-			rotationTimer = setTimeout(() => {
-				nextGame();
+    const holdTime = showAllScores ? 10000 : HOLD_TIME;
 
-				setTimeout(() => {
-					if (!stopped) rotate();
-				}, SLIDE_TIME);
-			}, HOLD_TIME);
-		};
+    rotationTimer = setTimeout(() => {
+        nextGame();
+
+        setTimeout(() => {
+            if (!stopped) rotate();
+        }, SLIDE_TIME);
+    }, holdTime);
+};
 
 		rotate();
 
