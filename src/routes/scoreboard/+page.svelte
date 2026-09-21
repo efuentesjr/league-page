@@ -20,6 +20,7 @@
 	let loading = true;
 	let error = '';
 	let currentGame = 0;
+	let showAllScores = false;
 	let transitioning = false;
 
 	const buildGames = async (matchupsData, teamManagersData) => {
