@@ -735,21 +735,17 @@ const rotate = () => {
 		z-index: 1;
 	}
 
-	.all-scores-title {
-    	position: relative;
-    	top: 4px;
-
-    	margin-bottom: 16px;
-
-		font-size: 16px;
-		font-weight: 900;
-		letter-spacing: 5px;
-
-		color: #222;
-
-		text-shadow:
-			0 1px 1px rgba(255, 255, 255, 0.55);
-	}
+.all-scores-title {
+  position: relative;
+  top: -12px;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  color: #222;
+  text-shadow:
+    0 1px 1px rgba(255, 255, 255, 0.55);
+}
 
 	.all-scores-title span {
 		padding: 0 10px;
