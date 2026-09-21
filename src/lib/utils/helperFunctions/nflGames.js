@@ -3,7 +3,7 @@ import { leagueID } from '$lib/utils/leagueInfo';
 let cachedGames = null;
 let cacheTime = 0;
 
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
 
 export const getNflGames = async (year, week) => {
 	const now = Date.now();
