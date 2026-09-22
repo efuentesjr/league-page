@@ -28,8 +28,7 @@
 
 		const isLive = nflGames.some(
 			(game) =>
-				game.status === 'in_game' ||
-				game.status === 'pre_game'
+				game.status === 'in_game'
 		);
 
 		console.log('[scoreboard] NFL games:', nflGames);
