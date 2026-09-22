@@ -783,7 +783,7 @@ const rotate = () => {
 	}
 
 	.summary-game {
-		font-size: 5px;
+		font-size: 10px;
 		font-weight: 500;
 		letter-spacing: 1px;
 
@@ -815,8 +815,8 @@ const rotate = () => {
 	}
 
 	.summary-logo {
-		width: 30px;
-		height: 30px;
+		width: 60px;
+		height: 60px;
 
 		border-radius: 50%;
 
