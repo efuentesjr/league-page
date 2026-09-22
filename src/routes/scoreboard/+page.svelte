@@ -811,8 +811,8 @@ const rotate = () => {
 	}
 
 	.summary-logo {
-		width: 60px;
-		height: 60px;
+		width: 70px;
+		height: 70px;
 
 		border-radius: 50%;
 
@@ -832,8 +832,8 @@ const rotate = () => {
 	padding: 0 6px 0 12px;
 
 	font-size: 16px;
-	font-weight: 600;
-	line-height: 1.5;
+	font-weight: 700;
+	line-height: 3.0;
 
 	white-space: nowrap;
 	overflow: hidden;
