@@ -782,13 +782,9 @@ const rotate = () => {
 			0 5px 15px rgba(0, 0, 0, 0.25);
 	}
 
-	.summary-game {
-		font-size: 10px;
-		font-weight: 500;
-		letter-spacing: 1px;
-
-		color: #555;
-	}
+.summary-game {
+	display: none;
+}
 
 	.summary-team {
 		display: grid;
