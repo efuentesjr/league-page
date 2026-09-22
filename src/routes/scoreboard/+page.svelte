@@ -789,7 +789,7 @@ const rotate = () => {
 	.summary-team {
 		display: grid;
 
-		grid-template-columns: 34px minmax(0, 1fr) auto;
+		grid-template-columns: 60px minmax(0, 1fr) auto;
 
 		align-items: center;
 
