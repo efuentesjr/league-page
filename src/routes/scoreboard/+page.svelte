@@ -764,7 +764,7 @@ const rotate = () => {
 	.score-summary {
 		display: grid;
 
-		grid-template-columns: 68px minmax(0, 1fr) 28px minmax(0, 1fr);
+		grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
 
 		align-items: center;
 
