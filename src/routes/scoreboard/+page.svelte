@@ -835,7 +835,7 @@ const rotate = () => {
 
 		padding: 0 6px;
 
-		font-size: 16px;
+		font-size: 26px;
 		font-weight: 800;
 		line-height: 1.05;
 
