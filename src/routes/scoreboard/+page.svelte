@@ -783,9 +783,9 @@ const rotate = () => {
 	}
 
 	.summary-game {
-		font-size: 13px;
-		font-weight: 900;
-		letter-spacing: 1.5px;
+		font-size: 5px;
+		font-weight: 500;
+		letter-spacing: 1px;
 
 		color: #555;
 	}
