@@ -830,22 +830,22 @@ const rotate = () => {
 			0 4px 12px rgba(0, 0, 0, 0.5);
 	}
 
-	.summary-name {
-		min-width: 0;
+.summary-name {
+	min-width: 0;
 
-		padding: 0 6px;
+	padding: 0 6px 0 12px;
 
-		font-size: 16px;
-		font-weight: 600;
-		line-height: 1.5;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.5;
 
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 
-		text-shadow:
-			0 1px 2px rgba(255, 255, 255, 0.35);
-	}
+	text-shadow:
+		0 1px 2px rgba(255, 255, 255, 0.35);
+}
 
 	.summary-score {
 		padding-left: 4px;
