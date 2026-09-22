@@ -26,11 +26,11 @@
 	const buildGames = async (matchupsData, teamManagersData) => {
 		const nflGames = await getNflGames(2026, weekNumber);
 
-const isLive = nflGames.some(
-	(game) =>
-		game.status === 'in_game' ||
-		game.status === 'pre_game'
-);
+		const isLive = nflGames.some(
+			(game) =>
+				game.status === 'in_game' ||
+				game.status === 'pre_game'
+		);
 
 		console.log('[scoreboard] NFL games:', nflGames);
 		console.log(
@@ -184,43 +184,43 @@ const isLive = nflGames.some(
 		}
 	};
 
-const nextGame = () => {
-	if (games.length <= 1) return;
+	const nextGame = () => {
+		if (games.length <= 1) return;
 
-	console.log(
-		'[scoreboard] ROTATION:',
-		'currentGame =',
-		currentGame,
-		'showAllScores =',
-		showAllScores,
-		'games =',
-		games.length
-	);
+		console.log(
+			'[scoreboard] ROTATION:',
+			'currentGame =',
+			currentGame,
+			'showAllScores =',
+			showAllScores,
+			'games =',
+			games.length
+		);
 
-	transitioning = true;
+		transitioning = true;
 
-	setTimeout(() => {
-		if (showAllScores) {
-			console.log('[scoreboard] ALL SCORES → GAME 1');
+		setTimeout(() => {
+			if (showAllScores) {
+				console.log('[scoreboard] ALL SCORES → GAME 1');
 
-			showAllScores = false;
-			currentGame = 0;
-		} else if (currentGame === games.length - 1) {
-			console.log('[scoreboard] LAST GAME → ALL SCORES');
+				showAllScores = false;
+				currentGame = 0;
+			} else if (currentGame === games.length - 1) {
+				console.log('[scoreboard] LAST GAME → ALL SCORES');
 
-			showAllScores = true;
-		} else {
-			console.log(
-				'[scoreboard] NEXT GAME →',
-				currentGame + 2
-			);
+				showAllScores = true;
+			} else {
+				console.log(
+					'[scoreboard] NEXT GAME →',
+					currentGame + 2
+				);
 
-			currentGame += 1;
-		}
+				currentGame += 1;
+			}
 
-		transitioning = false;
-	}, SLIDE_TIME);
-};
+			transitioning = false;
+		}, SLIDE_TIME);
+	};
 
 	onMount(async () => {
 		await loadScores();
@@ -230,19 +230,19 @@ const nextGame = () => {
 		let rotationTimer;
 		let stopped = false;
 
-const rotate = () => {
-    if (stopped || games.length <= 1) return;
+		const rotate = () => {
+			if (stopped || games.length <= 1) return;
 
-    const holdTime = showAllScores ? 10000 : HOLD_TIME;
+			const holdTime = showAllScores ? 10000 : HOLD_TIME;
 
-    rotationTimer = setTimeout(() => {
-        nextGame();
+			rotationTimer = setTimeout(() => {
+				nextGame();
 
-        setTimeout(() => {
-            if (!stopped) rotate();
-        }, SLIDE_TIME);
-    }, holdTime);
-};
+				setTimeout(() => {
+					if (!stopped) rotate();
+				}, SLIDE_TIME);
+			}, holdTime);
+		};
 
 		rotate();
 
@@ -331,8 +331,8 @@ const rotate = () => {
 									{#if game.away.logo}
 										<img
 											src={game.away.logo}
-										alt={game.away.name}
-										class="summary-logo"
+											alt={game.away.name}
+											class="summary-logo"
 										/>
 									{/if}
 
@@ -355,9 +355,9 @@ const rotate = () => {
 								>
 									{#if game.home.logo}
 										<img
-										src={game.home.logo}
-										alt={game.home.name}
-										class="summary-logo"
+											src={game.home.logo}
+											alt={game.home.name}
+											class="summary-logo"
 										/>
 									{/if}
 
@@ -381,156 +381,158 @@ const rotate = () => {
 
 		{:else}
 
-		<div class="matchup-stage">
+			<div class="matchup-stage">
 
-			<div
-				class:transitioning
-				class="matchup-card"
-			>
+				<div
+					class:transitioning
+					class="matchup-card"
+				>
 
-				<div class="game-label">
-					GAME {games[currentGame].gameNumber}
-					<span>•</span>
-					{games.length} MATCHUPS
-				</div>
-
-				<div class="teams">
-
-					<!-- AWAY TEAM -->
-					<div
-						class="team"
-						class:winning={
-							games[currentGame].away.score >
-							games[currentGame].home.score
-						}
-						class:completed={games[currentGame].allPlayersDone}
-					>
-
-						<div class="team-name">
-							{games[currentGame].away.name}
-						</div>
-
-						{#if games[currentGame].away.logo}
-							<img
-								src={games[currentGame].away.logo}
-								alt={games[currentGame].away.name}
-								class="logo"
-							/>
-						{:else}
-							<div class="logo placeholder">?</div>
-						{/if}
-
-						<div class="score">
-							{games[currentGame].away.score.toFixed(2)}
-						</div>
-
+					<div class="game-label">
+						GAME {games[currentGame].gameNumber}
+						<span>•</span>
+						{games.length} MATCHUPS
 					</div>
 
-					<!-- CENTER -->
-					<div class="center-column">
+					<div class="teams">
 
-						<div class="vs">
-							VS
-						</div>
+						<!-- AWAY TEAM -->
+						<div
+							class="team"
+							class:winning={
+								games[currentGame].away.score >
+								games[currentGame].home.score
+							}
+							class:completed={games[currentGame].allPlayersDone}
+						>
 
-						{#if games[currentGame].h2h}
-
-							<div class="h2h-panel">
-
-								<div class="h2h-title">
-									HEAD TO HEAD
-								</div>
-
-								<div class="h2h-line"></div>
-
-								<div class="h2h-wins">
-
-									<div class="h2h-side">
-										<div class="h2h-number">
-											{games[currentGame].h2h.winsAway}
-										</div>
-
-										<div class="h2h-label">
-											WINS
-										</div>
-									</div>
-
-									<div class="h2h-divider">
-										-
-									</div>
-
-									<div class="h2h-side">
-										<div class="h2h-number">
-											{games[currentGame].h2h.winsHome}
-										</div>
-
-										<div class="h2h-label">
-											WINS
-										</div>
-									</div>
-
-								</div>
-
-								<div class="h2h-points">
-
-									<div class="h2h-side">
-										<div class="h2h-points-number">
-											{games[currentGame].h2h.pointsAway.toFixed(2)}
-										</div>
-
-										<div class="h2h-label">
-											POINTS
-										</div>
-									</div>
-
-									<div class="h2h-divider">
-										-
-									</div>
-
-									<div class="h2h-side">
-										<div class="h2h-points-number">
-											{games[currentGame].h2h.pointsHome.toFixed(2)}
-										</div>
-
-										<div class="h2h-label">
-											POINTS
-										</div>
-									</div>
-
-								</div>
-
+							<div class="team-name">
+								{games[currentGame].away.name}
 							</div>
 
-						{/if}
+							{#if games[currentGame].away.logo}
+								<img
+									src={games[currentGame].away.logo}
+									alt={games[currentGame].away.name}
+									class="logo"
+								/>
+							{:else}
+								<div class="logo placeholder">?</div>
+							{/if}
 
-					</div>
+							<div class="score">
+								{games[currentGame].away.score.toFixed(2)}
+							</div>
 
-					<!-- HOME TEAM -->
-					<div
-						class="team"
-						class:winning={
-							games[currentGame].home.score >
-							games[currentGame].away.score
-						}
-						class:completed={games[currentGame].allPlayersDone}
-					>
-
-						<div class="team-name">
-							{games[currentGame].home.name}
 						</div>
 
-						{#if games[currentGame].home.logo}
-							<img
-								src={games[currentGame].home.logo}
-								alt={games[currentGame].home.name}
-								class="logo"
-							/>
-						{:else}
-							<div class="logo placeholder">?</div>
-						{/if}
+						<!-- CENTER -->
+						<div class="center-column">
 
-						<div class="score">
-							{games[currentGame].home.score.toFixed(2)}
+							<div class="vs">
+								VS
+							</div>
+
+							{#if games[currentGame].h2h}
+
+								<div class="h2h-panel">
+
+									<div class="h2h-title">
+										HEAD TO HEAD
+									</div>
+
+									<div class="h2h-line"></div>
+
+									<div class="h2h-wins">
+
+										<div class="h2h-side">
+											<div class="h2h-number">
+												{games[currentGame].h2h.winsAway}
+											</div>
+
+											<div class="h2h-label">
+												WINS
+											</div>
+										</div>
+
+										<div class="h2h-divider">
+											-
+										</div>
+
+										<div class="h2h-side">
+											<div class="h2h-number">
+												{games[currentGame].h2h.winsHome}
+											</div>
+
+											<div class="h2h-label">
+												WINS
+											</div>
+										</div>
+
+									</div>
+
+									<div class="h2h-points">
+
+										<div class="h2h-side">
+											<div class="h2h-points-number">
+												{games[currentGame].h2h.pointsAway.toFixed(2)}
+											</div>
+
+											<div class="h2h-label">
+												POINTS
+											</div>
+										</div>
+
+										<div class="h2h-divider">
+											-
+										</div>
+
+										<div class="h2h-side">
+											<div class="h2h-points-number">
+												{games[currentGame].h2h.pointsHome.toFixed(2)}
+											</div>
+
+											<div class="h2h-label">
+												POINTS
+											</div>
+										</div>
+
+									</div>
+
+								</div>
+
+							{/if}
+
+						</div>
+
+						<!-- HOME TEAM -->
+						<div
+							class="team"
+							class:winning={
+								games[currentGame].home.score >
+								games[currentGame].away.score
+							}
+							class:completed={games[currentGame].allPlayersDone}
+						>
+
+							<div class="team-name">
+								{games[currentGame].home.name}
+							</div>
+
+							{#if games[currentGame].home.logo}
+								<img
+									src={games[currentGame].home.logo}
+									alt={games[currentGame].home.name}
+									class="logo"
+								/>
+							{:else}
+								<div class="logo placeholder">?</div>
+							{/if}
+
+							<div class="score">
+								{games[currentGame].home.score.toFixed(2)}
+							</div>
+
 						</div>
 
 					</div>
@@ -538,8 +540,6 @@ const rotate = () => {
 				</div>
 
 			</div>
-
-		</div>
 
 		{/if}
 
@@ -569,7 +569,7 @@ const rotate = () => {
 		overflow: hidden;
 	}
 
-	@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700;800;900&display=swap');
+	@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap');
 
 	.scoreboard {
 		position: fixed;
@@ -590,7 +590,7 @@ const rotate = () => {
 		color: #fff;
 
 		font-family:
-			'Roboto Condensed',
+			'Barlow Condensed',
 			Arial,
 			Helvetica,
 			sans-serif;
@@ -735,31 +735,31 @@ const rotate = () => {
 		z-index: 1;
 	}
 
-.all-scores-title {
-  position: relative;
-  top: -3px;
-  margin-bottom: 16px;
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: 5px;
-  color: #222;
-  text-shadow:
-    0 1px 1px rgba(255, 255, 255, 0.55);
-}
+	.all-scores-title {
+		position: relative;
+		top: -3px;
+		margin-bottom: 16px;
+		font-size: 24px;
+		font-weight: 900;
+		letter-spacing: 5px;
+		color: #222;
+		text-shadow:
+			0 1px 1px rgba(255, 255, 255, 0.55);
+	}
 
 	.all-scores-title span {
 		padding: 0 10px;
 		color: #555;
 	}
 
-.all-scores-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 24px;
-  width: 100%;
-  position: relative;
-  top: -15px;
-}
+	.all-scores-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px 24px;
+		width: 100%;
+		position: relative;
+		top: -15px;
+	}
 
 	.score-summary {
 		display: grid;
@@ -768,7 +768,7 @@ const rotate = () => {
 
 		align-items: center;
 
-		min-height:	75px;
+		min-height: 75px;
 
 		padding: 7px 12px;
 
@@ -782,9 +782,9 @@ const rotate = () => {
 			0 5px 15px rgba(0, 0, 0, 0.25);
 	}
 
-.summary-game {
-	display: none;
-}
+	.summary-game {
+		display: none;
+	}
 
 	.summary-team {
 		display: grid;
@@ -826,22 +826,22 @@ const rotate = () => {
 			0 4px 12px rgba(0, 0, 0, 0.5);
 	}
 
-.summary-name {
-	min-width: 0;
+	.summary-name {
+		min-width: 0;
 
-	padding: 0 6px 0 12px;
+		padding: 0 6px 0 12px;
 
-	font-size: 16px;
-	font-weight: 700;
-	line-height: 3.0;
+		font-size: 16px;
+		font-weight: 700;
+		line-height: 3.0;
 
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 
-	text-shadow:
-		0 1px 2px rgba(255, 255, 255, 0.35);
-}
+		text-shadow:
+			0 1px 2px rgba(255, 255, 255, 0.35);
+	}
 
 	.summary-score {
 		padding-left: 4px;
