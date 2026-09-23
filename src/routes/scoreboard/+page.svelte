@@ -794,7 +794,7 @@
 
 		min-width: 0;
 
-		padding: 0 5px;
+		padding: 0 8px;
 
 		color: #222;
 
