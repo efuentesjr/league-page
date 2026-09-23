@@ -785,21 +785,21 @@
 		display: none;
 	}
 
-	.summary-team {
-		display: grid;
+.summary-team {
+	display: grid;
 
-		grid-template-columns: 60px minmax(0, 1fr) auto;
+	grid-template-columns: 70px minmax(0, 1fr) auto;
 
-		align-items: center;
+	align-items: center;
 
-		min-width: 0;
+	min-width: 0;
 
-		padding: 0 8px;
+	padding: 0 8px;
 
-		color: #222;
+	color: #222;
 
-		text-align: left;
-	}
+	text-align: left;
+}
 
 	.summary-team.winning {
 		font-weight: 900;
