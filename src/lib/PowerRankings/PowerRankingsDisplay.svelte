@@ -45,25 +45,25 @@
       dark: '#001B4D'
     },
 
-"chosen one": {
-  primary: '#6A1B9A',
-  dark: '#5A0F24'
-},
+    "chosen one": {
+      primary: '#6A1B9A',
+      dark: '#5A0F24'
+    },
 
-"child support": {
-  primary: '#D4AF37',
-  dark: '#006400'
-},
+    "child support": {
+      primary: '#D4AF37',
+      dark: '#006400'
+    },
 
     "bay area party supplies": {
       primary: '#AA0000',
       dark: '#470000'
     },
 
-"brute force attack": {
-  primary: '#0B162A',
-  dark: '#C83803'
-},
+    "brute force attack": {
+      primary: '#0B162A',
+      dark: '#C83803'
+    },
 
     "slickbears": {
       primary: '#C83803',
@@ -110,15 +110,15 @@
       dark: '#00364F'
     },
 
-"loud and stroud": {
-  primary: '#03202F',
-  dark: '#A71930'
-},
+    "loud and stroud": {
+      primary: '#03202F',
+      dark: '#A71930'
+    },
 
-"the comeback kid": {
-  primary: '#BF5700',
-  dark: '#7C2D00'
-},
+    "the comeback kid": {
+      primary: '#BF5700',
+      dark: '#7C2D00'
+    }
   };
 
   /*
@@ -126,14 +126,14 @@
    * don't prevent the team color from being found.
    */
 
-function normalizeTeamName(name) {
-  return (name || '')
-    .toLowerCase()
-    .replace(/[’']/g, '')
-    .replace(/[^a-z0-9\s]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
+  function normalizeTeamName(name) {
+    return (name || '')
+      .toLowerCase()
+      .replace(/[’']/g, '')
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
   function getTeamColor(team) {
     const name = normalizeTeamName(team?.manager?.name);
@@ -148,20 +148,26 @@ function normalizeTeamName(name) {
 
   /*
    * ============================================================
-   * BUILD POWER RANKINGS
+   * CALCULATE RANKINGS FOR A SPECIFIC WEEK
    * ============================================================
    *
-   * The actual power-ranking calculation remains the same:
-   * future projected scores are calculated, then normalized
-   * against the highest scoring roster.
+   * The Power Ranking score uses projected points from the
+   * requested week through the end of the season.
+   *
+   * This lets us calculate:
+   *
+   *   Current Week Ranking
+   *   Previous Week Ranking
+   *
+   * and compare the two to determine movement.
    */
 
-  const buildRankings = () => {
+  const calculateRankingsForWeek = (targetWeek) => {
     const rosterPowers = [];
 
-    let week = nflState.week;
+    let week = Number(targetWeek);
 
-    if (week == 0) {
+    if (!week || week < 1) {
       week = 1;
     }
 
@@ -172,8 +178,6 @@ function normalizeTeamName(name) {
 
       // Make sure the roster has players
       if (!roster.players) continue;
-
-      validGraph = true;
 
       const rosterPlayers = [];
 
@@ -198,10 +202,6 @@ function normalizeTeamName(name) {
 
       const seasonEnd = 18;
 
-      if (week >= seasonEnd) {
-        seasonOver = true;
-      }
-
       for (let i = week; i < seasonEnd; i++) {
         rosterPower.powerScore += predictScores(
           rosterPlayers,
@@ -220,6 +220,7 @@ function normalizeTeamName(name) {
     /*
      * Normalize the highest team to 100.
      */
+
     for (const rosterPower of rosterPowers) {
       rosterPower.powerScore =
         max > 0
@@ -230,7 +231,8 @@ function normalizeTeamName(name) {
     /*
      * Sort highest score to lowest score and assign rank.
      */
-    rankings = rosterPowers
+
+    return rosterPowers
       .sort((a, b) => b.powerScore - a.powerScore)
       .map((team, index) => {
         const colors = getTeamColor(team);
@@ -238,11 +240,95 @@ function normalizeTeamName(name) {
         return {
           ...team,
           rank: index + 1,
-          movement: '—',
           color: colors.primary,
           darkColor: colors.dark
         };
       });
+  };
+
+  /*
+   * ============================================================
+   * BUILD CURRENT POWER RANKINGS
+   * ============================================================
+   */
+
+  const buildRankings = () => {
+    let week = Number(nflState.week);
+
+    if (!week || week < 1) {
+      week = 1;
+    }
+
+    if (week >= 18) {
+      seasonOver = true;
+    }
+
+    validGraph = false;
+
+    /*
+     * Calculate this week's rankings.
+     */
+    const currentRankings = calculateRankingsForWeek(week);
+
+    if (currentRankings.length > 0) {
+      validGraph = true;
+    }
+
+    /*
+     * Calculate the previous week's rankings.
+     *
+     * Week 1 has no previous week, so all movement
+     * will remain "—".
+     */
+    let previousRankings = [];
+
+    if (week > 1) {
+      previousRankings = calculateRankingsForWeek(week - 1);
+    }
+
+    /*
+     * Create a quick lookup table:
+     *
+     * rosterID -> previous rank
+     */
+    const previousRanks = new Map();
+
+    for (const team of previousRankings) {
+      previousRanks.set(
+        String(team.rosterID),
+        team.rank
+      );
+    }
+
+    /*
+     * Add week-to-week movement to the current rankings.
+     */
+    rankings = currentRankings.map((team) => {
+      const previousRank = previousRanks.get(
+        String(team.rosterID)
+      );
+
+      let movement = '—';
+      let movementClass = 'movementSame';
+
+      if (previousRank !== undefined) {
+        const difference = previousRank - team.rank;
+
+        if (difference > 0) {
+          movement = `▲ ${difference}`;
+          movementClass = 'movementUp';
+        } else if (difference < 0) {
+          movement = `▼ ${Math.abs(difference)}`;
+          movementClass = 'movementDown';
+        }
+      }
+
+      return {
+        ...team,
+        movement,
+        movementClass
+      };
+    });
   };
 
   buildRankings();
@@ -271,16 +357,16 @@ function normalizeTeamName(name) {
      MAIN CONTAINER
      ============================================================ */
 
-.powerRankings {
-  width: 100%;
-  max-width: 1000px;
+  .powerRankings {
+    width: 100%;
+    max-width: 1000px;
 
-  margin: 22px auto 0;
+    margin: 22px auto 0;
 
-  padding: 0 10px 30px;
+    padding: 0 10px 30px;
 
-  box-sizing: border-box;
-}
+    box-sizing: border-box;
+  }
 
   /* ============================================================
      HEADER
@@ -323,93 +409,92 @@ function normalizeTeamName(name) {
     text-transform: uppercase;
   }
 
-/* ============================================================
-   TWO COLUMN LAYOUT
-   ============================================================ */
+  /* ============================================================
+     TWO COLUMN LAYOUT
+     ============================================================ */
 
-.rankingGrid {
-  display: grid;
+  .rankingGrid {
+    display: grid;
 
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  column-gap: 12px;
-  row-gap: 7px;
+    column-gap: 12px;
+    row-gap: 7px;
 
-  width: 100%;
-  max-width: 900px;
+    width: 100%;
+    max-width: 900px;
 
-  margin: 0 auto;
+    margin: 0 auto;
 
-  align-items: start;
-}
+    align-items: start;
+  }
 
-.rankingColumn {
-  display: flex;
-  flex-direction: column;
+  .rankingColumn {
+    display: flex;
+    flex-direction: column;
 
-  width: 100%;
-  min-width: 0;
+    width: 100%;
+    min-width: 0;
 
-  gap: 7px;
-}
+    gap: 7px;
+  }
 
+  /* ============================================================
+     RANKING ROW
+     ============================================================ */
 
-/* ============================================================
-   RANKING ROW
-   ============================================================ */
+  .rankingCard {
+    --teamColor: #34495e;
+    --teamDark: #151d24;
 
-.rankingCard {
-  --teamColor: #34495e;
-  --teamDark: #151d24;
+    position: relative;
 
-  position: relative;
+    display: grid;
 
-  display: grid;
+    /*
+     * Rank | Team Name | Score | Logo
+     */
+    grid-template-columns:
+      54px
+      minmax(0, 1fr)
+      62px
+      78px;
 
-  /*
-   * Rank | Team Name | Score | Logo
-   */
-  grid-template-columns:
-    54px
-    minmax(0, 1fr)
-    62px
-    78px;
+    width: 100%;
+    box-sizing: border-box;
 
-  width: 100%;
-  box-sizing: border-box;
+    align-items: center;
 
-  align-items: center;
+    height: 66px;
+    min-height: 66px;
 
-  height: 66px;
-  min-height: 66px;
+    overflow: hidden;
 
-  overflow: hidden;
+    background:
+      linear-gradient(
+        90deg,
+        var(--teamColor) 0%,
+        var(--teamColor) 55%,
+        var(--teamDark) 100%
+      );
 
-  background:
-    linear-gradient(
-      90deg,
-      var(--teamColor) 0%,
-      var(--teamColor) 55%,
-      var(--teamDark) 100%
-    );
+    border: 1px solid rgba(255, 255, 255, 0.16);
 
-  border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+      0 3px 7px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
 
-  box-shadow:
-    0 3px 7px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    cursor: pointer;
 
-  cursor: pointer;
+    transition:
+      transform 0.15s ease,
+      filter 0.15s ease;
+  }
 
-  transition:
-    transform 0.15s ease,
-    filter 0.15s ease;
-}
-
-.rankingCard:hover {
-  transform: translateX(3px);
-  filter: brightness(1.08);
-}
+  .rankingCard:hover {
+    transform: translateX(3px);
+    filter: brightness(1.08);
+  }
 
   /* ============================================================
      RANK BOX
@@ -485,16 +570,38 @@ function normalizeTeamName(name) {
       1px 2px 3px rgba(0, 0, 0, 0.9);
   }
 
+  /* ============================================================
+     WEEK-TO-WEEK MOVEMENT
+     ============================================================ */
+
   .movement {
     margin-top: 3px;
 
-    color: rgba(255, 255, 255, 0.70);
-
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.65rem;
-    font-weight: 700;
+    font-weight: 900;
 
     line-height: 1;
+
+    letter-spacing: 0.5px;
+  }
+
+  .movementUp {
+    color: #55e27a;
+
+    text-shadow:
+      0 0 4px rgba(85, 226, 122, 0.45);
+  }
+
+  .movementDown {
+    color: #ff5c5c;
+
+    text-shadow:
+      0 0 4px rgba(255, 92, 92, 0.45);
+  }
+
+  .movementSame {
+    color: rgba(255, 255, 255, 0.70);
   }
 
   /* ============================================================
@@ -548,6 +655,7 @@ function normalizeTeamName(name) {
      * This allows the logo to visually extend
      * toward/over the edge like the NFL graphic.
      */
+
     border: none;
     border-radius: 0;
 
@@ -564,6 +672,7 @@ function normalizeTeamName(name) {
   /*
    * Slight dark fade behind the logo so it remains readable.
    */
+
   .logoFade {
     position: absolute;
 
@@ -615,88 +724,88 @@ function normalizeTeamName(name) {
      MOBILE
      ============================================================ */
 
-@media (max-width: 700px) {
-  .powerRankings {
-    width: 94%;
-    margin: 15px auto 0;
-    padding-left: 0;
-    padding-right: 0;
-  }
+  @media (max-width: 700px) {
+    .powerRankings {
+      width: 94%;
+      margin: 15px auto 0;
+      padding-left: 0;
+      padding-right: 0;
+    }
 
-  .rankingTitle {
-    font-size: 1.4rem;
-    letter-spacing: 1px;
-  }
+    .rankingTitle {
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+    }
 
-  .rankingSubtitle {
-    font-size: 0.7rem;
-  }
+    .rankingSubtitle {
+      font-size: 0.7rem;
+    }
 
-  .rankingGrid {
-    grid-template-columns: 1fr;
-    gap: 5px;
-  }
+    .rankingGrid {
+      grid-template-columns: 1fr;
+      gap: 5px;
+    }
 
-  .rankingColumn {
-    gap: 5px;
-  }
+    .rankingColumn {
+      gap: 5px;
+    }
 
-  .rankingCard {
-    grid-template-columns:
-      44px
-      minmax(0, 1fr)
-      54px
-      62px;
+    .rankingCard {
+      grid-template-columns:
+        44px
+        minmax(0, 1fr)
+        54px
+        62px;
 
-    height: 54px;
-    min-height: 54px;
-  }
+      height: 54px;
+      min-height: 54px;
+    }
 
-  .rankingCard.topRank {
-    height: 58px;
-    min-height: 58px;
-  }
+    .rankingCard.topRank {
+      height: 58px;
+      min-height: 58px;
+    }
 
-  .rankNumber {
-    font-size: 1.2rem;
-  }
+    .rankNumber {
+      font-size: 1.2rem;
+    }
 
-  .topRank .rankNumber {
-    font-size: 1.35rem;
-  }
+    .topRank .rankNumber {
+      font-size: 1.35rem;
+    }
 
-  .teamInfo {
-    padding-left: 8px;
-  }
+    .teamInfo {
+      padding-left: 8px;
+    }
 
-  .teamName {
-    font-size: 0.78rem;
-  }
+    .teamName {
+      font-size: 0.78rem;
+    }
 
-  .movement {
-    font-size: 0.55rem;
-  }
+    .movement {
+      font-size: 0.55rem;
+    }
 
-  .score {
-    font-size: 0.78rem;
-    padding-right: 4px;
-  }
+    .score {
+      font-size: 0.78rem;
+      padding-right: 4px;
+    }
 
-  .teamLogo {
-    width: 62px;
-    height: 62px;
-    right: -2px;
-  }
+    .teamLogo {
+      width: 62px;
+      height: 62px;
+      right: -2px;
+    }
 
-  .topRank .teamLogo {
-    width: 68px;
-    height: 68px;
-  }
+    .topRank .teamLogo {
+      width: 68px;
+      height: 68px;
+    }
 
-  .logoFade {
-    width: 82px;
+    .logoFade {
+      width: 82px;
+    }
   }
-}
 
   /* ============================================================
      VERY SMALL PHONES
@@ -803,13 +912,15 @@ function normalizeTeamName(name) {
 
             <!-- TEAM NAME -->
             <div class="teamInfo">
+
               <div class="teamName">
                 {team.manager?.name || 'Unknown Team'}
               </div>
 
-              <div class="movement">
+              <div class="movement {team.movementClass}">
                 {team.movement}
               </div>
+
             </div>
 
             <!-- SCORE -->
@@ -884,13 +995,15 @@ function normalizeTeamName(name) {
 
             <!-- TEAM NAME -->
             <div class="teamInfo">
+
               <div class="teamName">
                 {team.manager?.name || 'Unknown Team'}
               </div>
 
-              <div class="movement">
+              <div class="movement {team.movementClass}">
                 {team.movement}
               </div>
+
             </div>
 
             <!-- SCORE -->
