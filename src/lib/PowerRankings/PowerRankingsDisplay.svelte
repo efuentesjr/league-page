@@ -726,10 +726,6 @@
    * UP
    */
 
-  .movement:has(??) {
-    color: #55e27a;
-  }
-
   /*
    * We use the arrow itself to determine the color.
    */
