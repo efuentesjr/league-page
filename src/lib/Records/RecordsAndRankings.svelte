@@ -673,7 +673,7 @@
                             <Cell class="header headerPrimary" colspan=5>
                                 {prefix} {key == "playoffData" ? "Playoff " : ""}Lineup IQ Rankings
                                 <div class="subTitle">
-                                    The percentage of potential points each manager has captured
+                                    Measures how effectively managers maximize the potential of their roster
                                 </div>
                             </Cell>
                         </Row>
