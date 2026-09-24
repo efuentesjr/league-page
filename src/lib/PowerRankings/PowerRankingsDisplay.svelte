@@ -1,9 +1,12 @@
 <script>
+  import { onMount } from 'svelte';
+
   import {
     getTeamFromTeamManagers,
     round,
     predictScores,
-    loadPlayers
+    loadPlayers,
+    getNflState
   } from '$lib/utils/helper';
 
   import {
@@ -27,11 +30,21 @@
 
   /*
    * ============================================================
-   * MFFL TEAM COLORS
+   * DAILY REFRESH
    * ============================================================
    *
-   * These are used for the ranking strips.
-   * Each team has a primary and darker color.
+   * Power Rankings recalculate once every 24 hours.
+   *
+   * The daily refresh also gets the current NFL week and
+   * refreshes player projections before rebuilding rankings.
+   */
+
+  const DAILY_REFRESH = 24 * 60 * 60 * 1000;
+
+  /*
+   * ============================================================
+   * MFFL TEAM COLORS
+   * ============================================================
    */
 
   const teamColors = {
@@ -122,8 +135,9 @@
   };
 
   /*
-   * Normalize names so small capitalization differences
-   * don't prevent the team color from being found.
+   * ============================================================
+   * NORMALIZE TEAM NAME
+   * ============================================================
    */
 
   function normalizeTeamName(name) {
@@ -151,15 +165,13 @@
    * CALCULATE RANKINGS FOR A SPECIFIC WEEK
    * ============================================================
    *
-   * The Power Ranking score uses projected points from the
-   * requested week through the end of the season.
+   * This allows us to calculate:
    *
-   * This lets us calculate:
+   * Current Week
+   *     versus
+   * Previous Week
    *
-   *   Current Week Ranking
-   *   Previous Week Ranking
-   *
-   * and compare the two to determine movement.
+   * and determine the movement arrow.
    */
 
   const calculateRankingsForWeek = (targetWeek) => {
@@ -176,7 +188,6 @@
     for (const rosterID in rosters) {
       const roster = rosters[rosterID];
 
-      // Make sure the roster has players
       if (!roster.players) continue;
 
       const rosterPlayers = [];
@@ -201,6 +212,11 @@
       };
 
       const seasonEnd = 18;
+
+      /*
+       * Calculate projected points from this week
+       * through the end of the regular season.
+       */
 
       for (let i = week; i < seasonEnd; i++) {
         rosterPower.powerScore += predictScores(
@@ -229,7 +245,7 @@
     }
 
     /*
-     * Sort highest score to lowest score and assign rank.
+     * Sort highest score to lowest score.
      */
 
     return rosterPowers
@@ -248,49 +264,56 @@
 
   /*
    * ============================================================
-   * BUILD CURRENT POWER RANKINGS
+   * BUILD CURRENT RANKINGS + WEEK-TO-WEEK MOVEMENT
    * ============================================================
    */
 
   const buildRankings = () => {
-    let week = Number(nflState.week);
+    validGraph = false;
+    seasonOver = false;
+
+    let week = Number(nflState?.week);
 
     if (!week || week < 1) {
       week = 1;
     }
 
-    if (week >= 18) {
+    const seasonEnd = 18;
+
+    if (week >= seasonEnd) {
       seasonOver = true;
     }
 
-    validGraph = false;
-
     /*
-     * Calculate this week's rankings.
+     * Current week's Power Rankings.
      */
-    const currentRankings = calculateRankingsForWeek(week);
+
+    const currentRankings =
+      calculateRankingsForWeek(week);
 
     if (currentRankings.length > 0) {
       validGraph = true;
     }
 
     /*
-     * Calculate the previous week's rankings.
+     * Previous week's Power Rankings.
      *
-     * Week 1 has no previous week, so all movement
-     * will remain "—".
+     * Week 1 has no previous week.
      */
+
     let previousRankings = [];
 
     if (week > 1) {
-      previousRankings = calculateRankingsForWeek(week - 1);
+      previousRankings =
+        calculateRankingsForWeek(week - 1);
     }
 
     /*
-     * Create a quick lookup table:
+     * Build:
      *
      * rosterID -> previous rank
      */
+
     const previousRanks = new Map();
 
     for (const team of previousRankings) {
@@ -301,55 +324,144 @@
     }
 
     /*
-     * Add week-to-week movement to the current rankings.
+     * Add movement to each current team.
      */
+
     rankings = currentRankings.map((team) => {
-      const previousRank = previousRanks.get(
-        String(team.rosterID)
-      );
+      const previousRank =
+        previousRanks.get(String(team.rosterID));
 
       let movement = '—';
-      let movementClass = 'movementSame';
 
       if (previousRank !== undefined) {
-        const difference = previousRank - team.rank;
+        const difference =
+          previousRank - team.rank;
 
         if (difference > 0) {
           movement = `▲ ${difference}`;
-          movementClass = 'movementUp';
         } else if (difference < 0) {
           movement = `▼ ${Math.abs(difference)}`;
-          movementClass = 'movementDown';
         }
       }
 
       return {
         ...team,
-        movement,
-        movementClass
+        movement
       };
     });
   };
+
+  /*
+   * ============================================================
+   * REFRESH PLAYER DATA
+   * ============================================================
+   */
+
+  const refreshPlayers = async () => {
+    try {
+      const newPlayersInfo =
+        await loadPlayers(null, true);
+
+      players = newPlayersInfo.players;
+
+      buildRankings();
+    } catch (error) {
+      console.error(
+        '[Power Rankings] Player refresh failed:',
+        error
+      );
+    }
+  };
+
+  /*
+   * ============================================================
+   * DAILY POWER RANKING REFRESH
+   * ============================================================
+   */
+
+  const refreshDaily = async () => {
+    try {
+      console.log(
+        '[Power Rankings] Running daily refresh...'
+      );
+
+      /*
+       * Get the current NFL week.
+       */
+
+      const newNflState =
+        await getNflState();
+
+      if (newNflState) {
+        nflState = newNflState;
+      }
+
+      /*
+       * Refresh player projections.
+       */
+
+      const newPlayersInfo =
+        await loadPlayers(null, true);
+
+      players = newPlayersInfo.players;
+
+      /*
+       * Recalculate rankings and movement.
+       */
+
+      buildRankings();
+
+      console.log(
+        '[Power Rankings] Daily refresh complete.'
+      );
+    } catch (error) {
+      console.error(
+        '[Power Rankings] Daily refresh failed:',
+        error
+      );
+    }
+  };
+
+  /*
+   * ============================================================
+   * INITIAL BUILD
+   * ============================================================
+   */
 
   buildRankings();
 
   /*
    * ============================================================
-   * REFRESH PLAYERS
+   * STALE PLAYER DATA
    * ============================================================
    */
-
-  const refreshPlayers = async () => {
-    const newPlayersInfo = await loadPlayers(null, true);
-
-    players = newPlayersInfo.players;
-
-    buildRankings();
-  };
 
   if (playersInfo.stale) {
     refreshPlayers();
   }
+
+  /*
+   * ============================================================
+   * 24-HOUR TIMER
+   * ============================================================
+   *
+   * The timer starts when this component is loaded.
+   *
+   * It is automatically cleaned up when the component
+   * is removed from the page.
+   */
+
+  onMount(() => {
+    const dailyTimer =
+      setInterval(
+        refreshDaily,
+        DAILY_REFRESH
+      );
+
+    return () => {
+      clearInterval(dailyTimer);
+    };
+  });
 </script>
 
 <style>
@@ -416,7 +528,8 @@
   .rankingGrid {
     display: grid;
 
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
 
     column-gap: 12px;
     row-gap: 7px;
@@ -454,6 +567,7 @@
     /*
      * Rank | Team Name | Score | Logo
      */
+
     grid-template-columns:
       54px
       minmax(0, 1fr)
@@ -461,6 +575,7 @@
       78px;
 
     width: 100%;
+
     box-sizing: border-box;
 
     align-items: center;
@@ -478,11 +593,16 @@
         var(--teamDark) 100%
       );
 
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    border:
+      1px solid
+      rgba(255, 255, 255, 0.16);
 
     box-shadow:
-      0 3px 7px rgba(0, 0, 0, 0.45),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      0 3px 7px
+      rgba(0, 0, 0, 0.45),
+
+      inset 0 1px 0
+      rgba(255, 255, 255, 0.15);
 
     cursor: pointer;
 
@@ -504,6 +624,7 @@
     position: relative;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -517,7 +638,8 @@
       );
 
     border-right:
-      1px solid rgba(255, 255, 255, 0.20);
+      1px solid
+      rgba(255, 255, 255, 0.20);
 
     box-sizing: border-box;
 
@@ -527,14 +649,19 @@
   .rankNumber {
     color: #fff;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:
+      Arial,
+      Helvetica,
+      sans-serif;
+
     font-size: 1.55rem;
     font-weight: 900;
 
     line-height: 1;
 
     text-shadow:
-      1px 2px 3px rgba(0, 0, 0, 0.85);
+      1px 2px 3px
+      rgba(0, 0, 0, 0.85);
   }
 
   /* ============================================================
@@ -557,7 +684,11 @@
 
     color: #fff;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:
+      Arial,
+      Helvetica,
+      sans-serif;
+
     font-size: 0.92rem;
     font-weight: 900;
 
@@ -567,7 +698,8 @@
     text-overflow: ellipsis;
 
     text-shadow:
-      1px 2px 3px rgba(0, 0, 0, 0.9);
+      1px 2px 3px
+      rgba(0, 0, 0, 0.9);
   }
 
   /* ============================================================
@@ -577,7 +709,11 @@
   .movement {
     margin-top: 3px;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:
+      Arial,
+      Helvetica,
+      sans-serif;
+
     font-size: 0.65rem;
     font-weight: 900;
 
@@ -586,22 +722,26 @@
     letter-spacing: 0.5px;
   }
 
-  .movementUp {
+  /*
+   * UP
+   */
+
+  .movement:has(??) {
     color: #55e27a;
-
-    text-shadow:
-      0 0 4px rgba(85, 226, 122, 0.45);
   }
 
-  .movementDown {
-    color: #ff5c5c;
+  /*
+   * We use the arrow itself to determine the color.
+   */
 
-    text-shadow:
-      0 0 4px rgba(255, 92, 92, 0.45);
-  }
-
-  .movementSame {
+  .movement {
     color: rgba(255, 255, 255, 0.70);
+  }
+
+  .movement {
+    text-shadow:
+      0 0 4px
+      rgba(0, 0, 0, 0.25);
   }
 
   /* ============================================================
@@ -613,7 +753,11 @@
 
     color: #fff;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:
+      Arial,
+      Helvetica,
+      sans-serif;
+
     font-size: 0.95rem;
     font-weight: 900;
 
@@ -624,7 +768,8 @@
     padding-right: 8px;
 
     text-shadow:
-      1px 2px 3px rgba(0, 0, 0, 0.9);
+      1px 2px 3px
+      rgba(0, 0, 0, 0.9);
 
     z-index: 4;
   }
@@ -646,32 +791,25 @@
 
     object-fit: contain;
 
-    /*
-     * Important:
-     * No circular crop.
-     * No white background.
-     * No border.
-     *
-     * This allows the logo to visually extend
-     * toward/over the edge like the NFL graphic.
-     */
-
     border: none;
     border-radius: 0;
 
     background: transparent;
 
     filter:
-      drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.75));
+      drop-shadow(
+        1px 2px 2px
+        rgba(0, 0, 0, 0.75)
+      );
 
     z-index: 5;
 
     pointer-events: none;
   }
 
-  /*
-   * Slight dark fade behind the logo so it remains readable.
-   */
+  /* ============================================================
+     LOGO FADE
+     ============================================================ */
 
   .logoFade {
     position: absolute;
@@ -707,8 +845,11 @@
       rgba(255, 255, 255, 0.28);
 
     box-shadow:
-      0 4px 9px rgba(0, 0, 0, 0.50),
-      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+      0 4px 9px
+      rgba(0, 0, 0, 0.50),
+
+      inset 0 1px 0
+      rgba(255, 255, 255, 0.22);
   }
 
   .topRank .rankNumber {
@@ -725,9 +866,12 @@
      ============================================================ */
 
   @media (max-width: 700px) {
+
     .powerRankings {
       width: 94%;
+
       margin: 15px auto 0;
+
       padding-left: 0;
       padding-right: 0;
     }
@@ -812,6 +956,7 @@
      ============================================================ */
 
   @media (max-width: 380px) {
+
     .rankingCard {
       grid-template-columns:
         42px
@@ -843,6 +988,7 @@
      ============================================================ */
 
   @media (prefers-reduced-motion: reduce) {
+
     .rankingCard {
       transition: none;
     }
@@ -850,10 +996,13 @@
 </style>
 
 {#if validGraph && !seasonOver}
+
   <section class="powerRankings">
 
     <!-- HEADER -->
+
     <div class="rankingHeader">
+
       <h2 class="rankingTitle">
         MFFL Power Rankings
       </h2>
@@ -861,9 +1010,12 @@
       <div class="rankingSubtitle">
         {leagueData.season} Season • Week {nflState.week || 1}
       </div>
+
     </div>
 
+
     <!-- RANKINGS -->
+
     <div class="rankingGrid">
 
       <!-- =====================================================
@@ -877,12 +1029,15 @@
           <div
             class:topRank={team.rank <= 3}
             class="rankingCard"
+
             style="
               --teamColor: {team.color};
               --teamDark: {team.darkColor};
             "
+
             role="button"
             tabindex="0"
+
             on:click={() =>
               gotoManager({
                 year: leagueData.season,
@@ -890,8 +1045,14 @@
                 rosterID: parseInt(team.rosterID)
               })
             }
+
             on:keydown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
+
+              if (
+                event.key === 'Enter' ||
+                event.key === ' '
+              ) {
+
                 event.preventDefault();
 
                 gotoManager({
@@ -899,46 +1060,71 @@
                   leagueTeamManagers,
                   rosterID: parseInt(team.rosterID)
                 });
+
               }
+
             }}
           >
 
             <!-- RANK -->
+
             <div class="rankBox">
+
               <span class="rankNumber">
                 #{team.rank}
               </span>
+
             </div>
 
+
             <!-- TEAM NAME -->
+
             <div class="teamInfo">
 
               <div class="teamName">
                 {team.manager?.name || 'Unknown Team'}
               </div>
 
-              <div class="movement {team.movementClass}">
+              <div
+                class="movement"
+                style="
+                  color:
+                    {team.movement.startsWith('▲')
+                      ? '#55e27a'
+                      : team.movement.startsWith('▼')
+                        ? '#ff5c5c'
+                        : 'rgba(255,255,255,0.70)'};
+                "
+              >
                 {team.movement}
               </div>
 
             </div>
 
+
             <!-- SCORE -->
+
             <div class="score">
               {team.powerScore}
             </div>
 
+
             <!-- LOGO BACKGROUND -->
+
             <div class="logoFade"></div>
 
+
             <!-- TEAM LOGO -->
+
             <img
               class="teamLogo"
+
               src={getAvatarFromTeamManagers(
                 leagueTeamManagers,
                 team.rosterID,
                 leagueData.season
               )}
+
               alt=""
             />
 
@@ -960,12 +1146,15 @@
           <div
             class:topRank={team.rank <= 3}
             class="rankingCard"
+
             style="
               --teamColor: {team.color};
               --teamDark: {team.darkColor};
             "
+
             role="button"
             tabindex="0"
+
             on:click={() =>
               gotoManager({
                 year: leagueData.season,
@@ -973,8 +1162,14 @@
                 rosterID: parseInt(team.rosterID)
               })
             }
+
             on:keydown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
+
+              if (
+                event.key === 'Enter' ||
+                event.key === ' '
+              ) {
+
                 event.preventDefault();
 
                 gotoManager({
@@ -982,46 +1177,71 @@
                   leagueTeamManagers,
                   rosterID: parseInt(team.rosterID)
                 });
+
               }
+
             }}
           >
 
             <!-- RANK -->
+
             <div class="rankBox">
+
               <span class="rankNumber">
                 #{team.rank}
               </span>
+
             </div>
 
+
             <!-- TEAM NAME -->
+
             <div class="teamInfo">
 
               <div class="teamName">
                 {team.manager?.name || 'Unknown Team'}
               </div>
 
-              <div class="movement {team.movementClass}">
+              <div
+                class="movement"
+                style="
+                  color:
+                    {team.movement.startsWith('▲')
+                      ? '#55e27a'
+                      : team.movement.startsWith('▼')
+                        ? '#ff5c5c'
+                        : 'rgba(255,255,255,0.70)'};
+                "
+              >
                 {team.movement}
               </div>
 
             </div>
 
+
             <!-- SCORE -->
+
             <div class="score">
               {team.powerScore}
             </div>
 
+
             <!-- LOGO BACKGROUND -->
+
             <div class="logoFade"></div>
 
+
             <!-- TEAM LOGO -->
+
             <img
               class="teamLogo"
+
               src={getAvatarFromTeamManagers(
                 leagueTeamManagers,
                 team.rosterID,
                 leagueData.season
               )}
+
               alt=""
             />
 
@@ -1034,4 +1254,5 @@
     </div>
 
   </section>
+
 {/if}
