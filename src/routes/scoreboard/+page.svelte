@@ -582,7 +582,7 @@
 			rgba(0, 0, 0, 0.55),
 			rgba(0, 0, 0, 0.55)
 		),
-		url('/steel.png') center center / cover no-repeat;
+		url('/stadium.png') center center / cover no-repeat;
 
 	color: #fff;
 
