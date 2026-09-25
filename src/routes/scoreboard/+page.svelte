@@ -860,7 +860,7 @@
 
 	.matchup-card {
 		position: relative;
-		top: -20px;
+		top: -80px;
 
 		width: 100%;
 		max-width: 1500px;
@@ -878,7 +878,7 @@
 		animation: enter 0.9s ease both;
 	}
 
-	.matchup-card::before {
+.matchup-card::before {
 	content: '';
 
 	position: absolute;
@@ -888,16 +888,13 @@
 	right: -3%;
 	bottom: -100px;
 
-	background:
-		linear-gradient(
-			135deg,
-			rgba(20, 28, 36, 0.94),
-			rgba(8, 14, 20, 0.88)
-		);
+	background: url('/steel.png') center center / cover no-repeat;
 
 	box-shadow:
-		0 12px 35px rgba(0, 0, 0, 0.55),
-		inset 0 1px 0 rgba(255, 255, 255, 0.05);
+		0 20px 50px rgba(0, 0, 0, 0.75),
+		0 0 35px rgba(30, 110, 170, 0.18),
+		inset 0 1px 0 rgba(255, 255, 255, 0.16),
+		inset 0 -1px 0 rgba(30, 120, 180, 0.20);
 
 	z-index: 0;
 
