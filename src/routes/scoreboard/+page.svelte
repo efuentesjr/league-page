@@ -885,7 +885,7 @@
 
 	top: -100px;
 	left: -3%;
-	right: 0%;
+	right: -1%;
 	bottom: -100px;
 
 	background: url('/steel.png') center center / cover no-repeat;
