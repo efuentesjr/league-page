@@ -785,21 +785,21 @@
 		display: none;
 	}
 
-.summary-team {
-	display: grid;
+	.summary-team {
+		display: grid;
 
-	grid-template-columns: 70px minmax(0, 1fr) auto;
+		grid-template-columns: 70px minmax(0, 1fr) auto;
 
-	align-items: center;
+		align-items: center;
 
-	min-width: 0;
+		min-width: 0;
 
-	padding: 0 8px;
+		padding: 0 8px;
 
-	color: #222;
+		color: #222;
 
-	text-align: left;
-}
+		text-align: left;
+	}
 
 	.summary-team.winning {
 		font-weight: 900;
@@ -1267,305 +1267,279 @@
 			animation: none;
 		}
 	}
-/* =========================
-   PHONE SCOREBOARD
-   ========================= */
 
-@media (max-width: 600px) {
+	/* =========================
+	   PHONE SCOREBOARD
+	   ========================= */
 
-	:global(html),
-	:global(body) {
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
+	@media (max-width: 600px) {
+
+		:global(html),
+		:global(body) {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.scoreboard {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		/* HEADER */
+		.top-bar {
+			height: 54px;
+			min-height: 54px;
+			grid-template-columns: 40px 1fr 40px;
+			padding: 0 6px;
+		}
+
+		.league-name img {
+			width: 34px;
+			height: 34px;
+		}
+
+		h1 {
+			font-size: 17px;
+			letter-spacing: 1.5px;
+			white-space: nowrap;
+		}
+
+		.season {
+			margin-top: 1px;
+			font-size: 8px;
+			letter-spacing: 1.5px;
+		}
+
+		.season span {
+			padding: 0 3px;
+		}
+
+		.live-indicator {
+			gap: 3px;
+			font-size: 9px;
+			letter-spacing: 1px;
+		}
+
+		.dot {
+			width: 5px;
+			height: 5px;
+		}
+
+		/* MATCHUP AREA */
+		.matchup-stage {
+			padding: 0 2px;
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		.matchup-card {
+			width: 100%;
+			max-width: 100%;
+			padding: 0 2px 5px;
+			box-sizing: border-box;
+		}
+
+		.matchup-card::before {
+			top: -18px;
+			left: -5px;
+			right: -5px;
+			bottom: -25px;
+		}
+
+		/* GAME LABEL */
+		.game-label {
+			height: 18px;
+			margin-top: 0;
+			margin-bottom: 3px;
+			font-size: 9px;
+			letter-spacing: 1.5px;
+			line-height: 18px;
+		}
+
+		.game-label span {
+			padding: 0 3px;
+		}
+
+		/* TEAMS */
+		.teams {
+			grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+			width: 100%;
+			gap: 0;
+		}
+
+		.team {
+			min-width: 0;
+			width: 100%;
+		}
+
+		/* TEAM NAME */
+		.team-name {
+			width: 100%;
+			max-width: 100%;
+			font-size: 11px;
+			font-weight: 800;
+			letter-spacing: 0;
+			line-height: 1.05;
+			margin-bottom: 8px;
+			padding: 0 2px;
+			white-space: normal;
+			overflow: hidden;
+			text-align: center;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+		}
+
+		/* LOGOS */
+		.logo {
+			width: 46px;
+			height: 46px;
+			margin-bottom: 5px;
+			border-width: 2px;
+		}
+
+		/* SCORE */
+		.score {
+			margin-top: 3px;
+			font-size: 27px;
+			line-height: 1;
+		}
+
+		/* CENTER */
+		.center-column {
+			width: 42px;
+			min-width: 42px;
+		}
+
+		.vs {
+			font-size: 18px;
+			letter-spacing: 1px;
+		}
+
+		/* H2H */
+		.h2h-panel {
+			width: 42px;
+			margin-top: 5px;
+			padding: 3px 0 2px;
+			border-top-width: 1px;
+			border-bottom-width: 1px;
+		}
+
+		.h2h-title {
+			margin-bottom: 2px;
+			font-size: 6px;
+			letter-spacing: 0.5px;
+		}
+
+		.h2h-line {
+			width: 80%;
+			margin: 0 auto 2px;
+		}
+
+		.h2h-wins,
+		.h2h-points {
+			grid-template-columns: 1fr 5px 1fr;
+		}
+
+		.h2h-wins {
+			margin-bottom: 2px;
+		}
+
+		.h2h-number {
+			font-size: 15px;
+		}
+
+		.h2h-points-number {
+			font-size: 8px;
+		}
+
+		.h2h-label {
+			margin-top: 0;
+			font-size: 6px;
+			letter-spacing: 0;
+		}
+
+		.h2h-divider {
+			font-size: 6px;
+		}
+
+		/* ALL SCORES */
+		.all-scores-card {
+			width: 100%;
+			max-width: 100%;
+			padding: 10px 4px 12px;
+			box-sizing: border-box;
+		}
+
+		.all-scores-card::before {
+			top: -15px;
+			left: -4px;
+			right: -4px;
+			bottom: -20px;
+		}
+
+		.all-scores-title {
+			top: -2px;
+			margin-bottom: 7px;
+			font-size: 14px;
+			letter-spacing: 1.5px;
+		}
+
+		.all-scores-title span {
+			padding: 0 3px;
+		}
+
+		.all-scores-grid {
+			grid-template-columns: 1fr;
+			gap: 5px;
+			top: -3px;
+		}
+
+		.score-summary {
+			grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1fr);
+			min-height: 48px;
+			padding: 3px 4px;
+			box-sizing: border-box;
+		}
+
+		.summary-team {
+			grid-template-columns: 34px minmax(0, 1fr) auto;
+			padding: 0 2px;
+		}
+
+		.summary-logo {
+			width: 32px;
+			height: 32px;
+		}
+
+		.summary-name {
+			padding: 0 2px 0 5px;
+			font-size: 10px;
+			font-weight: 700;
+			line-height: 1;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.summary-score {
+			padding-left: 1px;
+			font-size: 11px;
+		}
+
+		.summary-vs {
+			font-size: 8px;
+		}
+
+		/* FOOTER */
+		.bottom-bar {
+			height: 23px;
+			min-height: 23px;
+			padding: 0 7px;
+			font-size: 7px;
+			letter-spacing: 0.5px;
+		}
 	}
-
-	.scoreboard {
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-	}
-
-	/* HEADER */
-	.top-bar {
-		height: 58px;
-		min-height: 58px;
-
-		grid-template-columns: 45px 1fr 45px;
-
-		padding: 0 8px;
-	}
-
-	.league-name img {
-		width: 38px;
-		height: 38px;
-	}
-
-	h1 {
-		font-size: 20px;
-		letter-spacing: 2px;
-		white-space: nowrap;
-	}
-
-	.season {
-		margin-top: 2px;
-		font-size: 9px;
-		letter-spacing: 2px;
-	}
-
-	.season span {
-		padding: 0 4px;
-	}
-
-	.live-indicator {
-		gap: 4px;
-		font-size: 10px;
-		letter-spacing: 1px;
-	}
-
-	.dot {
-		width: 6px;
-		height: 6px;
-	}
-
-	/* MATCHUP AREA */
-	.matchup-stage {
-		padding: 0 4px;
-		width: 100%;
-		box-sizing: border-box;
-	}
-
-	.matchup-card {
-		width: 100%;
-		max-width: 100%;
-		padding: 0 4px 8px;
-		box-sizing: border-box;
-	}
-
-	.matchup-card::before {
-		top: -25px;
-		left: -8px;
-		right: -8px;
-		bottom: -35px;
-	}
-
-	/* GAME LABEL */
-	.game-label {
-		height: 20px;
-		margin-top: 0;
-		margin-bottom: 5px;
-
-		font-size: 11px;
-		letter-spacing: 2px;
-		line-height: 20px;
-	}
-
-	.game-label span {
-		padding: 0 4px;
-	}
-
-	/* TEAMS */
-	.teams {
-		grid-template-columns: minmax(0, 1fr) 55px minmax(0, 1fr);
-		width: 100%;
-		gap: 0;
-	}
-
-	.team {
-		min-width: 0;
-		width: 100%;
-	}
-
-	/* TEAM NAME */
-	.team-name {
-		width: 100%;
-		max-width: 100%;
-
-		font-size: 13px;
-		font-weight: 800;
-		letter-spacing: 0;
-
-		line-height: 1.05;
-
-		margin-bottom: 12px;
-
-		padding: 0 3px;
-
-		white-space: normal;
-		overflow: hidden;
-
-		text-align: center;
-
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-	}
-
-	/* LOGOS */
-	.logo {
-		width: 58px;
-		height: 58px;
-
-		margin-bottom: 8px;
-
-		border-width: 2px;
-	}
-
-	/* SCORE */
-	.score {
-		margin-top: 5px;
-
-		font-size: 32px;
-
-		line-height: 1;
-	}
-
-	/* CENTER */
-	.center-column {
-		width: 55px;
-		min-width: 55px;
-	}
-
-	.vs {
-		font-size: 23px;
-		letter-spacing: 1px;
-	}
-
-	/* H2H */
-	.h2h-panel {
-		width: 55px;
-
-		margin-top: 7px;
-
-		padding: 4px 0 3px;
-
-		border-top-width: 1px;
-		border-bottom-width: 1px;
-	}
-
-	.h2h-title {
-		margin-bottom: 3px;
-
-		font-size: 7px;
-		letter-spacing: 1px;
-	}
-
-	.h2h-line {
-		width: 80%;
-		margin: 0 auto 3px;
-	}
-
-	.h2h-wins,
-	.h2h-points {
-		grid-template-columns: 1fr 8px 1fr;
-	}
-
-	.h2h-wins {
-		margin-bottom: 3px;
-	}
-
-	.h2h-number {
-		font-size: 18px;
-	}
-
-	.h2h-points-number {
-		font-size: 9px;
-	}
-
-	.h2h-label {
-		margin-top: 1px;
-		font-size: 7px;
-		letter-spacing: 0;
-	}
-
-	.h2h-divider {
-		font-size: 7px;
-	}
-
-	/* ALL SCORES */
-	.all-scores-card {
-		width: 100%;
-		max-width: 100%;
-		padding: 12px 5px 15px;
-		box-sizing: border-box;
-	}
-
-	.all-scores-card::before {
-		top: -20px;
-		left: -5px;
-		right: -5px;
-		bottom: -25px;
-	}
-
-	.all-scores-title {
-		top: -2px;
-		margin-bottom: 8px;
-
-		font-size: 16px;
-		letter-spacing: 2px;
-	}
-
-	.all-scores-title span {
-		padding: 0 4px;
-	}
-
-	.all-scores-grid {
-		grid-template-columns: 1fr;
-		gap: 6px;
-		top: -4px;
-	}
-
-	.score-summary {
-		grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr);
-
-		min-height: 55px;
-
-		padding: 4px 5px;
-
-		box-sizing: border-box;
-	}
-
-	.summary-team {
-		grid-template-columns: 42px minmax(0, 1fr) auto;
-
-		padding: 0 2px;
-	}
-
-	.summary-logo {
-		width: 40px;
-		height: 40px;
-	}
-
-	.summary-name {
-		padding: 0 3px 0 6px;
-
-		font-size: 12px;
-		font-weight: 700;
-		line-height: 1.05;
-
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.summary-score {
-		padding-left: 2px;
-		font-size: 13px;
-	}
-
-	.summary-vs {
-		font-size: 9px;
-	}
-
-	/* FOOTER */
-	.bottom-bar {
-		height: 25px;
-		min-height: 25px;
-
-		padding: 0 8px;
-
-		font-size: 8px;
-		letter-spacing: 0.5px;
-	}
-}
 </style>
