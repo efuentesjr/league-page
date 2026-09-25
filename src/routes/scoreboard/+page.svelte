@@ -570,20 +570,30 @@
 
 	@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap');
 
-	.scoreboard {
-		position: fixed;
-		inset: 0;
+.scoreboard {
+	position: fixed;
+	inset: 0;
 
-		display: flex;
-		flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-		background:
-			radial-gradient(
-				ellipse at 50% 42%,
-				rgba(20, 55, 85, 0.55) 0%,
-				rgba(10, 25, 40, 0.32) 30%,
-				rgba(5, 10, 16, 0.9) 65%,
-				#000 100%
+	background:
+		linear-gradient(
+			rgba(0, 0, 0, 0.55),
+			rgba(0, 0, 0, 0.55)
+		),
+		url('/stadium.png') center center / cover no-repeat;
+
+	color: #fff;
+
+	font-family:
+		'Barlow Condensed',
+		Arial,
+		Helvetica,
+		sans-serif;
+
+	overflow: hidden;
+}
 			);
 
 		color: #fff;
