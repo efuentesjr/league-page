@@ -595,17 +595,6 @@
 	overflow: hidden;
 }
 
-		color: #fff;
-
-		font-family:
-			'Barlow Condensed',
-			Arial,
-			Helvetica,
-			sans-serif;
-
-		overflow: hidden;
-	}
-
 	.top-bar {
 		height: 90px;
 		min-height: 90px;
