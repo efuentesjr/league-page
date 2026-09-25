@@ -713,10 +713,10 @@
 
 		position: absolute;
 
-		top: -80px;
-		left: -6%;
-		right: -6%;
-		bottom: -90px;
+		top: -100px;
+		left: -20%;
+		right: -20%;
+		bottom: -110px;
 
 		background: url('/steel-background.jpg') center center / cover no-repeat;
 
