@@ -594,7 +594,6 @@
 
 	overflow: hidden;
 }
-			);
 
 		color: #fff;
 
