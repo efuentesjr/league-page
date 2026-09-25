@@ -582,7 +582,7 @@
 			rgba(0, 0, 0, 0.55),
 			rgba(0, 0, 0, 0.55)
 		),
-		url('/stadium.png') center center / cover no-repeat;
+		url('/steel.png') center center / cover no-repeat;
 
 	color: #fff;
 
@@ -716,7 +716,7 @@
 		right: -20%;
 		bottom: -110px;
 
-		background: url('/steel-background.jpg') center center / cover no-repeat;
+		background: url('/steel.png') center center / cover no-repeat;
 
 		box-shadow:
 			0 12px 35px rgba(0, 0, 0, 0.55),
