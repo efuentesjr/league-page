@@ -860,7 +860,7 @@
 
 	.matchup-card {
 		position: relative;
-		top: -80px;
+		top: -180px;
 
 		width: 100%;
 		max-width: 1500px;
