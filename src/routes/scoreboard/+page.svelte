@@ -883,7 +883,7 @@
 
 	position: absolute;
 
-	top: -110px;
+	top: -100px;
 	left: -3%;
 	right: -3%;
 	bottom: -100px;
