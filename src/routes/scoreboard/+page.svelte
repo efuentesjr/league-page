@@ -1245,19 +1245,15 @@
 		opacity: 1;
 	}
 }
-	}
 
-	@keyframes exit {
-		from {
-			opacity: 1;
-			transform: translateX(0);
-		}
-
-		to {
-			opacity: 0;
-			transform: translateX(-100px);
-		}
+@keyframes exit {
+	from {
+		opacity: 1;
 	}
+	to {
+		opacity: 0;
+	}
+}
 
 	@media (prefers-reduced-motion: reduce) {
 		.matchup-card,
