@@ -879,25 +879,30 @@
 	}
 
 	.matchup-card::before {
-		content: '';
+	content: '';
 
-		position: absolute;
+	position: absolute;
 
-		top: -80px;
-		left: -3%;
-		right: -3%;
-		bottom: -100px;
+	top: -80px;
+	left: -3%;
+	right: -3%;
+	bottom: -100px;
 
-		background: url('/steel-background.jpg') center center / cover no-repeat;
+	background:
+		linear-gradient(
+			135deg,
+			rgba(20, 28, 36, 0.94),
+			rgba(8, 14, 20, 0.88)
+		);
 
-		box-shadow:
-			0 12px 35px rgba(0, 0, 0, 0.55),
-			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+	box-shadow:
+		0 12px 35px rgba(0, 0, 0, 0.55),
+		inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
-		z-index: 0;
+	z-index: 0;
 
-		pointer-events: none;
-	}
+	pointer-events: none;
+}
 
 	.matchup-card > * {
 		position: relative;
