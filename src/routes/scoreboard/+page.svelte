@@ -691,7 +691,7 @@
 	top: -180px;
 
 	width: 100%;
-	max-width: 1200px;
+	max-width: 1100px;
 
 	padding: 24px 25px 28px;
 
@@ -1237,16 +1237,14 @@
 		color: #666;
 	}
 
-	@keyframes enter {
-		from {
-			opacity: 0;
-			transform: translateX(100px);
-		}
-
-		to {
-			opacity: 1;
-			transform: translateX(0);
-		}
+@keyframes enter {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
 	}
 
 	@keyframes exit {
