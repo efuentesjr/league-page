@@ -687,24 +687,24 @@
 	}
 
 	.all-scores-card {
-		position: relative;
-		top: 0px;
+	position: relative;
+	top: -180px;
 
-		width: 100%;
-		max-width: 1500px;
+	width: 100%;
+	max-width: 1500px;
 
-		padding: 24px 25px 28px;
+	padding: 24px 25px 28px;
 
-		text-align: center;
+	text-align: center;
 
-		background: transparent;
+	background: transparent;
 
-		border: none;
+	border: none;
 
-		box-shadow: none;
+	box-shadow: none;
 
-		animation: enter 0.9s ease both;
-	}
+	animation: enter 0.9s ease both;
+}
 
 	.all-scores-card::before {
 		content: '';
