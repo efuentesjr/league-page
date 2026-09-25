@@ -1240,11 +1240,9 @@
 @keyframes enter {
 	from {
 		opacity: 0;
-		transform: translateX(100px);
 	}
 	to {
 		opacity: 1;
-		transform: translateX(0);
 	}
 }
 
