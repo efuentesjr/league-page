@@ -863,7 +863,7 @@
 		top: -180px;
 
 		width: 100%;
-		max-width: 1100px;
+		max-width: 1200px;
 
 		padding: 0 25px 14px;
 
