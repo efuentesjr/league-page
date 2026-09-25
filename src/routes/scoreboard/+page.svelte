@@ -691,7 +691,7 @@
 	top: -180px;
 
 	width: 100%;
-	max-width: 1025px;
+	max-width: 1075px;
 
 	padding: 24px 25px 28px;
 
