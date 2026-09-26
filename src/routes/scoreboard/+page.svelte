@@ -711,10 +711,10 @@
 
 		position: absolute;
 
-		top: -100px;
+		top: 	0px;
 		left: -20%;
 		right: -20%;
-		bottom: -110px;
+		bottom: -60px;
 
 		background: url('/steel.png') center center / cover no-repeat;
 
