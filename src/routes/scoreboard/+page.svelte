@@ -883,10 +883,10 @@
 
 	position: absolute;
 
-	top: -50px;
+	top: -70px;
 	left: -3%;
 	right: -2%;
-	bottom: -50px;
+	bottom: -60px;
 
 	background: url('/steel.png') center center / cover no-repeat;
 
