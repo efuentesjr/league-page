@@ -683,7 +683,7 @@
 		align-items: flex-start;
 		justify-content: center;
 
-		padding: 110px 0vw;
+		padding: 50px 0vw;
 	}
 
 	.all-scores-card {
