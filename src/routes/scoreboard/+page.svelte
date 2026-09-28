@@ -708,26 +708,23 @@
 	animation: enter 0.9s ease both;
 }
 
-	.all-scores-card::before {
-		content: '';
+.all-scores-card::before {
+  content: '';
 
-		position: absolute;
+  position: absolute;
 
-		top: 	1px;
-		left: -20%;
-		right: -20%;
-		bottom: -60px;
+  top: 1px;
+  left: -20%;
+  right: -20%;
+  bottom: -60px;
 
-		background: url('/steel.png') center center / cover no-repeat;
+  background: transparent;
+  box-shadow: none;
 
-		box-shadow:
-			0 12px 35px rgba(0, 0, 0, 0.55),
-			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  z-index: 0;
 
-		z-index: 0;
-
-		pointer-events: none;
-	}
+  pointer-events: none;
+}
 
 	.all-scores-card > * {
 		position: relative;
@@ -891,13 +888,8 @@
 	right: -2%;
 	bottom: -60px;
 
-	background: url('/steel.png') center center / cover no-repeat;
-
-	box-shadow:
-		0 20px 50px rgba(0, 0, 0, 0.75),
-		0 0 35px rgba(30, 110, 170, 0.18),
-		inset 0 1px 0 rgba(255, 255, 255, 0.04),
-		inset 0 -1px 0 rgba(30, 120, 180, 0.06);
+	background: transparent;
+	box-shadow: none;
 
 	z-index: 0;
 
