@@ -693,6 +693,8 @@
 	width: 100%;
 	max-width: 850px;
 
+	transform: translateX(-30px);
+
 	padding: 24px 25px 28px;
 
 	text-align: center;
