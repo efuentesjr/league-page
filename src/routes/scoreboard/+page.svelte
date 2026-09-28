@@ -680,7 +680,7 @@
 		min-height: 0;
 
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: center;
 
 		padding: 0px 4vw;
