@@ -693,7 +693,7 @@
 	width: 100%;
 	max-width: 850px;
 
-	transform: translateX(-30px);
+	transform: translateX(-5px);
 
 	padding: 24px 25px 28px;
 
