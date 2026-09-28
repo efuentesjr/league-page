@@ -1058,19 +1058,19 @@
 		}
 	}
 
-	@keyframes summaryWinnerGlow {
-		0%, 100% {
-			filter:
-				drop-shadow(0 0 3px rgba(255, 215, 0, 0.35))
-				drop-shadow(0 0 8px rgba(255, 215, 0, 0.20));
-		}
+@keyframes summaryWinnerGlow {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 3px rgba(0, 191, 255, 0.35))
+      drop-shadow(0 0 8px rgba(0, 191, 255, 0.20));
+  }
 
-		50% {
-			filter:
-				drop-shadow(0 0 7px rgba(255, 215, 0, 0.95))
-				drop-shadow(0 0 16px rgba(255, 215, 0, 0.75));
-		}
-	}
+  50% {
+    filter:
+      drop-shadow(0 0 7px rgba(0, 191, 255, 0.95))
+      drop-shadow(0 0 16px rgba(0, 191, 255, 0.75));
+  }
+}
 
 	/* GOLD COMPLETED WINNER */
 	@keyframes completedWinnerGlow {
