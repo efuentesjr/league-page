@@ -858,6 +858,7 @@
 		color: #555;
 	}
 
+
 	.matchup-card {
 		position: relative;
 		top: -180px;
