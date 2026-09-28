@@ -891,8 +891,6 @@
 
 	background: url('/steel.png') center center / cover no-repeat;
 
-	border-radius: 4% / 5%;
-
 	box-shadow:
 		0 20px 50px rgba(0, 0, 0, 0.75),
 		0 0 35px rgba(30, 110, 170, 0.18),
