@@ -1037,19 +1037,19 @@
   animation: completedWinnerGlow 1.8s ease-in-out infinite !important;
 }
 
-/* NEON BLUE LIVE LEADER */
+/* ELECTRIC BLUE LIVE LEADER */
 @keyframes liveLeaderGlow {
   0%, 100% {
     filter:
-      drop-shadow(0 0 4px rgba(0, 191, 255, 0.35))
-      drop-shadow(0 0 10px rgba(0, 191, 255, 0.25));
+      drop-shadow(0 0 4px rgba(0, 140, 255, 0.40))
+      drop-shadow(0 0 10px rgba(0, 140, 255, 0.30));
   }
 
   50% {
     filter:
-      drop-shadow(0 0 8px rgba(0, 191, 255, 0.95))
-      drop-shadow(0 0 20px rgba(0, 191, 255, 0.80))
-      drop-shadow(0 0 40px rgba(0, 191, 255, 0.60));
+      drop-shadow(0 0 8px rgba(0, 140, 255, 1))
+      drop-shadow(0 0 20px rgba(0, 140, 255, 0.85))
+      drop-shadow(0 0 40px rgba(0, 140, 255, 0.65));
   }
 }
 
