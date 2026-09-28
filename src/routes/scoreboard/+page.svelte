@@ -767,7 +767,7 @@
 
 		align-items: center;
 
-		min-height: 55px;
+		min-height: 50px;
 
 		padding: 7px 12px;
 
