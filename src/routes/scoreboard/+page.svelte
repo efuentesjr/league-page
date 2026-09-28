@@ -1003,24 +1003,24 @@
 		color: #555;
 	}
 
-	.team-name {
-		width: 100%;
-		max-width: 90%;
+.team-name {
+	width: 100%;
+	max-width: 90%;
 
-		font-size: clamp(20px, 1.5vw, 38px);
-		font-weight: 900;
-		letter-spacing: 1px;
-		line-height: 1.15;
-		margin-bottom: 50px;
+	font-size: clamp(20px, 1.5vw, 38px);
+	font-weight: 900;
+	letter-spacing: 1px;
+	line-height: 1.15;
+	margin-bottom: 50px;
+	height: 44px;
 
-		white-space: normal;
-		overflow: visible;
-		text-align: center;
+	white-space: normal;
+	overflow: visible;
+	text-align: center;
 
-		text-shadow:
-			0 3px 10px rgba(0, 0, 0, 0.8);
-	}
-
+	text-shadow:
+		0 3px 10px rgba(0, 0, 0, 0.8);
+}
 	.score {
 		margin-top: 15px;
 
