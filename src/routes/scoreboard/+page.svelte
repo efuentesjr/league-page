@@ -686,12 +686,12 @@
 		padding: 0px 4vw;
 	}
 
-	.all-scores-card {
+.all-scores-card {
 	position: relative;
 	top: -180px;
 
 	width: 100%;
-	max-width: 1075px;
+	max-width: 900px;
 
 	padding: 24px 25px 28px;
 
