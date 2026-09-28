@@ -887,15 +887,17 @@
 	top: 10px;
 	left: -3%;
 	right: -2%;
-	height: 500px;
+	bottom: -60px;
 
 	background: url('/steel.png') center center / cover no-repeat;
+
+	border-radius: 4% / 5%;
 
 	box-shadow:
 		0 20px 50px rgba(0, 0, 0, 0.75),
 		0 0 35px rgba(30, 110, 170, 0.18),
-		inset 0 0px 0 rgba(255, 255, 255, 0.00),
-		inset 0 0px 0 rgba(30, 120, 180, 0.20);
+		inset 0 1px 0 rgba(255, 255, 255, 0.04),
+		inset 0 -1px 0 rgba(30, 120, 180, 0.06);
 
 	z-index: 0;
 
