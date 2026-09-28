@@ -1026,15 +1026,15 @@
 		line-height: 1;
 	}
 
-	/* LIVE LEADER — BLACK PULSING GLOW */
-	.team.winning:not(.completed) .logo {
-		animation: liveLeaderGlow 1.8s ease-in-out infinite !important;
+/* LIVE LEADER — BLACK PULSING GLOW */
+.team.winning:not(.completed) .logo {
+  animation: liveLeaderGlow 1.8s ease-in-out infinite !important;
 
-		filter:
-			drop-shadow(0 0 5px rgba(0, 0, 0, 0.6))
-			drop-shadow(0 0 14px rgba(0, 0, 0, 0.8))
-			drop-shadow(0 0 28px rgba(0, 0, 0, 0.7));
-	}
+  filter:
+    drop-shadow(0 0 5px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 14px rgba(0, 0, 0, 0.8))
+    drop-shadow(0 0 28px rgba(0, 0, 0, 0.7));
+}
 
 	/* COMPLETED WINNER — GOLD PULSING GLOW */
 	.team.winning.completed .logo,
