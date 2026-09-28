@@ -711,7 +711,7 @@
 
 		position: absolute;
 
-		top: 	3px;
+		top: 	1px;
 		left: -20%;
 		right: -20%;
 		bottom: -60px;
