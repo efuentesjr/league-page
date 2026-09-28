@@ -1026,37 +1026,32 @@
 		line-height: 1;
 	}
 
-/* LIVE LEADER — BLACK PULSING GLOW */
+/* LIVE LEADER — NEON BLUE PULSING GLOW */
 .team.winning:not(.completed) .logo {
   animation: liveLeaderGlow 1.8s ease-in-out infinite !important;
-
-  filter:
-    drop-shadow(0 0 5px rgba(0, 0, 0, 0.6))
-    drop-shadow(0 0 14px rgba(0, 0, 0, 0.8))
-    drop-shadow(0 0 28px rgba(0, 0, 0, 0.7));
 }
 
-	/* COMPLETED WINNER — GOLD PULSING GLOW */
-	.team.winning.completed .logo,
-	.team.winning.completed .score {
-		animation: completedWinnerGlow 1.8s ease-in-out infinite !important;
-	}
+/* COMPLETED WINNER — GOLD PULSING GLOW */
+.team.winning.completed .logo,
+.team.winning.completed .score {
+  animation: completedWinnerGlow 1.8s ease-in-out infinite !important;
+}
 
-	/* BLACK LIVE LEADER */
-	@keyframes liveLeaderGlow {
-		0%, 100% {
-			filter:
-				drop-shadow(0 0 4px rgba(0, 0, 0, 0.4))
-				drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
-		}
+/* NEON BLUE LIVE LEADER */
+@keyframes liveLeaderGlow {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 4px rgba(0, 191, 255, 0.35))
+      drop-shadow(0 0 10px rgba(0, 191, 255, 0.25));
+  }
 
-		50% {
-			filter:
-				drop-shadow(0 0 8px rgba(0, 0, 0, 1))
-				drop-shadow(0 0 20px rgba(0, 0, 0, 1))
-				drop-shadow(0 0 40px rgba(0, 0, 0, 0.9));
-		}
-	}
+  50% {
+    filter:
+      drop-shadow(0 0 8px rgba(0, 191, 255, 0.95))
+      drop-shadow(0 0 20px rgba(0, 191, 255, 0.80))
+      drop-shadow(0 0 40px rgba(0, 191, 255, 0.60));
+  }
+}
 
 @keyframes summaryWinnerGlow {
   0%, 100% {
