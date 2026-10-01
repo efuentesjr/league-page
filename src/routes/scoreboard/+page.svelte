@@ -731,17 +731,22 @@
 		z-index: 1;
 	}
 
-	.all-scores-title {
-		position: relative;
-		top: -3px;
-		margin-bottom: 16px;
-		font-size: 24px;
-		font-weight: 900;
-		letter-spacing: 5px;
-		color: #222;
-		text-shadow:
-			0 1px 1px rgba(255, 255, 255, 0.55);
-	}
+.all-scores-title {
+  position: relative;
+  top: -3px;
+  margin-bottom: 16px;
+
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 5px;
+
+  color: #008CFF;
+
+  text-shadow:
+    0 0 5px rgba(0, 140, 255, 0.90),
+    0 0 12px rgba(0, 140, 255, 0.70),
+    0 0 24px rgba(0, 140, 255, 0.45);
+}
 
 	.all-scores-title span {
 		padding: 0 10px;
