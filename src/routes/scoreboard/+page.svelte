@@ -754,7 +754,7 @@
 		gap: 12px 24px;
 		width: 100%;
 		position: relative;
-		top: 10px;
+		top: 15px;
 	}
 
 	.score-summary {
