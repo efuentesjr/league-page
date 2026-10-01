@@ -740,12 +740,23 @@
   font-weight: 900;
   letter-spacing: 5px;
 
-  color: #008CFF;
+  background: linear-gradient(
+    to bottom,
+    #e8f7ff 0%,
+    #9edfff 20%,
+    #008cff 45%,
+    #0066cc 70%,
+    #c9efff 100%
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 
   text-shadow:
-    0 0 5px rgba(0, 140, 255, 0.90),
-    0 0 12px rgba(0, 140, 255, 0.70),
-    0 0 24px rgba(0, 140, 255, 0.45);
+    0 0 5px rgba(0, 140, 255, 0.75),
+    0 0 12px rgba(0, 100, 255, 0.50),
+    0 0 24px rgba(0, 80, 200, 0.35);
 }
 
 	.all-scores-title span {
