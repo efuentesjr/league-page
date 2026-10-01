@@ -773,24 +773,19 @@
 		top: 20px;
 	}
 
-.score-summary {
-  display: grid;
+.summary-score {
+  padding-left: 4px;
 
-  grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+  font-size: 19px;
+  font-weight: 900;
 
-  align-items: center;
+  font-variant-numeric: tabular-nums;
 
-  min-height: 20px;
+  color: #7fd3ff !important;
 
-  padding: 7px 12px;
-
-  background: rgba(0, 10, 25, 0.18);
-
-  border: 1px solid rgba(120, 190, 255, 0.22);
-
-  box-shadow:
-    inset 0 0 20px rgba(0, 100, 200, 0.08),
-    0 3px 10px rgba(0, 0, 0, 0.25);
+  text-shadow:
+    0 0 4px rgba(0, 140, 255, 0.80),
+    0 0 9px rgba(0, 100, 255, 0.45);
 }
 
 	.summary-game {
@@ -873,16 +868,15 @@
 }
 
 .summary-vs {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 900;
 
-  color: #d7e9f7;
-
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 1),
-    0 0 6px rgba(0, 140, 255, 0.65);
+  color: #9fb8c9 !important;
 
   text-align: center;
+
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.95);
 }
 
 	.matchup-card {
