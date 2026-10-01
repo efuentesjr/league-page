@@ -829,7 +829,7 @@
 
 		font-size: 13px;
 		font-weight: 600;
-		line-height: 3.0;
+		line-height: .95;
 
 		white-space: normal;
 		overflow: break-word;
