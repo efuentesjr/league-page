@@ -827,8 +827,8 @@
 
 		padding: 0 6px 0 12px;
 
-		font-size: 16px;
-		font-weight: 700;
+		font-size: 13px;
+		font-weight: 600;
 		line-height: 3.0;
 
 		white-space: nowrap;
