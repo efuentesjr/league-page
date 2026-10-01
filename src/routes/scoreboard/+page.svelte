@@ -786,8 +786,8 @@
 
   background: transparent;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+border-top: 1px solid rgba(255, 255, 255, 0.10);
+border-bottom: 1px solid rgba(0, 0, 0, 0.18);
 
   box-shadow: none;
 }
