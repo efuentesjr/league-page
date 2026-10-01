@@ -864,19 +864,22 @@
 
   font-variant-numeric: tabular-nums;
 
-  color: #ffffff;
+  color: #ffffff !important;
 
   text-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.95),
-    0 0 7px rgba(0, 140, 255, 0.45);
+    0 2px 4px rgba(0, 0, 0, 1),
+    0 0 5px rgba(0, 0, 0, 0.9);
 }
 
-	.summary-vs {
-		font-size: 13px;
-		font-weight: 900;
+.summary-vs {
+  font-size: 13px;
+  font-weight: 900;
 
-		color: #555;
-	}
+  color: #d7e9f7 !important;
+
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 1);
+}
 
 
 	.matchup-card {
