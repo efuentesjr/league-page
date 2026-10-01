@@ -691,7 +691,7 @@
 	top: -180px;
 
 	width: 100%;
-	max-width: 850px;
+	max-width: 1100px;
 
 	transform: translateX(-5px);
 
