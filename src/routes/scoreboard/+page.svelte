@@ -836,22 +836,25 @@
 			0 4px 12px rgba(0, 0, 0, 0.5);
 	}
 
-	.summary-name {
-		min-width: 0;
+.summary-name {
+  min-width: 0;
 
-		padding: 0 6px 0 12px;
+  padding: 0 6px 0 12px;
 
-		font-size: 16px;
-		font-weight: 600;
-		line-height: .95;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 0.95;
 
-		white-space: normal;
-		overflow: break-word;
-		text-align: left;
+  color: #ffffff !important;
 
-		text-shadow:
-			0 1px 2px rgba(255, 255, 255, 0.35);
-	}
+  white-space: normal;
+  overflow-wrap: break-word;
+  text-align: center;
+
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 1),
+    0 0 4px rgba(0, 0, 0, 0.95);
+}
 
 .summary-score {
   padding-left: 4px;
