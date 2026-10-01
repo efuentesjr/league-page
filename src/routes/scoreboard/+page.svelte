@@ -784,7 +784,7 @@
 
 		padding: 7px 12px;
 
-		background: rgba(255, 255, 255, 0.60);
+		background: rgba(35, 50, 65, 0.78);
 
 		border-top: 1px solid rgba(255, 255, 255, 0.45);
 		border-bottom: 1px solid rgba(0, 0, 0, 0.35);
