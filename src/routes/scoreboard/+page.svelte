@@ -831,9 +831,9 @@
 		font-weight: 600;
 		line-height: 3.0;
 
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		white-space: normal;
+		overflow: break-word;
+		text-align: left;
 
 		text-shadow:
 			0 1px 2px rgba(255, 255, 255, 0.35);
