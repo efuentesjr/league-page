@@ -773,26 +773,24 @@
 		top: 20px;
 	}
 
-	.score-summary {
-		display: grid;
+.score-summary {
+  display: grid;
 
-		grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
 
-		align-items: center;
+  align-items: center;
 
-		min-height: 20px;
+  min-height: 20px;
 
-		padding: 7px 12px;
+  padding: 7px 12px;
 
-		background: rgba(35, 50, 65, 0.78);
+  background: transparent;
 
-		border-top: 1px solid rgba(255, 255, 255, 0.45);
-		border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 
-		box-shadow:
-			inset 0 1px 0 rgba(255, 255, 255, 0.10),
-			0 5px 15px rgba(0, 0, 0, 0.25);
-	}
+  box-shadow: none;
+}
 
 	.summary-game {
 		display: none;
@@ -855,16 +853,20 @@
 			0 1px 2px rgba(255, 255, 255, 0.35);
 	}
 
-	.summary-score {
-		padding-left: 4px;
+.summary-score {
+  padding-left: 4px;
 
-		font-size: 19px;
-		font-weight: 900;
+  font-size: 19px;
+  font-weight: 900;
 
-		font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums;
 
-		color: #000;
-	}
+  color: #ffffff;
+
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.95),
+    0 0 7px rgba(0, 140, 255, 0.45);
+}
 
 	.summary-vs {
 		font-size: 13px;
