@@ -847,9 +847,9 @@
     0 1px 3px rgba(0, 0, 0, 0.95);
 }
 
-	.matchup-card {
-		position: relative;
-		top: -180px;
+.matchup-card {
+  position: relative;
+  top: clamp(-180px, calc(270px - 50vh), -80px);
 
 		width: 100%;
 		max-width: 1150px;
