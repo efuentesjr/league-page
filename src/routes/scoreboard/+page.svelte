@@ -522,16 +522,6 @@
 
 	{/if}
 
-	<footer class="bottom-bar">
-
-		<div>MFFL • 2026 SEASON</div>
-
-		<div>WEEK {weekNumber}</div>
-
-		<div>LIVE MFFL SCORES</div>
-
-	</footer>
-
 </div>
 
 <style>
