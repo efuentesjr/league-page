@@ -1278,7 +1278,7 @@
 	   LAPTOP / SHORTER SCREENS
 	   ========================= */
 
-	@media (min-width: 601px) and (max-height: 900px) {
+	@media (min-width: 600px) and (max-height: 850px) {
 
 		.matchup-card {
 			top: -80px;
