@@ -656,7 +656,7 @@
 
 .all-scores-card {
 	position: relative;
-	top: -180px;
+	top: 0;
 
 	width: 100%;
 	max-width: 1200px;
