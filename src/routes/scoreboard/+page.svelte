@@ -259,28 +259,6 @@
 
 <div class="scoreboard">
 
-	<header class="top-bar">
-
-		<div class="league-name">
-			<img src="/badge.png" alt="MFFL" />
-		</div>
-
-		<div class="header-center">
-			<h1>{title}</h1>
-
-			<div class="season">
-				{season} <span>•</span> WEEK {weekNumber}
-			</div>
-		</div>
-
-		{#if games[currentGame]?.isLive}
-			<div class="live-indicator">
-				<span class="dot"></span>
-				LIVE
-			</div>
-		{/if}
-
-	</header>
 
 	{#if loading}
 
