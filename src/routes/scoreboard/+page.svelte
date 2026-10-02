@@ -1273,6 +1273,101 @@
 		}
 	}
 
+
+	/* =========================
+	   LAPTOP / SHORTER SCREENS
+	   ========================= */
+
+	@media (min-width: 601px) and (max-height: 900px) {
+
+		.matchup-card {
+			top: -80px;
+		}
+
+		.all-scores-card {
+			top: -80px;
+		}
+
+		.game-label {
+			height: 26px;
+			margin-top: 0;
+			margin-bottom: 6px;
+
+			font-size: 19px;
+			line-height: 26px;
+		}
+
+		.teams {
+			grid-template-columns: 1fr 210px 1fr;
+		}
+
+		.logo {
+			width: clamp(95px, 10vw, 145px);
+			height: clamp(95px, 10vw, 145px);
+
+			margin-bottom: 12px;
+		}
+
+		.team-name {
+			font-size: clamp(18px, 1.4vw, 30px);
+
+			margin-bottom: 25px;
+
+			height: 40px;
+		}
+
+		.score {
+			margin-top: 10px;
+
+			font-size: clamp(45px, 5vw, 72px);
+		}
+
+		.h2h-panel {
+			width: 210px;
+
+			margin-top: 10px;
+			padding: 6px 0 5px;
+		}
+
+		.h2h-title {
+			font-size: 17px;
+			margin-bottom: 4px;
+		}
+
+		.h2h-number {
+			font-size: 32px;
+		}
+
+		.h2h-points-number {
+			font-size: 17px;
+		}
+
+		.h2h-label {
+			font-size: 13px;
+		}
+
+		.all-scores-grid {
+			gap: 10px 20px;
+		}
+
+		.summary-logo {
+			width: 60px;
+			height: 60px;
+		}
+
+		.summary-team {
+			grid-template-columns: 60px minmax(0, 1fr) auto;
+		}
+
+		.summary-name {
+			font-size: 15px;
+		}
+
+		.summary-score {
+			font-size: 18px;
+		}
+	}
+
 	/* =========================
 	   PHONE SCOREBOARD
 	   ========================= */
