@@ -48,7 +48,14 @@ export async function GET() {
 
     const scoringSettings = leagueData.scoring_settings;
 
-    return json(computePlayers(playerData, weeklyData, scoringSettings));
+    // Cache on Vercel's CDN: fresh for 1 hour, then served instantly while it
+    // rebuilds in the background (for up to a day). Keeps slow Sleeper
+    // responses from timing out page loads.
+    return json(computePlayers(playerData, weeklyData, scoringSettings), {
+        headers: {
+            'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400'
+        }
+    });
 }
 
 const computePlayers = (playerData, weeklyData, scoringSettings) => {
