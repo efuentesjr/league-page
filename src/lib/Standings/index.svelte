@@ -1,5 +1,5 @@
 <script>
-    import { leagueName, round } from '$lib/utils/helper';
+    import { leagueName, round, getLeagueData } from '$lib/utils/helper';
 	import { getTeamFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
   	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
 	import LinearProgress from '@smui/linear-progress';
@@ -17,6 +17,9 @@
 
     let loading = true;
     let preseason = false;
+
+    // teams 1 through playoffTeams make the playoffs (from Sleeper's league settings)
+    let playoffTeams = 8;
     let standings, year, leagueTeamManagers;
     onMount(async () => {
         const asyncStandingsData = await standingsData;
@@ -27,6 +30,13 @@
         }
         const {standingsInfo, yearData} = asyncStandingsData;
         leagueTeamManagers = await leagueTeamManagersData;
+
+        try {
+            const leagueData = await getLeagueData();
+            playoffTeams = Number(leagueData?.settings?.playoff_teams) || playoffTeams;
+        } catch (err) {
+            console.error('[Standings] Could not read playoff teams, using 8:', err);
+        }
         year = yearData;
 
         let finalStandings = Object.keys(standingsInfo).map((key) => standingsInfo[key]);
@@ -71,6 +81,30 @@
         margin: 1.5em 0 2em;
     }
 
+    :global(.playoffLine td) {
+        padding: 0 !important;
+        height: auto !important;
+    }
+
+    .playoffLineInner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 12px;
+        font-size: 0.7em;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--blueOne, #00316b);
+    }
+
+    .playoffLineInner::before,
+    .playoffLineInner::after {
+        content: '';
+        flex: 1;
+        border-top: 2px dashed currentColor;
+    }
+
     .standingsTable {
         max-width: 100%;
         overflow-x: scroll;
@@ -95,6 +129,7 @@
         <DataTable table$aria-label="League Standings" >
             <Head> <!-- Team name  -->
                 <Row>
+                    <Cell class="center">#</Cell>
                     <Cell class="center">Team</Cell>
                     {#each columnOrder as column}
                         <Cell class="center wrappable">{column.name}</Cell>
@@ -103,8 +138,18 @@
             </Head>
             <Body>
                 <!-- 	Standing	 -->
-                {#each standings as standing}
-                    <Standing {columnOrder} {standing} {leagueTeamManagers} team={getTeamFromTeamManagers(leagueTeamManagers, standing.rosterID)} />
+                {#each standings as standing, index}
+                    <Standing rank={index + 1} {columnOrder} {standing} {leagueTeamManagers} team={getTeamFromTeamManagers(leagueTeamManagers, standing.rosterID)} />
+
+                    {#if index + 1 === playoffTeams && standings.length > playoffTeams}
+                        <Row class="playoffLine">
+                            <Cell colspan={columnOrder.length + 2}>
+                                <div class="playoffLineInner">
+                                    <span>▲ Playoffs · Top {playoffTeams}</span>
+                                </div>
+                            </Cell>
+                        </Row>
+                    {/if}
                 {/each}
             </Body>
         </DataTable>
