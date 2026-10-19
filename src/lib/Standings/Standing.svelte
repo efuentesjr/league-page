@@ -27,13 +27,19 @@
         text-align: center;
     }
 
+    /* the ball hangs off the right side so the number stays centered */
     .rankWrap {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
+        position: relative;
+        display: inline-block;
     }
 
     .ball {
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-left: 5px;
+
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -47,7 +53,7 @@
         line-height: 1;
         color: #1a1a1a;
 
-        background: radial-gradient(circle at 35% 30%, #ffffff 0%, #f1f1f1 45%, #bdbdbd 100%);
+        background: radial-gradient(circle at 35% 30%, #fff6b3 0%, #ffd400 45%, #c99a00 100%);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
     }
 
