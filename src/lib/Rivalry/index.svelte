@@ -324,7 +324,7 @@
                     <span class="tierLabel">Rivalry Tier {rivalry.tier.tier}</span>
                     <span class="tierName">{rivalry.tier.name}</span>
                     <span class="tierFlames" aria-hidden="true">
-                        {#each [1, 2, 3, 4] as n}
+                        {#each [1, 2, 3, 4, 5] as n}
                             <span class:dim={n > rivalry.tier.flames}>🔥</span>
                         {/each}
                     </span>

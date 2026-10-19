@@ -43,29 +43,39 @@ export const maxBracketRound = (bracket) =>
 	(bracket || []).reduce((max, g) => Math.max(max, Number(g.r) || 0), 0);
 
 /*
- * Rivalry tiers, from the deepest playoff meeting.
+ * Rivalry tiers: the deepest playoff meeting decides tiers 1-3;
+ * without a playoff meeting, the number of regular season games
+ * decides tiers 4-5.
  */
+export const OLD_RIVALS_GAMES = 6;
+
 export const RIVALRY_TIERS = {
 	legendary: {
 		tier: 1,
 		name: 'Legendary',
-		flames: 4,
+		flames: 5,
 		color: '#e5b52a'
 	},
 	heated: {
 		tier: 2,
 		name: 'Heated',
-		flames: 3,
+		flames: 4,
 		color: '#e2452b'
 	},
 	badBlood: {
 		tier: 3,
 		name: 'Bad Blood',
-		flames: 2,
+		flames: 3,
 		color: '#e2722b'
 	},
-	familiar: {
+	oldRivals: {
 		tier: 4,
+		name: 'Old Rivals',
+		flames: 2,
+		color: '#4a90d9'
+	},
+	familiar: {
+		tier: 5,
 		name: 'Familiar Foes',
 		flames: 1,
 		color: '#8a96a3'
@@ -91,8 +101,10 @@ export const getRivalryTier = (playoffMeetings = [], totalGames = 0) => {
 	if (count(1)) {
 		return { ...RIVALRY_TIERS.badBlood, reason: `Met in the playoffs${times(count(1))}` };
 	}
-	return {
-		...RIVALRY_TIERS.familiar,
-		reason: `${totalGames} regular season game${totalGames === 1 ? '' : 's'}`
-	};
+	// regular season only: 6+ games = Old Rivals, 1-5 = Familiar Foes
+	const reason = `${totalGames} regular season game${totalGames === 1 ? '' : 's'}`;
+	if (totalGames >= OLD_RIVALS_GAMES) {
+		return { ...RIVALRY_TIERS.oldRivals, reason };
+	}
+	return { ...RIVALRY_TIERS.familiar, reason };
 };
