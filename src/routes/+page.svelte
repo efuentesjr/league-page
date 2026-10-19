@@ -205,39 +205,159 @@
     font-style: italic;
   }
 
-  /* ===== The Beat Shortcut ===== */
+  /* ===== The Beat Shortcut: "league pulse" banner ===== */
   .the-beat-link {
-    display: block;
-    width: fit-content;
-    margin: 8px auto 50px;
-    line-height: 0;
+    --void: #050a16;
+    --ion: #38e8ff;
+    --plasma: #7c5cff;
+    --signal: #e8f4ff;
+    --dim: #7088aa;
+
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 22px;
+
+    width: 100%;
+    max-width: 960px;
+    margin: 8px auto 40px;
+    padding: 22px 28px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+    color: var(--signal);
+    text-decoration: none;
+
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(124, 92, 255, 0.28), transparent 60%),
+      radial-gradient(ellipse at 80% 50%, rgba(56, 232, 255, 0.16), transparent 55%),
+      var(--void);
+    border: 1px solid rgba(56, 232, 255, 0.35);
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+    transition: border-color 0.2s ease;
   }
 
-  .the-beat-link img {
-    display: block;
-    width: auto;
-    max-width: 100%;
+  .the-beat-link:hover,
+  .the-beat-link:focus-visible {
+    border-color: var(--ion);
+    outline: none;
+  }
+
+  .the-beat-link:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--ion);
+  }
+
+  /* the heartbeat trace that runs behind the wordmark */
+  .beat-pulse {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .beat-pulse .trace-base {
+    fill: none;
+    stroke: rgba(56, 232, 255, 0.14);
+    stroke-width: 2;
+  }
+
+  .beat-pulse .trace {
+    fill: none;
+    stroke: var(--ion);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 220 1400;
+    filter: drop-shadow(0 0 6px var(--ion));
+    animation: beatTrace 3.2s linear infinite;
+  }
+
+  @keyframes beatTrace {
+    from { stroke-dashoffset: 220; }
+    to { stroke-dashoffset: -1400; }
+  }
+
+  .beat-badge {
+    position: relative;
+    width: 76px;
     height: auto;
-    cursor: pointer;
-    transition: transform 0.15s ease, opacity 0.15s ease;
+    filter: drop-shadow(0 0 12px rgba(56, 232, 255, 0.45));
   }
 
-  .the-beat-link:hover img {
-    transform: scale(1.04);
-    opacity: 0.9;
+  .beat-title {
+    position: relative;
+    min-width: 0;
+  }
+
+  .beat-wordmark {
+    display: block;
+    font-size: clamp(2.2rem, 7vw, 4.6rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    color: var(--signal);
+    text-shadow:
+      0 0 14px rgba(56, 232, 255, 0.55),
+      0 0 38px rgba(124, 92, 255, 0.45);
+  }
+
+  .beat-tagline {
+    display: block;
+    margin-top: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--dim);
+  }
+
+  .beat-open {
+    position: relative;
+    padding: 9px 16px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--void);
+    background: var(--ion);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    transition: background-color 0.2s ease;
+  }
+
+  .the-beat-link:hover .beat-open {
+    background: #8ff4ff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .beat-pulse .trace {
+      animation: none;
+      stroke-dasharray: none;
+      opacity: 0.5;
+    }
   }
 
   /* ===== Mobile ===== */
   @media (max-width: 700px) {
     .the-beat-link {
-      margin: 6px auto 40px;
-      max-width: 90%;
+      width: 96%;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px;
+      padding: 16px 16px;
+      margin: 6px auto 30px;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
     }
 
-    .the-beat-link img {
-      width: auto;
-      max-width: 100%;
-      height: auto;
+    .beat-badge {
+      width: 52px;
+    }
+
+    .beat-tagline {
+      font-size: 0.85rem;
+    }
+
+    .beat-open {
+      grid-column: 1 / -1;
+      justify-self: stretch;
+      text-align: center;
     }
   }
 </style>
@@ -283,10 +403,21 @@
       href="https://jdiazdecaro.github.io/MFFL/beat.html"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="The Beat - MFFL League Pulse"
-      title="The Beat - MFFL League Pulse"
+      aria-label="The Beat: MFFL league pulse (opens in a new tab)"
     >
-      <img src="/The Beat.png" alt="The Beat" />
+      <svg class="beat-pulse" viewBox="0 0 960 160" preserveAspectRatio="none" aria-hidden="true">
+        <polyline class="trace-base" points="0,80 600,80 622,80 636,56 650,104 666,18 684,142 700,80 730,80 742,66 754,94 766,80 960,80" />
+        <polyline class="trace" points="0,80 600,80 622,80 636,56 650,104 666,18 684,142 700,80 730,80 742,66 754,94 766,80 960,80" />
+      </svg>
+
+      <img class="beat-badge" src="/badge.png" alt="" />
+
+      <span class="beat-title">
+        <span class="beat-wordmark">The Beat</span>
+        <span class="beat-tagline">The MFFL league pulse</span>
+      </span>
+
+      <span class="beat-open">Read The Beat</span>
     </a>
 
     <PowerRankings />
