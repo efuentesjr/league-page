@@ -575,6 +575,9 @@
     font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
     color: var(--signal);
 
+    /* lay out by the space this panel actually gets, not the window */
+    container-type: inline-size;
+
     background:
       linear-gradient(rgba(56, 232, 255, 0.05) 1px, transparent 1px) 0 0 / 100% 28px,
       linear-gradient(90deg, rgba(56, 232, 255, 0.05) 1px, transparent 1px) 0 0 / 28px 100%,
@@ -599,6 +602,7 @@
 
   .rankingTitle {
     margin: 0;
+    font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
     font-size: 2rem;
     font-weight: 700;
     line-height: 1;
@@ -783,15 +787,9 @@
     }
   }
 
-  /* MOBILE */
+  /* NARROW PANEL (phones, or a narrow column next to the sidebar) */
 
-  @media (max-width: 700px) {
-    .powerRankings {
-      width: 96%;
-      padding: 18px 10px 20px;
-      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
-    }
-
+  @container (max-width: 640px) {
     .rankingHeader {
       flex-direction: column;
       align-items: flex-start;
@@ -839,6 +837,14 @@
 
     .score {
       font-size: 0.95rem;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .powerRankings {
+      width: 96%;
+      padding: 18px 10px 20px;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
     }
   }
 </style>

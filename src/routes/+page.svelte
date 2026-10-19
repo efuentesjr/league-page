@@ -214,10 +214,12 @@
     --dim: #7088aa;
 
     position: relative;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 22px;
+    gap: 14px 22px;
+
+    container-type: inline-size;
 
     width: 100%;
     max-width: 960px;
@@ -289,12 +291,14 @@
 
   .beat-title {
     position: relative;
+    flex: 1 1 220px;
     min-width: 0;
   }
 
   .beat-wordmark {
     display: block;
-    font-size: clamp(2.2rem, 7vw, 4.6rem);
+    font-size: clamp(2.2rem, 9cqi, 4.6rem);
+    white-space: nowrap;
     font-weight: 700;
     line-height: 0.95;
     letter-spacing: 0.01em;
@@ -314,6 +318,8 @@
 
   .beat-open {
     position: relative;
+    flex: none;
+    margin-left: auto;
     padding: 9px 16px;
     font-size: 0.95rem;
     font-weight: 700;
@@ -335,17 +341,8 @@
     }
   }
 
-  /* ===== Mobile ===== */
-  @media (max-width: 700px) {
-    .the-beat-link {
-      width: 96%;
-      grid-template-columns: auto minmax(0, 1fr);
-      gap: 14px;
-      padding: 16px 16px;
-      margin: 6px auto 30px;
-      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
-    }
-
+  /* ===== Narrow ===== */
+  @container (max-width: 520px) {
     .beat-badge {
       width: 52px;
     }
@@ -355,9 +352,17 @@
     }
 
     .beat-open {
-      grid-column: 1 / -1;
-      justify-self: stretch;
+      flex: 1 1 100%;
       text-align: center;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .the-beat-link {
+      width: 96%;
+      padding: 16px;
+      margin: 6px auto 30px;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
     }
   }
 </style>
