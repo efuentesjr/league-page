@@ -1,5 +1,21 @@
 <script>
     export let viewManager, players, changeManager;
+
+    // dynamic values (fall back to leagueInfo.js when unavailable)
+    export let dynamicRival = null;
+    export let topScorer = null;
+    export let teamTier = null;
+    export let historyState = 'loading';
+
+    $: favoriteID = topScorer?.playerID ?? viewManager.favoritePlayer;
+    $: favoriteInfo = favoriteID ? players?.[favoriteID] : null;
+
+    $: mode = teamTier?.mode ?? viewManager.mode;
+
+    $: rival = dynamicRival ?? (historyState === 'loading' ? null : viewManager.rival);
+    $: rivalClickable = rival && rival.link != null;
+
+    const formatPoints = (points) => Number(points).toFixed(1);
 </script>
 
 <style>
@@ -55,6 +71,22 @@
         width: 90px;
         text-align: center;
         line-height: 1.2em;
+    }
+
+    .infoDetail {
+        margin-top: 0.35em;
+        font-size: 0.85em;
+        color: var(--g999, #999);
+        font-style: italic;
+    }
+
+    .loadingIcon {
+        animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.35; }
+        50% { opacity: 1; }
     }
 
     .tradingScale {
@@ -208,44 +240,74 @@
             </div>
         </div>
     {/if}
-    <!-- Favorite player (optioonal) -->
-    {#if viewManager.favoritePlayer}
+    <!-- Favorite player: this season's top scorer on the current roster -->
+    {#if favoriteID && favoriteInfo}
         <div class="infoSlot">
             <div class="infoLabel">
                 Favorite Player
             </div>
             <div class="infoIcon playerIcon">
-                <img class="favoritePlayer" src="https://sleepercdn.com/content/nfl/players/{viewManager.favoritePlayer}.jpg" alt="favorite player"/>
+                <img class="favoritePlayer" src="https://sleepercdn.com/content/nfl/players/{favoriteID}.jpg" alt="favorite player"/>
             </div>
             <div class="infoAnswer">
-                {players[viewManager.favoritePlayer].fn} {players[viewManager.favoritePlayer].ln}
+                {favoriteInfo.fn} {favoriteInfo.ln}
+                {#if topScorer}
+                    <div class="infoDetail">{formatPoints(topScorer.points)} pts this season</div>
+                {/if}
             </div>
         </div>
     {/if}
-    <!-- Rebuild Mod (optional) -->
-    {#if viewManager.mode}
+    <!-- Win Now / Dynasty / Rebuild: league tier -->
+    {#if mode}
         <div class="infoSlot">
             <div class="infoLabel">
                 Win Now or Rebuild?
             </div>
             <div class="infoIcon">
-                <img class="rebuildOrWin" src="/{viewManager.mode.replace(' ', '%20')}.png" alt="win now or rebuild"/>
+                <img class="rebuildOrWin" src="/{mode.replace(' ', '%20')}.png" alt="win now or rebuild"/>
             </div>
             <div class="infoAnswer">
-                {viewManager.mode}
+                {mode}
+                {#if teamTier}
+                    <div class="infoDetail">{teamTier.tier} · #{teamTier.rank} of {teamTier.total}</div>
+                {/if}
             </div>
         </div>
     {/if}
-    <!-- Rival -->
-    <div class="infoSlot infoRival" onclick={() => changeManager(viewManager.rival.link)}>
-        <div class="infoLabel">
-            Rival
+    <!-- Rival: the opponent who has beaten this manager the most, all time -->
+    {#if rival}
+        <div
+            class="infoSlot"
+            class:infoRival={rivalClickable}
+            role={rivalClickable ? 'button' : undefined}
+            tabindex={rivalClickable ? 0 : undefined}
+            onclick={() => rivalClickable && changeManager(rival.link)}
+            onkeydown={(e) => rivalClickable && (e.key === 'Enter' || e.key === ' ') && changeManager(rival.link)}
+        >
+            <div class="infoLabel">
+                Rival
+            </div>
+            <div class="infoIcon">
+                <img class="rival" src="{rival.image}" alt="rival"/>
+            </div>
+            <div class="infoAnswer">
+                {rival.name}
+                {#if dynamicRival}
+                    <div class="infoDetail">
+                        {dynamicRival.yourWins}–{dynamicRival.theirWins}{dynamicRival.ties ? `–${dynamicRival.ties}` : ''} all time
+                    </div>
+                {/if}
+            </div>
         </div>
-        <div class="infoIcon">
-            <img class="rival" src="{viewManager.rival.image}" alt="rival"/>
+    {:else if historyState === 'loading'}
+        <div class="infoSlot">
+            <div class="infoLabel">
+                Rival
+            </div>
+            <div class="infoIcon loadingIcon"></div>
+            <div class="infoAnswer">
+                Finding rival…
+            </div>
         </div>
-        <div class="infoAnswer">
-            {viewManager.rival.name}
-        </div>
-    </div>
+    {/if}
 </div>
