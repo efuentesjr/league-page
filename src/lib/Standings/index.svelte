@@ -95,7 +95,7 @@
         font-weight: 700;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--blueOne, #00316b);
+        color: #3d8bfd;
     }
 
     .playoffLineInner::before,
