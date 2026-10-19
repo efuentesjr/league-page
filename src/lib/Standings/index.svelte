@@ -18,6 +18,15 @@
     let loading = true;
     let preseason = false;
 
+    // Small numbered balls shown next to a standing.
+    // Key = place in the standings, value = number on the ball. Edit freely.
+    const standingBalls = {
+        8: 1,
+        11: 3,
+        12: 2,
+        13: 1,
+    };
+
     // teams 1 through playoffTeams make the playoffs (from Sleeper's league settings)
     let playoffTeams = 8;
     let standings, year, leagueTeamManagers;
@@ -139,7 +148,7 @@
             <Body>
                 <!-- 	Standing	 -->
                 {#each standings as standing, index}
-                    <Standing rank={index + 1} {columnOrder} {standing} {leagueTeamManagers} team={getTeamFromTeamManagers(leagueTeamManagers, standing.rosterID)} />
+                    <Standing rank={index + 1} ball={standingBalls[index + 1]} {columnOrder} {standing} {leagueTeamManagers} team={getTeamFromTeamManagers(leagueTeamManagers, standing.rosterID)} />
 
                     {#if index + 1 === playoffTeams && standings.length > playoffTeams}
                         <Row class="playoffLine">
