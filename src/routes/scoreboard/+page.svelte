@@ -257,271 +257,226 @@
 	<title>{title}</title>
 </svelte:head>
 
+<!--
+	LAYOUT
+	------
+	.stage is sized exactly like the stadium image would be with
+	"background-size: cover", so the image's big screen is always
+	at the same percentage spot inside it. .screen sits on that
+	spot, and everything inside sizes itself from the screen
+	(cqw / cqh units), so it stays centered on every window size.
+-->
 <div class="scoreboard">
+	<div class="stage">
+		<div class="screen">
+			<div class="screen-content" class:expanded={showAllScores && !loading && !error && games.length > 0}>
 
+				{#if loading}
 
-	{#if loading}
-
-		<div class="message">
-			LOADING MFFL MATCHUPS...
-		</div>
-
-	{:else if error}
-
-		<div class="message error">
-			{error}
-		</div>
-
-	{:else if games.length === 0}
-
-		<div class="message">
-			NO MATCHUPS FOUND
-		</div>
-
-	{:else}
-
-		{#if showAllScores}
-
-			<div class="matchup-stage">
-				<div class="all-scores-card">
-
-					<div class="all-scores-title">
-						ALL SCORES
-						<span>•</span>
-						{games.length} MATCHUPS
+					<div class="message">
+						LOADING MFFL MATCHUPS...
 					</div>
 
-					<div class="all-scores-grid">
+				{:else if error}
 
-						{#each games as game}
+					<div class="message error">
+						{error}
+					</div>
 
-							<div class="score-summary">
+				{:else if games.length === 0}
 
-								<div class="summary-game">
-									GAME {game.gameNumber}
+					<div class="message">
+						NO MATCHUPS FOUND
+					</div>
+
+				{:else if showAllScores}
+
+					<div class="all-scores">
+
+						<div class="all-scores-title">
+							ALL SCORES
+							<span>•</span>
+							{games.length} MATCHUPS
+						</div>
+
+						<div class="all-scores-grid">
+
+							{#each games as game}
+
+								<div class="score-summary">
+
+									{#each [game.away, game.home] as team, i}
+										{@const other = i === 0 ? game.home : game.away}
+
+										<div
+											class="summary-team"
+											class:winning={team.score > other.score}
+										>
+											{#if team.logo}
+												<img
+													src={team.logo}
+													alt={team.name}
+													class="summary-logo"
+												/>
+											{:else}
+												<div class="summary-logo placeholder">?</div>
+											{/if}
+
+											<span class="summary-name">
+												{team.name}
+											</span>
+
+											<span class="summary-score">
+												{team.score.toFixed(2)}
+											</span>
+										</div>
+									{/each}
+
 								</div>
 
-								<div
-									class="summary-team"
-									class:winning={game.away.score > game.home.score}
-								>
-									{#if game.away.logo}
-										<img
-											src={game.away.logo}
-											alt={game.away.name}
-											class="summary-logo"
-										/>
-									{/if}
+							{/each}
 
-									<span class="summary-name">
-										{game.away.name}
-									</span>
+						</div>
 
-									<span class="summary-score">
-										{game.away.score.toFixed(2)}
-									</span>
+					</div>
+
+				{:else}
+
+					<div
+						class:transitioning
+						class="matchup-card"
+					>
+
+						<div class="game-label">
+							GAME {games[currentGame].gameNumber}
+							<span>•</span>
+							{games.length} MATCHUPS
+						</div>
+
+						<div class="teams">
+
+							<!-- AWAY TEAM -->
+							<div
+								class="team"
+								class:winning={
+									games[currentGame].away.score >
+									games[currentGame].home.score
+								}
+								class:completed={games[currentGame].allPlayersDone}
+							>
+
+								<div class="team-name">
+									<span>{games[currentGame].away.name}</span>
 								</div>
 
-								<div class="summary-vs">
+								{#if games[currentGame].away.logo}
+									<img
+										src={games[currentGame].away.logo}
+										alt={games[currentGame].away.name}
+										class="logo"
+									/>
+								{:else}
+									<div class="logo placeholder">?</div>
+								{/if}
+
+								<div class="score">
+									{games[currentGame].away.score.toFixed(2)}
+								</div>
+
+							</div>
+
+							<!-- CENTER -->
+							<div class="center-column">
+
+								<div class="vs">
 									VS
 								</div>
 
-								<div
-									class="summary-team"
-									class:winning={game.home.score > game.away.score}
-								>
-									{#if game.home.logo}
-										<img
-											src={game.home.logo}
-											alt={game.home.name}
-											class="summary-logo"
-										/>
-									{/if}
+								{#if games[currentGame].h2h}
 
-									<span class="summary-name">
-										{game.home.name}
-									</span>
+									<div class="h2h-panel">
 
-									<span class="summary-score">
-										{game.home.score.toFixed(2)}
-									</span>
+										<div class="h2h-title">
+											HEAD TO HEAD
+										</div>
+
+										<div class="h2h-row">
+											<div class="h2h-side">
+												<div class="h2h-number">
+													{games[currentGame].h2h.winsAway}
+												</div>
+												<div class="h2h-label">WINS</div>
+											</div>
+
+											<div class="h2h-side">
+												<div class="h2h-number">
+													{games[currentGame].h2h.winsHome}
+												</div>
+												<div class="h2h-label">WINS</div>
+											</div>
+										</div>
+
+										<div class="h2h-row">
+											<div class="h2h-side">
+												<div class="h2h-points-number">
+													{games[currentGame].h2h.pointsAway.toFixed(2)}
+												</div>
+												<div class="h2h-label">POINTS</div>
+											</div>
+
+											<div class="h2h-side">
+												<div class="h2h-points-number">
+													{games[currentGame].h2h.pointsHome.toFixed(2)}
+												</div>
+												<div class="h2h-label">POINTS</div>
+											</div>
+										</div>
+
+									</div>
+
+								{/if}
+
+							</div>
+
+							<!-- HOME TEAM -->
+							<div
+								class="team"
+								class:winning={
+									games[currentGame].home.score >
+									games[currentGame].away.score
+								}
+								class:completed={games[currentGame].allPlayersDone}
+							>
+
+								<div class="team-name">
+									<span>{games[currentGame].home.name}</span>
+								</div>
+
+								{#if games[currentGame].home.logo}
+									<img
+										src={games[currentGame].home.logo}
+										alt={games[currentGame].home.name}
+										class="logo"
+									/>
+								{:else}
+									<div class="logo placeholder">?</div>
+								{/if}
+
+								<div class="score">
+									{games[currentGame].home.score.toFixed(2)}
 								</div>
 
 							</div>
 
-						{/each}
-
-					</div>
-
-				</div>
-			</div>
-
-		{:else}
-
-			<div class="matchup-stage">
-
-				<div
-					class:transitioning
-					class="matchup-card"
-				>
-
-					<div class="game-label">
-						GAME {games[currentGame].gameNumber}
-						<span>•</span>
-						{games.length} MATCHUPS
-					</div>
-
-					<div class="teams">
-
-						<!-- AWAY TEAM -->
-						<div
-							class="team"
-							class:winning={
-								games[currentGame].away.score >
-								games[currentGame].home.score
-							}
-							class:completed={games[currentGame].allPlayersDone}
-						>
-
-							<div class="team-name">
-								{games[currentGame].away.name}
-							</div>
-
-							{#if games[currentGame].away.logo}
-								<img
-									src={games[currentGame].away.logo}
-									alt={games[currentGame].away.name}
-									class="logo"
-								/>
-							{:else}
-								<div class="logo placeholder">?</div>
-							{/if}
-
-							<div class="score">
-								{games[currentGame].away.score.toFixed(2)}
-							</div>
-
-						</div>
-
-						<!-- CENTER -->
-						<div class="center-column">
-
-							<div class="vs">
-								VS
-							</div>
-
-							{#if games[currentGame].h2h}
-
-								<div class="h2h-panel">
-
-									<div class="h2h-title">
-										HEAD TO HEAD
-									</div>
-
-									<div class="h2h-line"></div>
-
-									<div class="h2h-wins">
-
-										<div class="h2h-side">
-											<div class="h2h-number">
-												{games[currentGame].h2h.winsAway}
-											</div>
-
-											<div class="h2h-label">
-												WINS
-											</div>
-										</div>
-
-										<div class="h2h-divider">
-											-
-										</div>
-
-										<div class="h2h-side">
-											<div class="h2h-number">
-												{games[currentGame].h2h.winsHome}
-											</div>
-
-											<div class="h2h-label">
-												WINS
-											</div>
-										</div>
-
-									</div>
-
-									<div class="h2h-points">
-
-										<div class="h2h-side">
-											<div class="h2h-points-number">
-												{games[currentGame].h2h.pointsAway.toFixed(2)}
-											</div>
-
-											<div class="h2h-label">
-												POINTS
-											</div>
-										</div>
-
-										<div class="h2h-divider">
-											-
-										</div>
-
-										<div class="h2h-side">
-											<div class="h2h-points-number">
-												{games[currentGame].h2h.pointsHome.toFixed(2)}
-											</div>
-
-											<div class="h2h-label">
-												POINTS
-											</div>
-										</div>
-
-									</div>
-
-								</div>
-
-							{/if}
-
-						</div>
-
-						<!-- HOME TEAM -->
-						<div
-							class="team"
-							class:winning={
-								games[currentGame].home.score >
-								games[currentGame].away.score
-							}
-							class:completed={games[currentGame].allPlayersDone}
-						>
-
-							<div class="team-name">
-								{games[currentGame].home.name}
-							</div>
-
-							{#if games[currentGame].home.logo}
-								<img
-									src={games[currentGame].home.logo}
-									alt={games[currentGame].home.name}
-									class="logo"
-								/>
-							{:else}
-								<div class="logo placeholder">?</div>
-							{/if}
-
-							<div class="score">
-								{games[currentGame].home.score.toFixed(2)}
-							</div>
-
 						</div>
 
 					</div>
 
-				</div>
+				{/if}
 
 			</div>
-
-		{/if}
-
-	{/if}
-
+		</div>
+	</div>
 </div>
 
 <style>
@@ -536,358 +491,134 @@
 		overflow: hidden;
 	}
 
-	@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap');
+	/* ============================================================
+	   STAGE + SCREEN
+	   ============================================================
+	   stadium.png is 1362 x 777. Its big screen (inside the
+	   silver frame) runs from x 276-1079 and y 137-471.
+	   If the background image is ever replaced, update the
+	   ratio in .stage and the percentages in .screen.
+	   ============================================================ */
 
-.scoreboard {
-	position: fixed;
-	inset: 0;
+	.scoreboard {
+		position: fixed;
+		inset: 0;
+		overflow: hidden;
 
-	display: flex;
-	flex-direction: column;
+		background: #000;
+		color: #fff;
 
-	background:
-		linear-gradient(
-			rgba(0, 0, 0, 0.55),
-			rgba(0, 0, 0, 0.55)
-		),
-		url('/stadium.png') center center / cover no-repeat;
+		font-family:
+			'Barlow Condensed',
+			Arial,
+			Helvetica,
+			sans-serif;
 
-	color: #fff;
-
-	font-family:
-		'Barlow Condensed',
-		Arial,
-		Helvetica,
-		sans-serif;
-
-	overflow: hidden;
-}
-
-	.top-bar {
-		height: 90px;
-		min-height: 90px;
-
-		display: grid;
-		grid-template-columns: 200px 1fr 200px;
-		align-items: center;
-
-		padding: 0 40px;
-
-		background: rgba(0, 0, 0, 0.88);
-
-		border-bottom: 2px solid #30363d;
+		container-type: size;
+		container-name: page;
 	}
 
-	.league-name {
-		display: flex;
-		align-items: center;
+	.stage {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+
+		/* same size the image gets with background-size: cover */
+		width: max(100cqw, calc(100cqh * 1362 / 777));
+		height: max(100cqh, calc(100cqw * 777 / 1362));
+
+		transform: translate(-50%, -50%);
+
+		background:
+			linear-gradient(
+				rgba(0, 0, 0, 0.55),
+				rgba(0, 0, 0, 0.55)
+			),
+			url('/stadium.png') 0 0 / 100% 100% no-repeat;
 	}
 
-	.league-name img {
-		width: 72px;
-		height: 72px;
-		object-fit: contain;
+	.screen {
+		position: absolute;
+		left: 20.26%;
+		top: 17.63%;
+		width: 58.96%;
+		height: 42.99%;
 	}
 
-	.header-center {
+	/*
+	 * On a tall phone the screen is wider than the phone itself,
+	 * so the content is kept within the visible width.
+	 * (100cqw here is the width of the whole page.)
+	 */
+	.screen-content {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+
+		width: min(100%, calc(100cqw - 16px));
+
+		transform: translateX(-50%);
+
+		container-type: size;
+		container-name: screen;
+
+		box-sizing: border-box;
 		text-align: center;
 	}
 
-	h1 {
-		margin: 0;
-
-		font-size: 34px;
-		font-weight: 900;
-		letter-spacing: 5px;
+	/*
+	 * Tall phones: the screen only covers ~40% of the height,
+	 * so the ALL SCORES list is allowed to run down past it.
+	 * (Here 100cqh is the height of the whole page; the screen
+	 * starts 17.63% of the way down.)
+	 */
+	@container page (aspect-ratio < 0.8) {
+		.screen-content.expanded {
+			bottom: auto;
+			height: calc(100cqh * 0.78);
+		}
 	}
 
-	.season {
-		margin-top: 7px;
+	/* ============================================================
+	   MESSAGES
+	   ============================================================ */
 
-		font-size: 16px;
-		font-weight: 700;
-		letter-spacing: 5px;
-
-		color: #aaa;
-	}
-
-	.season span {
-		padding: 0 10px;
-		color: #777;
-	}
-
-	.live-indicator {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 10px;
-
-		font-size: 18px;
-		font-weight: 900;
-		letter-spacing: 3px;
-	}
-
-	.dot,
-	.status-dot {
-		display: inline-block;
-
-		border-radius: 50%;
-
-		background: #e21b23;
-
-		box-shadow: 0 0 12px rgba(226, 27, 35, 0.8);
-	}
-
-	.dot {
-		width: 12px;
-		height: 12px;
-	}
-
-	.matchup-stage {
-		flex: 1;
-		min-height: 0;
+	.message {
+		height: 100%;
 
 		display: flex;
 		align-items: center;
 		justify-content: center;
 
-		padding: 0px 4vw;
+		padding: 0 4cqw;
+
+		font-size: min(7cqh, 4cqw);
+		font-weight: 800;
+		letter-spacing: 0.15em;
+
+		color: #aaa;
 	}
 
-.all-scores-card {
-	position: relative;
-	top: 0;
-
-	width: 100%;
-	max-width: 1200px;
-
-	transform: translateX(-5px);
-
-	padding: 24px 25px 28px;
-
-	text-align: center;
-
-	background: transparent;
-
-	border: none;
-
-	box-shadow: none;
-
-	animation: enter 0.9s ease both;
-}
-
-.all-scores-card::before {
-  content: '';
-
-  position: absolute;
-
-  top: 1px;
-  left: -20%;
-  right: -20%;
-  bottom: -60px;
-
-  background: transparent;
-  box-shadow: none;
-
-  z-index: 0;
-
-  pointer-events: none;
-}
-
-	.all-scores-card > * {
-		position: relative;
-		z-index: 1;
+	.message.error {
+		color: #e21b23;
 	}
 
-.all-scores-title {
-  position: relative;
-  top: -3px;
-  margin-bottom: 16px;
+	/* ============================================================
+	   SINGLE MATCHUP
+	   ============================================================ */
 
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: 5px;
+	.matchup-card {
+		height: 100%;
+		box-sizing: border-box;
 
-  background: linear-gradient(
-    to bottom,
-    #e8f7ff 0%,
-    #9edfff 20%,
-    #008cff 45%,
-    #0066cc 70%,
-    #c9efff 100%
-  );
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-
-  text-shadow:
-    0 0 5px rgba(0, 140, 255, 0.75),
-    0 0 12px rgba(0, 100, 255, 0.50),
-    0 0 24px rgba(0, 80, 200, 0.35);
-}
-
-	.all-scores-title span {
-		padding: 0 10px;
-		color: #555;
-	}
-
-	.all-scores-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 12px 24px;
-		width: 100%;
-		position: relative;
-		top: 20px;
-	}
-
-.summary-score {
-  padding-left: 4px;
-
-  font-size: 19px;
-  font-weight: 900;
-
-  font-variant-numeric: tabular-nums;
-
-  color: #7fd3ff !important;
-
-  text-shadow:
-    0 0 4px rgba(0, 140, 255, 0.80),
-    0 0 9px rgba(0, 100, 255, 0.45);
-}
-
-	.summary-game {
-		display: none;
-	}
-
-	.summary-team {
-		display: grid;
-
-		grid-template-columns: 70px minmax(0, 1fr) auto;
-
-		align-items: center;
-
-		min-width: 0;
-
-		padding: 0 8px;
-
-		color: #222;
-
-		text-align: left;
-	}
-
-	.summary-team.winning {
-		font-weight: 900;
-	}
-
-	.summary-team.winning .summary-logo {
-		animation: summaryWinnerGlow 1.8s ease-in-out infinite;
-	}
-
-	.summary-logo {
-		width: 70px;
-		height: 70px;
-
-		border-radius: 50%;
-
-		object-fit: cover;
-
-		background: #111;
-
-		border: 2px solid #3f464d;
-
-		box-shadow:
-			0 4px 12px rgba(0, 0, 0, 0.5);
-	}
-
-.summary-name {
-  min-width: 0;
-
-  padding: 0 6px 0 12px;
-
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 0.95;
-
-  color: #ffffff !important;
-
-  white-space: normal;
-  overflow-wrap: break-word;
-  text-align: center;
-
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 1),
-    0 0 4px rgba(0, 0, 0, 0.95);
-}
-
-.summary-score {
-  padding-left: 4px;
-
-  font-size: 19px;
-  font-weight: 900;
-
-  font-variant-numeric: tabular-nums;
-
-  color: #ffffff !important;
-
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 1),
-    0 0 5px rgba(0, 0, 0, 0.9);
-}
-
-.summary-vs {
-  font-size: 13px;
-  font-weight: 900;
-
-  color: #9fb8c9 !important;
-
-  text-align: center;
-
-  text-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.95);
-}
-
-.matchup-card {
-  position: relative;
-  top: clamp(-180px, calc(270px - 50vh), -80px);
-
-		width: 100%;
-		max-width: 1150px;
-
-		padding: 0 25px 14px;
-
-		text-align: center;
-
-		background: transparent;
-
-		border: none;
-
-		box-shadow: none;
+		padding: 3cqh 2cqw;
 
 		animation: enter 0.9s ease both;
-	}
-
-.matchup-card::before {
-	content: '';
-
-	position: absolute;
-
-	top: 10px;
-	left: -3%;
-	right: -2%;
-	bottom: -60px;
-
-	background: transparent;
-	box-shadow: none;
-
-	z-index: 0;
-
-	pointer-events: none;
-}
-
-	.matchup-card > * {
-		position: relative;
-		z-index: 1;
 	}
 
 	.matchup-card.transitioning {
@@ -895,49 +626,25 @@
 	}
 
 	.game-label {
-		height: 30px;
+		margin-bottom: 2cqh;
 
-		margin-top: 4px;
-		margin-bottom: 10px;
-
-		font-size: 22px;
+		font-size: min(5.5cqh, 3.2cqw);
 		font-weight: 800;
-		letter-spacing: 5px;
-		line-height: 30px;
+		letter-spacing: 0.25em;
+		line-height: 1;
 
 		color: #999;
 	}
 
 	.game-label span {
-		padding: 0 10px;
+		padding: 0 0.4em;
 		color: #555;
-	}
-
-	.status-label {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-
-		margin-bottom: 35px;
-
-		font-size: 19px;
-		font-weight: 900;
-		letter-spacing: 4px;
-
-		color: #ddd;
-	}
-
-	.status-dot {
-		width: 9px;
-		height: 9px;
 	}
 
 	.teams {
 		display: grid;
-		grid-template-columns: 1fr 240px 1fr;
+		grid-template-columns: minmax(0, 1fr) 24% minmax(0, 1fr);
 		align-items: center;
-
-		width: 100%;
 	}
 
 	.team {
@@ -949,6 +656,70 @@
 		min-width: 0;
 	}
 
+	.team-name {
+		width: 100%;
+		height: 2.3em;
+
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+
+		margin-bottom: 3cqh;
+
+		font-size: min(7cqh, 4.4cqw);
+		font-weight: 900;
+		letter-spacing: 0.02em;
+		line-height: 1.12;
+
+		text-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
+	}
+
+	.team-name span {
+		max-width: 95%;
+
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		overflow-wrap: break-word;
+	}
+
+	.logo {
+		width: min(34cqh, 20cqw);
+		height: min(34cqh, 20cqw);
+
+		border-radius: 50%;
+		object-fit: cover;
+		box-sizing: border-box;
+
+		background: #111;
+		border: max(2px, 0.6cqh) solid #3f464d;
+
+		box-shadow: 0 1.5cqh 4cqh rgba(0, 0, 0, 0.55);
+	}
+
+	.logo.placeholder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		font-size: min(14cqh, 8cqw);
+		font-weight: 900;
+		color: #555;
+	}
+
+	.score {
+		margin-top: 3cqh;
+
+		font-size: min(21cqh, 11cqw);
+		font-weight: 900;
+		font-variant-numeric: tabular-nums;
+		line-height: 1;
+
+		text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+	}
+
 	.center-column {
 		display: flex;
 		flex-direction: column;
@@ -958,105 +729,376 @@
 		min-width: 0;
 	}
 
-	.logo {
-		width: clamp(110px, 12vw, 180px);
-		height: clamp(110px, 12vw, 180px);
+	.vs {
+		font-size: min(11cqh, 6cqw);
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		line-height: 1;
 
-		margin-bottom: 18px;
-
-		border-radius: 50%;
-
-		object-fit: cover;
-
-		background: #111;
-
-		border: 3px solid #3f464d;
-
-		box-shadow:
-			0 15px 40px rgba(0, 0, 0, 0.55);
+		color: #8a96a3;
 	}
 
-	.logo.placeholder {
+	.h2h-panel {
+		width: 100%;
+		box-sizing: border-box;
+
+		margin-top: 3cqh;
+		padding: 1.5cqh 0;
+
+		border-top: max(1px, 0.4cqh) solid #3b4249;
+		border-bottom: max(1px, 0.4cqh) solid #3b4249;
+	}
+
+	.h2h-title {
+		margin-bottom: 1.5cqh;
+
+		font-size: min(4.2cqh, 2.3cqw);
+		font-weight: 900;
+		letter-spacing: 0.12em;
+
+		color: #aab2ba;
+	}
+
+	.h2h-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.h2h-row + .h2h-row {
+		margin-top: 1.5cqh;
+	}
+
+	.h2h-side {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		min-width: 0;
+	}
+
+	.h2h-number {
+		font-size: min(9cqh, 5cqw);
+		font-weight: 900;
+		line-height: 1;
+
+		color: #e8eef3;
+	}
+
+	.h2h-points-number {
+		font-size: min(4.2cqh, 2.4cqw);
+		font-weight: 800;
+		font-variant-numeric: tabular-nums;
+
+		color: #e8eef3;
+	}
+
+	.h2h-label {
+		margin-top: 0.3em;
+
+		font-size: min(3.2cqh, 1.8cqw);
+		font-weight: 800;
+		letter-spacing: 0.1em;
+
+		color: #8a96a3;
+	}
+
+	/* LIVE LEADER — NEON BLUE PULSING GLOW */
+	.team.winning:not(.completed) .logo {
+		animation: liveLeaderGlow 1.8s ease-in-out infinite;
+	}
+
+	/* COMPLETED WINNER — GOLD PULSING GLOW */
+	.team.winning.completed .logo,
+	.team.winning.completed .score {
+		animation: completedWinnerGlow 1.8s ease-in-out infinite;
+	}
+
+	/* ============================================================
+	   ALL SCORES
+	   ============================================================ */
+
+	.all-scores {
+		height: 100%;
+		box-sizing: border-box;
+
+		display: flex;
+		flex-direction: column;
+
+		padding: 4cqh 2cqw 3cqh;
+
+		animation: enter 0.9s ease both;
+	}
+
+	.all-scores-title {
+		margin-bottom: 3cqh;
+
+		font-size: min(6cqh, 3.4cqw);
+		font-weight: 900;
+		letter-spacing: 0.2em;
+		line-height: 1;
+
+		background: linear-gradient(
+			to bottom,
+			#e8f7ff 0%,
+			#9edfff 20%,
+			#008cff 45%,
+			#0066cc 70%,
+			#c9efff 100%
+		);
+
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.all-scores-title span {
+		padding: 0 0.4em;
+	}
+
+	.all-scores-grid {
+		flex: 1;
+		min-height: 0;
+
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-auto-rows: minmax(0, 1fr);
+		gap: 2cqh 2cqw;
+	}
+
+	.score-summary {
+		display: grid;
+		grid-template-rows: 1fr 1fr;
+		gap: 1cqh;
+
+		min-width: 0;
+		min-height: 0;
+		box-sizing: border-box;
+
+		padding: 0.8cqh 1.2cqw;
+
+		background: rgba(0, 10, 30, 0.55);
+		border: 1px solid rgba(110, 170, 255, 0.25);
+		border-radius: 1.2cqh;
+	}
+
+	.summary-team {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 1cqw;
+
+		min-width: 0;
+		text-align: left;
+
+		opacity: 0.8;
+	}
+
+	.summary-team.winning {
+		opacity: 1;
+	}
+
+	.summary-team.winning .summary-logo {
+		animation: summaryWinnerGlow 1.8s ease-in-out infinite;
+	}
+
+	.summary-logo {
+		width: min(7cqh, 3.2cqw);
+		height: min(7cqh, 3.2cqw);
+
+		border-radius: 50%;
+		object-fit: cover;
+		box-sizing: border-box;
+
+		background: #111;
+		border: 1px solid #3f464d;
+	}
+
+	.summary-logo.placeholder {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 
-		font-size: 60px;
+		font-size: min(6cqh, 2.2cqw);
 		font-weight: 900;
 		color: #555;
 	}
 
-.team-name {
-	width: 100%;
-	max-width: 90%;
+	.summary-name {
+		min-width: 0;
 
-	font-size: clamp(20px, 1.5vw, 38px);
-	font-weight: 900;
-	letter-spacing: 1px;
-	line-height: 1.15;
-	margin-bottom: 50px;
-	height: 44px;
+		font-size: min(4.4cqh, 2.1cqw);
+		font-weight: 800;
+		line-height: 1.1;
 
-	white-space: normal;
-	overflow: visible;
-	text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 
-	text-shadow:
-		0 3px 10px rgba(0, 0, 0, 0.8);
-}
-	.score {
-		margin-top: 15px;
-
-		font-size: clamp(55px, 6vw, 90px);
-		font-weight: 900;
-
-		font-variant-numeric: tabular-nums;
-
-		line-height: 1;
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
 	}
 
-/* LIVE LEADER — NEON BLUE PULSING GLOW */
-.team.winning:not(.completed) .logo {
-  animation: liveLeaderGlow 1.8s ease-in-out infinite !important;
-}
+	.summary-score {
+		font-size: min(5cqh, 2.4cqw);
+		font-weight: 900;
+		font-variant-numeric: tabular-nums;
 
-/* COMPLETED WINNER — GOLD PULSING GLOW */
-.team.winning.completed .logo,
-.team.winning.completed .score {
-  animation: completedWinnerGlow 1.8s ease-in-out infinite !important;
-}
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+	}
 
-/* ELECTRIC BLUE LIVE LEADER */
-@keyframes liveLeaderGlow {
-  0%, 100% {
-    filter:
-      drop-shadow(0 0 4px rgba(0, 140, 255, 0.40))
-      drop-shadow(0 0 10px rgba(0, 140, 255, 0.30));
-  }
+	.summary-team.winning .summary-score {
+		color: #7fd3ff;
+	}
 
-  50% {
-    filter:
-      drop-shadow(0 0 8px rgba(0, 140, 255, 1))
-      drop-shadow(0 0 20px rgba(0, 140, 255, 0.85))
-      drop-shadow(0 0 40px rgba(0, 140, 255, 0.65));
-  }
-}
+	/* ============================================================
+	   NARROW SCREENS (phones held upright, tablets)
+	   The screen box is close to square here, so give the
+	   logos/scores more room and use 2 columns of score cards.
+	   ============================================================ */
 
-@keyframes summaryWinnerGlow {
-  0%, 100% {
-    filter:
-      drop-shadow(0 0 3px rgba(0, 191, 255, 0.35))
-      drop-shadow(0 0 8px rgba(0, 191, 255, 0.20));
-  }
+	@container screen (aspect-ratio < 1.6) {
+		.game-label {
+			font-size: min(5cqh, 3.6cqw);
+			letter-spacing: 0.15em;
+		}
 
-  50% {
-    filter:
-      drop-shadow(0 0 7px rgba(0, 191, 255, 0.95))
-      drop-shadow(0 0 16px rgba(0, 191, 255, 0.75));
-  }
-}
+		.teams {
+			grid-template-columns: minmax(0, 1fr) 26% minmax(0, 1fr);
+		}
 
-	/* GOLD COMPLETED WINNER */
+		.team-name {
+			font-size: min(6cqh, 5cqw);
+		}
+
+		.logo {
+			width: min(30cqh, 26cqw);
+			height: min(30cqh, 26cqw);
+		}
+
+		.score {
+			font-size: min(16cqh, 12cqw);
+		}
+
+		.h2h-title {
+			font-size: min(3.6cqh, 3cqw);
+			letter-spacing: 0.05em;
+		}
+
+		.h2h-number {
+			font-size: min(8cqh, 7cqw);
+		}
+
+		.h2h-points-number {
+			font-size: min(3.8cqh, 3.2cqw);
+		}
+
+		.h2h-label {
+			font-size: min(2.8cqh, 2.4cqw);
+			letter-spacing: 0.05em;
+		}
+
+		.all-scores-title {
+			font-size: min(5cqh, 4.5cqw);
+			letter-spacing: 0.12em;
+		}
+
+		.all-scores-grid {
+			gap: 2cqh 2cqw;
+		}
+
+		.summary-team {
+			gap: 2cqw;
+		}
+
+		.summary-logo {
+			width: min(7cqh, 8cqw);
+			height: min(7cqh, 8cqw);
+		}
+
+		.summary-logo {
+			width: min(6cqh, 5cqw);
+			height: min(6cqh, 5cqw);
+		}
+
+		.summary-name {
+			font-size: min(3.6cqh, 2.6cqw);
+		}
+
+		.summary-score {
+			font-size: min(4cqh, 3cqw);
+		}
+	}
+
+	/* Tall, narrow box (phone ALL SCORES): one column, full names */
+	@container screen (aspect-ratio < 0.8) {
+		.all-scores {
+			padding: 2cqh 1cqw;
+		}
+
+		.all-scores-title {
+			margin-bottom: 2cqh;
+			font-size: min(3.6cqh, 5cqw);
+		}
+
+		.all-scores-grid {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 1.2cqh;
+		}
+
+		.score-summary {
+			padding: 0.6cqh 3cqw;
+			gap: 0.4cqh;
+		}
+
+		.summary-team {
+			gap: 3cqw;
+		}
+
+		.summary-logo {
+			width: min(3.8cqh, 9cqw);
+			height: min(3.8cqh, 9cqw);
+		}
+
+		.summary-name {
+			font-size: min(2.6cqh, 4.4cqw);
+		}
+
+		.summary-score {
+			font-size: min(2.9cqh, 4.8cqw);
+		}
+	}
+
+	/* ============================================================
+	   ANIMATIONS
+	   ============================================================ */
+
+	@keyframes liveLeaderGlow {
+		0%, 100% {
+			filter:
+				drop-shadow(0 0 4px rgba(0, 140, 255, 0.40))
+				drop-shadow(0 0 10px rgba(0, 140, 255, 0.30));
+		}
+
+		50% {
+			filter:
+				drop-shadow(0 0 8px rgba(0, 140, 255, 1))
+				drop-shadow(0 0 20px rgba(0, 140, 255, 0.85))
+				drop-shadow(0 0 40px rgba(0, 140, 255, 0.65));
+		}
+	}
+
+	@keyframes summaryWinnerGlow {
+		0%, 100% {
+			filter:
+				drop-shadow(0 0 3px rgba(0, 191, 255, 0.35))
+				drop-shadow(0 0 8px rgba(0, 191, 255, 0.20));
+		}
+
+		50% {
+			filter:
+				drop-shadow(0 0 7px rgba(0, 191, 255, 0.95))
+				drop-shadow(0 0 16px rgba(0, 191, 255, 0.75));
+		}
+	}
+
 	@keyframes completedWinnerGlow {
 		0%, 100% {
 			box-shadow:
@@ -1074,540 +1116,21 @@
 		}
 	}
 
-	.vs {
-		font-size: 46px;
-		font-weight: 900;
-		letter-spacing: 4px;
-
-		color: #777;
+	@keyframes enter {
+		from { opacity: 0; }
+		to { opacity: 1; }
 	}
 
-	.h2h-panel {
-		width: 240px;
-
-		margin-top: 16px;
-		padding: 8px 0 6px;
-
-		background: transparent;
-
-		border-top: 2px solid #3b4249;
-		border-bottom: 2px solid #3b4249;
+	@keyframes exit {
+		from { opacity: 1; }
+		to { opacity: 0; }
 	}
-
-	.h2h-title {
-		margin-bottom: 6px;
-
-		font-size: 20px;
-		font-weight: 900;
-		letter-spacing: 3px;
-
-		color: #aab2ba;
-	}
-
-	.h2h-line {
-		width: 85%;
-
-		height: 1px;
-
-		margin: 0 auto 7px;
-
-		background: #30363d;
-	}
-
-	.h2h-wins,
-	.h2h-points {
-		display: grid;
-		grid-template-columns: 1fr 20px 1fr;
-		align-items: center;
-	}
-
-	.h2h-wins {
-		margin-bottom: 6px;
-	}
-
-	.h2h-side {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.h2h-number {
-		font-size: 40px;
-		font-weight: 900;
-
-		line-height: 1;
-
-		color: #000;
-	}
-
-	.h2h-points-number {
-		font-size: 20px;
-		font-weight: 800;
-
-		font-variant-numeric: tabular-nums;
-
-		color: #000;
-	}
-
-	.h2h-label {
-		margin-top: 3px;
-
-		font-size: 16px;
-		font-weight: 800;
-		letter-spacing: 2px;
-
-		color: #777;
-	}
-
-	.h2h-divider {
-		font-size: 13px;
-		font-weight: 700;
-
-		color: #555;
-	}
-
-	.game-number {
-		margin-top: 40px;
-
-		font-size: 20px;
-		font-weight: 800;
-		letter-spacing: 4px;
-
-		color: #666;
-	}
-
-	.message {
-		flex: 1;
-
-		display: flex;
-		align-items: center;
-		justify-content: center;
-
-		font-size: 25px;
-		font-weight: 800;
-		letter-spacing: 4px;
-
-		color: #aaa;
-	}
-
-	.message.error {
-		color: #e21b23;
-	}
-
-	.bottom-bar {
-		height: 38px;
-		min-height: 38px;
-
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-
-		padding: 0 30px;
-
-		background: #050505;
-
-		border-top: 1px solid #292929;
-
-		font-size: 14px;
-		font-weight: 700;
-		letter-spacing: 2px;
-
-		color: #666;
-	}
-
-@keyframes enter {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
-@keyframes exit {
-	from {
-		opacity: 1;
-	}
-	to {
-		opacity: 0;
-	}
-}
 
 	@media (prefers-reduced-motion: reduce) {
 		.matchup-card,
-		.matchup-card.transitioning {
+		.matchup-card.transitioning,
+		.all-scores {
 			animation: none;
-		}
-	}
-
-
-	/* =========================
-	   LAPTOP / SHORTER SCREENS
-	   ========================= */
-
-	@media (min-width: 600px) and (max-height: 850px) {
-
-		.matchup-card {
-			top: -80px;
-		}
-
-		.all-scores-card {
-			top: -80px;
-		}
-
-		.game-label {
-			height: 26px;
-			margin-top: 0;
-			margin-bottom: 6px;
-
-			font-size: 19px;
-			line-height: 26px;
-		}
-
-		.teams {
-			grid-template-columns: 1fr 210px 1fr;
-		}
-
-		.logo {
-			width: clamp(95px, 10vw, 145px);
-			height: clamp(95px, 10vw, 145px);
-
-			margin-bottom: 12px;
-		}
-
-		.team-name {
-			font-size: clamp(18px, 1.4vw, 30px);
-
-			margin-bottom: 25px;
-
-			height: 40px;
-		}
-
-		.score {
-			margin-top: 10px;
-
-			font-size: clamp(45px, 5vw, 72px);
-		}
-
-		.h2h-panel {
-			width: 210px;
-
-			margin-top: 10px;
-			padding: 6px 0 5px;
-		}
-
-		.h2h-title {
-			font-size: 17px;
-			margin-bottom: 4px;
-		}
-
-		.h2h-number {
-			font-size: 32px;
-		}
-
-		.h2h-points-number {
-			font-size: 17px;
-		}
-
-		.h2h-label {
-			font-size: 13px;
-		}
-
-		.all-scores-grid {
-			gap: 10px 20px;
-		}
-
-		.summary-logo {
-			width: 60px;
-			height: 60px;
-		}
-
-		.summary-team {
-			grid-template-columns: 60px minmax(0, 1fr) auto;
-		}
-
-		.summary-name {
-			font-size: 15px;
-		}
-
-		.summary-score {
-			font-size: 18px;
-		}
-	}
-
-	/* =========================
-	   PHONE SCOREBOARD
-	   ========================= */
-
-	@media (max-width: 600px) {
-
-		:global(html),
-		:global(body) {
-			width: 100%;
-			height: 100%;
-			overflow: hidden;
-		}
-
-		.scoreboard {
-			width: 100%;
-			height: 100%;
-			overflow: hidden;
-		}
-
-		/* HEADER */
-		.top-bar {
-			height: 54px;
-			min-height: 54px;
-			grid-template-columns: 40px 1fr 40px;
-			padding: 0 6px;
-		}
-
-		.league-name img {
-			width: 34px;
-			height: 34px;
-		}
-
-		h1 {
-			font-size: 17px;
-			letter-spacing: 1.5px;
-			white-space: nowrap;
-		}
-
-		.season {
-			margin-top: 1px;
-			font-size: 8px;
-			letter-spacing: 1.5px;
-		}
-
-		.season span {
-			padding: 0 3px;
-		}
-
-		.live-indicator {
-			gap: 3px;
-			font-size: 9px;
-			letter-spacing: 1px;
-		}
-
-		.dot {
-			width: 5px;
-			height: 5px;
-		}
-
-		/* MATCHUP AREA */
-		.matchup-stage {
-			padding: 0 2px;
-			width: 100%;
-			box-sizing: border-box;
-		}
-
-		.matchup-card {
-			width: 100%;
-			max-width: 100%;
-			padding: 0 2px 5px;
-			box-sizing: border-box;
-		}
-
-		.matchup-card::before {
-			top: -18px;
-			left: -5px;
-			right: -5px;
-			bottom: -25px;
-		}
-
-		/* GAME LABEL */
-		.game-label {
-			height: 18px;
-			margin-top: 0;
-			margin-bottom: 3px;
-			font-size: 9px;
-			letter-spacing: 1.5px;
-			line-height: 18px;
-		}
-
-		.game-label span {
-			padding: 0 3px;
-		}
-
-		/* TEAMS */
-		.teams {
-			grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
-			width: 100%;
-			gap: 0;
-		}
-
-		.team {
-			min-width: 0;
-			width: 100%;
-		}
-
-		/* TEAM NAME */
-		.team-name {
-			width: 100%;
-			max-width: 100%;
-			font-size: 11px;
-			font-weight: 800;
-			letter-spacing: 0;
-			line-height: 1.05;
-			margin-bottom: 8px;
-			padding: 0 2px;
-			white-space: normal;
-			overflow: hidden;
-			text-align: center;
-			display: -webkit-box;
-			-webkit-line-clamp: 2;
-			-webkit-box-orient: vertical;
-		}
-
-		/* LOGOS */
-		.logo {
-			width: 46px;
-			height: 46px;
-			margin-bottom: 5px;
-			border-width: 2px;
-		}
-
-		/* SCORE */
-		.score {
-			margin-top: 3px;
-			font-size: 27px;
-			line-height: 1;
-		}
-
-		/* CENTER */
-		.center-column {
-			width: 42px;
-			min-width: 42px;
-		}
-
-		.vs {
-			font-size: 18px;
-			letter-spacing: 1px;
-		}
-
-		/* H2H */
-		.h2h-panel {
-			width: 42px;
-			margin-top: 5px;
-			padding: 3px 0 2px;
-			border-top-width: 1px;
-			border-bottom-width: 1px;
-		}
-
-		.h2h-title {
-			margin-bottom: 2px;
-			font-size: 6px;
-			letter-spacing: 0.5px;
-		}
-
-		.h2h-line {
-			width: 80%;
-			margin: 0 auto 2px;
-		}
-
-		.h2h-wins,
-		.h2h-points {
-			grid-template-columns: 1fr 5px 1fr;
-		}
-
-		.h2h-wins {
-			margin-bottom: 2px;
-		}
-
-		.h2h-number {
-			font-size: 15px;
-		}
-
-		.h2h-points-number {
-			font-size: 8px;
-		}
-
-		.h2h-label {
-			margin-top: 0;
-			font-size: 6px;
-			letter-spacing: 0;
-		}
-
-		.h2h-divider {
-			font-size: 6px;
-		}
-
-		/* ALL SCORES */
-		.all-scores-card {
-			width: 100%;
-			max-width: 100%;
-			padding: 10px 4px 12px;
-			box-sizing: border-box;
-		}
-
-		.all-scores-card::before {
-			top: -15px;
-			left: -4px;
-			right: -4px;
-			bottom: -20px;
-		}
-
-		.all-scores-title {
-			top: -2px;
-			margin-bottom: 7px;
-			font-size: 14px;
-			letter-spacing: 1.5px;
-		}
-
-		.all-scores-title span {
-			padding: 0 3px;
-		}
-
-		.all-scores-grid {
-			grid-template-columns: 1fr;
-			gap: 5px;
-			top: -3px;
-		}
-
-		.score-summary {
-			grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1fr);
-			min-height: 48px;
-			padding: 3px 4px;
-			box-sizing: border-box;
-		}
-
-		.summary-team {
-			grid-template-columns: 34px minmax(0, 1fr) auto;
-			padding: 0 2px;
-		}
-
-		.summary-logo {
-			width: 32px;
-			height: 32px;
-		}
-
-		.summary-name {
-			padding: 0 2px 0 5px;
-			font-size: 10px;
-			font-weight: 700;
-			line-height: 1;
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-
-		.summary-score {
-			padding-left: 1px;
-			font-size: 11px;
-		}
-
-		.summary-vs {
-			font-size: 8px;
-		}
-
-		/* FOOTER */
-		.bottom-bar {
-			height: 23px;
-			min-height: 23px;
-			padding: 0 7px;
-			font-size: 7px;
-			letter-spacing: 0.5px;
 		}
 	}
 </style>
