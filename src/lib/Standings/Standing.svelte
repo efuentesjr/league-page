@@ -31,14 +31,14 @@
     .rankWrap {
         position: relative;
         display: inline-block;
+        padding: 0 24px;
     }
 
     .ball {
         position: absolute;
-        left: 100%;
+        right: 0;
         top: 50%;
         transform: translateY(-50%);
-        margin-left: 5px;
 
         display: inline-flex;
         align-items: center;
