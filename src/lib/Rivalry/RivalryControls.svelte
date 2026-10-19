@@ -2,6 +2,7 @@
 	import IconButton from '@smui/icon-button';
 
     export let year, displayWeek, selected, length;
+    export let displayLabel = null;
 
     const nav = (dir) => {
         if(dir === "left") {
@@ -38,7 +39,7 @@
     {#if length > 0}
         <IconButton class="material-icons" onclick={() => nav("left")}>chevron_left</IconButton>
     {/if}
-    <h4>{year} Week {displayWeek}</h4>
+    <h4>{year} {displayLabel ?? `Week ${displayWeek}`}</h4>
     {#if length > 0}
         <IconButton class="material-icons" onclick={() => nav("right")}>chevron_right</IconButton>
     {/if}

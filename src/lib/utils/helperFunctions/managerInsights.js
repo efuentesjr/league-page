@@ -24,8 +24,9 @@ import { getLeagueTeamManagers } from './leagueTeamManagers';
 import { getRosterIDFromManagerID } from './universalFunctions';
 import { predictScores } from './predictOptimalScore';
 import { waitForAll } from './multiPromise';
+import { classifyBracketGame, maxBracketRound } from './playoffRounds';
 
-const CACHE_PREFIX = 'mfflSeasonGames_v1_';
+const CACHE_PREFIX = 'mfflSeasonGames_v2_';
 
 const fetchJSON = async (url) => {
 	const res = await fetch(url, { compress: true });
@@ -99,9 +100,11 @@ const loadSeason = async (league, maxWeek, withPlayerPoints) => {
 		}
 	});
 
-	// championship bracket games that have a winner
+	// championship bracket games that have a winner (placement games skipped)
+	const maxRound = maxBracketRound(bracket);
 	for (const game of bracket) {
 		if (!game.t1 || !game.t2 || !game.w) continue;
+		if (!classifyBracketGame(game, maxRound)) continue;
 		games.push({
 			week: lastRegularWeek + Number(game.r || 1),
 			playoff: true,

@@ -2,7 +2,7 @@
 	import Matchup from "$lib/Matchups/Matchup.svelte";
 	import TradeTransaction from "$lib/Transactions/TradeTransaction.svelte";
 	import { getLeagueRecords, getLeagueTransactions, getRivalryMatchups, loadPlayers, round } from "$lib/utils/helper";
-	import { getRosterIDFromManagerIDAndYear } from "$lib/utils/helperFunctions/universalFunctions";
+	import { getRosterIDFromManagerIDAndYear, getTeamNameFromTeamManagers } from "$lib/utils/helperFunctions/universalFunctions";
 	import LinearProgress from '@smui/linear-progress';
 	import { onMount } from "svelte";
 	import ComparissonBar from "./ComparissonBar.svelte";
@@ -42,6 +42,17 @@
 
     $: matchup = rivalry?.matchups[selected]?.matchup;
     $: displayWeek = rivalry?.matchups[selected]?.week;
+    $: displayLabel = rivalry?.matchups[selected]?.label;
+
+    const teamName = (rosterID, season) => {
+        try {
+            return getTeamNameFromTeamManagers(leagueTeamManagers, rosterID, season);
+        } catch {
+            return 'Unknown Team';
+        }
+    };
+
+    const recordText = (a, b, t = 0) => `${a}–${b}${t ? `–${t}` : ''}`;
     $: year = rivalry?.matchups[selected]?.year;
     
     const setTradeHistory = (p1, p2) => {
@@ -136,6 +147,137 @@
     .center {
         text-align: center;
     }
+
+    /* rivalry tier */
+    .tierBanner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        margin: 0 auto 1.5em;
+        padding: 14px 20px 12px;
+        width: fit-content;
+        max-width: 90%;
+        border-radius: 14px;
+        border: 2px solid var(--tierColor);
+        background: color-mix(in srgb, var(--tierColor) 12%, transparent);
+        text-align: center;
+    }
+
+    .tierLabel {
+        font-size: 0.75em;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #999;
+    }
+
+    .tierName {
+        font-size: 1.7em;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--tierColor);
+    }
+
+    .tierFlames {
+        font-size: 1.1em;
+        letter-spacing: 2px;
+    }
+
+    .tierFlames .dim {
+        filter: grayscale(1);
+        opacity: 0.25;
+    }
+
+    .tierReason {
+        font-size: 0.9em;
+        color: #bbb;
+    }
+
+    /* regular season vs playoffs */
+    .splits {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        width: 90%;
+        max-width: 560px;
+        margin: 0 auto 1.5em;
+    }
+
+    .split {
+        padding: 10px 8px;
+        border-radius: 10px;
+        border: 1px solid var(--aaa);
+        text-align: center;
+    }
+
+    .splitTitle {
+        font-size: 0.75em;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #999;
+    }
+
+    .splitRecord {
+        font-size: 1.9em;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .splitNote {
+        font-size: 0.75em;
+        color: #999;
+    }
+
+    .meetings {
+        width: 90%;
+        max-width: 560px;
+        margin: 0 auto 1.5em;
+        padding: 0;
+        list-style: none;
+    }
+
+    .meeting {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--ddd, rgba(255,255,255,0.1));
+        font-size: 0.95em;
+    }
+
+    .meetingStage {
+        flex: none;
+        min-width: 9.5em;
+        font-weight: 800;
+    }
+
+    .meetingStage.championship {
+        color: #e5b52a;
+    }
+
+    .meetingResult {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .meetingScore {
+        flex: none;
+        font-variant-numeric: tabular-nums;
+        color: #aaa;
+    }
+
+    @media (max-width: 520px) {
+        .meeting {
+            flex-wrap: wrap;
+            gap: 2px 10px;
+        }
+        .meetingStage {
+            min-width: 0;
+        }
+    }
     .helmets {
         width: 80%;
         max-width: 800px;
@@ -177,13 +319,56 @@
 {:else}
     {#if rivalry?.matchups.length > 0 }
         <div class="scoreBoard">
+            {#if rivalry.tier}
+                <div class="tierBanner" style="--tierColor: {rivalry.tier.color}">
+                    <span class="tierLabel">Rivalry Tier {rivalry.tier.tier}</span>
+                    <span class="tierName">{rivalry.tier.name}</span>
+                    <span class="tierFlames" aria-hidden="true">
+                        {#each [1, 2, 3, 4] as n}
+                            <span class:dim={n > rivalry.tier.flames}>🔥</span>
+                        {/each}
+                    </span>
+                    <span class="tierReason">{rivalry.tier.reason}</span>
+                </div>
+            {/if}
             <h3>Head to Head</h3>
+            <div class="splits">
+                <div class="split">
+                    <div class="splitTitle">Regular Season</div>
+                    <div class="splitRecord">{recordText(rivalry.regular.one, rivalry.regular.two, rivalry.regular.ties)}</div>
+                    <div class="splitNote">left – right</div>
+                </div>
+                <div class="split">
+                    <div class="splitTitle">Playoffs</div>
+                    <div class="splitRecord">{recordText(rivalry.playoffs.one, rivalry.playoffs.two)}</div>
+                    <div class="splitNote">{rivalry.playoffMeetings.length ? `${rivalry.playoffMeetings.length} meeting${rivalry.playoffMeetings.length > 1 ? 's' : ''}` : 'never met'}</div>
+                </div>
+            </div>
+            {#if rivalry.playoffMeetings.length}
+                <ul class="meetings">
+                    {#each rivalry.playoffMeetings as meeting}
+                        <li class="meeting">
+                            <span class="meetingStage" class:championship={meeting.stage === 'championship'}>
+                                {meeting.year} {meeting.label}
+                            </span>
+                            <span class="meetingResult">
+                                {teamName(meeting.winnerRosterID, meeting.year)} won
+                            </span>
+                            {#if meeting.pointsOne != null}
+                                <span class="meetingScore">
+                                    {round(meeting.winnerSide === 'one' ? meeting.pointsOne : meeting.pointsTwo)}–{round(meeting.winnerSide === 'one' ? meeting.pointsTwo : meeting.pointsOne)}
+                                </span>
+                            {/if}
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
             <!-- wins -->
             <ComparissonBar sideOne={rivalry.wins.one} sideTwo={rivalry.wins.two} label="Wins" unit="wins" />
             <!-- points -->
             <ComparissonBar sideOne={parseFloat(round(rivalry.points.one))} sideTwo={parseFloat(round(rivalry.points.two))} label="Points" unit="pts" />
             <h3>Matchups</h3>
-            <RivalryControls bind:selected={selected} {year} {displayWeek} length={rivalry.matchups.length} />
+            <RivalryControls bind:selected={selected} {year} {displayWeek} {displayLabel} length={rivalry.matchups.length} />
             <Matchup key={`${playerOne}-${playerTwo}`} ix={selected} active={selected} {year} {matchup} players={playersInfo.players} {displayWeek} expandOverride={true} {leagueTeamManagers} />
         </div>
     {/if}
