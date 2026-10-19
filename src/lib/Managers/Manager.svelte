@@ -2,7 +2,13 @@
 <script>
     import Button, { Group, Label } from '@smui/button';
     import LinearProgress from '@smui/linear-progress';
-    import { loadPlayers, getLeagueTransactions } from '$lib/utils/helper';
+    import { loadPlayers, getLeagueTransactions, getLeagueData, getNflState, waitForAll } from '$lib/utils/helper';
+    import {
+        getManagerHistory,
+        findRival,
+        findTopScorer,
+        computeTeamTiers
+    } from '$lib/utils/helperFunctions/managerInsights';
     import Roster from '../Rosters/Roster.svelte';
     import TransactionsPage from '../Transactions/TransactionsPage.svelte';
     import { goto } from '$app/navigation';
@@ -54,6 +60,24 @@
     let players, playersInfo;
     let loading = true;
 
+    /*
+     * Dynamic Rival / Favorite Player / Win Now-Rebuild.
+     * history: all-time head-to-head + this season's player points
+     */
+    let history = null;
+    let historyState = 'loading';
+    let tiers = {};
+    let tierInputs = null;
+
+    const buildTiers = () => {
+        if (!tierInputs || !players) return;
+        tiers = computeTeamTiers({ rosters, players, ...tierInputs });
+    };
+
+    $: dynamicRival = history ? findRival(history, viewManager.managerID) : null;
+    $: topScorer = history ? findTopScorer(history, roster) : null;
+    $: teamTier = rosterID != null ? tiers[String(rosterID)] ?? null : null;
+
     const refreshTransactions = async () => {
         const newTransactions = await getLeagueTransactions(false, true);
         transactions = newTransactions.transactions;
@@ -62,15 +86,33 @@
     onMount(async () => {
         if (transactionsData.stale) refreshTransactions();
 
+        getManagerHistory()
+            .then((h) => {
+                history = h;
+                historyState = 'ready';
+            })
+            .catch((err) => {
+                console.error('[Manager] Could not load head-to-head history:', err);
+                historyState = 'error';
+            });
+
         const playerData = await loadPlayers(null);
         playersInfo = playerData;
         players = playerData.players;
         loading = false;
 
+        waitForAll(getLeagueData(), getNflState())
+            .then(([leagueData, nflState]) => {
+                tierInputs = { leagueData, nflState };
+                buildTiers();
+            })
+            .catch((err) => console.error('[Manager] Could not build tiers:', err));
+
         if (playerData.stale) {
             const newPlayerData = await loadPlayers(null, true);
             playersInfo = newPlayerData;
             players = newPlayerData.players;
+            buildTiers();
         }
     });
 
@@ -489,7 +531,7 @@
     </div>
 
     {#if !loading}
-        <ManagerFantasyInfo {viewManager} {players} {changeManager} />
+        <ManagerFantasyInfo {viewManager} {players} {changeManager} {dynamicRival} {topScorer} {teamTier} {historyState} />
     {/if}
 
     <ManagerAwards

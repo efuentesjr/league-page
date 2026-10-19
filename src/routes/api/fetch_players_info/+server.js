@@ -66,6 +66,8 @@ const computePlayers = (playerData, weeklyData, scoringSettings) => {
         if(projPlayer.team) {
             player.t = projPlayer.team;
             player.wi = {};
+            // age is used for the Win Now / Rebuild tiers on the Managers pages
+            if(projPlayer.age) player.a = projPlayer.age;
         }
         if(projPlayer.team && projPlayer.injury_status) {
             player.is = projPlayer.injury_status;

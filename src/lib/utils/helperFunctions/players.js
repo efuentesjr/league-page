@@ -2,6 +2,9 @@ import { get } from 'svelte/store';
 import {players} from '$lib/stores';
 import { browser } from '$app/environment';
 
+// bump when the shape of /api/fetch_players_info changes
+const PLAYERS_INFO_VERSION = '2';
+
 export const loadPlayers = async (servFetch, refresh = false) => {     
 	if(get(players)[1426]) {
 		return {
@@ -18,6 +21,12 @@ export const loadPlayers = async (servFetch, refresh = false) => {
     if(browser) {
         playersInfo = JSON.parse(localStorage.getItem("playersInfo"));
         expiration = parseInt(localStorage.getItem("expiration"));
+
+        // cached copies made before player ages were added get replaced once
+        if(localStorage.getItem("playersInfoVersion") != PLAYERS_INFO_VERSION) {
+            playersInfo = null;
+            expiration = null;
+        }
     }
 
     if(playersInfo && playersInfo[1426] && expiration && now > expiration && !refresh) {
@@ -42,6 +51,7 @@ export const loadPlayers = async (servFetch, refresh = false) => {
             const newExpiration = ts + (24 * 3600);
 
             localStorage.setItem("expiration", newExpiration)  
+            localStorage.setItem("playersInfoVersion", PLAYERS_INFO_VERSION)
 
             players.update(() => data);
         }
