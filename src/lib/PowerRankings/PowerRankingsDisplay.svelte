@@ -14,6 +14,8 @@
     gotoManager
   } from '$lib/utils/helperFunctions/universalFunctions';
 
+  import { leagueID } from '$lib/utils/leagueInfo';
+
   export let nflState;
   export let rostersData;
   export let leagueTeamManagers;
@@ -174,7 +176,13 @@
    * and determine the movement arrow.
    */
 
-  const calculateRankingsForWeek = (targetWeek) => {
+  /*
+   * rosterPlayerOverrides (optional):
+   *   Map of rosterID -> array of player IDs.
+   *   Used to rank teams with LAST week's rosters instead
+   *   of today's rosters.
+   */
+  const calculateRankingsForWeek = (targetWeek, rosterPlayerOverrides = null) => {
     const rosterPowers = [];
 
     let week = Number(targetWeek);
@@ -188,11 +196,14 @@
     for (const rosterID in rosters) {
       const roster = rosters[rosterID];
 
-      if (!roster.players) continue;
+      const playerIDs =
+        rosterPlayerOverrides?.get(String(rosterID)) ?? roster.players;
+
+      if (!playerIDs) continue;
 
       const rosterPlayers = [];
 
-      for (const rosterPlayer of roster.players) {
+      for (const rosterPlayer of playerIDs) {
         if (!players[rosterPlayer]) continue;
 
         rosterPlayers.push({
@@ -298,14 +309,17 @@
     /*
      * Previous week's Power Rankings.
      *
-     * Week 1 has no previous week.
+     * Uses the rosters as they were BEFORE this week's
+     * waivers, free-agent moves and trades (see
+     * loadPreviousRosters). Until those are loaded, or in
+     * week 1, every team shows "—".
      */
 
     let previousRankings = [];
 
-    if (week > 1) {
+    if (week > 1 && previousRosterPlayers && previousRostersWeek === week) {
       previousRankings =
-        calculateRankingsForWeek(week - 1);
+        calculateRankingsForWeek(week - 1, previousRosterPlayers);
     }
 
     /*
@@ -349,6 +363,77 @@
         movement
       };
     });
+  };
+
+  /*
+   * ============================================================
+   * LAST WEEK'S ROSTERS
+   * ============================================================
+   *
+   * Sleeper only gives us today's rosters, so we rebuild
+   * last week's by undoing every completed transaction from
+   * the current week (newest first):
+   *   - a player ADDED to a team is taken back off it
+   *   - a player DROPPED by a team is put back on it
+   * This covers waivers, free agents and trades.
+   */
+
+  let previousRosterPlayers = null;
+  let previousRostersWeek = null;
+
+  const loadPreviousRosters = async () => {
+    const week = Number(nflState?.week);
+
+    if (!week || week <= 1) return;
+
+    try {
+      const res = await fetch(
+        `https://api.sleeper.app/v1/league/${leagueID}/transactions/${week}`
+      );
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const transactions = (await res.json()) || [];
+
+      const rosterSets = new Map();
+
+      for (const rosterID in rosters) {
+        rosterSets.set(
+          String(rosterID),
+          new Set(rosters[rosterID].players || [])
+        );
+      }
+
+      const completed = transactions
+        .filter((t) => t.status === 'complete')
+        .sort((a, b) => (b.status_updated || 0) - (a.status_updated || 0));
+
+      for (const transaction of completed) {
+        for (const [playerID, rosterID] of Object.entries(transaction.adds || {})) {
+          rosterSets.get(String(rosterID))?.delete(playerID);
+        }
+
+        for (const [playerID, rosterID] of Object.entries(transaction.drops || {})) {
+          rosterSets.get(String(rosterID))?.add(playerID);
+        }
+      }
+
+      const result = new Map();
+
+      for (const [rosterID, playerSet] of rosterSets) {
+        result.set(rosterID, [...playerSet]);
+      }
+
+      previousRosterPlayers = result;
+      previousRostersWeek = week;
+
+      buildRankings();
+    } catch (error) {
+      console.error(
+        '[Power Rankings] Could not load last week\'s rosters:',
+        error
+      );
+    }
   };
 
   /*
@@ -406,10 +491,13 @@
       players = newPlayersInfo.players;
 
       /*
-       * Recalculate rankings and movement.
+       * Recalculate rankings, then reload last week's
+       * rosters (the NFL week may have changed) and
+       * recalculate movement.
        */
 
       buildRankings();
+      await loadPreviousRosters();
 
       console.log(
         '[Power Rankings] Daily refresh complete.'
@@ -429,6 +517,7 @@
    */
 
   buildRankings();
+  loadPreviousRosters();
 
   /*
    * ============================================================
