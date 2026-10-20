@@ -27,28 +27,33 @@
         text-align: center;
     }
 
-    /* the ball hangs off the right side so the number stays centered */
+    /* narrow # column; the ball sits on the number's top-right corner like a badge */
+    :global(.rankCell) {
+        width: 1%;
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+
     .rankWrap {
         position: relative;
         display: inline-block;
-        padding: 0 24px;
+        padding: 0 13px;
     }
 
     .ball {
         position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
+        left: calc(100% - 13px);
+        top: -7px;
 
         display: inline-flex;
         align-items: center;
         justify-content: center;
 
-        width: 18px;
-        height: 18px;
+        width: 15px;
+        height: 15px;
         border-radius: 50%;
 
-        font-size: 11px;
+        font-size: 9px;
         font-weight: 800;
         line-height: 1;
         color: #1a1a1a;
@@ -58,13 +63,13 @@
     }
 
     .rank {
-        font-size: 1.15em;
-        font-weight: 700;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
     }
 </style>
 
 <Row class="contrastRow">
-    <Cell class="center">
+    <Cell class="center rankCell">
         <span class="rankWrap">
             <span class="rank">{rank}</span>
             {#if ball != null}

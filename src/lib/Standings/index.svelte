@@ -206,7 +206,7 @@
         <DataTable table$aria-label="League Standings" >
             <Head> <!-- Team name  -->
                 <Row>
-                    <Cell class="center">#</Cell>
+                    <Cell class="center rankCell">#</Cell>
                     <Cell class="center">Team</Cell>
                     {#each columnOrder as column}
                         <Cell class="center wrappable">{column.name}</Cell>
