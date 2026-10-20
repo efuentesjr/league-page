@@ -49,6 +49,15 @@ export const maxBracketRound = (bracket) =>
  */
 export const OLD_RIVALS_GAMES = 6;
 
+/*
+ * Former managers. Any rivalry with one of them is a Ghost Rivalry,
+ * whatever their history. Sleeper user IDs (names can change).
+ */
+export const GHOST_MANAGERS = {
+	'852011322831912960': 'XioCanela',
+	'866167945603239936': 'XioLu'
+};
+
 export const RIVALRY_TIERS = {
 	legendary: {
 		tier: 1,
@@ -79,6 +88,15 @@ export const RIVALRY_TIERS = {
 		name: 'Familiar Foes',
 		flames: 1,
 		color: '#8a96a3'
+	},
+	ghost: {
+		tier: null,
+		label: 'Retired rival',
+		name: 'Ghost Rivalry',
+		icon: '👻',
+		slots: 1,
+		flames: 1,
+		color: '#b8a7ff'
 	}
 };
 
@@ -86,8 +104,13 @@ export const RIVALRY_TIERS = {
  * @param {Array} playoffMeetings [{ depth, label, year }]
  * @param {number} totalGames     every meeting, regular season + playoffs
  */
-export const getRivalryTier = (playoffMeetings = [], totalGames = 0) => {
+export const getRivalryTier = (playoffMeetings = [], totalGames = 0, ghost = null) => {
 	if (!totalGames) return null;
+
+	if (ghost) {
+		const left = ghost.lastSeason ? ` after ${ghost.lastSeason}` : '';
+		return { ...RIVALRY_TIERS.ghost, reason: `${ghost.name} left the league${left}` };
+	}
 
 	const count = (depth) => playoffMeetings.filter((m) => m.depth === depth).length;
 	const times = (n) => (n > 1 ? ` (${n}×)` : '');

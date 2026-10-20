@@ -4,7 +4,7 @@ import { getNflState } from "./nflState"
 import { waitForAll } from './multiPromise';
 import { getRosterIDFromManagerIDAndYear } from '$lib/utils/helperFunctions/universalFunctions';
 import { getLeagueTeamManagers } from "./leagueTeamManagers";
-import { classifyBracketGame, maxBracketRound, getRivalryTier } from './playoffRounds';
+import { classifyBracketGame, maxBracketRound, getRivalryTier, GHOST_MANAGERS } from './playoffRounds';
 
 export const getRivalryMatchups = async (userOneID, userTwoID) => {
     if(!userOneID || !userTwoID) {
@@ -116,7 +116,15 @@ export const getRivalryMatchups = async (userOneID, userTwoID) => {
     });
 
     rivalry.playoffMeetings.sort((a, b) => b.year - a.year || b.depth - a.depth);
-    rivalry.tier = getRivalryTier(rivalry.playoffMeetings, rivalry.matchups.length);
+    // a matchup with a former manager is a Ghost Rivalry
+    const ghostID = [userOneID, userTwoID].find((id) => GHOST_MANAGERS[String(id)]);
+    const ghost = ghostID
+        ? {
+            name: teamManagers.users?.[ghostID]?.display_name || GHOST_MANAGERS[String(ghostID)],
+            lastSeason: rivalry.matchups.reduce((max, m) => Math.max(max, Number(m.year) || 0), 0) || null,
+        }
+        : null;
+    rivalry.tier = getRivalryTier(rivalry.playoffMeetings, rivalry.matchups.length, ghost);
 
 	return rivalry;
 }

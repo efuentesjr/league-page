@@ -323,11 +323,11 @@
         <div class="scoreBoard">
             {#if rivalry.tier}
                 <div class="tierBanner" style="--tierColor: {rivalry.tier.color}">
-                    <span class="tierLabel">Rivalry Tier {rivalry.tier.tier}</span>
+                    <span class="tierLabel">{rivalry.tier.label ?? `Rivalry Tier ${rivalry.tier.tier}`}</span>
                     <span class="tierName">{rivalry.tier.name}</span>
                     <span class="tierFlames" aria-hidden="true">
-                        {#each [1, 2, 3, 4, 5] as n}
-                            <span class:dim={n > rivalry.tier.flames}>🔥</span>
+                        {#each Array.from({ length: rivalry.tier.slots ?? 5 }, (_, i) => i + 1) as n}
+                            <span class:dim={n > rivalry.tier.flames}>{rivalry.tier.icon ?? '🔥'}</span>
                         {/each}
                     </span>
                     <span class="tierReason">{rivalry.tier.reason}</span>
