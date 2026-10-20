@@ -210,13 +210,22 @@ export const computeTradeGrades = ({ seasons, nowKey }) => {
 		});
 
 		const weeks = weeksBetween(tradeK, nowKey);
+		// sides that can't be judged by points
+		const onlyFaab = sides.map((side) => side.assets.length > 0 && side.assets.every((a) => a.type === 'faab'));
+		const onlyPending = sides.map(
+			(side) =>
+				side.pending > 0 &&
+				side.assets.every((a) => (a.type === 'pick' ? a.pending : a.type === 'faab'))
+		);
+		const faabDeal = onlyFaab.some(Boolean);
+		const waitingOnPicks = onlyPending.some(Boolean);
+
 		const gradeAt = (vals, enoughWeeks) => {
 			const total = vals.reduce((a, b) => a + b, 0);
-			return vals.map((v, i) => {
-				const side = sides[i];
-				const onlyPending = side.pending > 0 && side.assets.every((a) => a.type === 'pick' ? a.pending : a.type === 'faab');
+			return vals.map((v) => {
+				if (faabDeal) return 'FAAB deal';
+				if (waitingOnPicks) return 'Pending';
 				if (!enoughWeeks) return 'Too early';
-				if (onlyPending) return 'Pending';
 				if (total < 1) return 'Wash';
 				return letterFor(v / total);
 			});
@@ -259,7 +268,7 @@ export const computeTradeGrades = ({ seasons, nowKey }) => {
 	const managers = {};
 	for (const tr of trades) {
 		// only settled trades count toward records
-		const graded = tr.sides.every((s) => !['Too early', 'Pending', 'Wash'].includes(s.grade));
+		const graded = tr.sides.every((s) => !['Too early', 'Pending', 'Wash', 'FAAB deal'].includes(s.grade));
 		for (const side of tr.sides) {
 			const others = tr.sides.filter((o) => o !== side);
 			const otherAvg = others.reduce((a, o) => a + o.value, 0) / Math.max(1, others.length);

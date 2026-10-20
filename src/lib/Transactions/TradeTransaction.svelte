@@ -2,8 +2,24 @@
 	import { gotoManager } from '$lib/utils/helper';
 	import { getTeamFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
 	import TransactionMove from './TransactionMove.svelte';
+	import { onMount } from 'svelte';
+	import { getTradeGrades, gradeTone } from '$lib/utils/helperFunctions/tradeGradesClient';
 
 	export let transaction, players, leagueTeamManagers;
+
+	// trade grade per side (starting-lineup points since the trade)
+	let graded = null;
+	onMount(async () => {
+		if (transaction.type !== 'trade') return;
+		try {
+			const grades = await getTradeGrades();
+			graded = grades.byID[String(transaction.id)] || null;
+		} catch (err) {
+			console.error('[TradeTransaction] Could not load trade grades:', err);
+		}
+	});
+
+	const sideFor = (rosterID, g) => g?.sides.find((s) => Number(s.rosterID) === Number(rosterID));
 </script>
 
 <style>
@@ -84,6 +100,53 @@
         height: 100%;
     }
 
+    .grade {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6px;
+        margin: 4px 0 6px;
+        padding: 2px 8px;
+        font-family: 'Chakra Petch', 'Roboto', sans-serif;
+        font-size: 0.85em;
+        border: 1px solid currentColor;
+    }
+
+    .grade strong {
+        font-weight: 700;
+    }
+
+    .gradePts {
+        font-size: 0.85em;
+        opacity: 0.8;
+    }
+
+    .tone-great {
+        color: var(--mf-up, #128a4a);
+        box-shadow: 0 0 10px -3px currentColor;
+    }
+
+    .tone-good {
+        color: var(--mf-ion);
+    }
+
+    .tone-meh {
+        color: #e2722b;
+    }
+
+    .tone-bad {
+        color: var(--mf-down, #c2263b);
+    }
+
+    .tone-muted {
+        color: var(--mf-dim);
+    }
+
+    .gradeNote {
+        display: block;
+        margin-top: 4px;
+        font-style: normal;
+    }
+
     @media (max-width: 420px) {
         .ownerName {
             font-size: 0.8em;
@@ -106,6 +169,13 @@
                                     <span class="currentOwner">({getTeamFromTeamManagers(leagueTeamManagers, owner).name})</span>
                                 {/if}
                             </span>
+                            {#if sideFor(owner, graded)}
+                                {@const side = sideFor(owner, graded)}
+                                <span class="grade tone-{gradeTone(side.grade)}" title="Starting-lineup points from what they received, since the trade">
+                                    <strong>{side.grade}</strong>
+                                    {#if side.grade !== 'FAAB deal'}<span class="gradePts">{side.value} pts</span>{/if}
+                                </span>
+                            {/if}
                         </div>
                     </th>
                 {/each}
@@ -119,5 +189,11 @@
     </table>
     <span class="date">
         {transaction.date}
+        {#if graded}
+            <span class="gradeNote">
+                Graded on starting-lineup points since the trade{graded.weeks ? ` (${graded.weeks} week${graded.weeks === 1 ? '' : 's'})` : ''}.
+                <a href="/trade-grades">Report card</a>
+            </span>
+        {/if}
     </span>
 </div>

@@ -32,6 +32,12 @@ export const tabs = [
     key: 'transactions'
   },
   {
+    icon: 'grading',
+    label: 'Trade Grades',
+    dest: '/trade-grades',
+    key: 'trade-grades'
+  },
+  {
     icon: 'storage',
     label: 'Rosters',
     dest: '/rosters',
