@@ -154,6 +154,33 @@
         border-top: 2px dashed currentColor;
     }
 
+    .finePrint {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        max-width: 72ch;
+        margin: -3.5em auto 4em;
+        padding: 0 12px;
+        font-size: 0.78em;
+        line-height: 1.5;
+        color: var(--mf-dim);
+    }
+
+    .finePrint strong {
+        color: var(--mf-text);
+        font-weight: 600;
+    }
+
+    .finePrintBall {
+        flex: none;
+        width: 12px;
+        height: 12px;
+        margin-top: 3px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #fff6b3 0%, #ffd400 45%, #c99a00 100%);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
     .standingsTable {
         max-width: 100%;
         overflow-x: scroll;
@@ -203,4 +230,15 @@
             </Body>
         </DataTable>
     </div>
+
+    <p class="finePrint">
+        <span class="finePrintBall" aria-hidden="true"></span>
+        <span>
+            <strong>Draft lottery balls.</strong> Finishing the regular season 8th, 11th, 12th or 13th earns ping pong
+            balls for the draft lottery: 8th gets 1, 11th gets 3, 12th gets 2, 13th gets 1. Balls go with the spot, not the
+            team, so they can change hands until the regular season ends. Six more are earned in the Toilet Bowl (1st place 3,
+            2nd place 2, 3rd place 1), and non-playoff teams can buy one extra entry for the #1 pick with FAAB.
+            See <a href="/constitution#draft-order">Constitution §3.4–3.5</a>.
+        </span>
+    </p>
 {/if}

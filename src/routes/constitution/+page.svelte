@@ -1171,7 +1171,7 @@
         additional time for trade discussions.
       </p>
 
-      <h3 class="subSectionHeading" bind:this={threeFour}>3.4 Draft Order Determination</h3>
+      <h3 class="subSectionHeading" id="draft-order" bind:this={threeFour}>3.4 Draft Order Determination</h3>
       <p>
         In an effort to combat tanking during the regular season and encourage managers to stay competitive through the playoffs,
         you can earn ping pong balls based on your regular season record and by placing 1st through 3rd in the Toilet Bowl. See
@@ -1207,7 +1207,7 @@
             <tr><td>TM16</td><td>16th</td><td>0</td><td>0%</td></tr>
             <tr class="total-row">
               <td colspan="3">REG SEASON TOTAL PING PONG BALLS:</td>
-              <td>8</td>
+              <td>7</td>
             </tr>
           </tbody>
         </table>
