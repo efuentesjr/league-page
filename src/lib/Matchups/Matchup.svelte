@@ -151,15 +151,37 @@
         z-index: 2;
     }
 
+    /* center slash: dark gap with a lit edge in the leading team's color */
     .divider {
+        --lead: var(--mf-dim);
         position: absolute;
         z-index: 3;
-        transform: translateX(-50%);
         top: 0;
         left: 50%;
+        width: 14px;
         height: 100%;
-        width: 15px;
+        transform: translateX(-50%) skewX(-14deg);
+        background: var(--mf-bg);
+        border-left: 1px solid var(--mf-line);
+        border-right: 1px solid var(--mf-line);
+        pointer-events: none;
     }
+
+    .divider::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 3px;
+        transform: translateX(-50%);
+        background: var(--lead);
+        box-shadow: 0 0 8px 1px color-mix(in srgb, var(--lead) 70%, transparent);
+    }
+
+    .divider.lead-home { --lead: var(--mf-ion); }
+    .divider.lead-away { --lead: var(--mf-plasma); }
+    .divider.lead-tied { --lead: var(--mf-dim); }
 
     .home {
         justify-content: flex-start;
@@ -540,7 +562,7 @@
             <div class="name">{home.manager.name}</div>
             <div class="totalPoints totalPointsR">{round(homePointsTotal)}<div class="totalProjection">{round(homeProjectionTotal)}</div></div>
         </div>
-        <img class="divider" src="/{winning}Divider.jpg" alt="divider" />
+        <div class="divider lead-{winning}" aria-hidden="true"></div>
         <div class="opponent away{winning == "away" ? " awayGlow" : ""}">
             <div class="totalPoints totalPointsL">{round(awayPointsTotal)}<div class="totalProjection">{round(awayProjectionTotal)}</div></div>
             <div class="name" >{away.manager.name}</div>
