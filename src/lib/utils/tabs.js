@@ -20,6 +20,12 @@ export const tabs = [
     key: 'standings'
   },
   {
+    icon: 'trending_up',
+    label: 'Playoff Odds',
+    dest: '/playoff-odds',
+    key: 'playoff-odds'
+  },
+  {
     icon: 'swap_horiz',
     label: 'Trades & Waivers',
     dest: '/transactions',
@@ -67,12 +73,6 @@ export const tabs = [
     dest: '/records',
     key: 'records'
   },
-//  {
-//    icon: 'trending_up',
-//    label: 'Playoff Projections',
-//    dest: '/playoffs-projection',
- //   key: 'playoffs-projection'
-//  },
   {
     icon: 'gavel',
     label: 'Competition Committee',
