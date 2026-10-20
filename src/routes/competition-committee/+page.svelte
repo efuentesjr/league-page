@@ -1,6 +1,4 @@
 <script lang="ts">
-  export const prerender = true;
-
   import { slide } from 'svelte/transition';
 
   type Proposal = {
@@ -108,18 +106,29 @@
     }, {} as Record<number, { year: number; items: any[] }>)
   ).sort((a, b) => b.year - a.year); // newest first
 
-  // collapsed state per year
-  let openYears: Record<number, boolean> = {};
+  // collapsed state per year (most recent year starts open)
+  let openYears: Record<number, boolean> = grouped.length ? { [grouped[0].year]: true } : {};
+
+  const tally = (items: any[]) => ({
+    approved: items.filter((o) => o.status === 'Approved' || o.status === 'Enacted by Commish').length,
+    rejected: items.filter((o) => o.status === 'Rejected').length
+  });
+  const allTime = tally(previous);
+
+  const proposalTone = (s: Proposal['status']) =>
+    ({ NEW: 'new', OPEN: 'open', CARRIED: 'ok', REJECTED: 'bad', YEARLY: 'yearly', REVOTE: 'hold', HOLD: 'hold' })[s] || 'yearly';
+  const proposalLabel = (s: Proposal['status']) =>
+    ({ NEW: 'New', OPEN: 'Open', CARRIED: 'Carried', REJECTED: 'Rejected', YEARLY: 'Yearly', REVOTE: 'Revote', HOLD: 'On hold' })[s] || s;
 
   function toggleYear(y: number) {
     openYears = { ...openYears, [y]: !openYears[y] }; // ✅ ensures reactivity
   }
 
-  function previousChipClass(s?: OutcomeStatus) {
-    if (s === 'Approved') return 'cc-chip--ok';
-    if (s === 'Rejected') return 'cc-chip--bad';
-    if (s === 'Enacted by Commish') return 'cc-chip--commish';
-    return 'cc-chip--hold';
+  function outcomeTone(s?: OutcomeStatus) {
+    if (s === 'Approved') return 'ok';
+    if (s === 'Rejected') return 'bad';
+    if (s === 'Enacted by Commish') return 'commish';
+    return 'hold';
   }
 </script>
 
@@ -129,265 +138,409 @@
 
 <section class="cc-page">
   <header class="cc-header">
-    <h1 class="cc-title">Competition Committee</h1>
-    <p class="cc-subtitle">Active proposals and previous outcomes</p>
+    <div>
+      <h1 class="cc-title">Competition Committee</h1>
+      <p class="cc-subtitle">Rule proposals on the table, and how past votes went</p>
+    </div>
+    <div class="cc-stats">
+      <div class="cc-stat"><strong>{proposals.length}</strong><span>On the table</span></div>
+      <div class="cc-stat ok"><strong>{allTime.approved}</strong><span>Passed</span></div>
+      <div class="cc-stat bad"><strong>{allTime.rejected}</strong><span>Voted down</span></div>
+    </div>
   </header>
 
   <!-- ACTIVE PROPOSALS -->
-  <section class="cc-section cc-section--white">
-    <h2 class="cc-section-title">2027 Active Proposed Rule Discussions</h2>
-    <div class="cc-grid">
-      {#each parsedProposals as p (p.id)}
-        <article class="cc-card">
-          <div class="cc-card-top">
-            <span
-              class={
-                "cc-chip " +
-                (p.status === 'NEW'
-                  ? 'cc-chip--new'
-                  : p.status === 'OPEN'
-                  ? 'cc-chip--open'
-                  : p.status === 'CARRIED'
-                  ? 'cc-chip--ok'
-                  : p.status === 'REJECTED'
-                  ? 'cc-chip--bad'
-                  : p.status === 'YEARLY'
-                  ? 'cc-chip--yearly'
-                  : p.status === 'REVOTE'
-                  ? 'cc-chip--revote'
-                  : p.status === 'HOLD'
-                  ? 'cc-chip--hold'
-                  : 'cc-chip--hold')
-              }
-            >
-              {p.status}
-            </span>
-            <span class="cc-id">#{p.id}</span>
-          </div>
+  <div class="cc-sectionHead">
+    <h2>2027 Proposals</h2>
+    <span>Up for discussion at the next meeting</span>
+  </div>
+  <div class="cc-grid">
+    {#each parsedProposals as p (p.id)}
+      <article class="cc-card tone-{proposalTone(p.status)}">
+        <div class="cc-card-top">
+          <span class="cc-chip">{proposalLabel(p.status)}</span>
+          <span class="cc-id">#{p.id}</span>
+        </div>
 
-          <h3 class="cc-card-title">
-            {p.parsed.base}{p.parsed.options.length ? ':' : ''}
-          </h3>
+        <h3 class="cc-card-title">{p.parsed.base}</h3>
 
-          {#if p.parsed.options.length}
-            <ul class="cc-bullets">
-              {#each p.parsed.options as opt}
-                <li>{opt}</li>
-              {/each}
-            </ul>
-          {/if}
-
-          <p class="cc-meta"><strong>Owner:</strong> {p.owner}</p>
-          {#if p.notes}<p class="cc-notes">{p.notes}</p>{/if}
-        </article>
-      {/each}
-    </div>
-  </section>
-
-  <!-- PREVIOUS OUTCOMES (GROUPED & COLLAPSIBLE WITH SLIDE) -->
-  <section class="cc-section cc-section--white">
-    <h2 class="cc-section-title">Previous Outcomes of Rule Votes</h2>
-
-    {#each grouped as g}
-      <div class="cc-year-block">
-        <button class="cc-year-toggle" on:click={() => toggleYear(g.year)}>
-          <span>{g.year}</span>
-          <span>{openYears[g.year] ? '▼' : '▶'}</span>
-        </button>
-
-        {#if openYears[g.year]}
-          <div class="cc-grid" transition:slide>
-            {#each g.items as o, i (o.id + '-' + i)}
-              <article class="cc-card cc-card--sm">
-                <div class="cc-card-top">
-                  {#if o.status}
-                    <span class={"cc-chip " + previousChipClass(o.status)}>
-                      {o.status}{o.year ? ` ${o.year}` : ''}
-                    </span>
-                  {/if}
-                </div>
-
-                {#if hasValue(o.parsed.base)}
-                  <h3 class="cc-card-title">
-                    {o.parsed.base}{o.parsed.options.length ? ':' : ''}
-                  </h3>
-                {/if}
-
-                {#if o.parsed.options.length}
-                  <ul class="cc-bullets">
-                    {#each o.parsed.options as opt}
-                      <li>{opt}</li>
-                    {/each}
-                  </ul>
-                {/if}
-
-                {#if hasValue(o.ruleDeadline)}
-                  <p class="cc-meta"><strong>Rule Deadline:</strong> {o.ruleDeadline}</p>
-                {/if}
-
-                {#if o.notes}<p class="cc-notes">{o.notes}</p>{/if}
-              </article>
+        {#if p.parsed.options.length}
+          <ol class="cc-options">
+            {#each p.parsed.options as opt, i}
+              <li><span class="cc-optNum">Option {i + 1}</span>{opt}</li>
             {/each}
-          </div>
+          </ol>
         {/if}
-      </div>
+
+        <div class="cc-foot">
+          <span class="cc-owner"><span class="cc-footLabel">Owner</span>{p.owner}</span>
+          {#if p.notes}<span class="cc-ref">{p.notes}</span>{/if}
+        </div>
+      </article>
     {/each}
-  </section>
+  </div>
+
+  <!-- PREVIOUS OUTCOMES -->
+  <div class="cc-sectionHead">
+    <h2>Past Votes</h2>
+    <span>Tap a year to open it</span>
+  </div>
+
+  {#each grouped as g}
+    {@const t = tally(g.items)}
+    <div class="cc-year" class:open={openYears[g.year]}>
+      <button type="button" class="cc-year-toggle" aria-expanded={!!openYears[g.year]} on:click={() => toggleYear(g.year)}>
+        <span class="cc-yearName">{g.year}<span class="cc-chevron" aria-hidden="true">▸</span></span>
+        <span class="cc-yearTally">
+          <span class="ok">{t.approved} passed</span>
+          <span class="bad">{t.rejected} voted down</span>
+        </span>
+      </button>
+
+      {#if openYears[g.year]}
+        <div class="cc-grid cc-grid--past" transition:slide>
+          {#each g.items as o, i (o.id + '-' + i)}
+            <article class="cc-card cc-card--sm tone-{outcomeTone(o.status)}">
+              <div class="cc-card-top">
+                {#if o.status}<span class="cc-chip">{o.status === 'Enacted by Commish' ? 'Enacted by commish' : o.status}</span>{/if}
+              </div>
+
+              {#if hasValue(o.parsed.base)}
+                <h3 class="cc-card-title">{o.parsed.base}</h3>
+              {/if}
+
+              {#if o.parsed.options.length}
+                <ol class="cc-options">
+                  {#each o.parsed.options as opt, i}
+                    <li><span class="cc-optNum">Option {i + 1}</span>{opt}</li>
+                  {/each}
+                </ol>
+              {/if}
+
+              {#if hasValue(o.ruleDeadline) || o.notes}
+                <div class="cc-foot">
+                  {#if hasValue(o.ruleDeadline)}<span class="cc-owner"><span class="cc-footLabel">Deadline</span>{o.ruleDeadline}</span>{/if}
+                  {#if o.notes}<span class="cc-ref">{o.notes}</span>{/if}
+                </div>
+              {/if}
+            </article>
+          {/each}
+        </div>
+      {/if}
+    </div>
+  {/each}
 </section>
 
 <style>
+  /* ============================================================
+     COMPETITION COMMITTEE — same panel language as the home page
+     ============================================================ */
   .cc-page {
-    max-width: 1100px;
+    width: 96%;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 1.25rem 1rem 2.5rem;
+    padding: 22px 0 50px;
+    font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+    color: var(--mf-text);
   }
 
   .cc-header {
-    text-align: center;
-    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 20px 20px 18px;
+    background:
+      linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 28px,
+      linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 28px 100%,
+      radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--mf-plasma) 22%, transparent), transparent 60%),
+      var(--mf-bg);
+    border: 1px solid var(--mf-line);
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
   }
 
   .cc-title {
-    font-size: 1.15rem;
+    margin: 0;
+    font-size: 2rem;
     font-weight: 700;
-    margin: 0 0 0.15rem 0;
-    letter-spacing: 0.2px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--mf-text);
+    text-shadow: 0 0 18px var(--mf-line-strong);
   }
 
   .cc-subtitle {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin: 0;
+    margin: 6px 0 0;
+    font-size: 0.85rem;
+    color: var(--mf-dim);
   }
 
-  .cc-section {
-    margin-top: 1.25rem;
-    border-radius: 12px;
-    padding: 1rem;
+  .cc-stats {
+    display: flex;
+    gap: 8px;
   }
 
-  .cc-section--white {
-    background: #e4ecf3;
-    box-shadow: 0 1px 4px rgba(0,0,255,1);
-    border: 1px solid #d1e4ff;
+  .cc-stat {
+    --tone: var(--mf-ion);
+    min-width: 84px;
+    padding: 8px 12px;
+    background: var(--mf-panel);
+    border: 1px solid var(--mf-line);
+    border-top: 2px solid var(--tone);
+    text-align: center;
   }
 
-  .cc-section-title {
-    font-size: 0.95rem;
+  .cc-stat strong {
+    display: block;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--tone);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cc-stat span {
+    font-size: 0.68rem;
     font-weight: 700;
-    color: #222;
-    margin: 0 0 0.6rem 0;
-    padding-left: 0.5rem;
-    border-left: 4px solid #0b4eb3;
-    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mf-dim);
+  }
+
+  .cc-stat.ok { --tone: var(--mf-up); }
+  .cc-stat.bad { --tone: var(--mf-down); }
+
+  .cc-sectionHead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 34px 4px 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--mf-line);
+  }
+
+  .cc-sectionHead h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--mf-text);
+    text-shadow: 0 0 18px var(--mf-line-strong);
+  }
+
+  .cc-sectionHead span {
+    font-size: 0.82rem;
+    color: var(--mf-dim);
   }
 
   .cc-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 12px;
   }
 
+  .cc-grid--past {
+    padding: 12px;
+  }
+
+  /* status tones */
+  .tone-new     { --tone: var(--mf-ion); }
+  .tone-open    { --tone: #58a7ff; }
+  .tone-ok      { --tone: var(--mf-up); }
+  .tone-bad     { --tone: var(--mf-down); }
+  .tone-hold    { --tone: #e0b03a; }
+  .tone-yearly  { --tone: var(--mf-plasma); }
+  .tone-commish { --tone: #e5b52a; }
+
   .cc-card {
-    background: #ffffff;
-    border: 1px solid #e7e7e7;
-    border-radius: 10px;
-    padding: 0.75rem;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 14px 12px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--tone) 12%, transparent), transparent 45%),
+      var(--mf-panel);
+    border: 1px solid var(--mf-line);
+    border-left: 3px solid var(--tone);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
   }
 
   .cc-card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-  }
-
-  .cc-card--sm {
-    font-size: 0.85rem;
+    background-color: var(--mf-panel-2);
+    border-top-color: var(--mf-line-strong);
+    border-right-color: var(--mf-line-strong);
+    border-bottom-color: var(--mf-line-strong);
   }
 
   .cc-card-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.35rem;
-    min-height: 1.25rem;
-  }
-
-  .cc-id {
-    font-size: 0.7rem;
-    color: #9aa0a6;
-  }
-
-  .cc-card-title {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0.15rem 0 0.3rem;
-    line-height: 1.25;
-  }
-
-  .cc-bullets {
-    margin: 0.25rem 0 0.4rem;
-    padding-left: 1.1rem;
-    list-style: disc;
-    color: #1f2937;
-    font-size: 0.86rem;
-  }
-
-  .cc-bullets li {
-    margin: 0.15rem 0;
-  }
-
-  .cc-meta {
-    font-size: 0.78rem;
-    color: #4b5563;
-    margin: 0.25rem 0 0.2rem 0;
-  }
-
-  .cc-notes {
-    font-size: 0.75rem;
-    color: #6b7280;
-    margin: 0;
+    min-height: 1.2rem;
   }
 
   .cc-chip {
-    font-size: 0.65rem;
+    padding: 1px 7px;
+    font-size: 0.66rem;
     font-weight: 700;
-    padding: 0.18rem 0.55rem;
-    border-radius: 999px;
-    border: 1px solid;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tone);
+    border: 1px solid currentColor;
+    background: color-mix(in srgb, var(--tone) 10%, transparent);
   }
 
-  .cc-chip--new  { background:#00efa6; color:#003a24; border-color:#00c987; }
-  .cc-chip--open { background:#bcd8ff; color:#003f97; border-color:#82b7ff; }
-  .cc-chip--ok   { background:#b9f6c5; color:#065f28; border-color:#7eea97; }
-  .cc-chip--bad  { background:#ffb8b8; color:#7d0000; border-color:#ff7a7a; }
-  .cc-chip--hold { background:#ffb8b8; color:#7d0000; border-color:#ff7a7a; }
-  .cc-chip--commish { background:#d3ccff; color:#2b198c; border-color:#b3a8ff; }
-  .cc-chip--yearly { background:#8af2ff; color:#004d57; border-color:#4de8ff; }
-  .cc-chip--revote { background:#ffd57a; color:#6a3f00; border-color:#ffb733; }
+  .cc-id {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--mf-dim);
+    font-variant-numeric: tabular-nums;
+  }
 
-  .cc-year-block {
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border-radius: 8px;
-    background: #f7faff;
-    border: 1px solid #d9e5ff;
+  .cc-card-title {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--mf-text);
+  }
+
+  .cc-card--sm .cc-card-title {
+    font-size: 0.9rem;
+  }
+
+  .cc-options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cc-options li {
+    padding: 6px 8px;
+    font-size: 0.84rem;
+    line-height: 1.35;
+    background: var(--mf-panel-2);
+    border: 1px solid var(--mf-line);
+  }
+
+  .cc-optNum {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mf-ion);
+  }
+
+  .cc-foot {
+    margin-top: auto;
+    padding-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--mf-line);
+    font-size: 0.78rem;
+  }
+
+  .cc-owner {
+    color: var(--mf-text);
+  }
+
+  .cc-footLabel {
+    margin-right: 6px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mf-dim);
+  }
+
+  .cc-ref {
+    padding: 1px 6px;
+    font-size: 0.72rem;
+    color: var(--mf-dim);
+    border: 1px solid var(--mf-line-strong);
+  }
+
+  /* past years: collapsible bars, same as Draft History */
+  .cc-year {
+    margin-bottom: 10px;
+    background: var(--mf-bg);
+    border: 1px solid var(--mf-line);
+  }
+
+  .cc-year.open {
+    border-color: var(--mf-line-strong);
   }
 
   .cc-year-toggle {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: #dce9ff;
-    border: 1px solid #bcd1ff;
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    font: inherit;
+    color: var(--mf-text);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--mf-ion) 10%, transparent), transparent 60%), var(--mf-panel);
+    border: 0;
     cursor: pointer;
+    text-align: left;
+  }
+
+  .cc-year-toggle:hover,
+  .cc-year-toggle:focus-visible {
+    background-color: var(--mf-panel-2);
+    outline: none;
+  }
+
+  .cc-year-toggle:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--mf-ion);
+  }
+
+  .cc-yearName {
+    font-size: 1.35rem;
     font-weight: 700;
-    font-size: 0.9rem;
-    margin-bottom: 0.7rem;
+    line-height: 1;
+  }
+
+  .cc-chevron {
+    display: inline-block;
+    margin-left: 8px;
+    color: var(--mf-ion);
+    transition: transform 0.15s ease;
+  }
+
+  .open .cc-chevron {
+    transform: rotate(90deg);
+  }
+
+  .cc-yearTally {
+    display: flex;
+    gap: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .cc-yearTally .ok { color: var(--mf-up); }
+  .cc-yearTally .bad { color: var(--mf-down); }
+
+  @media (max-width: 600px) {
+    .cc-page { width: calc(100% - 16px); }
+    .cc-title { font-size: 1.6rem; }
+    .cc-stats { width: 100%; }
+    .cc-stat { flex: 1; min-width: 0; }
+    .cc-sectionHead h2 { font-size: 1.3rem; }
+    .cc-sectionHead span { display: none; }
+    .cc-yearTally { flex-direction: column; gap: 2px; align-items: flex-end; font-size: 0.72rem; }
+    .cc-grid--past { padding: 8px; }
   }
 </style>
