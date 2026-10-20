@@ -49,16 +49,19 @@
 
 <style>
 	footer {
-		background-color: var(--f8f8f8);
+		background:
+			linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 24px,
+			var(--mf-panel);
 		width: 100%;
         display: block;
         position: absolute;
         bottom: 0;
 		z-index: 1;
-		border-top: 1px solid #920505;
+		border-top: 1px solid var(--mf-line-strong);
+		box-shadow: 0 -2px 18px -6px var(--mf-ion-glow);
 		padding: 30px 0 60px;
 		text-align: center;
-		color: #777;
+		color: var(--mf-dim);
 	}
 
 	#navigation {

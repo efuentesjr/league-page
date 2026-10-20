@@ -4,10 +4,10 @@
 
 // Svelte Colors!
 @use '@material/theme/index' as theme with (
-  $primary: #00316b,
-  $secondary: #0082c3,
+  $primary: #0077b6,
+  $secondary: #5b3fd6,
   $surface: #fff,
-  $background: #fff,
+  $background: #eef3fb,
   $error: color-palette.$red-900,
 );
 
@@ -33,6 +33,22 @@
 @use '@material/typography/index' as typography;
 
 :root {
+
+  // ===== MFFL futuristic theme tokens (light) =====
+  --mf-bg: #eef3fb;
+  --mf-panel: #ffffff;
+  --mf-panel-2: #f3f7fd;
+  --mf-line: rgba(0, 100, 170, 0.18);
+  --mf-line-strong: rgba(0, 119, 182, 0.55);
+  --mf-ion: #0077b6;
+  --mf-ion-glow: rgba(0, 119, 182, 0.22);
+  --mf-plasma: #5b3fd6;
+  --mf-text: #0b1a33;
+  --mf-dim: #4f6484;
+  --mf-grid: rgba(0, 100, 170, 0.06);
+  --mf-up: #128a4a;
+  --mf-down: #c2263b;
+  --mf-on-ion: #ffffff;
   --fff: #fff;
   --fffTransparent: rgba(255,255,255,0);
   --f8f8f8: #f8f8f8;
@@ -134,9 +150,17 @@ body {
   background-color: theme.$surface;
   color: theme.$on-surface;
   min-height: 100vh;
-  background: #f4f4f4;
-  background: linear-gradient(to bottom right, #f4f4f4,#ebebeb );
-  background: -webkit-linear-gradient(to bottom right, #f4f4f4,#ebebeb );
+}
+
+/* ===== MFFL futuristic theme: page background, type, links ===== */
+html body {
+  color: var(--mf-text);
+  background:
+    linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 32px,
+    linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 32px 100%,
+    radial-gradient(ellipse 80% 50% at 50% 0%, color-mix(in srgb, var(--mf-plasma) 16%, transparent), transparent 70%),
+    var(--mf-bg);
+  background-attachment: fixed;
 }
  
 //
@@ -203,4 +227,48 @@ a:visited {
 
 .mdc-button--outlined:not(:disabled) {
   background-color: #f9f9f9 !important;
+}
+
+
+/* ===== MFFL futuristic theme: shared overrides (both modes) ===== */
+h1, h2, h3, h4, h5, h6,
+.mdc-tab__text-label,
+.mdc-drawer__title,
+.mdc-data-table__header-cell {
+  font-family: 'Chakra Petch', 'Roboto', sans-serif;
+}
+
+h1, h2 {
+  letter-spacing: 0.01em;
+}
+
+.mdc-tab__text-label {
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.mdc-data-table__header-cell {
+  font-weight: 700;
+  color: var(--mf-ion);
+}
+
+.mdc-data-table {
+  background-color: var(--mf-panel);
+  border-color: var(--mf-line);
+}
+
+a {
+  color: var(--mf-ion);
+}
+
+a:visited {
+  color: color-mix(in srgb, var(--mf-ion) 70%, var(--mf-plasma));
+}
+
+:focus-visible {
+  outline-color: var(--mf-ion);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--mf-ion) 35%, transparent);
 }

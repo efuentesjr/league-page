@@ -207,11 +207,11 @@
 
   /* ===== The Beat Shortcut: "league pulse" banner ===== */
   .the-beat-link {
-    --void: #050a16;
-    --ion: #38e8ff;
-    --plasma: #7c5cff;
-    --signal: #e8f4ff;
-    --dim: #7088aa;
+    --void: var(--mf-bg);
+    --ion: var(--mf-ion);
+    --plasma: var(--mf-plasma);
+    --signal: var(--mf-text);
+    --dim: var(--mf-dim);
 
     position: relative;
     display: flex;
@@ -233,10 +233,10 @@
     text-decoration: none;
 
     background:
-      radial-gradient(ellipse at 30% 50%, rgba(124, 92, 255, 0.28), transparent 60%),
-      radial-gradient(ellipse at 80% 50%, rgba(56, 232, 255, 0.16), transparent 55%),
+      radial-gradient(ellipse at 30% 50%, color-mix(in srgb, var(--mf-plasma) 22%, transparent), transparent 60%),
+      radial-gradient(ellipse at 80% 50%, color-mix(in srgb, var(--mf-ion) 14%, transparent), transparent 55%),
       var(--void);
-    border: 1px solid rgba(56, 232, 255, 0.35);
+    border: 1px solid var(--mf-line-strong);
     clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
     transition: border-color 0.2s ease;
   }
@@ -262,7 +262,7 @@
 
   .beat-pulse .trace-base {
     fill: none;
-    stroke: rgba(56, 232, 255, 0.14);
+    stroke: var(--mf-line);
     stroke-width: 2;
   }
 
@@ -286,7 +286,7 @@
     position: relative;
     width: 76px;
     height: auto;
-    filter: drop-shadow(0 0 12px rgba(56, 232, 255, 0.45));
+    filter: drop-shadow(0 0 12px var(--mf-line-strong));
   }
 
   .beat-title {
@@ -304,8 +304,8 @@
     letter-spacing: 0.01em;
     color: var(--signal);
     text-shadow:
-      0 0 14px rgba(56, 232, 255, 0.55),
-      0 0 38px rgba(124, 92, 255, 0.45);
+      0 0 14px var(--mf-ion-glow),
+      0 0 38px color-mix(in srgb, var(--mf-plasma) 22%, transparent);
   }
 
   .beat-tagline {
@@ -323,14 +323,14 @@
     padding: 9px 16px;
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--void);
+    color: var(--mf-on-ion);
     background: var(--ion);
     clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
     transition: background-color 0.2s ease;
   }
 
   .the-beat-link:hover .beat-open {
-    background: #8ff4ff;
+    background: color-mix(in srgb, var(--ion) 75%, white);
   }
 
   @media (prefers-reduced-motion: reduce) {

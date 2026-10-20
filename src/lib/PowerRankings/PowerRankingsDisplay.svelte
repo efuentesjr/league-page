@@ -559,12 +559,12 @@
      ============================================================ */
 
   .powerRankings {
-    --void: #050a16;
-    --panel: #0a1326;
-    --ion: #38e8ff;
-    --plasma: #7c5cff;
-    --signal: #e8f4ff;
-    --dim: #7088aa;
+    --void: var(--mf-bg);
+    --panel: var(--mf-panel);
+    --ion: var(--mf-ion);
+    --plasma: var(--mf-plasma);
+    --signal: var(--mf-text);
+    --dim: var(--mf-dim);
 
     width: 100%;
     max-width: 960px;
@@ -579,11 +579,11 @@
     container-type: inline-size;
 
     background:
-      linear-gradient(rgba(56, 232, 255, 0.05) 1px, transparent 1px) 0 0 / 100% 28px,
-      linear-gradient(90deg, rgba(56, 232, 255, 0.05) 1px, transparent 1px) 0 0 / 28px 100%,
-      radial-gradient(ellipse at 50% 0%, rgba(124, 92, 255, 0.22), transparent 60%),
+      linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 28px,
+      linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 28px 100%,
+      radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--mf-plasma) 22%, transparent), transparent 60%),
       var(--void);
-    border: 1px solid rgba(56, 232, 255, 0.18);
+    border: 1px solid var(--mf-line);
     border-radius: 4px;
     clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
   }
@@ -597,7 +597,7 @@
     gap: 12px;
     margin: 0 4px 18px;
     padding-bottom: 12px;
-    border-bottom: 1px solid rgba(56, 232, 255, 0.22);
+    border-bottom: 1px solid var(--mf-line);
   }
 
   .rankingTitle {
@@ -608,7 +608,7 @@
     line-height: 1;
     letter-spacing: 0.02em;
     color: var(--signal);
-    text-shadow: 0 0 18px rgba(56, 232, 255, 0.45);
+    text-shadow: 0 0 18px var(--mf-line-strong);
   }
 
   .rankingSubtitle {
@@ -652,7 +652,7 @@
     background:
       linear-gradient(90deg, color-mix(in srgb, var(--teamColor) 32%, transparent), transparent 55%),
       var(--panel);
-    border: 1px solid rgba(56, 232, 255, 0.14);
+    border: 1px solid var(--mf-line);
 
     cursor: pointer;
     transition: border-color 0.15s ease, background-color 0.15s ease;
@@ -660,8 +660,8 @@
 
   .rankingCard:hover,
   .rankingCard:focus-visible {
-    border-color: rgba(56, 232, 255, 0.6);
-    background-color: #0e1b35;
+    border-color: var(--mf-line-strong);
+    background-color: var(--mf-panel-2);
     outline: none;
   }
 
@@ -701,7 +701,7 @@
   }
 
   .movement.up { color: #6dffa8; }
-  .movement.down { color: #ff7a8a; }
+  .movement.down { color: #ff9aa6; }
 
   /* logo */
 
@@ -752,7 +752,7 @@
     position: relative;
     height: 4px;
     margin-top: 7px;
-    background: rgba(112, 136, 170, 0.22);
+    background: color-mix(in srgb, var(--mf-dim) 22%, transparent);
     overflow: hidden;
   }
 
@@ -761,7 +761,7 @@
     inset: 0 auto 0 0;
     width: calc(var(--score) * 1%);
     background: linear-gradient(90deg, var(--teamColor), var(--ion));
-    box-shadow: 0 0 8px rgba(56, 232, 255, 0.6);
+    box-shadow: 0 0 8px var(--mf-line-strong);
     animation: meterFill 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     animation-delay: calc(var(--rank) * 45ms);
   }
@@ -773,8 +773,8 @@
   /* top 3: lit edge */
 
   .rankingCard.topRank {
-    border-color: rgba(56, 232, 255, 0.45);
-    box-shadow: 0 0 18px rgba(56, 232, 255, 0.14);
+    border-color: var(--mf-line-strong);
+    box-shadow: 0 0 18px var(--mf-line);
   }
 
   .topRank .rankNumber {
