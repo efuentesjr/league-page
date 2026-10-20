@@ -44,13 +44,31 @@
 	};
 
 	const assetLabel = (a) => {
-		if (a.type === 'player') return { name: playerName(a.playerID), detail: `${a.points} pts${a.still ? '' : ' (gone)'}` };
+		const gone = a.flip ? '' : a.still ? '' : ' (gone)';
+		if (a.type === 'player') return { name: playerName(a.playerID), detail: `${a.points} pts${gone}` };
 		if (a.type === 'pick') {
 			const label = `${a.season} round ${a.round} pick${a.changedFrom ? ` (was round ${a.changedFrom})` : ''}`;
 			if (a.pending) return { name: label, detail: 'pending' };
-			return { name: `${label} → ${playerName(a.playerID)}`, detail: `${a.points} pts${a.still ? '' : ' (gone)'}` };
+			if (a.flip && !a.playerID) return { name: label, detail: `${a.points} pts` };
+			return { name: `${label} → ${playerName(a.playerID)}`, detail: `${a.points} pts${gone}` };
 		}
 		return { name: `$${a.amount} FAAB`, detail: '' };
+	};
+
+	// "flipped to Team C (2025 wk 6) for Player, Player"
+	const flipText = (flip) => {
+		const to = flip.to.map((r) => team(r, flip.season).name).join(' & ');
+		const got = flip.received
+			.map((r) => (r.type === 'player' ? playerName(r.playerID) : r.type === 'pick' ? `${r.season} R${r.round} pick${r.pending ? ' (pending)' : r.playerID ? ` → ${playerName(r.playerID)}` : ''}` : `$${r.amount} FAAB`))
+			.join(', ');
+		const share = flip.share < 1 ? ` · ${Math.round(flip.share * 100)}% share` : '';
+		return `Flipped to ${to} (${flip.season} wk ${flip.week}) for ${got || 'nothing'}${share}`;
+	};
+
+	const continuesText = (ids, trades) => {
+		const earlier = ids.map((id) => trades.find((t) => t.id === id)).filter(Boolean);
+		if (!earlier.length) return '';
+		return `Continues the ${earlier.map((t) => `${t.season} week ${t.week}`).join(' & ')} trade, counted there in trading records.`;
 	};
 
 	const isSettled = (t) => t.sides.every((s) => !['Too early', 'Pending', 'Wash', 'FAAB deal'].includes(s.grade));
@@ -89,6 +107,8 @@
 			Every trade graded on the <strong>starting-lineup points</strong> each side got from what it received,
 			counted from the trade until that player left the team. Grades update every week, so old trades keep
 			aging. Draft picks stay pending until they're used; trades younger than {MIN_WEEKS} weeks are "too early".
+			Flip a player within 4 weeks, or trade away a pick at any time, and the original trade is credited with
+			what you got for it.
 		</p>
 	</header>
 
@@ -182,10 +202,18 @@
 									<div class="sideValue">
 										{#if side.grade !== 'FAAB deal'}{side.value} pts{/if}
 									</div>
+									{#if side.continues?.length}
+										<p class="continues">{continuesText(side.continues, data.trades)}</p>
+									{/if}
 									<ul class="assets">
 										{#each side.assets as a}
 											{@const lbl = assetLabel(a)}
-											<li><span>{lbl.name}</span>{#if lbl.detail}<em>{lbl.detail}</em>{/if}</li>
+											<li>
+												<span>{lbl.name}</span>{#if lbl.detail}<em>{lbl.detail}</em>{/if}
+												{#if a.flip}
+													<small class="flip">↳ {flipText(a.flip)}</small>
+												{/if}
+											</li>
 										{:else}
 											<li class="dim">Nothing received</li>
 										{/each}
@@ -533,9 +561,23 @@
 
 	.assets li {
 		display: flex;
+		flex-wrap: wrap;
 		justify-content: space-between;
-		gap: 8px;
+		gap: 0 8px;
 		padding: 2px 0;
+	}
+
+	.flip {
+		flex-basis: 100%;
+		padding-left: 8px;
+		font-size: 0.78rem;
+		color: var(--mf-ion);
+	}
+
+	.continues {
+		margin: 2px 0 4px;
+		font-size: 0.78rem;
+		color: var(--mf-dim);
 	}
 
 	.assets li span {

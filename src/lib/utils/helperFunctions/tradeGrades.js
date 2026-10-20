@@ -18,6 +18,17 @@
 
 export const MIN_WEEKS = 3; // fewer game weeks since the trade = "Too early"
 
+/*
+ * "Follow the asset": when a team re-trades something it received, the
+ * original trade is credited with (a fair share of) what it got back.
+ *  - players: only if re-traded within FLIP_WEEKS game weeks of arriving
+ *  - picks: always (a pick never scores while you hold it)
+ *  - chains are followed up to MAX_FLIP_DEPTH trades deep
+ *  - dropped players are never followed
+ */
+export const FLIP_WEEKS = 4;
+const MAX_FLIP_DEPTH = 3;
+
 const GRADE_SCALE = [
 	[0.75, 'A+'],
 	[0.65, 'A'],
@@ -71,17 +82,34 @@ export const computeTradeGrades = ({ seasons, nowKey, overrides = {} }) => {
 
 	// when does a player leave a roster? (dropped or traded away)
 	const exits = {};
+	// where did each draft pick go? key season|round|original roster
+	const pickMoves = {};
 	allTx.forEach((t, order) => {
 		for (const [pid, rid] of Object.entries(t.drops || {})) {
-			(exits[`${pid}|${rid}`] ??= []).push({ k: t._k, order });
+			(exits[`${pid}|${rid}`] ??= []).push({ k: t._k, order, tx: t });
+		}
+		if (t.type === 'trade') {
+			for (const dp of t.draft_picks || []) {
+				(pickMoves[`${dp.season}|${dp.round}|${dp.roster_id}`] ??= []).push({
+					k: t._k,
+					order,
+					tx: t,
+					from: Number(dp.previous_owner_id),
+					to: Number(dp.owner_id)
+				});
+			}
 		}
 	});
 
-	const exitAfter = (pid, rid, fromK, fromOrder) => {
+	const nextExit = (pid, rid, fromK, fromOrder) => {
 		const list = exits[`${pid}|${rid}`] || [];
-		const hit = list.find((e) => e.k > fromK || (e.k === fromK && e.order > fromOrder));
-		return hit ? hit.k : Infinity;
+		return list.find((e) => e.k > fromK || (e.k === fromK && e.order > fromOrder)) || null;
 	};
+
+	const nextPickMove = (dp, rid, fromOrder) =>
+		(pickMoves[`${dp.season}|${dp.round}|${dp.roster_id}`] || []).find(
+			(m) => m.order > fromOrder && m.from === Number(rid)
+		) || null;
 
 	/** starting-lineup points for player on roster between keys, split into checkpoints */
 	const playerValue = (pid, rid, startK, endK, checkpoints) => {
@@ -134,6 +162,162 @@ export const computeTradeGrades = ({ seasons, nowKey, overrides = {} }) => {
 	// game weeks between two keys (for "Too early")
 	const weeksBetween = (fromK, toK) => starterWeeks.filter((w) => w.k >= fromK && w.k <= toK).length;
 
+	// ---------- asset valuation (with follow-the-asset) ----------
+	const orderOf = new Map(allTx.map((t, i) => [t, i]));
+	const followedSent = {}; // `${tradeID}|${rosterID}` -> Set of followed sent assets
+	const followedFrom = {}; // `${tradeID}|${rosterID}` -> Set of earlier trade IDs that followed into it
+	let rootTradeID = null;
+
+	const correctedRound = (tx, dp) => {
+		const fix = overrides[String(tx.transaction_id)]?.picks?.find(
+			(p) =>
+				String(p.season) === String(dp.season) &&
+				Number(p.originalOwner) === Number(dp.roster_id) &&
+				Number(p.fromRound) === Number(dp.round)
+		);
+		return fix ? { round: fix.toRound, changedFrom: fix.fromRound } : { round: dp.round, changedFrom: null };
+	};
+
+	// what a team sent in a trade (players to other teams + picks), for fair shares
+	const sentAssets = (tx, rid) => {
+		const out = [];
+		for (const [pid, from] of Object.entries(tx.drops || {})) {
+			if (Number(from) === Number(rid) && tx.adds?.[pid] != null && Number(tx.adds[pid]) !== Number(rid)) {
+				out.push(`p:${pid}`);
+			}
+		}
+		for (const dp of tx.draft_picks || []) {
+			if (Number(dp.previous_owner_id) === Number(rid)) out.push(`k:${dp.season}|${dp.round}|${dp.roster_id}`);
+		}
+		return out;
+	};
+
+	const round1 = (x) => Math.round(x * 10) / 10;
+
+	/** value of everything `rid` received in `tx`, times `share` */
+	const evalFlip = (tx, rid, sentKey, cps, depth) => {
+		const order = orderOf.get(tx);
+		const sent = sentAssets(tx, rid);
+		const share = sent.length ? 1 / sent.length : 1;
+		const id = `${tx.transaction_id}|${rid}`;
+		(followedSent[id] ??= new Set()).add(sentKey);
+		if (rootTradeID && String(rootTradeID) !== String(tx.transaction_id)) {
+			(followedFrom[id] ??= new Set()).add(rootTradeID);
+		}
+
+		const received = [];
+		for (const [pid, to] of Object.entries(tx.adds || {})) {
+			if (Number(to) === Number(rid)) received.push(evalPlayer(pid, rid, tx._k, order, cps, depth));
+		}
+		for (const dp of tx.draft_picks || []) {
+			if (Number(dp.owner_id) === Number(rid)) received.push(evalPick(tx, dp, rid, order, cps, depth));
+		}
+		for (const b of tx.waiver_budget || []) {
+			if (Number(b.receiver) === Number(rid)) received.push({ type: 'faab', amount: b.amount, total: 0, at: cps.map(() => 0) });
+		}
+
+		const total = received.reduce((t, r) => t + r.total, 0) * share;
+		const at = cps.map((_, i) => received.reduce((t, r) => t + r.at[i], 0) * share);
+		return {
+			total,
+			at,
+			pending: received.some((r) => r.pending),
+			resolved: received.some((r) => r.resolved),
+			summary: {
+				tradeID: String(tx.transaction_id),
+				season: tx._season,
+				week: Number(tx.leg || 1),
+				to: (tx.roster_ids || []).map(Number).filter((r) => r !== Number(rid)),
+				share: round1(share * 100) / 100,
+				received: received.map(describe)
+			}
+		};
+	};
+
+	const describe = (r) => {
+		const base = { type: r.type, points: round1(r.total) };
+		if (r.type === 'player') return { ...base, playerID: r.playerID, flip: r.flip || null };
+		if (r.type === 'pick')
+			return { ...base, season: r.season, round: r.round, pending: r.pending && !r.resolved, playerID: r.playerID || null, flip: r.flip || null };
+		return { type: 'faab', amount: r.amount };
+	};
+
+	/** a player `rid` got at (acqK, acqOrder) */
+	const evalPlayer = (pid, rid, acqK, acqOrder, cps, depth) => {
+		const exit = nextExit(pid, rid, acqK, acqOrder);
+		const v = playerValue(pid, rid, acqK, exit ? exit.k : Infinity, cps);
+		const out = {
+			type: 'player',
+			playerID: pid,
+			total: v.total,
+			at: v.at,
+			held: v.total,
+			starts: v.weeks,
+			still: !exit,
+			pending: false,
+			resolved: true,
+			flip: null
+		};
+		if (exit && exit.tx.type === 'trade' && depth < MAX_FLIP_DEPTH) {
+			const heldWeeks = starterWeeks.filter((w) => w.k >= acqK && w.k < exit.k).length;
+			if (heldWeeks <= FLIP_WEEKS) {
+				const f = evalFlip(exit.tx, rid, `p:${pid}`, cps, depth + 1);
+				out.total += f.total;
+				f.at.forEach((x, i) => (out.at[i] += x));
+				out.pending = f.pending;
+				out.resolved = f.resolved || v.total > 0;
+				out.flip = f.summary;
+			}
+		}
+		return out;
+	};
+
+	/** a draft pick `rid` got in `tx` */
+	const evalPick = (tx, dp, rid, acqOrder, cps, depth) => {
+		const { round, changedFrom } = correctedRound(tx, dp);
+		const out = {
+			type: 'pick',
+			season: dp.season,
+			round,
+			changedFrom,
+			from: dp.roster_id,
+			total: 0,
+			at: cps.map(() => 0),
+			pending: false,
+			resolved: false,
+			playerID: null,
+			flip: null
+		};
+
+		// traded away before it was used: always follow
+		const move = nextPickMove(dp, rid, acqOrder);
+		if (move) {
+			if (depth < MAX_FLIP_DEPTH) {
+				const f = evalFlip(move.tx, rid, `k:${dp.season}|${dp.round}|${dp.roster_id}`, cps, depth + 1);
+				Object.assign(out, { total: f.total, at: f.at, pending: f.pending, resolved: f.resolved, flip: f.summary });
+			}
+			return out;
+		}
+
+		const made = resolvePick({ ...dp, round });
+		if (!made) {
+			out.pending = true;
+			return out;
+		}
+		const pv = evalPlayer(made.playerID, rid, key(dp.season, 0), -1, cps, depth);
+		Object.assign(out, {
+			total: pv.total,
+			at: pv.at,
+			playerID: made.playerID,
+			starts: pv.starts,
+			still: pv.still,
+			pending: pv.pending,
+			resolved: true,
+			flip: pv.flip
+		});
+		return out;
+	};
+
 	// ---------- grade every trade ----------
 	const trades = [];
 	allTx.forEach((t, order) => {
@@ -149,85 +333,60 @@ export const computeTradeGrades = ({ seasons, nowKey, overrides = {} }) => {
 		const seasonEndK = key(season, 99);
 		const checkpoints = [monthK, Math.min(seasonEndK, nowKey), nowKey];
 
+		rootTradeID = String(t.transaction_id);
 		const sides = (t.roster_ids || []).map((rid) => {
-			const assets = [];
-			const sum = { total: 0, at: checkpoints.map(() => 0) };
-			let pending = 0;
-
+			const evaluated = [];
 			for (const [pid, to] of Object.entries(t.adds || {})) {
-				if (Number(to) !== Number(rid)) continue;
-				const end = exitAfter(pid, rid, tradeK, order);
-				const v = playerValue(pid, rid, tradeK, end, checkpoints);
-				sum.total += v.total;
-				v.at.forEach((x, i) => (sum.at[i] += x));
-				assets.push({
-					type: 'player',
-					playerID: pid,
-					points: Math.round(v.total * 10) / 10,
-					starts: v.weeks,
-					still: end === Infinity
-				});
+				if (Number(to) === Number(rid)) evaluated.push(evalPlayer(pid, rid, tradeK, order, checkpoints, 0));
 			}
-
-			const fix = overrides[String(t.transaction_id)];
-			for (const rawPick of t.draft_picks || []) {
-				if (Number(rawPick.owner_id) !== Number(rid)) continue;
-				// commissioner/conditional corrections (e.g. a 1st that became a 3rd)
-				const change = fix?.picks?.find(
-					(p) =>
-						String(p.season) === String(rawPick.season) &&
-						Number(p.originalOwner) === Number(rawPick.roster_id) &&
-						Number(p.fromRound) === Number(rawPick.round)
-				);
-				const pick = change ? { ...rawPick, round: change.toRound } : rawPick;
-				const changedFrom = change ? change.fromRound : null;
-				const made = resolvePick(pick);
-				if (!made) {
-					pending++;
-					assets.push({ type: 'pick', season: pick.season, round: pick.round, changedFrom, from: pick.roster_id, pending: true });
-					continue;
-				}
-				const draftK = key(pick.season, 0);
-				const end = exitAfter(made.playerID, rid, draftK, -1);
-				const v = playerValue(made.playerID, rid, draftK, end, checkpoints);
-				sum.total += v.total;
-				v.at.forEach((x, i) => (sum.at[i] += x));
-				assets.push({
-					type: 'pick',
-					season: pick.season,
-					round: pick.round,
-					changedFrom,
-					from: pick.roster_id,
-					pending: false,
-					playerID: made.playerID,
-					points: Math.round(v.total * 10) / 10,
-					starts: v.weeks,
-					still: end === Infinity
-				});
+			for (const dp of t.draft_picks || []) {
+				if (Number(dp.owner_id) === Number(rid)) evaluated.push(evalPick(t, dp, rid, order, checkpoints, 0));
 			}
-
 			for (const b of t.waiver_budget || []) {
-				if (Number(b.receiver) === Number(rid)) assets.push({ type: 'faab', amount: b.amount });
+				if (Number(b.receiver) === Number(rid)) {
+					evaluated.push({ type: 'faab', amount: b.amount, total: 0, at: checkpoints.map(() => 0), pending: false, resolved: false });
+				}
 			}
 
+			const assets = evaluated.map((a) => {
+				if (a.type === 'faab') return { type: 'faab', amount: a.amount };
+				const common = {
+					points: round1(a.total),
+					starts: a.starts ?? 0,
+					still: a.still ?? false,
+					flip: a.flip
+				};
+				if (a.type === 'player') {
+					return { type: 'player', playerID: a.playerID, held: round1(a.held), ...common };
+				}
+				return {
+					type: 'pick',
+					season: a.season,
+					round: a.round,
+					changedFrom: a.changedFrom,
+					from: a.from,
+					pending: a.pending && !a.resolved,
+					playerID: a.playerID,
+					...common
+				};
+			});
+
+			const valued = evaluated.filter((a) => a.type !== 'faab');
 			return {
 				rosterID: Number(rid),
 				managers: managersBySeasonRoster[season]?.[rid] || [],
 				assets,
-				pending,
-				value: sum.total,
-				at: sum.at
+				pending: valued.filter((a) => a.pending && !a.resolved).length,
+				onlyPending: valued.length > 0 && valued.some((a) => a.pending) && !valued.some((a) => a.resolved),
+				value: valued.reduce((x, a) => x + a.total, 0),
+				at: checkpoints.map((_, i) => valued.reduce((x, a) => x + a.at[i], 0))
 			};
 		});
 
 		const weeks = weeksBetween(tradeK, nowKey);
 		// sides that can't be judged by points
 		const onlyFaab = sides.map((side) => side.assets.length > 0 && side.assets.every((a) => a.type === 'faab'));
-		const onlyPending = sides.map(
-			(side) =>
-				side.pending > 0 &&
-				side.assets.every((a) => (a.type === 'pick' ? a.pending : a.type === 'faab'))
-		);
+		const onlyPending = sides.map((side) => side.onlyPending);
 		const faabDeal = onlyFaab.some(Boolean);
 		const waitingOnPicks = onlyPending.some(Boolean);
 
@@ -275,6 +434,21 @@ export const computeTradeGrades = ({ seasons, nowKey, overrides = {} }) => {
 		});
 	});
 
+	// a side whose every sent asset was followed from an earlier trade is a
+	// continuation of that trade: show it, but don't count it twice in records
+	const txByID = new Map(allTx.map((t) => [String(t.transaction_id), t]));
+	for (const tr of trades) {
+		const tx = txByID.get(tr.id);
+		for (const side of tr.sides) {
+			const id = `${tr.id}|${side.rosterID}`;
+			const sent = sentAssets(tx, side.rosterID);
+			const followed = followedSent[id];
+			const earlier = followedFrom[id] ? [...followedFrom[id]] : [];
+			side.continues = earlier;
+			side.countsInRecords = !(sent.length > 0 && earlier.length > 0 && followed && sent.every((k) => followed.has(k)));
+		}
+	}
+
 	trades.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
 	// ---------- manager trading records ----------
@@ -287,6 +461,7 @@ export const computeTradeGrades = ({ seasons, nowKey, overrides = {} }) => {
 			const otherAvg = others.reduce((a, o) => a + o.value, 0) / Math.max(1, others.length);
 			for (const m of side.managers) {
 				const rec = (managers[m] ??= { name: names[m] || 'Unknown', trades: 0, won: 0, lost: 0, even: 0, net: 0 });
+				if (!side.countsInRecords) continue; // counted in the earlier trade it continues
 				rec.trades++;
 				if (!graded) continue;
 				rec.net += side.value - otherAvg;
