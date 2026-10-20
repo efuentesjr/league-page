@@ -1193,27 +1193,6 @@
         <img src="/lottery-night.webp" alt="MFFL Draft Lottery Night: how the draft order is drawn, from pick 16 down to pick 1" loading="lazy" width="1400" height="1372" />
       </a>
 
-      <h4>Earning ping-pong balls</h4>
-      <div class="ledger-wrap">
-        <table class="draft-order-table compact-mobile-table">
-          <thead>
-            <tr class="table-header">
-              <th>Earned by</th>
-              <th>Balls</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Regular-season 8th seed</td><td>1</td></tr>
-            <tr><td>Regular-season 11th seed</td><td>3</td></tr>
-            <tr><td>Regular-season 12th seed</td><td>2</td></tr>
-            <tr><td>Regular-season 13th seed</td><td>1</td></tr>
-            <tr><td>Toilet Bowl 1st place</td><td>3</td></tr>
-            <tr><td>Toilet Bowl 2nd place</td><td>2</td></tr>
-            <tr><td>Toilet Bowl 3rd place</td><td>1</td></tr>
-            <tr><td>FAAB auction winner (see 3.5)</td><td>1 (pick #1 only)</td></tr>
-          </tbody>
-        </table>
-      </div>
       <p>A team keeps every ball it earns, so one team can hold balls from more than one line.</p>
 
       <h4>The 8th seed</h4>
