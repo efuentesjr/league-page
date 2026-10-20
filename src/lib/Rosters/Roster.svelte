@@ -1,7 +1,5 @@
 <script>
 	import { gotoManager } from '$lib/utils/helper';
-  	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
-	import { Icon } from '@smui/icon-button';
 	import RosterRow from "./RosterRow.svelte"
 	
 	export let roster, leagueTeamManagers, startersAndReserve, players, rosterPositions, division, expanded;
@@ -104,209 +102,251 @@
 
 	$: record = buildRecord(roster);
 
-	let selected = "0px";
-	let status = "minimized";
-	const toggleSelected = () => {
-		selected = selected == "0px" ? calcHeight() + "px" : "0px";
-		status = status == "minimized" ? "expanded" : "minimized";
-	}
+	let open = false;
+	const toggleSelected = () => (open = !open);
+	$: open = !!expanded;
 
-	let innerWidth;
-
-	const calcHeight = () => {
-		const multiplier = 52;
-		const benchLength = finalBench.length * multiplier + 53;
-		let irLength = 0;
-		if(finalIR) {
-			irLength = finalIR.length * multiplier + 52;
-		}
-		return benchLength + irLength;
-	}
-
-	$: {
-		selected = expanded ? calcHeight() + "px" : "0px";
-		status = expanded ? "expanded" : "minimized";
-	}
-
+	$: wins = record.filter((r) => r === 'green').length;
+	$: losses = record.filter((r) => r === 'red').length;
+	$: ties = record.length - wins - losses;
+	$: benchCount = finalBench.length + (finalIR ? finalIR.length : 0);
 </script>
 
-<svelte:window bind:innerWidth={innerWidth} />
-
 <style>
-	h5 {
-    text-align: center;
-		margin: 0.2em auto;
-	}
-	
-	.teamAvatar {
-		vertical-align: middle;
-		border-radius: 50%;
-		height: 40px;
-		margin-right: 15px;
-		border: 0.25px solid #777;
-	}
-
+	/* ============================================================
+	   TEAM ROSTER CARD — same panel language as Power Rankings
+	   ============================================================ */
 	.team {
-		margin: 4px 10px 10px;
+		--divColor: var(--mf-ion);
+		width: 100%;
+		max-width: 400px;
+		margin: 0 auto;
+		box-sizing: border-box;
+		font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+		color: var(--mf-text);
+		background:
+			linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 24px,
+			linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 24px 100%,
+			var(--mf-bg);
+		border: 1px solid var(--mf-line);
+		clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
 	}
 
-	:global(.clickable) {
+	.div-2 { --divColor: var(--mf-plasma); }
+	.div-3 { --divColor: #00ceb8; }
+	.div-4 { --divColor: #ffae58; }
+
+	.teamHeader {
+		display: grid;
+		grid-template-columns: 48px minmax(0, 1fr);
+		align-items: center;
+		gap: 12px;
+		padding: 12px 18px 10px 12px;
+		background:
+			radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--divColor) 28%, transparent), transparent 70%),
+			var(--mf-panel);
+		border-bottom: 1px solid var(--mf-line);
+		border-top: 2px solid var(--divColor);
 		cursor: pointer;
 	}
 
-	:global(.teamInner) {
-		box-shadow: 0px 3px 3px -2px var(--boxShadowOne), 0px 3px 4px 0px var(--boxShadowTwo), 0px 1px 8px 0px var(--boxShadowThree);
-		display: block;
-	    margin: 0 auto;
+	.teamHeader:hover .teamName,
+	.teamHeader:focus-visible .teamName {
+		color: var(--mf-ion);
 	}
 
-	.rosterBench{
+	.teamHeader:focus-visible {
+		outline: 2px solid var(--mf-ion);
+		outline-offset: -2px;
+	}
+
+	.teamAvatar {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		border: 1px solid var(--divColor);
+		box-shadow: 0 0 10px color-mix(in srgb, var(--divColor) 55%, transparent);
+		object-fit: cover;
+	}
+
+	.teamName {
+		margin: 0;
+		font-size: 1.25rem;
+		font-weight: 700;
+		line-height: 1.1;
+		letter-spacing: 0.01em;
 		overflow: hidden;
-		width: 100%;
-		display: block;
-		transition: max-height 0.7s ease-in-out;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		transition: color 0.15s ease;
 	}
 
-	:global(.r_1) {
-		text-align: center;
-		background-color: var(--r1);
-	}
-
-	:global(.r_2) {
-		text-align: center;
-		background-color: var(--r2);
-	}
-
-	:global(.r_3) {
-		text-align: center;
-		background-color: var(--r3);
-	}
-
-	.record {
-		width: 100%;
-		margin-bottom: 5px;
+	.teamMeta {
+		margin-top: 4px;
 		display: flex;
-		justify-content: space-around;
+		align-items: center;
+		gap: 8px;
+		font-size: 0.78rem;
+		color: var(--mf-dim);
+	}
+
+	.teamMeta strong {
+		color: var(--mf-text);
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* record: one tick per game, oldest → newest */
+	.record {
+		display: flex;
+		gap: 2px;
+		flex: 1;
+		max-width: 160px;
 	}
 
 	.result {
-		width: 11px;
+		flex: 1;
+		height: 6px;
+		max-width: 12px;
+		background: var(--mf-line);
 	}
 
-	h3 {
-		font-size: 1.5em;
-		font-weight: 500;
-		margin: 12px 0;
+	.result.green { background: var(--mf-up); box-shadow: 0 0 4px color-mix(in srgb, var(--mf-up) 60%, transparent); }
+	.result.red { background: var(--mf-down); }
+
+	.sectionLabel {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 6px 14px;
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--mf-dim);
+		background: var(--mf-panel-2);
+		border-bottom: 1px solid var(--mf-line);
 	}
 
-	h5 {
-		font-size: 1.2em;
-		text-align: center;
+	.rows {
+		display: flex;
+		flex-direction: column;
 	}
 
-	@media (max-width: 500px) {
-		.team {
-			font-size: 0.9em;
-		}
-		.result {
-			width: 9px;
-		}
-
-		h3 {
-			font-size: 1.3em;
-			margin: 3px 0;
-		}
-
-		h5 {
-			font-size: 1.1em;
-		}
-	}
-
-	@media (max-width: 340px) {
-		h3 {
-			font-size: 1.1em;
-			margin: 6px 0;
-		}
-
-		h5 {
-			font-size: 1em;
-		}
-	}
-
-	@media (max-width: 400px) {
-		.team {
-			margin: 4px auto 10px;
-		}
-	}
-
-	:global(.icon) {
-		vertical-align: middle;
-	}
-
-	.italic {
-		color: #aaa;
-		font-style: italic;
-	}
-
-	:global(.interactive) {
-		vertical-align: middle;
+	.benchToggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		padding: 10px 14px;
+		box-sizing: border-box;
+		font: inherit;
+		font-size: 0.8rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--mf-ion);
+		background: linear-gradient(90deg, color-mix(in srgb, var(--mf-ion) 12%, transparent), transparent 70%), var(--mf-panel-2);
+		border: 0;
+		border-top: 1px solid var(--mf-line);
 		cursor: pointer;
 	}
 
-	:global(.bench) {
-		background-color: var(--ir);
+	.benchToggle:hover,
+	.benchToggle:focus-visible {
+		background-color: var(--mf-panel);
+		outline: none;
+		box-shadow: inset 0 0 0 1px var(--mf-line-strong);
+	}
+
+	.benchCount {
+		color: var(--mf-dim);
+		font-weight: 500;
+		letter-spacing: 0.04em;
+	}
+
+	.chevron {
+		display: inline-block;
+		margin-left: 6px;
+		transition: transform 0.2s ease;
+	}
+
+	.open .chevron {
+		transform: rotate(180deg);
+	}
+
+	/* smooth open/close without measuring heights */
+	.benchWrap {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.45s ease;
+	}
+
+	.benchWrap.open {
+		grid-template-rows: 1fr;
+	}
+
+	.benchInner {
+		overflow: hidden;
+		min-height: 0;
+	}
+
+	.benchInner .sectionLabel:first-child {
+		border-top: 1px solid var(--mf-line);
 	}
 </style>
 
-<div class="team">
-	<DataTable class="teamInner" table$aria-label="Team Name" style="width: {innerWidth * 0.95 > 380 ? 380 : innerWidth * 0.95}px;" >
-		<Head> <!-- Team name  -->
-			<Row>
-				<Cell colspan=4 class="r_{division} clickable">
-					<h3 onclick={() => gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}>
-						<img alt="team avatar" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
-						{team?.name ? team.name : 'No Manager'}
-					</h3>
-
-					<div class="record">
+<div class="team div-{division}" class:open>
+	<div
+		class="teamHeader"
+		role="link"
+		tabindex="0"
+		onclick={() => gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}
+		onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}
+	>
+		<img alt="" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
+		<div>
+			<h3 class="teamName">{team?.name ? team.name : 'No Manager'}</h3>
+			<div class="teamMeta">
+				{#if record.length}
+					<span><strong>{wins}-{losses}{ties ? `-${ties}` : ''}</strong></span>
+					<div class="record" aria-label="Game by game results">
 						{#each record as result}
-							<img alt="match result" class="result" src="/{result}.png" />
+							<span class="result {result}"></span>
 						{/each}
 					</div>
-				</Cell>
-			</Row>
-		</Head>
-		<Body>
-			<!-- 	Starters	 -->
-			{#each finalStarters as starter}
-				<RosterRow player={starter} />
-			{/each}
-			<Row class="interactive" onclick={toggleSelected}>
-				<Cell colspan=4 class="{division}"><h5><Icon class="material-icons icon">king_bed</Icon> Bench <span class="italic">({status})</span></h5></Cell>
-			</Row>
-		</Body>
-	</DataTable>
-	<div class="rosterBench" style="max-height: {selected}">
-		<DataTable class="teamInner" style="width: 380px" >
-			<Body class="bench">
-				<!-- 	Bench	 -->
+				{/if}
+			</div>
+		</div>
+	</div>
+
+	<div class="sectionLabel"><span>Starters</span><span>{finalStarters.length}</span></div>
+	<div class="rows">
+		{#each finalStarters as starter}
+			<RosterRow player={starter} />
+		{/each}
+	</div>
+
+	<button type="button" class="benchToggle" aria-expanded={open} onclick={toggleSelected}>
+		<span>{open ? 'Hide bench' : 'Show bench'}<span class="chevron" aria-hidden="true">▾</span></span>
+		<span class="benchCount">{benchCount} players</span>
+	</button>
+
+	<div class="benchWrap" class:open>
+		<div class="benchInner">
+			<div class="sectionLabel"><span>Bench</span><span>{finalBench.length}</span></div>
+			<div class="rows">
 				{#each finalBench as bench}
 					<RosterRow player={bench} />
 				{/each}
-				
-				<!-- 	IR	 -->
-				{#if finalIR}
-					<Row>
-					<Cell colspan=4 ><h5><Icon class="material-icons icon">healing</Icon> Injured Reserve</h5></Cell>
-					</Row>
+			</div>
+			{#if finalIR}
+				<div class="sectionLabel"><span>Injured reserve</span><span>{finalIR.length}</span></div>
+				<div class="rows">
 					{#each finalIR as ir}
 						<RosterRow player={ir} />
 					{/each}
-				{/if}
-				<Row class="interactive" onclick={toggleSelected}>
-					<Cell colspan=4 class="{division}"><h5><Icon class="material-icons icon">close_fullscreen</Icon>Close Bench</h5></Cell>
-				</Row>
-			</Body>
-		</DataTable>
+				</div>
+			{/if}
+		</div>
 	</div>
 </div>

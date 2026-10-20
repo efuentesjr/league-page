@@ -1,245 +1,200 @@
 <script>
-	import { Row, Cell } from '@smui/data-table';
-	
 	export let player;
 
 	const playerSLotClass = player.slot.replace('/', '').replace('SUPER_', 'S-').replace('REC_', 'R-');
 	const playerSlot = player.slot.replace('SUPER_', 'S ').replace('REC_', 'R ');
+	const empty = player.name == 'Empty';
 </script>
 
 <style>
-	.playerAvatar {
-        position: relative;
-		vertical-align: middle;
-		height: 40px;
-		width: 40px;
-		background-position: center;
-		background-repeat: no-repeat;
-		background-size: auto 45px;
-        overflow: visible;
+	.row {
+		--posColor: var(--mf-dim);
+		display: grid;
+		grid-template-columns: 54px 44px minmax(0, 1fr);
+		align-items: center;
+		gap: 10px;
+		min-height: 48px;
+		padding-right: 12px;
+		box-sizing: border-box;
+		background:
+			linear-gradient(90deg, color-mix(in srgb, var(--posColor) 16%, transparent), transparent 45%),
+			var(--mf-panel);
+		border-bottom: 1px solid var(--mf-line);
+		font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+		transition: background-color 0.15s ease;
 	}
-    .teamLogo {
-        width: 21px;
-        position: absolute;
-        top: 0;
-        right: -16px;
-    }
+
+	.row:hover {
+		background-color: var(--mf-panel-2);
+	}
+
+	.row.empty {
+		grid-template-columns: 54px minmax(0, 1fr);
+	}
+
+	/* slot chip: angled slab in the slot's colors (same shape as the home rank chip) */
 	.pos {
-		display: inline-flex;
+		align-self: stretch;
+		display: flex;
 		align-items: center;
 		justify-content: center;
-		border-radius: 8px;
-		width: 46px;
-		height: 32px;
-	}
-
-	.QB {
-		background-color: var(--QB);
-	}
-
-	.WR {
-		background-color: var(--WR);
-	}
-
-	.RB {
-		background-color: var(--RB);
-	}
-
-	.TE {
-		background-color: var(--TE);
-	}
-
-	.FLEX {
-		background: linear-gradient(to right, var(--WR), var(--WR) 33.33%, var(--RB) 33.33%, var(--RB) 66.66%, var(--TE) 66.66%);
-	}
-
-	.WRRB {
-		background: linear-gradient(to right, var(--WR), var(--WR) 50%, var(--RB) 50%);
-	}
-
-	.K {
-		background-color: var(--K);
-	}
-
-	.S-FLEX {
-		background: linear-gradient(to right, var(--WR), var(--WR) 25%, var(--RB) 25%, var(--RB) 50%, var(--TE) 50%, var(--TE) 75%, var(--QB));
-		background-color: #8f66ff;
-	}
-
-	.R-FLEX {
-		background: linear-gradient(to right, var(--WR), var(--WR) 50%, var(--TE) 50%);
-	}
-
-	.DEF {
-		background-color: var(--DEF);
-	}
-
-	.DL {
-		background-color: var(--DL);
-	}
-
-	.LB {
-		background-color: var(--LB);
-	}
-
-	.DB {
-		background-color: var(--DB);
-	}
-
-	.IDP {
-		background: linear-gradient(to right, var(--DL), var(--DL) 33.33%, var(--LB) 33.33%, var(--LB) 66.66%, var(--DB) 66.66%);
-	}
-
-	.BN {
-		background-color: var(--BN);
-	}
-
-	:global(.slot) {
-		width: 22px !important;
-    	padding: 1px 6px 1px 8px !important;
-	}
-	:global(.avatar) {
-		width: 45px;
-	}
-	:global(.playerCell) {
-		height: 45px !important;
-		overflow-y: hidden !important;
-	}
-
-	:global(.nameCell) {
-    	padding: 0 5px;
-	}
-
-	span.nickname {
-		color: #888;
-		font-style: italic;
-		font-size: 0.8em;
-	}
-
-	:global(.injury) {
-		font-style: italic;
+		padding-right: 6px;
+		font-size: 0.78rem;
 		font-weight: 700;
-		font-size: 0.7em;
-		margin-left: 0.5em;
-		vertical-align:super;
+		letter-spacing: 0.02em;
+		color: #fff;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+		clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
+		background: var(--BN);
+		white-space: nowrap;
 	}
 
-	:global(.Q) {
-		color: #c09111;
+	.QB { background: linear-gradient(160deg, var(--QB), color-mix(in srgb, var(--QB) 45%, #000)); }
+	.WR { background: linear-gradient(160deg, var(--WR), color-mix(in srgb, var(--WR) 45%, #000)); }
+	.RB { background: linear-gradient(160deg, var(--RB), color-mix(in srgb, var(--RB) 45%, #000)); }
+	.TE { background: linear-gradient(160deg, var(--TE), color-mix(in srgb, var(--TE) 45%, #000)); }
+	.K { background: var(--K); }
+	.DEF { background: var(--DEF); color: #222; text-shadow: none; }
+	.DL { background: var(--DL); }
+	.LB { background: var(--LB); }
+	.DB { background: var(--DB); }
+	.FLEX { background: linear-gradient(160deg, var(--WR), var(--WR) 33%, var(--RB) 33%, var(--RB) 66%, var(--TE) 66%); }
+	.WRRB { background: linear-gradient(160deg, var(--WR), var(--WR) 50%, var(--RB) 50%); }
+	.S-FLEX { background: linear-gradient(160deg, var(--WR), var(--WR) 25%, var(--RB) 25%, var(--RB) 50%, var(--TE) 50%, var(--TE) 75%, var(--QB) 75%); }
+	.R-FLEX { background: linear-gradient(160deg, var(--WR), var(--WR) 50%, var(--TE) 50%); }
+	.IDP { background: linear-gradient(160deg, var(--DL), var(--DL) 33%, var(--LB) 33%, var(--LB) 66%, var(--DB) 66%); }
+	.BN {
+		background: linear-gradient(160deg, color-mix(in srgb, var(--mf-ion) 35%, var(--mf-panel-2)), var(--mf-panel-2));
+		color: var(--mf-text);
 	}
 
-	:global(.OUT) {
-		color: #851313;
+	.playerAvatar {
+		position: relative;
+		width: 38px;
+		height: 38px;
+		border-radius: 50%;
+		background-color: var(--mf-panel-2);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		border: 1px solid var(--posColor);
+		box-shadow: 0 0 6px color-mix(in srgb, var(--posColor) 45%, transparent);
 	}
 
-	:global(.IR) {
-		color: #851313;
+	.teamLogo {
+		position: absolute;
+		width: 18px;
+		height: 18px;
+		right: -7px;
+		bottom: -4px;
+		border-radius: 50%;
+		background: var(--mf-panel);
+		border: 1px solid var(--mf-line);
+		padding: 1px;
+		box-sizing: border-box;
 	}
 
-	:global(.PUP) {
-		color: #851313;
+	.info {
+		min-width: 0;
+		padding: 5px 0;
 	}
 
-    .additionalInfo {
-        display: inline-block;
-        font-size: 0.7em;
-    }
-
-    /* position text colors */
-	.text-QB {
-		color: var(--QB);
+	.name {
+		font-size: 0.92rem;
+		font-weight: 600;
+		line-height: 1.15;
+		color: var(--mf-text);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
-	.text-WR {
-		color: var(--WR);
+	.emptyName {
+		color: var(--mf-dim);
+		font-style: italic;
+		font-weight: 500;
 	}
 
-	.text-RB {
-		color: var(--RB);
+	.additionalInfo {
+		margin-top: 2px;
+		font-size: 0.72rem;
+		color: var(--mf-dim);
+		letter-spacing: 0.02em;
 	}
 
-	.text-TE {
-		color: var(--TE);
+	.posText {
+		font-weight: 700;
+		color: var(--posColor);
 	}
 
-	.text-K {
-		color: var(--K);
+	.nickname {
+		display: block;
+		color: var(--mf-dim);
+		font-style: italic;
+		font-size: 0.72rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
-	.text-DEF {
-		color: var(--DEF);
+	/* injury tags (rendered inside the name HTML) */
+	.row :global(.injury) {
+		display: inline-block;
+		margin-left: 6px;
+		padding: 0 4px;
+		font-size: 0.65rem;
+		font-weight: 700;
+		font-style: normal;
+		line-height: 1.4;
+		vertical-align: 2px;
+		border: 1px solid currentColor;
 	}
 
-	.text-DL {
-		color: var(--DL);
-	}
+	.row :global(.Q) { color: #e0b03a; }
+	.row :global(.OUT),
+	.row :global(.IR),
+	.row :global(.PUP) { color: var(--mf-down); }
 
-	.text-LB {
-		color: var(--LB);
-	}
-
-	.text-DB {
-		color: var(--DB);
-	}
-
-	@media (max-width: 460px) {
-		:global(.nameCell) {
-			font-size: 0.9em;
+	@media (max-width: 360px) {
+		.row {
+			grid-template-columns: 46px 38px minmax(0, 1fr);
+			gap: 8px;
+		}
+		.row.empty {
+			grid-template-columns: 46px minmax(0, 1fr);
+		}
+		.pos {
+			font-size: 0.7rem;
+		}
+		.playerAvatar {
+			width: 34px;
+			height: 34px;
 		}
 	}
-
-    @media (max-width: 355px) {
-        :global(.slot) {
-            width: 22px !important;
-            padding: 1px 2px 1px 2px !important;
-        }
-        :global(.avatar) {
-            padding: 0px 16px 0px 2px !important;
-        }
-        .pos {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            width: 42px;
-            height: 24px;
-            font-size: 0.8em;
-        }
-		:global(.nameCell) {
-			font-size: 0.85em;
-		}
-    }
-
 </style>
 
-<Row>
-	<Cell class="slot playerCell"><span class="pos {playerSLotClass}">{playerSlot}</span></Cell>
-	{#if player.avatar}
-		<Cell class="avatar playerCell">
-            <div class="playerAvatar" style="{player.avatar}">
-                {#if player.team && player.poss != "DEF"}
-                    <img src="https://sleepercdn.com/images/team_logos/nfl/{player.team.toLowerCase()}.png" class="teamLogo" alt="team logo"/>
-                {/if}
-            </div>
-        </Cell>
+<div class="row" class:empty style={player.poss ? `--posColor: var(--${player.poss}, var(--mf-dim))` : ''}>
+	<span class="pos {playerSLotClass}">{playerSlot}</span>
+	{#if !empty && player.avatar}
+		<div class="playerAvatar" style={player.avatar}>
+			{#if player.team && player.poss != 'DEF'}
+				<img src="https://sleepercdn.com/images/team_logos/nfl/{player.team.toLowerCase()}.png" class="teamLogo" alt="" />
+			{/if}
+		</div>
 	{/if}
-	<Cell class="playerCell nameCell" colspan={player.name != "Empty" ? 1 : 3}>
-        <div class="info">
-            <!-- name -->
-            {@html player.name}
-            <!-- name -->
-            {#if player.poss !== "DEF"}
-                <div class="additionalInfo">
-                    <span class="text-{player.poss}" >{@html player.poss}</span>
-                    {#if player.team}
-                        &nbsp;-&nbsp;
-                        {player.team}
-                    {/if}
-                </div>
-            {/if}
-        </div>
-        {#if player.nickname}
-            <span class="nickname">"{player.nickname}</span>
-        {/if}
-    </Cell>
-</Row>
+	<div class="info">
+		{#if empty}
+			<div class="name emptyName">Empty</div>
+		{:else}
+			<div class="name">{@html player.name}</div>
+			{#if player.poss !== 'DEF'}
+				<div class="additionalInfo">
+					<span class="posText">{player.poss}</span>{#if player.team} · {player.team}{/if}
+				</div>
+			{/if}
+			{#if player.nickname}
+				<span class="nickname">"{player.nickname}"</span>
+			{/if}
+		{/if}
+	</div>
+</div>
