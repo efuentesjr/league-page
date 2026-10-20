@@ -180,7 +180,7 @@
     }
 
     .divider.lead-home { --lead: var(--mf-ion); }
-    .divider.lead-away { --lead: var(--mf-plasma); }
+    .divider.lead-away { --lead: var(--mf-ion); }
     .divider.lead-tied { --lead: var(--mf-dim); }
 
     .home {
@@ -199,12 +199,13 @@
         justify-content: flex-end;
         right: 0;
         text-align: right;
-        background: linear-gradient(270deg, color-mix(in srgb, var(--mf-plasma) 26%, var(--mf-panel)), var(--mf-panel-2));
+        background: linear-gradient(270deg, color-mix(in srgb, var(--mf-ion) 22%, var(--mf-panel)), var(--mf-panel-2));
     }
 
+    /* the leading team glows neon blue on either side */
     :global(.awayGlow) {
-        box-shadow: 0 0 10px 2px color-mix(in srgb, var(--mf-plasma) 55%, transparent);
-        background: linear-gradient(270deg, color-mix(in srgb, var(--mf-plasma) 55%, var(--mf-panel)), color-mix(in srgb, var(--mf-plasma) 22%, var(--mf-panel))) !important;
+        box-shadow: 0 0 10px 2px var(--mf-ion-glow);
+        background: linear-gradient(270deg, color-mix(in srgb, var(--mf-ion) 45%, var(--mf-panel)), color-mix(in srgb, var(--mf-ion) 18%, var(--mf-panel))) !important;
     }
 
     .name {
