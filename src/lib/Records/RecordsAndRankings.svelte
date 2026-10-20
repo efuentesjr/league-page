@@ -155,6 +155,8 @@
     .recordsScope :global(table) {
         width: 100%;
         background: transparent;
+        table-layout: auto;
+        white-space: normal;
     }
 
     .recordsScope :global(.mdc-data-table__row),
