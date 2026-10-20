@@ -872,7 +872,7 @@
 			padding: 12px 12px;
 		}
 
-		.teamCell {
+		.row .teamCell {
 			grid-area: team;
 		}
 
