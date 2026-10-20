@@ -41,7 +41,11 @@ const GRADE_SCALE = [
 	[0, 'F']
 ];
 
-export const letterFor = (share) => GRADE_SCALE.find(([min]) => share >= min)[1];
+// negative points (defenses, kickers) can push a share below 0: that's an F
+export const letterFor = (share) => {
+	const x = Number.isFinite(share) ? share : 0;
+	return (GRADE_SCALE.find(([min]) => x >= min) || GRADE_SCALE[GRADE_SCALE.length - 1])[1];
+};
 
 // time key: season * 100 + week (or transaction leg)
 const key = (season, week) => Number(season) * 100 + Number(week);
