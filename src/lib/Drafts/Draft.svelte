@@ -236,8 +236,12 @@
         background-color: var(--mf-panel-2);
     }
 
+    :global(.draftPanel .upcomingBoard table) {
+        min-width: 1400px;
+    }
+
     :global(.draftPanel .upcomingBoard td) {
-        height: 12em;
+        height: 12.5em;
     }
 
     :global(.draftPanel .draftTeam) {
