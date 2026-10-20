@@ -858,8 +858,8 @@
 		position: relative;
 		height: max(4px, 1.4cqh);
 		overflow: hidden;
-		background: #7c5cff;
-		box-shadow: 0 0 10px rgba(124, 92, 255, 0.55);
+		background: #7d8ea6;
+		box-shadow: 0 0 10px rgba(125, 142, 166, 0.5);
 	}
 
 	.winFill {

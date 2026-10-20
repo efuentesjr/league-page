@@ -5,7 +5,7 @@
 // Svelte Colors!
 @use '@material/theme/index' as theme with (
   $primary: #0077b6,
-  $secondary: #5b3fd6,
+  $secondary: #55657d,
   $surface: #fff,
   $background: #eef3fb,
   $error: color-palette.$red-900,
@@ -42,7 +42,7 @@
   --mf-line-strong: rgba(0, 119, 182, 0.55);
   --mf-ion: #0077b6;
   --mf-ion-glow: rgba(0, 119, 182, 0.22);
-  --mf-plasma: #5b3fd6;
+  --mf-plasma: #55657d;
   --mf-text: #0b1a33;
   --mf-dim: #4f6484;
   --mf-grid: rgba(0, 100, 170, 0.06);
