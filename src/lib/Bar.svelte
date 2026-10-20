@@ -5,6 +5,7 @@
     gotoManager,
     round
   } from "./utils/helperFunctions/universalFunctions";
+  import { getLogoColor } from "./utils/logoColor";
 
   // color is kept for compatibility; rows now use the home-page palette
   export let leagueTeamManagers, stat, label, xMin, xMax, secondStat, managerID, rosterID, color = null, year, rank = null;
@@ -30,6 +31,11 @@
   };
 
   const go = () => gotoManager({year, leagueTeamManagers, managerID, rosterID});
+
+  // team color pulled from its logo (falls back to the site accent)
+  let logoColor = null;
+  $: getLogoColor(avatar).then((c) => (logoColor = c));
+  $: teamStyle = logoColor ? `--chipA: ${logoColor}; --chipB: color-mix(in srgb, ${logoColor} 35%, #000);` : '';
 
   $: medal = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
 </script>
@@ -66,9 +72,10 @@
     box-shadow: inset 0 0 0 2px var(--mf-ion);
   }
 
-  .gold   { --chipA: #e5b52a; --chipB: #6b4d06; }
-  .silver { --chipA: #c9d3e0; --chipB: #4a5566; }
-  .bronze { --chipA: #d08a4e; --chipB: #5c3216; }
+  /* top three keep medal colors on the rank tab; the rest of the card wears the team color */
+  .gold   { --medalA: #e5b52a; --medalB: #6b4d06; }
+  .silver { --medalA: #c9d3e0; --medalB: #4a5566; }
+  .bronze { --medalA: #d08a4e; --medalB: #5c3216; }
 
   .card.gold,
   .card.silver,
@@ -84,7 +91,7 @@
     align-items: center;
     justify-content: center;
     padding-right: 6px;
-    background: linear-gradient(160deg, var(--chipA), var(--chipB));
+    background: linear-gradient(160deg, var(--medalA, var(--chipA)), var(--medalB, var(--chipB)));
     clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
     font-size: 1.3rem;
     font-weight: 700;
@@ -191,7 +198,7 @@
   }
 </style>
 
-<div class="card {medal}" role="link" tabindex="0" style="--rank: {rank || 1}" on:click={go} on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && go()}>
+<div class="card {medal}" role="link" tabindex="0" style="--rank: {rank || 1}; {teamStyle}" on:click={go} on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && go()}>
   <div class="rankBox">{rank ?? ''}</div>
   <img class="avatar" alt="" src={avatar} />
   <div class="info">

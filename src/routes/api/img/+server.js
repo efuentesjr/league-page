@@ -1,37 +1,36 @@
-import { error } from '@sveltejs/kit';
-
-// Allow-list remote hosts you fetch images from
-const ALLOW = [
-  'sleepercdn.com',
-  'r2.dev',                 // Cloudflare R2 default domain
-  // 'your.cdn.domain.com', // <-- add your CDN host(s) if needed
-];
+/*
+ * Same-origin pass-through for Sleeper avatars, so the browser is allowed
+ * to read their pixels (Sleeper's CDN sends no CORS headers). Used only to
+ * pick a team's color from its logo. Locked to sleepercdn.com images.
+ */
+const ALLOWED_HOST = 'sleepercdn.com';
+const ALLOWED_PATHS = ['/avatars/', '/uploads/', '/images/'];
 
 export async function GET({ url, fetch }) {
-  const u = url.searchParams.get('u');
-  if (!u) throw error(400, 'Missing ?u=');
+	let target;
+	try {
+		target = new URL(url.searchParams.get('u') || '');
+	} catch {
+		return new Response('bad url', { status: 400 });
+	}
+	if (
+		target.protocol !== 'https:' ||
+		target.hostname !== ALLOWED_HOST ||
+		!ALLOWED_PATHS.some((p) => target.pathname.startsWith(p))
+	) {
+		return new Response('not allowed', { status: 403 });
+	}
 
-  let target;
-  try {
-    target = new URL(u);
-  } catch {
-    throw error(400, 'Bad URL');
-  }
+	const res = await fetch(target.href);
+	const type = res.headers.get('content-type') || '';
+	if (!res.ok || !type.startsWith('image/')) {
+		return new Response('not found', { status: 404 });
+	}
 
-  if (!ALLOW.some((d) => target.hostname.endsWith(d))) {
-    throw error(400, 'Domain not allowed');
-  }
-
-  const res = await fetch(target.href);
-  if (!res.ok) throw error(res.status, `Upstream ${res.statusText}`);
-
-  const ct = res.headers.get('content-type') || 'image/jpeg';
-  const buf = await res.arrayBuffer();
-
-  return new Response(buf, {
-    headers: {
-      'Content-Type': ct,
-      'Cache-Control': 'public, max-age=86400, immutable'
-    }
-  });
+	return new Response(await res.arrayBuffer(), {
+		headers: {
+			'content-type': type,
+			'cache-control': 'public, max-age=86400, s-maxage=604800, stale-while-revalidate=604800'
+		}
+	});
 }
