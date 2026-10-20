@@ -37,11 +37,15 @@
 
 <style>
     .chartWrapper {
-		background-color: var(--fff);
+        background:
+            linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 24px,
+            linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 24px 100%,
+            var(--mf-panel);
+        border: 1px solid var(--mf-line);
+        border-top: 2px solid var(--mf-ion);
         padding: 1em 0 0.5em;
         margin: 0 auto;
         max-width: 950px;
-        box-shadow: 0px 3px 3px -2px var(--boxShadowOne), 0px 3px 4px 0px var(--boxShadowTwo), 0px 1px 8px 0px var(--boxShadowThree);
     }
 
     .barChart {
@@ -52,10 +56,14 @@
     }
 
     h6 {
-        font-weight: 400;
+        font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.04em;
         width: 100%;
         text-align: center;
-        margin: 0 0 1em;
+        margin: 0 0 0.8em;
+        color: var(--mf-text);
     }
 
     .buttonHolderG {

@@ -1,5 +1,4 @@
 <script>
-    import Button, { Group, Label } from '@smui/button';
     import { getLeagueRecords, getLeagueTransactions } from '$lib/utils/helper';
     import AllTimeRecords from './AllTimeRecords.svelte';
     import PerSeasonRecords from './PerSeasonRecords.svelte';
@@ -65,66 +64,131 @@
 <style>
     .rankingsWrapper {
         margin: 0 auto;
-        width: 100%;
+        width: 96%;
         max-width: 1200px;
+        padding-bottom: 30px;
+        font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
     }
 
     .empty {
-        margin: 10em 0 4em;
+        margin: 6em 0 4em;
         text-align: center;
+        color: var(--mf-dim);
     }
 
-    /* Button Styling */
-    .buttonHolder {
-        text-align: center;
-        margin: 2em 0 0;
+    /* header panel: same as home Power Rankings */
+    .recordsHeader {
+        margin: 22px auto 0;
+        padding: 20px 20px 18px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        background:
+            linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 28px,
+            linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 28px 100%,
+            radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--mf-plasma) 22%, transparent), transparent 60%),
+            var(--mf-bg);
+        border: 1px solid var(--mf-line);
+        clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
     }
 
-    /* Start button resizing */
+    .recordsTitle {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        color: var(--mf-text);
+        text-shadow: 0 0 18px var(--mf-line-strong);
+    }
 
-    @media (max-width: 540px) {
-        :global(.buttonHolder .selectionButtons) {
-            font-size: 0.6em;
+    .recordsSub {
+        margin-top: 6px;
+        font-size: 0.85rem;
+        color: var(--mf-dim);
+    }
+
+    .toggles {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+    }
+
+    .segment {
+        display: inline-flex;
+        border: 1px solid var(--mf-line-strong);
+        clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+
+    .segment button {
+        padding: 8px 14px;
+        font: inherit;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--mf-ion);
+        background: var(--mf-panel);
+        border: 0;
+        cursor: pointer;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .segment button + button {
+        border-left: 1px solid var(--mf-line-strong);
+    }
+
+    .segment button:hover,
+    .segment button:focus-visible {
+        background: var(--mf-panel-2);
+        outline: none;
+    }
+
+    .segment button.on {
+        background: var(--mf-ion);
+        color: var(--mf-on-ion);
+    }
+
+    @media (max-width: 600px) {
+        .rankingsWrapper {
+            width: calc(100% - 16px);
+        }
+        .toggles {
+            align-items: stretch;
+            width: 100%;
+        }
+        .segment button {
+            flex: 1;
+            padding: 8px 6px;
+            font-size: 0.72rem;
+        }
+        .recordsTitle {
+            font-size: 1.6rem;
         }
     }
-
-    @media (max-width: 415px) {
-        :global(.buttonHolder .selectionButtons) {
-            font-size: 0.5em;
-            padding: 0 6px;
-        }
-    }
-
-    @media (max-width: 315px) {
-        :global(.buttonHolder .selectionButtons) {
-            font-size: 0.45em;
-            padding: 0 3px;
-        }
-    }
-
-    /* End button resizing */
 </style>
 
 <div class="rankingsWrapper">
 
-    <div class="buttonHolder">
-        <Group variant="outlined">
-            <Button class="selectionButtons" onclick={() => key = "regularSeasonData"} variant="{key == "regularSeasonData" ? "raised" : "outlined"}">
-                <Label>Regular Season</Label>
-            </Button>
-            <Button class="selectionButtons" onclick={() => key = "playoffData"} variant="{key == "playoffData" ? "raised" : "outlined"}">
-                <Label>Playoffs</Label>
-            </Button>
-        </Group>
-        <br />
-        <Group variant="outlined">
-            <Button class="selectionButtons" onclick={() => display = "allTime"} variant="{display == "allTime" ? "raised" : "outlined"}">
-                <Label>All-Time Records</Label>
-            </Button>
-            <Button class="selectionButtons" onclick={() => display = "season"} variant="{display == "season" ? "raised" : "outlined"}">
-                <Label>Season Records</Label>
-            </Button>
-        </Group>
+    <div class="recordsHeader">
+        <div>
+            <h2 class="recordsTitle">League Records</h2>
+            <div class="recordsSub">Every season since the league started</div>
+        </div>
+        <div class="toggles">
+            <div class="segment" role="group" aria-label="Season type">
+                <button type="button" class:on={key == "regularSeasonData"} aria-pressed={key == "regularSeasonData"} onclick={() => key = "regularSeasonData"}>Regular Season</button>
+                <button type="button" class:on={key == "playoffData"} aria-pressed={key == "playoffData"} onclick={() => key = "playoffData"}>Playoffs</button>
+            </div>
+            <div class="segment" role="group" aria-label="Time range">
+                <button type="button" class:on={display == "allTime"} aria-pressed={display == "allTime"} onclick={() => display = "allTime"}>All-Time</button>
+                <button type="button" class:on={display == "season"} aria-pressed={display == "season"} onclick={() => display = "season"}>By Season</button>
+            </div>
+        </div>
     </div>
 
     {#if display == "allTime"}

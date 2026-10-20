@@ -1,296 +1,231 @@
 <script>
-    import Button, { Group, Label } from '@smui/button';
+    import { browser } from '$app/environment';
     import { generateGraph, gotoManager, round } from '$lib/utils/helper';
-
   	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
+	import LinearProgress from '@smui/linear-progress';
 	import RecordTeam from './RecordTeam.svelte';
 	import BarChart from '$lib/BarChart.svelte';
+	import { getManagerHistory, computeWinStreaks } from '$lib/utils/helperFunctions/managerInsights';
 
     export let key, tradesData, waiversData, weekRecords, weekLows, seasonLongRecords, seasonLongLows, showTies, winPercentages, fptsHistories, lineupIQs, prefix, blowouts, closestMatchups, allTime=false, leagueTeamManagers;
 
-    let graphs = [];
-    let curTable = 0;
-    let curGraph = 0;
-
-    let iqOffset = 0;
-    let tables = [
-        "Win Percentages",
-        "Points",
-        "Transactions",
-    ]
-
     const year = allTime ? null : prefix;
+    const playoffWord = () => (key == "playoffData" ? "Playoff " : "");
 
-    const changeTable = (newGraph) => {
-        switch (newGraph) {
-            case 0 - iqOffset:
-            case (4 + (99 * iqOffset)):
-                curTable = 0;
-                break;
-            case 1 - iqOffset:
-            case 2 - iqOffset:
-                curTable = 1 - iqOffset;
-                break;
-            case 3 - iqOffset:
-                curTable = 2 - iqOffset;
-                break;
-            case 5 - (2 * iqOffset):
-            case 6 - (2 * iqOffset):
-                curTable = 3 - iqOffset;
-                break;
-            default:
-                curTable = 0;
-                break;
-        }
+    /* ---------- win streaks (all-time view only) ---------- */
+    let history = null;
+    let streakError = false;
+    if (allTime && browser) {
+        getManagerHistory()
+            .then((h) => (history = h))
+            .catch(() => (streakError = true));
     }
+    $: streakData = history ? computeWinStreaks(history, { playoffs: key == "playoffData" }) : null;
 
-    const changeGraph = (newTable) => {
-        switch (newTable) {
-            case 0 - iqOffset:
-                if(curGraph == 0 || curGraph == 4) {
-                    break;
-                }
-                curGraph = 0;
-                break;
-            case 1 - iqOffset:
-                if(curGraph == 1 - iqOffset || curGraph == 2 - iqOffset) {
-                    break;
-                }
-                curGraph = 1 - iqOffset;
-                break;
-            case 2 - iqOffset:
-                curGraph = 3 - iqOffset;
-                break;
-            case 3 - iqOffset:
-                if(curGraph == 5 - (2 * iqOffset) || curGraph == 6 - (2 * iqOffset)) {
-                    break;
-                }
-                curGraph = 5 - (2 * iqOffset);
-                break;
-            default:
-                curGraph = 0;
-                break;
-        }
-    }
+    const weekLabel = (point, playoffs) => {
+        if (!point) return '';
+        return playoffs ? `${point.year} playoffs` : `${point.year} Wk ${point.week}`;
+    };
+    const streakSpan = (s) => {
+        if (!s.start) return '—';
+        const playoffs = key == "playoffData";
+        const a = weekLabel(s.start, playoffs), b = weekLabel(s.end, playoffs);
+        return a === b ? a : `${a} – ${b}`;
+    };
 
-    const setGraphs = (wD) => {
-        const lineupIQGraph = {
-            stats: lineupIQs,
-            x: "Lineup IQ",
-            stat: "%",
-            header: "Manager Lineup IQ",
-            field: "iq",
-            short: "Lineup IQ"
+    /* ---------- transactions: one row per manager, trades + waivers ---------- */
+    const buildTransactions = (tD, wD) => {
+        const byKey = new Map();
+        const k = (x) => (x.managerID ? `m${x.managerID}` : `r${x.rosterID}`);
+        for (const w of wD || []) byKey.set(k(w), { managerID: w.managerID, rosterID: w.rosterID, trades: 0, waivers: w.waivers || 0 });
+        for (const t of tD || []) {
+            const row = byKey.get(k(t)) || { managerID: t.managerID, rosterID: t.rosterID, trades: 0, waivers: 0 };
+            row.trades = t.trades || 0;
+            byKey.set(k(t), row);
         }
+        return [...byKey.values()];
+    };
+    $: transactions = buildTransactions(tradesData, waiversData);
 
-        const potentialPointsGraph = {
-            stats: lineupIQs,
-            x: "Points",
-            stat: "",
-            header: "Potential Points vs Points",
-            field: "potentialPoints",
-            secondField: "fpts",
-            short: "Potential Points"
+    /* ---------- views: each button = one chart + its matching table ---------- */
+    const buildViews = (lIQs, wP, fH, tx, streaks, k) => {
+        const v = [];
+        const hasIQ = !!lIQs?.[0]?.potentialPoints;
+        if (hasIQ) v.push({ id: 'iq', short: 'Lineup IQ', table: 'iq',
+            graph: generateGraph({ stats: lIQs, x: 'Lineup IQ', stat: '%', header: 'Manager Lineup IQ', field: 'iq', short: 'Lineup IQ' }, year) });
+        v.push({ id: 'wins', short: 'Wins', table: 'win',
+            graph: generateGraph({ stats: wP, x: 'Wins', stat: '', header: 'Team Wins', field: 'wins', short: 'Wins' }, year, 5) });
+        v.push({ id: 'winPct', short: 'Win %', table: 'win',
+            graph: generateGraph({ stats: wP, x: 'Win Percentage', stat: '%', header: 'Team Win Percentages', field: 'percentage', short: 'Win %' }, year) });
+        v.push({ id: 'points', short: 'Fantasy Points', table: 'points',
+            graph: generateGraph({ stats: fH, x: 'Fantasy Points', stat: '', header: 'Team Fantasy Points', field: 'fptsFor', short: 'Fantasy Points' }, year) });
+        if (hasIQ) v.push({ id: 'potential', short: 'Potential Points', table: 'iq',
+            graph: generateGraph({ stats: lIQs, x: 'Points', stat: '', header: 'Potential Points vs Points', field: 'potentialPoints', secondField: 'fpts', short: 'Potential Points' }, year, 10, 0) });
+        if (k == "regularSeasonData" && tx.length) {
+            v.push({ id: 'trades', short: 'Trades', table: 'transactions',
+                graph: generateGraph({ stats: tx, x: '# of trades', stat: '', header: 'Number of Trades Managers Have Made', field: 'trades', short: 'Trades' }, year) });
+            v.push({ id: 'waivers', short: 'Waivers', table: 'transactions',
+                graph: generateGraph({ stats: tx, x: '# of Waiver Moves', stat: '', header: 'Waiver Moves Managers Have Made', field: 'waivers', short: 'Waivers' }, year) });
         }
+        if (allTime) v.push({ id: 'streaks', short: 'Win Streaks', table: 'streaks',
+            graph: streaks?.some((s) => s.streak > 0)
+                ? generateGraph({ stats: streaks, x: 'Consecutive wins', stat: '', header: `Longest ${k == "playoffData" ? "Playoff " : ""}Win Streak · Current Teams`, field: 'streak', short: 'Win Streaks' }, year, 2)
+                : null });
+        return v;
+    };
 
-        const winsGraph = {
-            stats: winPercentages,
-            x: "Wins",
-            stat: "",
-            header: "Team Wins",
-            field: "wins",
-            short: "Wins"
-        }
+    $: views = buildViews(lineupIQs, winPercentages, fptsHistories, transactions, streakData, key);
+    let curView = null;
+    $: active = views.find((v) => v.id === curView) || views[0];
 
-        const winPercentagesGraph = {
-            stats: winPercentages,
-            x: "Win Percentage",
-            stat: "%",
-            header: "Team Win Percentages",
-            field: "percentage",
-            short: "Win Percentage"
-        }
-
-        const fptsHistoriesGraph = {
-            stats: fptsHistories,
-            x: "Fantasy Points",
-            stat: "",
-            header: "Team Fantasy Points",
-            field: "fptsFor",
-            short: "Fantasy Points"
-        }
-
-        const tradesGraph = {
-            stats: tradesData,
-            x: "# of trades",
-            stat: "",
-            header: "Number of Trades Managers Have Made",
-            field: "trades",
-            short: "Trades"
-        }
-
-        const waiversGraph = {
-            stats: wD,
-            x: "# of Waiver Moves",
-            stat: "",
-            header: "Waivers Moves Managers Have Made",
-            field: "waivers",
-            short: "Waivers"
-        }
-        const gs = [];
-
-        if(lineupIQs[0]?.potentialPoints) {
-            gs.push(generateGraph(lineupIQGraph, year));
-        }
-        gs.push(generateGraph(winsGraph, year, 5));
-        gs.push(generateGraph(winPercentagesGraph, year));
-        gs.push(generateGraph(fptsHistoriesGraph, year));
-        if(lineupIQs[0]?.potentialPoints) {
-            gs.push(generateGraph(potentialPointsGraph, year, 10, 0));
-        }
-        if(key == "regularSeasonData") {
-            gs.push(generateGraph(tradesGraph, year));
-            gs.push(generateGraph(waiversGraph, year));
-        }
-
-        curGraph = 0;
-        graphs = gs;
-    }
-
-    const setTransactionsAndGraphs = (wD) => {
-        if(wD[0].rosterID) {
-            for(let i = 1; i <= waiversData.length; i++) {
-                if(!tradesData.find(t => t.rosterID == i)) {
-                    tradesData.push({
-                        rosterID: i,
-                        trades: 0,
-                    })
-                }
-            }
-        }
-        if(wD[0].managerID) {
-            for(const userID in leagueTeamManagers.users) {
-                if(!tradesData.find(t => t.managerID == userID)) {
-                    tradesData.push({
-                        managerID: userID,
-                        trades: 0,
-                    })
-                }
-            }
-        }
-        const transactions = [];
-
-        for(const w of wD) {
-            let trades = 0;
-            if(tradesData[0].managerID) {
-                trades = tradesData.find(t => t.managerID == w.managerID)?.trades || 0;
-            } else if(tradesData[0].rosterID) {
-                trades = tradesData.find(t => t.rosterID == w.rosterID)?.trades || 0;
-            }
-            const waivers = w.waivers;
-            transactions.push({
-                rosterID: w.rosterID,
-                managerID: w.managerID,
-                trades,
-                waivers,
-            })
-        }
-
-        setGraphs(wD)
-        return transactions;
-    }
-
-    const setTables = (lIQs) => {
-        const t = [
-            "Win Percentages",
-            "Points",
-        ]
-        if(key == "regularSeasonData") {
-            t.push("Transactions")
-        }
-        if(!lIQs[0]?.potentialPoints) {
-            iqOffset = 1;
-        } else {
-            t.unshift('Lineup IQs');
-        }
-        tables = t
-    }
-
-    $: transactions =  setTransactionsAndGraphs(waiversData)
-    $: changeTable(curGraph);
-    $: changeGraph(curTable);
-    $: setTables(lineupIQs)
-    
-    let innerWidth;
-
+    // transactions table follows whichever button is selected
+    $: sortedTransactions = [...transactions].sort((a, b) =>
+        active?.id === 'trades'
+            ? b.trades - a.trades || b.waivers - a.waivers
+            : b.waivers - a.waivers || b.trades - a.trades
+    );
+    $: sortedWins = [...(winPercentages || [])].sort((a, b) =>
+        active?.id === 'wins' ? b.wins - a.wins || b.percentage - a.percentage : b.percentage - a.percentage
+    );
+    $: sortedIQ = [...(lineupIQs || [])].sort((a, b) =>
+        active?.id === 'potential' ? b.potentialPoints - a.potentialPoints : b.iq - a.iq
+    );
 </script>
 
-<svelte:window bind:innerWidth={innerWidth} />
-
 <style>
-    :global(.headerPrimary) {
-        background-color: var(--headerPrimary);
-        text-align: center;
+    /* ============================================================
+       RECORDS — same panel language as the home page
+       ============================================================ */
+    .recordsScope {
+        font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+        color: var(--mf-text);
+    }
+
+    .sectionTitle {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 2.2em 4px 1em;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--mf-line);
+    }
+
+    .sectionTitle h4 {
+        margin: 0;
+        font-size: 1.7rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        color: var(--mf-text);
+        text-shadow: 0 0 18px var(--mf-line-strong);
+    }
+
+    .sectionTitle span {
+        font-size: 0.82rem;
+        color: var(--mf-dim);
+    }
+
+    .fullFlex {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+        gap: 18px;
+        margin: 0 auto 2em;
+        align-items: start;
+    }
+
+    /* --- tables --- */
+    .recordsScope :global(.recordTable),
+    .recordsScope :global(.rankingTable) {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        background: var(--mf-panel);
+        border: 1px solid var(--mf-line);
+        box-shadow: none;
+        overflow-x: auto;
+    }
+
+    .recordsScope :global(.rankingTable) {
+        display: block;
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    .recordsScope :global(table) {
+        width: 100%;
+        background: transparent;
+    }
+
+    .recordsScope :global(.mdc-data-table__row),
+    .recordsScope :global(.mdc-data-table__header-row) {
+        background: transparent;
+    }
+
+    .recordsScope :global(.mdc-data-table__cell),
+    .recordsScope :global(.mdc-data-table__header-cell) {
+        font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+        color: var(--mf-text);
+        border-bottom-color: var(--mf-line);
+    }
+
+    .recordsScope :global(.mdc-data-table__header-cell) {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--mf-dim);
+    }
+
+    .recordsScope :global(.mdc-data-table__header-cell.headerPrimary) {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        text-transform: none;
+        text-align: left;
+        color: var(--mf-text);
+        background: linear-gradient(90deg, color-mix(in srgb, var(--mf-ion) 16%, transparent), transparent 70%), var(--mf-panel-2);
+        border-top: 2px solid var(--mf-ion);
+    }
+
+    .recordsScope :global(.mdc-data-table__body .mdc-data-table__row:hover) {
+        background: var(--mf-panel-2);
+    }
+
+    .recordsScope :global(.mdc-data-table__body .mdc-data-table__cell) {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* rank column: gold / silver / bronze for the top three */
+    .recordsScope :global(.rank) {
+        width: 28px;
+        font-weight: 700;
+        color: var(--mf-ion);
+    }
+    .recordsScope :global(.mdc-data-table__body .mdc-data-table__row:nth-child(1) .rank) { color: #e5b52a; }
+    .recordsScope :global(.mdc-data-table__body .mdc-data-table__row:nth-child(2) .rank) { color: #c9d3e0; }
+    .recordsScope :global(.mdc-data-table__body .mdc-data-table__row:nth-child(3) .rank) { color: #d08a4e; }
+
+    .recordsScope :global(.statCell) {
+        font-weight: 700;
+        color: var(--mf-ion);
     }
 
     .italic {
         display: block;
         font-style: italic;
-        font-size: 0.9em;
-        color: var(--g999);
-    }
-
-    :global(.recordTable) {
-        box-shadow: 0px 3px 3px -2px var(--boxShadowOne), 0px 3px 4px 0px var(--boxShadowTwo), 0px 1px 8px 0px var(--boxShadowThree);
-        margin: 2em;
-    }
-
-    :global(.rankingTable) {
-        display: table;
-        box-shadow: 0px 3px 3px -2px var(--boxShadowOne), 0px 3px 4px 0px var(--boxShadowTwo), 0px 1px 8px 0px var(--boxShadowThree);
-        margin: 2em auto 0.5em;
-    }
-
-    .fullFlex {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        margin: 3em auto 5em;
-    }
-
-    .rankingHolder {
-        display: block;
-        width: 100%;
-        overflow-x: hidden;
+        font-size: 0.8em;
+        font-weight: 400;
+        color: var(--mf-dim);
     }
 
     .subTitle {
         font-style: italic;
-        font-size: 0.7em;
-        color: #888;
+        font-size: 0.75em;
+        font-weight: 400;
+        color: var(--mf-dim);
         line-height: 1.2em;
-    }
-
-    h4 {
-        text-align: center;
-        margin: 2em 0 1em;
-    }
-
-    .rankingTableWrapper {
-        width: 25%;
-    }
-
-    .rankingInner {
-        position: relative;
-        display: flex;
-        flex-wrap: nowrap;
-        width: 400%;
-		transition: margin-left 0.8s;
-    }
-
-    .buttonHolder {
-        text-align: center;
-        margin: 2em 0 4em;
+        white-space: normal;
     }
 
     :global(.cellName) {
@@ -303,165 +238,144 @@
         padding: 0.7em 0;
     }
 
-    :global(.rank) {
-        padding-right: 0;
-    }
-
     .vs {
         padding-left: 0.6em;
-        margin: 0.5em 0;
+        margin: 0.4em 0;
+        font-size: 0.75em;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--mf-dim);
+        text-transform: uppercase;
     }
 
-    :global(.mdc-data-table__cell, .mdc-data-table__header-cell) {
-        border-bottom-color: var(--borderOverride);
+    /* --- view tabs --- */
+    .viewTabs {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+        margin: 0 auto 1.4em;
+        max-width: 900px;
     }
 
-    /* Start button resizing */
-
-    @media (max-width: 540px) {
-        :global(.buttonHolder .selectionButtons) {
-            font-size: 0.6em;
-        }
+    .viewTab {
+        padding: 7px 14px;
+        font: inherit;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--mf-ion);
+        background: var(--mf-panel);
+        border: 1px solid var(--mf-line-strong);
+        cursor: pointer;
+        clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+        transition: background-color 0.15s ease, color 0.15s ease;
     }
 
-    @media (max-width: 415px) {
-        :global(.buttonHolder .selectionButtons) {
-            font-size: 0.5em;
-            padding: 0 6px;
-            height: 30px;
-        }
+    .viewTab:hover,
+    .viewTab:focus-visible {
+        background: var(--mf-panel-2);
+        outline: none;
     }
 
-    @media (max-width: 315px) {
-        :global(.buttonHolder .selectionButtons) {
-            font-size: 0.45em;
-            padding: 0 3px;
-        }
+    .viewTab.selected {
+        background: var(--mf-ion);
+        color: var(--mf-on-ion);
+        border-color: var(--mf-ion);
     }
 
-    @media (max-width: 265px) {
-        :global(.buttonHolder .selectionButtons) {
-            font-size: 0.4em;
-            padding: 0 2px;
-            height: 24px;
-            min-width: 40px;
-        }
+    .viewTab.new::after {
+        content: 'NEW';
+        margin-left: 6px;
+        padding: 0 4px;
+        font-size: 0.62rem;
+        color: var(--mf-plasma);
+        border: 1px solid currentColor;
     }
 
-    /* End button resizing */
+    .viewTab.selected.new::after {
+        color: var(--mf-on-ion);
+    }
 
-    /* Start record table resizing */
+    .rankingPanel {
+        margin: 1.6em auto 4em;
+    }
+
+    .loadingStreaks {
+        max-width: 420px;
+        margin: 2em auto;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--mf-dim);
+    }
+
+    .streakNum {
+        font-size: 1.1em;
+        font-weight: 700;
+        color: var(--mf-ion);
+    }
+
+    .liveTag {
+        display: inline-block;
+        margin-left: 6px;
+        padding: 0 5px;
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--mf-up);
+        border: 1px solid currentColor;
+        vertical-align: 2px;
+    }
+
+    .spanText {
+        font-size: 0.85em;
+        color: var(--mf-dim);
+        white-space: nowrap;
+    }
+
+    .finePrint {
+        max-width: 760px;
+        margin: 0.8em auto 0;
+        font-size: 0.75rem;
+        line-height: 1.45;
+        color: var(--mf-dim);
+        text-align: center;
+    }
 
     @media (max-width: 510px) {
-        :global(.recordTable th) {
-            font-size: 0.8em;
-            padding: 1px 12px;
+        .recordsScope :global(.mdc-data-table__cell),
+        .recordsScope :global(.mdc-data-table__header-cell) {
+            font-size: 0.78em;
+            padding: 2px 8px;
         }
-        :global(.recordTable td) {
-            font-size: 0.8em;
-            padding: 1px 12px;
+        .recordsScope :global(.mdc-data-table__header-cell.headerPrimary) {
+            font-size: 0.85rem;
+            padding: 10px 10px;
         }
-
-        .vsRecord {
-            margin: .6em 0;
+        .sectionTitle h4 {
+            font-size: 1.35rem;
         }
-    }
-
-    @media (max-width: 480px) {
-        :global(.rank) {
-            padding: 1px 0 1px 5px !important;
-        }
-        :global(.rank) {
-            padding: 1px 0 1px 5px !important;
+        .viewTab {
+            padding: 6px 10px;
+            font-size: 0.7rem;
         }
     }
 
-    @media (max-width: 460px) {
-        :global(.recordTable th) {
-            font-size: 0.6em;
-            padding: 1px 12px;
-        }
-        :global(.recordTable td) {
-            font-size: 0.6em;
-            padding: 1px 12px;
+    @media (max-width: 380px) {
+        .recordsScope :global(.mdc-data-table__cell),
+        .recordsScope :global(.mdc-data-table__header-cell) {
+            font-size: 0.7em;
+            padding: 2px 5px;
         }
     }
-
-    @media (max-width: 365px) {
-        :global(.recordTable th) {
-            font-size: 0.5em;
-            padding: 1px 8px;
-        }
-        :global(.recordTable td) {
-            font-size: 0.5em;
-            padding: 1px 8px;
-        }
-    }
-
-    @media (max-width: 265px) {
-        :global(.recordTable th) {
-            font-size: 0.4em;
-            padding: 1px 5px;
-        }
-        :global(.recordTable td) {
-            font-size: 0.4em;
-            padding: 1px 5px;
-        }
-    }
-
-    /* END record table resizing */
-
-    /* Start ranking table resizing */
-
-    @media (max-width: 570px) {
-        :global(.rankingTable th) {
-            font-size: 0.8em;
-            max-width: 110px;
-            white-space: break-spaces;
-            padding: 1px 12px;
-        }
-        :global(.rankingTable td) {
-            font-size: 0.8em;
-            max-width: 110px;
-            white-space: break-spaces;
-            padding: 1px 12px;
-        }
-    }
-
-    @media (max-width: 410px) {
-        :global(.rankingTable th) {
-            font-size: 0.6em;
-            max-width: 90px;
-            white-space: break-spaces;
-            padding: 1px 12px;
-        }
-        :global(.rankingTable td) {
-            font-size: 0.6em;
-            max-width: 90px;
-            white-space: break-spaces;
-            padding: 1px 12px;
-        }
-    }
-
-    @media (max-width: 340px) {
-        :global(.rankingTable th) {
-            font-size: 0.55em;
-            max-width: 80px;
-            white-space: break-spaces;
-            padding: 1px 6px;
-        }
-        :global(.rankingTable td) {
-            font-size: 0.55em;
-            max-width: 80px;
-            white-space: break-spaces;
-            padding: 1px 6px;
-        }
-    }
-
-    /* END ranking table resizing */
 </style>
 
-<h4>{prefix} Records</h4>
+<div class="recordsScope">
+<div class="sectionTitle">
+    <h4>{prefix} Records</h4>
+    <span>{key == "playoffData" ? "Playoffs" : "Regular season"}</span>
+</div>
 
 <div class="fullFlex">
     {#if weekRecords && weekRecords.length}
@@ -657,158 +571,191 @@
     {/if}
 </div>
 
-<h4>{prefix} {key == "playoffData" ? "Playoff " : ""}Rankings</h4>
 
-{#if graphs.length}
-    <BarChart {graphs} bind:curGraph={curGraph} {leagueTeamManagers} />
+<div class="sectionTitle">
+    <h4>{prefix} {playoffWord()}Rankings</h4>
+    <span>Pick a stat: the chart and table update together</span>
+</div>
+
+<div class="viewTabs" role="tablist">
+    {#each views as view}
+        <button type="button" role="tab" class="viewTab" class:selected={active?.id === view.id} class:new={view.id === 'streaks'} aria-selected={active?.id === view.id} onclick={() => (curView = view.id)}>
+            {view.short}
+        </button>
+    {/each}
+</div>
+
+{#if active?.graph}
+    {#key active.id + key}
+        <BarChart graphs={[active.graph]} curGraph={0} {leagueTeamManagers} />
+    {/key}
 {/if}
 
-<div class="rankingHolder">
-    <div class="rankingInner" style="margin-left: -{100 * curTable}%;">
-        {#if lineupIQs[0]?.potentialPoints}
-            <div class="rankingTableWrapper">
-                <DataTable class="rankingTable">
-                    <Head>
-                        <Row>
-                            <Cell class="header headerPrimary" colspan=5>
-                                {prefix} {key == "playoffData" ? "Playoff " : ""}Lineup IQ Rankings
-                                <div class="subTitle">
-                                    Measures how effectively managers maximize the potential of their roster
-                                </div>
-                            </Cell>
-                        </Row>
-                        <Row>
-                            <Cell class="header"></Cell>
-                            <Cell class="header">Manager</Cell>
-                            <Cell class="header">Lineup IQ</Cell>
-                            <Cell class="header">Points</Cell>
-                            <Cell class="header">Potential Points</Cell>
-                        </Row>
-                    </Head>
-                    <Body>
-                        {#each lineupIQs as lineupIQ, ix}
-                            <Row>
-                                <Cell>{ix + 1}</Cell>
-                                <Cell class="cellName" onclick={() => gotoManager({year: lineupIQ.year || prefix, leagueTeamManagers, managerID: lineupIQ.managerID, rosterID: lineupIQ.rosterID})}>
-                                    <RecordTeam {leagueTeamManagers} managerID={lineupIQ.managerID} rosterID={lineupIQ.rosterID} year={allTime ? lineupIQ.year : prefix} />
-                                </Cell>
-                                <Cell>{lineupIQ.iq}%</Cell>
-                                <Cell>{round(lineupIQ.fpts)}</Cell>
-                                <Cell>{round(lineupIQ.potentialPoints)}</Cell>
-                            </Row>
-                        {/each}
-                    </Body>
-                </DataTable>
-            </div>
-        {/if}
-
-        <div class="rankingTableWrapper">
-            <DataTable class="rankingTable">
-                <Head>
+<div class="rankingPanel">
+    {#if active?.table === 'iq'}
+        <DataTable class="rankingTable">
+            <Head>
+                <Row>
+                    <Cell class="header headerPrimary" colspan=5>
+                        {prefix} {playoffWord()}Lineup IQ Rankings
+                        <div class="subTitle">How well managers get the most out of their roster</div>
+                    </Cell>
+                </Row>
+                <Row>
+                    <Cell class="header"></Cell>
+                    <Cell class="header">Manager</Cell>
+                    <Cell class="header">Lineup IQ</Cell>
+                    <Cell class="header">Points</Cell>
+                    <Cell class="header">Potential</Cell>
+                </Row>
+            </Head>
+            <Body>
+                {#each sortedIQ as lineupIQ, ix}
                     <Row>
-                        <Cell class="header headerPrimary" colspan=6>{prefix} {key == "playoffData" ? "Playoff " : ""}Win Percentages Rankings</Cell>
+                        <Cell class="rank">{ix + 1}</Cell>
+                        <Cell class="cellName" onclick={() => gotoManager({year: lineupIQ.year || prefix, leagueTeamManagers, managerID: lineupIQ.managerID, rosterID: lineupIQ.rosterID})}>
+                            <RecordTeam {leagueTeamManagers} managerID={lineupIQ.managerID} rosterID={lineupIQ.rosterID} year={allTime ? lineupIQ.year : prefix} />
+                        </Cell>
+                        <Cell class={active.id === 'iq' ? 'statCell' : ''}>{lineupIQ.iq}%</Cell>
+                        <Cell>{round(lineupIQ.fpts)}</Cell>
+                        <Cell class={active.id === 'potential' ? 'statCell' : ''}>{round(lineupIQ.potentialPoints)}</Cell>
                     </Row>
+                {/each}
+            </Body>
+        </DataTable>
+    {:else if active?.table === 'win'}
+        <DataTable class="rankingTable">
+            <Head>
+                <Row>
+                    <Cell class="header headerPrimary" colspan=6>{prefix} {playoffWord()}{active.id === 'wins' ? 'Wins' : 'Win Percentage'} Rankings</Cell>
+                </Row>
+                <Row>
+                    <Cell class="header"></Cell>
+                    <Cell class="header">Manager</Cell>
+                    <Cell class="header">Win %</Cell>
+                    <Cell class="header">Wins</Cell>
+                    {#if showTies}
+                        <Cell class="header">Ties</Cell>
+                    {/if}
+                    <Cell class="header">Losses</Cell>
+                </Row>
+            </Head>
+            <Body>
+                {#each sortedWins as winPercentage, ix}
                     <Row>
-                        <Cell class="header"></Cell>
-                        <Cell class="header">Manager</Cell>
-                        <Cell class="header">Win %</Cell>
-                        <Cell class="header">Wins</Cell>
+                        <Cell class="rank">{ix + 1}</Cell>
+                        <Cell class="cellName" onclick={() => gotoManager({year: winPercentage.year || prefix, leagueTeamManagers, rosterID: winPercentage.rosterID, managerID: winPercentage.managerID})}>
+                            <RecordTeam {leagueTeamManagers} managerID={winPercentage.managerID} rosterID={winPercentage.rosterID} year={allTime ? winPercentage.year : prefix} />
+                        </Cell>
+                        <Cell class={active.id === 'winPct' ? 'statCell' : ''}>{winPercentage.percentage}%</Cell>
+                        <Cell class={active.id === 'wins' ? 'statCell' : ''}>{winPercentage.wins}</Cell>
                         {#if showTies}
-                            <Cell class="header">Ties</Cell>
+                            <Cell>{winPercentage.ties}</Cell>
                         {/if}
-                        <Cell class="header">Losses</Cell>
+                        <Cell>{winPercentage.losses}</Cell>
                     </Row>
-                </Head>
-                <Body>
-                    {#each winPercentages as winPercentage, ix}
-                        <Row>
-                            <Cell>{ix + 1}</Cell>
-                            <Cell class="cellName" onclick={() => gotoManager({year: winPercentage.year || prefix, leagueTeamManagers, rosterID: winPercentage.rosterID, managerID: winPercentage.managerID})}>
-                                <RecordTeam {leagueTeamManagers} managerID={winPercentage.managerID} rosterID={winPercentage.rosterID} year={allTime ? winPercentage.year : prefix} />
-                            </Cell>
-                            <Cell>{winPercentage.percentage}%</Cell>
-                            <Cell>{winPercentage.wins}</Cell>
-                            {#if showTies}
-                                <Cell>{winPercentage.ties}</Cell>
-                            {/if}
-                            <Cell>{winPercentage.losses}</Cell>
-                        </Row>
-                    {/each}
-                </Body>
-            </DataTable>
-        </div>
-
-        <div class="rankingTableWrapper">
+                {/each}
+            </Body>
+        </DataTable>
+    {:else if active?.table === 'points'}
+        <DataTable class="rankingTable">
+            <Head>
+                <Row>
+                    <Cell class="header headerPrimary" colspan=5>{prefix} {playoffWord()}Fantasy Points Rankings</Cell>
+                </Row>
+                <Row>
+                    <Cell class="header"></Cell>
+                    <Cell class="header">Manager</Cell>
+                    <Cell class="header">Points For</Cell>
+                    <Cell class="header">Against</Cell>
+                    <Cell class="header">Per Game</Cell>
+                </Row>
+            </Head>
+            <Body>
+                {#each fptsHistories as fptsHistory, ix}
+                    <Row>
+                        <Cell class="rank">{ix + 1}</Cell>
+                        <Cell class="cellName" onclick={() => gotoManager({year: fptsHistory.year || prefix, leagueTeamManagers, rosterID: fptsHistory.rosterID, managerID: fptsHistory.managerID})}>
+                            <RecordTeam {leagueTeamManagers} managerID={fptsHistory.managerID} rosterID={fptsHistory.rosterID} year={allTime ? fptsHistory.year : prefix} />
+                        </Cell>
+                        <Cell class="statCell">{round(fptsHistory.fptsFor)}</Cell>
+                        <Cell>{round(fptsHistory.fptsAgainst)}</Cell>
+                        <Cell>{round(fptsHistory.fptsPerGame)}</Cell>
+                    </Row>
+                {/each}
+            </Body>
+        </DataTable>
+    {:else if active?.table === 'transactions'}
+        <DataTable class="rankingTable">
+            <Head>
+                <Row>
+                    <Cell class="header headerPrimary" colspan=4>{prefix} Transaction Totals<span class="italic">Sorted by {active.id === 'trades' ? 'trades' : 'waiver moves'}</span></Cell>
+                </Row>
+                <Row>
+                    <Cell class="header"></Cell>
+                    <Cell class="header">Manager</Cell>
+                    <Cell class="header">Trades</Cell>
+                    <Cell class="header">Waivers</Cell>
+                </Row>
+            </Head>
+            <Body>
+                {#each sortedTransactions as transaction, ix (transaction.managerID || transaction.rosterID)}
+                    <Row>
+                        <Cell class="rank">{ix + 1}</Cell>
+                        <Cell class="cellName" onclick={() => gotoManager({year: transaction.year || prefix, leagueTeamManagers, rosterID: transaction.rosterID, managerID: transaction.managerID})}>
+                            <RecordTeam {leagueTeamManagers} managerID={transaction.managerID} rosterID={transaction.rosterID} year={allTime ? transaction.year : prefix} />
+                        </Cell>
+                        <Cell class={active.id === 'trades' ? 'statCell' : ''}>{transaction.trades}</Cell>
+                        <Cell class={active.id === 'waivers' ? 'statCell' : ''}>{transaction.waivers}</Cell>
+                    </Row>
+                {/each}
+            </Body>
+        </DataTable>
+    {:else if active?.table === 'streaks'}
+        {#if streakError}
+            <p class="loadingStreaks">Couldn't load game history from Sleeper. Refresh to try again.</p>
+        {:else if !streakData}
+            <div class="loadingStreaks">
+                <p>Going through every game since the league started...</p>
+                <LinearProgress indeterminate />
+            </div>
+        {:else}
             <DataTable class="rankingTable">
                 <Head>
                     <Row>
                         <Cell class="header headerPrimary" colspan=5>
-                            {prefix} {key == "playoffData" ? "Playoff " : ""}Fantasy Points Rankings
+                            Longest {playoffWord()}Win Streaks
+                            <span class="italic">Current teams · all seasons</span>
                         </Cell>
                     </Row>
                     <Row>
                         <Cell class="header"></Cell>
-                        <Cell class="header">Manager</Cell>
-                        <Cell class="header">Points For</Cell>
-                        <Cell class="header">Points Against</Cell>
-                        <Cell class="header">Points Per Game</Cell>
+                        <Cell class="header">Team</Cell>
+                        <Cell class="header">Longest</Cell>
+                        <Cell class="header">When</Cell>
+                        <Cell class="header">Now</Cell>
                     </Row>
                 </Head>
                 <Body>
-                    {#each fptsHistories as fptsHistory, ix}
+                    {#each streakData as s, ix (s.managerID)}
                         <Row>
-                            <Cell>{ix + 1}</Cell>
-                            <Cell class="cellName" onclick={() => gotoManager({year: fptsHistory.year || prefix, leagueTeamManagers, rosterID: fptsHistory.rosterID, managerID: fptsHistory.managerID})}>
-                                <RecordTeam {leagueTeamManagers} managerID={fptsHistory.managerID} rosterID={fptsHistory.rosterID} year={allTime ? fptsHistory.year : prefix} />
+                            <Cell class="rank">{ix + 1}</Cell>
+                            <Cell class="cellName" onclick={() => gotoManager({leagueTeamManagers, rosterID: s.rosterID})}>
+                                <RecordTeam {leagueTeamManagers} rosterID={s.rosterID} year={leagueTeamManagers.currentSeason} />
                             </Cell>
-                            <Cell>{round(fptsHistory.fptsFor)}</Cell>
-                            <Cell>{round(fptsHistory.fptsAgainst)}</Cell>
-                            <Cell>{round(fptsHistory.fptsPerGame)}</Cell>
+                            <Cell><span class="streakNum">{s.streak}</span>{#if s.active}<span class="liveTag">LIVE</span>{/if}</Cell>
+                            <Cell><span class="spanText">{streakSpan(s)}</span></Cell>
+                            <Cell>{s.current ? `W${s.current}` : '—'}</Cell>
                         </Row>
                     {/each}
                 </Body>
             </DataTable>
-        </div>
-
-        <div class="rankingTableWrapper">
-            <DataTable class="rankingTable">
-                <Head>
-                    <Row>
-                        <Cell class="header headerPrimary" colspan=4>
-                            {prefix} Transaction Totals
-                        </Cell>
-                    </Row>
-                    <Row>
-                        <Cell class="header"></Cell>
-                        <Cell class="header">Manager</Cell>
-                        <Cell class="header">Trades</Cell>
-                        <Cell class="header">Waivers</Cell>
-                    </Row>
-                </Head>
-                <Body>
-                    {#each transactions as transaction, ix}
-                        <Row>
-                            <Cell>{ix + 1}</Cell>
-                            <Cell class="cellName" onclick={() => gotoManager({year: transaction.year || prefix, leagueTeamManagers, rosterID: transaction.rosterID, managerID: transaction.managerID})}>
-                                <RecordTeam {leagueTeamManagers} managerID={transaction.managerID} rosterID={transaction.rosterID} year={allTime ? transaction.year : prefix} />
-                            </Cell>
-                            <Cell>{transaction.trades}</Cell>
-                            <Cell>{transaction.waivers}</Cell>
-                        </Row>
-                    {/each}
-                </Body>
-            </DataTable>
-        </div>
-
-    </div>
+            <p class="finePrint">
+                Consecutive {key == "playoffData" ? "championship-bracket" : "regular-season"} wins by each current team's manager, carried across seasons.
+                A loss or tie ends a streak. LIVE means the streak is still going. "Now" is the current run.
+                {#if key != "playoffData"}This week's games count once they're final.{/if}
+            </p>
+        {/if}
+    {/if}
 </div>
-
-<div class="buttonHolder">
-    <Group variant="outlined">
-        {#each tables as table, ix}
-            <Button class="selectionButtons" onclick={() => curTable = ix} variant="{curTable == ix ? "raised" : "outlined"}">
-                <Label>{table}</Label>
-            </Button>
-        {/each}
-    </Group>
 </div>

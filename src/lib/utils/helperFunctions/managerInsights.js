@@ -150,6 +150,7 @@ const buildHistory = async () => {
 
 	const beats = {};
 	const ties = {};
+	const timeline = {}; // managerID -> [{ year, week, playoff, r: 'W'|'L'|'T' }]
 	let seasonPlayerPoints = {};
 
 	const managersOf = (year, rosterID) =>
@@ -158,6 +159,12 @@ const buildHistory = async () => {
 	const record = (year, game) => {
 		const left = managersOf(year, game.tie ? game.a : game.winner);
 		const right = managersOf(year, game.tie ? game.b : game.loser);
+
+		const log = (ids, r) => {
+			for (const id of ids) (timeline[id] ??= []).push({ year, week: game.week, playoff: game.playoff, r });
+		};
+		log(left, game.tie ? 'T' : 'W');
+		log(right, game.tie ? 'T' : 'L');
 
 		for (const x of left) {
 			for (const y of right) {
@@ -214,10 +221,67 @@ const buildHistory = async () => {
 		isCurrentSeason = false;
 	}
 
-	return { beats, ties, seasonPlayerPoints, teamManagers };
+	return { beats, ties, timeline, seasonPlayerPoints, teamManagers };
 };
 
 let historyPromise = null;
+
+/*
+ * ============================================================
+ * WIN STREAKS
+ * ============================================================
+ * Longest run of consecutive wins for each manager, across every
+ * linked season (a streak carries over from one season into the
+ * next). A loss or a tie ends it. `playoffs` picks championship
+ * bracket games only; otherwise regular-season games only.
+ * Only managers on a current team are returned.
+ */
+export const computeWinStreaks = (history, { playoffs = false } = {}) => {
+	if (!history?.timeline) return [];
+	const tm = history.teamManagers;
+	const current = tm?.teamManagersMap?.[tm.currentSeason] || {};
+
+	const currentRosterOf = {};
+	for (const [rosterID, entry] of Object.entries(current)) {
+		for (const m of entry.managers || []) currentRosterOf[m] = Number(rosterID);
+	}
+
+	const out = [];
+	for (const managerID of Object.keys(currentRosterOf)) {
+		const games = (history.timeline[managerID] || [])
+			.filter((g) => !!g.playoff === !!playoffs)
+			.sort((a, b) => a.year - b.year || a.week - b.week);
+
+		let longest = 0, run = 0, runStart = null, best = null;
+		for (const g of games) {
+			if (g.r === 'W') {
+				if (run === 0) runStart = g;
+				run++;
+				// ">=" keeps the most recent streak when two are tied
+				if (run >= longest) {
+					longest = run;
+					best = { start: runStart, end: g };
+				}
+			} else {
+				run = 0;
+			}
+		}
+
+		out.push({
+			managerID,
+			rosterID: currentRosterOf[managerID],
+			streak: longest,
+			current: run,
+			active: longest > 0 && run === longest,
+			start: best?.start ? { year: best.start.year, week: best.start.week } : null,
+			end: best?.end ? { year: best.end.year, week: best.end.week } : null,
+			games: games.length
+		});
+	}
+
+	out.sort((a, b) => b.streak - a.streak || b.current - a.current);
+	return out;
+};
 
 /** Cached for the life of the page so every manager view reuses it. */
 export const getManagerHistory = (forceRefresh = false) => {
