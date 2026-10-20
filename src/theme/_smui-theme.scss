@@ -272,3 +272,26 @@ a:visited {
 ::selection {
   background: color-mix(in srgb, var(--mf-ion) 35%, transparent);
 }
+
+/* ===== MFFL futuristic theme: data tables ===== */
+.mdc-data-table {
+  border: 1px solid var(--mf-line);
+  border-radius: 2px;
+  box-shadow: 0 0 22px -12px var(--mf-ion-glow);
+}
+
+.mdc-data-table__header-row {
+  background: var(--mf-panel-2);
+}
+
+.mdc-data-table__header-row .mdc-data-table__header-cell {
+  border-bottom: 1px solid var(--mf-line-strong);
+}
+
+.mdc-data-table__row {
+  border-top-color: var(--mf-line);
+}
+
+.mdc-data-table__row:not(.mdc-data-table__row--selected):hover {
+  background-color: color-mix(in srgb, var(--mf-ion) 7%, transparent);
+}

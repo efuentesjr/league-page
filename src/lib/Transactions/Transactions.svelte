@@ -54,7 +54,7 @@
 	}
 
 	.link:hover {
-		color: #00316b;
+		color: var(--mf-ion);
 	}
 
 	.nothingYet {

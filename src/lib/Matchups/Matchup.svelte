@@ -157,24 +157,24 @@
         justify-content: flex-start;
         left: 0;
         text-align: left;
-        background-color: #485566;
+        background: linear-gradient(90deg, color-mix(in srgb, var(--mf-ion) 22%, var(--mf-panel)), var(--mf-panel-2));
     }
 
     :global(.homeGlow) {
-        box-shadow: 0 0 6px 4px #3279cf;
-        background-color: #00316b !important;
+        box-shadow: 0 0 10px 2px var(--mf-ion-glow);
+        background: linear-gradient(90deg, color-mix(in srgb, var(--mf-ion) 45%, var(--mf-panel)), color-mix(in srgb, var(--mf-ion) 18%, var(--mf-panel))) !important;
     }
 
     .away {
         justify-content: flex-end;
         right: 0;
         text-align: right;
-        background-color: #8b6969;
+        background: linear-gradient(270deg, color-mix(in srgb, var(--mf-plasma) 26%, var(--mf-panel)), var(--mf-panel-2));
     }
 
     :global(.awayGlow) {
-        box-shadow: 0 0 6px 4px #d15454;
-        background-color: #920505 !important;
+        box-shadow: 0 0 10px 2px color-mix(in srgb, var(--mf-plasma) 55%, transparent);
+        background: linear-gradient(270deg, color-mix(in srgb, var(--mf-plasma) 55%, var(--mf-panel)), color-mix(in srgb, var(--mf-plasma) 22%, var(--mf-panel))) !important;
     }
 
     .name {
@@ -183,7 +183,7 @@
         line-height: 1.1em;
         flex-grow: 1;
         word-break: break-word;
-        color: #fff;
+        color: var(--mf-text);
         font-style: italic;
     }
 
@@ -416,7 +416,9 @@
 
     .totalPoints {
         line-height: 1.1em;
-        color: #fff;
+        color: var(--mf-text);
+        font-family: 'Chakra Petch', 'Roboto', sans-serif;
+        font-weight: 600;
     }
 
     .totalPointsR {
@@ -430,7 +432,7 @@
     }
 
     .totalProjection {
-        color: #ccc;
+        color: var(--mf-dim);
         font-size: 0.7em;
         font-style: italic;
     }

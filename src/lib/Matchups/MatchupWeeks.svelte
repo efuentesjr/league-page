@@ -72,7 +72,7 @@
     }
 
     :global(.changeWeek:hover) {
-        color: #00316b;
+        color: var(--mf-ion);
     }
 
     .spacer {

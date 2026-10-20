@@ -105,9 +105,9 @@
     min-width: 470px;
     max-width: 470px;
     min-height: 100%;
-    background-color: var(--ebebeb);
-    border-left: var(--eee);
-    box-shadow: inset 8px 0px 6px -6px rgb(0 0 0 / 24%);
+    background-color: var(--mf-panel);
+    border-left: 1px solid var(--mf-line);
+    box-shadow: inset 10px 0 18px -14px var(--mf-ion-glow);
   }
 
   @media (max-width: 950px) {
@@ -138,11 +138,14 @@
   }
 
   .homeBanner {
-    background-color: var(--blueOne);
-    color: #fff;
+    background: var(--mf-panel-2);
+    color: var(--mf-text);
     padding: 0.5em 0;
-    font-weight: 500;
+    font-family: 'Chakra Petch', 'Roboto', sans-serif;
+    font-weight: 600;
     font-size: 1.5em;
+    border-bottom: 1px solid var(--mf-line-strong);
+    box-shadow: 0 2px 14px -6px var(--mf-ion-glow);
   }
 
   /* ===== Current Champion ===== */
@@ -185,9 +188,10 @@
     text-align: center;
     font-size: 2em;
     font-weight: bold;
-    font-family: 'Arial', sans-serif;
-    color: #0047ab;
-    text-transform: uppercase;
+    font-family: 'Chakra Petch', 'Roboto', sans-serif;
+    color: var(--mf-ion);
+    text-shadow: 0 0 14px var(--mf-ion-glow);
+    letter-spacing: 0.02em;
   }
 
   .label {
