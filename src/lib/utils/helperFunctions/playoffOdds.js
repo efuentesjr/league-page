@@ -510,24 +510,35 @@ export const gameWinProbabilities = (inputs, week = inputs.currentWeek) => {
  *  3. Playoff teams by projected finish (title favorite picks last)
  */
 export const projectedDraftOrder = (results, playoffTeams = 8) => {
-	const playoffSet = new Set(
-		[...results]
-			.sort((a, b) => b.playoffPct - a.playoffPct || b.projectedWins - a.projectedWins || b.pointsFor - a.pointsFor)
-			.slice(0, playoffTeams)
-			.map((r) => String(r.rosterID))
+	/*
+	 * Follows Constitution 3.4 (drawn from #16 down to #1):
+	 *   #16–15  top two playoff finishers (not the 8th seed), one ball each
+	 *   #14–10  next five playoff finishers (not the 8th seed), one ball each
+	 *   #9 up   lottery-pool teams with no balls, one ball each
+	 *   #1 down lottery-pool teams with balls (earned-ball drawing)
+	 * The lottery pool is the 8th seed plus the non-playoff teams. The draws
+	 * among equal-ball groups are random, so within a group we show the most
+	 * likely spot: worst teams first for the no-ball group, title odds for the
+	 * playoff groups.
+	 */
+	const bySeed = [...results].sort(
+		(a, b) => b.playoffPct - a.playoffPct || b.projectedWins - a.projectedWins || b.pointsFor - a.pointsFor
 	);
+	const playoffIDs = bySeed.slice(0, playoffTeams).map((r) => String(r.rosterID));
+	const eighthSeed = playoffIDs[playoffTeams - 1];
+	const playoffSet = new Set(playoffIDs);
 
-	const lottery = results
+	const pool = results.filter((r) => !playoffSet.has(String(r.rosterID)) || String(r.rosterID) === eighthSeed);
+	const withBalls = pool
 		.filter((r) => r.lotteryAnyPct >= 50)
 		.sort((a, b) => b.firstPickPct - a.firstPickPct || b.lotteryBalls - a.lotteryBalls);
-	const inLottery = new Set(lottery.map((r) => String(r.rosterID)));
-
-	const nonPlayoff = results
-		.filter((r) => !inLottery.has(String(r.rosterID)) && !playoffSet.has(String(r.rosterID)))
+	const ballIDs = new Set(withBalls.map((r) => String(r.rosterID)));
+	const noBalls = pool
+		.filter((r) => !ballIDs.has(String(r.rosterID)))
 		.sort((a, b) => a.projectedWins - b.projectedWins || a.pointsFor - b.pointsFor);
 
-	const playoff = results
-		.filter((r) => !inLottery.has(String(r.rosterID)) && playoffSet.has(String(r.rosterID)))
+	const contenders = results
+		.filter((r) => playoffSet.has(String(r.rosterID)) && String(r.rosterID) !== eighthSeed)
 		.sort(
 			(a, b) =>
 				(a.champPct ?? 0) - (b.champPct ?? 0) ||
@@ -535,7 +546,21 @@ export const projectedDraftOrder = (results, playoffTeams = 8) => {
 				(a.semifinalPct ?? 0) - (b.semifinalPct ?? 0) ||
 				a.playoffPct - b.playoffPct
 		);
+	const finalists = contenders.slice(-2);
+	const playoffDraw = contenders.slice(0, -2);
 
-	const tag = (list, group) => list.map((r) => ({ rosterID: String(r.rosterID), group, firstPickPct: r.firstPickPct, champPct: r.champPct }));
-	return [...tag(lottery, 'lottery'), ...tag(nonPlayoff, 'nonPlayoff'), ...tag(playoff, 'playoff')];
+	const tag = (list, group) =>
+		list.map((r) => ({
+			rosterID: String(r.rosterID),
+			group,
+			firstPickPct: r.firstPickPct,
+			champPct: r.champPct,
+			eighthSeed: String(r.rosterID) === eighthSeed
+		}));
+	return [
+		...tag(withBalls, 'lottery'),
+		...tag(noBalls, 'nonPlayoff'),
+		...tag(playoffDraw, 'playoff'),
+		...tag(finalists, 'finalist')
+	];
 };

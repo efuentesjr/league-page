@@ -693,6 +693,18 @@
       margin: 0.16rem 0;
     }
   }
+
+  .lottery-graphic {
+    display: block;
+    margin: 1rem 0 1.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .lottery-graphic img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
 </style>
 
 <div class="constitution-shell">
@@ -1173,97 +1185,75 @@
 
       <h3 class="subSectionHeading" id="draft-order" bind:this={threeFour}>3.4 Draft Order Determination</h3>
       <p>
-        In an effort to combat tanking during the regular season and encourage managers to stay competitive through the playoffs,
-        you can earn ping pong balls based on your regular season record and by placing 1st through 3rd in the Toilet Bowl. See
-        below:
+        To discourage tanking and keep every team competing through Week 17, the draft order is set at a lottery drawing held
+        after the season. The order is drawn from pick #16 down to pick #1.
       </p>
 
+      <a class="lottery-graphic" href="/lottery-night.webp" target="_blank" rel="noopener">
+        <img src="/lottery-night.webp" alt="MFFL Draft Lottery Night: how the draft order is drawn, from pick 16 down to pick 1" loading="lazy" width="1400" height="1372" />
+      </a>
+
+      <h4>Earning ping-pong balls</h4>
       <div class="ledger-wrap">
         <table class="draft-order-table compact-mobile-table">
           <thead>
             <tr class="table-header">
-              <th>Name</th>
-              <th>R_Seed</th>
+              <th>Earned by</th>
               <th>Balls</th>
-              <th>Pick%</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>TM1</td><td>1st</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM2</td><td>2nd</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM3</td><td>3rd</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM4</td><td>4th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM5</td><td>5th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM6</td><td>6th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM7</td><td>7th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM8</td><td>8th</td><td>1</td><td>8%</td></tr>
-            <tr><td>TM9</td><td>9th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM10</td><td>10th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM11</td><td>11th</td><td>3</td><td>23%</td></tr>
-            <tr><td>TM12</td><td>12th</td><td>2</td><td>15%</td></tr>
-            <tr><td>TM13</td><td>13th</td><td>1</td><td>8%</td></tr>
-            <tr><td>TM14</td><td>14th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM15</td><td>15th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM16</td><td>16th</td><td>0</td><td>0%</td></tr>
-            <tr class="total-row">
-              <td colspan="3">REG SEASON TOTAL PING PONG BALLS:</td>
-              <td>7</td>
-            </tr>
+            <tr><td>Regular-season 8th seed</td><td>1</td></tr>
+            <tr><td>Regular-season 11th seed</td><td>3</td></tr>
+            <tr><td>Regular-season 12th seed</td><td>2</td></tr>
+            <tr><td>Regular-season 13th seed</td><td>1</td></tr>
+            <tr><td>Toilet Bowl 1st place</td><td>3</td></tr>
+            <tr><td>Toilet Bowl 2nd place</td><td>2</td></tr>
+            <tr><td>Toilet Bowl 3rd place</td><td>1</td></tr>
+            <tr><td>FAAB auction winner (see 3.5)</td><td>1 (pick #1 only)</td></tr>
           </tbody>
         </table>
       </div>
+      <p>A team keeps every ball it earns, so one team can hold balls from more than one line.</p>
 
-      <div class="ledger-wrap">
-        <table class="draft-order-table compact-mobile-table">
-          <thead>
-            <tr class="table-header">
-              <th>Name</th>
-              <th>P_Seed</th>
-              <th>Balls</th>
-              <th>Pick%</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>TM1</td><td>1st</td><td>16th</td><td>0%</td></tr>
-            <tr><td>TM2</td><td>2nd</td><td>15th</td><td>0%</td></tr>
-            <tr><td>TM3</td><td>3rd</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>TM4</td><td>4th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>TM5</td><td>5th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>TM6</td><td>6th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>TM7</td><td>7th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>TM8</td><td>8th</td><td>TBD</td><td>0%</td></tr>
-            <tr><td>TM9</td><td>9th</td><td>3</td><td>23%</td></tr>
-            <tr><td>TM10</td><td>10th</td><td>2</td><td>15%</td></tr>
-            <tr><td>TM11</td><td>11th</td><td>1</td><td>8%</td></tr>
-            <tr><td>TM12</td><td>12th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM13</td><td>13th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM14</td><td>14th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM15</td><td>15th</td><td>0</td><td>0%</td></tr>
-            <tr><td>TM16</td><td>16th</td><td>0</td><td>0%</td></tr>
-            <tr class="total-row">
-              <td colspan="3">PLAYOFFS TOTAL PING PONG BALLS:</td>
-              <td>6</td>
-            </tr>
-          </tbody>
-        </table>
+      <h4>The 8th seed</h4>
+      <p>
+        The 8th seed is placed in the lottery pool no matter how far it advances in the playoffs. It is the only playoff team
+        eligible for the #1 pick. When the 8th seed finishes in the top seven of the playoffs, the playoff teams below it each
+        move up one place for the drawings below.
+      </p>
+
+      <h4>The drawing, in order</h4>
+      <div class="subBlock">
+        <ol>
+          <li><strong>Picks #16 and #15:</strong> the top two playoff finishers (excluding the 8th seed) each receive one ball. The first team drawn picks #16.</li>
+          <li><strong>Picks #14 through #10:</strong> the next five playoff finishers (excluding the 8th seed) each receive one ball, drawn for #14 down to #10.</li>
+          <li>
+            <strong>Lottery pool (picks #9 through #1):</strong> the 8th seed and the eight non-playoff teams.
+            <ul>
+              <li>Teams in the pool <strong>without</strong> balls each receive one ball and are drawn first, for the lowest open picks starting at #9. If only one team has no balls, it receives #9 automatically.</li>
+              <li>Teams <strong>with</strong> balls are drawn last, using their earned balls, starting with pick #1. Once a team is drawn, all of its remaining balls are removed. The FAAB auction ball counts only for the #1 pick, then is removed.</li>
+            </ul>
+          </li>
+        </ol>
       </div>
-
       <div class="info-callout">
-        *TBD - The exact draft order will be determined using a lottery-style drawing with a ping pong machine. Each pick will be
-        drawn randomly to ensure fairness.
+        Between 4 and 8 teams will hold balls in any season, so the earned-ball drawing decides the top 4 to 8 picks.
       </div>
 
       <h3 class="subSectionHeading" bind:this={threeFive}>3.5 Draft Lottery FAAB Entry</h3>
       <p>
-        Non-playoff teams may use FAAB to purchase one additional ping-pong entry for the #1 overall pick lottery.
+        One additional ping-pong entry for the #1 overall pick will be auctioned each year for FAAB.
       </p>
       <div class="subBlock">
         <ul>
-          <li>Only non-playoff teams are eligible to purchase an entry.</li>
-          <li>Each eligible team may purchase no more than one additional entry.</li>
-          <li>The FAAB cost and purchase deadline will be announced by the Commissioner before the lottery is finalized.</li>
-          <li>Purchased entries apply only to the lottery for the #1 overall pick and do not affect other draft positions unless otherwise stated by league rule.</li>
-          <li>If a team does not have sufficient FAAB, it may not purchase an entry.</li>
+          <li>Only non-playoff teams may bid.</li>
+          <li>Only one entry is awarded per year, to the highest bidder.</li>
+          <li>Bids are submitted as sealed bids, using a method announced by the Commissioner, and are collected by a commissioner whose team is not bidding.</li>
+          <li>The bidding window and minimum bid will be announced by the Commissioner before the lottery.</li>
+          <li>Ties will be broken by a spin-off using the online tool.</li>
+          <li>The winning bid is deducted from the winning team's FAAB budget. A team may not bid more FAAB than it has.</li>
+          <li>If no team bids, no additional entry is awarded.</li>
         </ul>
       </div>
     </section>

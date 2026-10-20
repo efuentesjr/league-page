@@ -18,8 +18,9 @@
     const groupLabel = (info) => {
         if (!info) return '';
         if (info.group === 'lottery') return `Lottery · ${info.firstPickPct >= 0.5 ? Math.round(info.firstPickPct) : '<1'}% #1`;
-        if (info.group === 'nonPlayoff') return 'Non-playoff';
-        return 'Playoffs';
+        if (info.group === 'nonPlayoff') return 'No balls · #9 draw';
+        if (info.group === 'finalist') return 'Finalist · 15–16 draw';
+        return 'Playoffs · 10–14 draw';
     };
 
     let progress = 0;
@@ -292,7 +293,11 @@
     }
 
     .tag-playoff {
-        color: var(--mf-ion);
+        color: var(--mf-plasma);
+    }
+
+    .tag-finalist {
+        color: var(--mf-up);
     }
 
     :global(.curDraftName) {
@@ -359,9 +364,9 @@
 
 {#if orderInfo && !previous}
     <p class="orderNote">
-        Projected order from <a href="/playoff-odds">Lottery Watch</a>: lottery teams first (best #1 pick odds),
-        then other non-playoff teams (worst record first), then playoff teams by projected finish (title favorite picks last).
-        The real order is set by the lottery drawing.
+        Projected order under <a href="/constitution#draft-order">Constitution 3.4</a>, using <a href="/playoff-odds">Lottery Watch</a> odds.
+        Picks 1–9 are the lottery pool (the 8th seed plus non-playoff teams): ball teams on top by #1 odds, then teams with no balls.
+        Picks 10–14 and 15–16 are drawn among playoff teams. Every group is a live drawing, so this shows the most likely spot.
     </p>
 {/if}
 
