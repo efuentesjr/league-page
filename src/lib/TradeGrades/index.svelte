@@ -65,39 +65,20 @@
 		return `Flipped to ${to} (${flip.season} wk ${flip.week}) for ${got || 'nothing'}${share}`;
 	};
 
-	const continuesText = (ids, trades) => {
-		const earlier = ids.map((id) => trades.find((t) => t.id === id)).filter(Boolean);
+	const continuesText = (side, trades) => {
+		const earlier = side.continues.map((id) => trades.find((t) => t.id === id)).filter(Boolean);
 		if (!earlier.length) return '';
-		return `Continues the ${earlier.map((t) => `${t.season} week ${t.week}`).join(' & ')} trade, counted there in trading records.`;
+		const labels = [...new Set(earlier.map((t) => `${t.season} week ${t.week}`))];
+		const from =
+			earlier.length === 1
+				? `the ${labels[0]} trade`
+				: labels.length === 1
+					? `${earlier.length} earlier trades (${labels[0]})`
+					: `${earlier.length} earlier trades`;
+		return side.countsInRecords
+			? `Includes assets flipped from ${from}.`
+			: `Passes along assets from ${from}; counted there in trading records.`;
 	};
-
-	const isSettled = (t) => t.sides.every((s) => !['Too early', 'Pending', 'Wash', 'FAAB deal'].includes(s.grade));
-
-	$: seasons = data ? [...new Set(data.trades.map((t) => t.season))] : [];
-	$: shown = data ? data.trades.filter((t) => seasonFilter === 'all' || t.season === seasonFilter) : [];
-
-	// biggest gap between best and worst side, settled trades only
-	$: fleeces = data
-		? data.trades
-				.filter(isSettled)
-				.map((t) => {
-					const sorted = [...t.sides].sort((a, b) => b.value - a.value);
-					return { t, winner: sorted[0], loser: sorted[sorted.length - 1], margin: sorted[0].value - sorted[sorted.length - 1].value };
-				})
-				.sort((a, b) => b.margin - a.margin)
-				.slice(0, 5)
-		: [];
-
-	$: records = data
-		? Object.entries(data.managers)
-				.map(([id, m]) => ({ id, ...m }))
-				.filter((m) => m.trades > 0)
-				.sort((a, b) => b.net - a.net)
-		: [];
-	$: maxNet = Math.max(1, ...records.map((m) => Math.abs(m.net)));
-
-	const openManager = (managerID) => gotoManager({ leagueTeamManagers: ltm, managerID });
-	const signed = (v) => `${v > 0 ? '+' : ''}${Math.round(v)}`;
 </script>
 
 <section class="report">
@@ -203,7 +184,7 @@
 										{#if side.grade !== 'FAAB deal'}{side.value} pts{/if}
 									</div>
 									{#if side.continues?.length}
-										<p class="continues">{continuesText(side.continues, data.trades)}</p>
+										<p class="continues">{continuesText(side, data.trades)}</p>
 									{/if}
 									<ul class="assets">
 										{#each side.assets as a}
