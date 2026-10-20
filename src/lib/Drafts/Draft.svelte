@@ -18,7 +18,7 @@
     const groupLabel = (info) => {
         if (!info) return '';
         if (info.group === 'lottery') return `Lottery · ${info.firstPickPct >= 0.5 ? Math.round(info.firstPickPct) : '<1'}% #1`;
-        if (info.group === 'nonPlayoff') return 'No balls · #9 draw';
+        if (info.group === 'nonPlayoff') return 'No balls · random draw';
         if (info.group === 'finalist') return 'Finalist · 15–16 draw';
         return 'Playoffs · 10–14 draw';
     };
