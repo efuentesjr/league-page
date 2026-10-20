@@ -185,7 +185,7 @@
 	/* --- division champions --- */
 	.divisions {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
 		gap: 12px;
 	}
 
@@ -355,9 +355,12 @@
 		.label { font-size: 0.8em; }
 	}
 
+	@media (max-width: 640px) {
+		.divisions { grid-template-columns: repeat(min(var(--cols, 4), 2), minmax(0, 1fr)); gap: 8px; }
+	}
+
 	@media (max-width: 520px) {
 		.label { font-size: 0.72em; padding: 3px 6px 4px; }
-		.divisions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 		.teamName { font-size: 0.85em; }
 	}
 
@@ -414,7 +417,7 @@
 
 	{#if winners.length}
 		<div class="sectionHead">{winners.some((d) => d.name) ? 'Division champions' : 'Regular season champion'}</div>
-		<div class="divisions">
+		<div class="divisions" style="--cols: {Math.min(winners.length, 4)}">
 			{#each winners as division, i}
 				<div class="division" role="link" tabindex="0" onclick={() => go(division.rosterID)} onkeydown={key(division.rosterID)}>
 					{#if bannerFor(division, i)}
