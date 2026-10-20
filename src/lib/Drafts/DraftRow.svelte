@@ -40,25 +40,41 @@
     overflow: hidden;
   }
 
-  :global(.changedHands) {
-    background-color: var(--draftSwapped);
+  /* traded pick: plasma corner notch */
+  :global(.changedHands)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-style: solid;
+    border-width: 0 12px 12px 0;
+    border-color: transparent var(--mf-plasma) transparent transparent;
+    z-index: 3;
   }
 
   .draftPos {
     position: absolute;
-    top: 0.3em;
-    left: 0.3em;
-    font-style: italic;
-    color: rgba(255,255,255,.7);
+    top: 0.35em;
+    left: 0.4em;
+    right: 0.4em;
+    font-weight: 700;
+    color: var(--mf-ion);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     z-index: 2;
   }
 
   .draftPosPrev {
     position: absolute;
-    top: 0.1em;
-    left: 0.1em;
-    font-style: italic;
-    color: rgba(255,255,255,.7);
+    top: 0.25em;
+    left: 0.35em;
+    right: 0.35em;
+    font-weight: 700;
+    color: var(--posColor, var(--mf-ion));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     z-index: 2;
   }
 
@@ -66,29 +82,23 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 3px;
+    bottom: 4px;
+    padding: 0 3px;
     text-align: center;
     white-space: break-spaces;
     line-height: 1.2em;
-    color: #fff;              /* switched from #444 to white */
-    font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0,0,0,.65);
+    color: var(--mf-plasma);
+    font-weight: 700;
     z-index: 2;
   }
 
-  /* Previous-draft color classes (unchanged) */
-  :global(.prevQB) { background-color: var(--QBfade); }
-  :global(.prevWR) { background-color: var(--WRfade); }
-  :global(.prevRB) { background-color: var(--RBfade); }
-  :global(.prevTE) { background-color: var(--TEfade); }
-  :global(.prevK)  { background-color: var(--Kfade); }
-  :global(.prevDEF){ background-color: var(--DEfadeFfade); }
-  :global(.prevCB) { background-color: var(--CBfade); }
-  :global(.prevSS) { background-color: var(--SSfade); }
-  :global(.prevFS) { background-color: var(--FSfade); }
-  :global(.prevDE) { background-color: var(--DEfade); }
-  :global(.prevDL) { background-color: var(--DLfade); }
-  :global(.prevLB) { background-color: var(--LBfade); }
+  /* Previous drafts: dark square with a position-colored edge + glow */
+  :global(.draftCell.prevPick) {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--posColor) 30%, transparent), transparent 75%),
+      var(--mf-panel) !important;
+    border-left: 3px solid var(--posColor) !important;
+  }
 
   .playerAvatar {
     display: inline-block;
@@ -96,12 +106,14 @@
     transform: translate(-50%, -50%);
     left: 50%;
     top: 45%;
-    height: 25px;
-    width: 25px;
+    height: 28px;
+    width: 28px;
     background-position: center;
     border-radius: 100%;
     background-repeat: no-repeat;
-    background-size: auto 25px;
+    background-size: auto 28px;
+    background-color: var(--mf-panel-2);
+    border: 1px solid var(--posColor, var(--mf-line));
   }
 
   .name {
@@ -113,7 +125,14 @@
     white-space: break-spaces;
     line-height: 1em;
     bottom: 0.5em;
-    color: rgba(0, 0, 0, 0.87);
+    padding: 0 2px;
+    font-weight: 600;
+    color: var(--mf-text);
+  }
+
+  .team {
+    color: var(--mf-dim);
+    font-weight: 400;
   }
 
   /* === Projected rookie in upcoming squares === */
@@ -207,7 +226,10 @@
 <Row>
   {#each draftRow as draftCol, col}
     {#if !previous || draftCol}
-      <Cell class="draftCell{draftCol ? ' changedHands' : ''}{previous ? ` prev${players[draftCol.player].pos}` : ''}">
+      <Cell
+        class="draftCell{draftCol && !previous ? ' changedHands' : ''}{previous ? ' prevPick' : ''}{previous && draftCol?.newOwner ? ' changedHands' : ''}"
+        style={previous ? `--posColor: var(--${players[draftCol.player]?.pos}, var(--mf-dim))` : ''}
+      >
         <!-- First-round mock draft overlay (Upcoming only) 
         {#if !previous && row === 1}
           <img
@@ -290,7 +312,7 @@
           <br />
           <div class="name">
             {`${players[draftCol.player].fn} ${players[draftCol.player].ln}`}
-            {players[draftCol.player].pos == 'DEF' ? '' : ` (${players[draftCol.player].t})`}
+            {#if players[draftCol.player].pos != 'DEF'}<span class="team">({players[draftCol.player].t})</span>{/if}
           </div>
         {/if}
       </Cell>

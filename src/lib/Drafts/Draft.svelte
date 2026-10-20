@@ -7,7 +7,11 @@
     import { gotoManager } from '$lib/utils/helper'
 	import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
     
-    export let draftData, leagueTeamManagers, previous = false, year, players;
+    export let draftData, leagueTeamManagers, previous = false, year, players, startOpen = true;
+
+    let open = startOpen;
+    const roundsCount = draftData.draft?.length || 0;
+    const teamsCount = draftData.draftOrder?.filter(Boolean).length || 0;
 
     const {draftOrder, draft, accuracy, reversalRound, draftType, orderInfo} = draftData;
 
@@ -64,77 +68,120 @@
 </script>
 
 <style>
+    /* ============================================================
+       DRAFT BOARD — same "model readout" panel as Power Rankings
+       ============================================================ */
+    .draftPanel {
+        width: 96%;
+        max-width: 1500px;
+        margin: 22px auto 0;
+        padding: 22px 16px 24px;
+        box-sizing: border-box;
+        font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+        color: var(--mf-text);
+        background:
+            linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 28px,
+            linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 28px 100%,
+            radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--mf-plasma) 22%, transparent), transparent 60%),
+            var(--mf-bg);
+        border: 1px solid var(--mf-line);
+        border-radius: 4px;
+        clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+    }
+
+    .draftPanel.previous {
+        margin-top: 14px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+        background:
+            linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 28px,
+            linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 28px 100%,
+            var(--mf-bg);
+    }
+
+    .draftHeader {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+        margin: 0 0 14px;
+        padding: 0 4px 12px;
+        border: 0;
+        border-bottom: 1px solid var(--mf-line);
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: left;
+    }
+
+    .previous .draftHeader {
+        cursor: pointer;
+        align-items: center;
+    }
+
+    .previous.closed .draftHeader {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: 0;
+    }
+
+    .draftTitle {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        color: var(--mf-text);
+        text-shadow: 0 0 18px var(--mf-line-strong);
+    }
+
+    .previous .draftTitle {
+        font-size: 1.35rem;
+    }
+
+    .draftSubtitle {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--mf-dim);
+        text-align: right;
+    }
+
+    .draftSubtitle strong {
+        color: var(--mf-ion);
+        font-weight: 700;
+    }
+
+    .chevron {
+        display: inline-block;
+        margin-left: 8px;
+        color: var(--mf-ion);
+        transition: transform 0.15s ease;
+    }
+
+    .open .chevron {
+        transform: rotate(90deg);
+    }
+
     .accuracy {
         display: block;
         width: 80%;
         max-width: 800px;
-        margin: 2em auto 3em;
+        margin: 0.5em auto 1.5em;
     }
 
     .accuracyText {
-        font-size: 0.7em;
-        color: #666;
+        font-size: 0.75em;
+        color: var(--mf-dim);
     }
 
     .disclaimer {
         font-style: italic;
-        color: #888;
     }
 
-    :global(.draftBoard) {
-        display: block;
-        width: 95%;
-        margin: 2em auto 3em;
-        overflow-x: auto;
-    }
-
-	:global(.draftTeam) {
-        font-size: 0.8em;
-		text-align: center;
-		padding: 5px 0;
-		background-color: var(--transactHeader);
-        white-space: break-spaces;
-        line-height: 1em;
-        height: 5em;
-        vertical-align: initial;
-	}
-
-	:global(.draftBoard table) {
-        border-collapse: collapse;
-        table-layout: fixed;
-        width: 100%;
-        min-width: 1200px;
-	}
-
-    :global(.draftBoard td) {
-        border-right: 1px solid #ddd;
-        height: 7em;
-        font-size: 0.7em;
-    }
-
-    :global(.upcomingBoard td) {
-        height: 12em;
-    }
-
-    :global(.draftBoard td:last-of-type) {
-        border-right: none;
-    }
-
-	.avatar {
-		border-radius: 50%;
-        height: 30px;
-        width: 30px;
-        margin: 0.4em 0;
-		border: 0.25px solid #777;
-	}
-
-    .clickable {
-        cursor: pointer;
-    }
-	
     .orderNote {
-        max-width: 72ch;
-        margin: 0 auto 1em;
+        max-width: 80ch;
+        margin: 0 auto 0.8em;
         font-size: 0.85em;
         line-height: 1.45;
         color: var(--mf-dim);
@@ -142,7 +189,84 @@
     }
 
     .prospectNote {
-        margin-top: -0.4em;
+        margin-top: -0.2em;
+    }
+
+    .orderNote strong {
+        color: var(--mf-text);
+    }
+
+    /* --- board --- */
+    :global(.draftPanel .draftBoard) {
+        display: block;
+        width: 100%;
+        margin: 1em 0 0;
+        overflow-x: auto;
+        background: transparent;
+        border: 1px solid var(--mf-line);
+        border-radius: 0;
+    }
+
+    :global(.draftPanel .draftBoard table) {
+        border-collapse: separate;
+        border-spacing: 3px;
+        table-layout: fixed;
+        width: 100%;
+        min-width: 1200px;
+        background: transparent;
+    }
+
+    :global(.draftPanel .draftBoard .mdc-data-table__row),
+    :global(.draftPanel .draftBoard .mdc-data-table__header-row) {
+        background: transparent !important;
+        border: 0;
+    }
+
+    :global(.draftPanel .draftBoard td) {
+        height: 7em;
+        font-size: 0.7em;
+        font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+        background: var(--mf-panel);
+        border: 1px solid var(--mf-line) !important;
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    :global(.draftPanel .draftBoard td:hover) {
+        border-color: var(--mf-line-strong) !important;
+        background-color: var(--mf-panel-2);
+    }
+
+    :global(.draftPanel .upcomingBoard td) {
+        height: 12em;
+    }
+
+    :global(.draftPanel .draftTeam) {
+        font-size: 0.8em;
+        font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+        font-weight: 600;
+        text-align: center;
+        padding: 6px 2px;
+        color: var(--mf-text) !important;
+        background: linear-gradient(180deg, color-mix(in srgb, var(--mf-ion) 14%, transparent), transparent 80%), var(--mf-panel-2) !important;
+        border: 1px solid var(--mf-line) !important;
+        border-top: 2px solid var(--mf-ion) !important;
+        white-space: break-spaces;
+        line-height: 1.1em;
+        height: 5em;
+        vertical-align: initial;
+    }
+
+    .avatar {
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        margin: 0.4em 0;
+        border: 1px solid var(--mf-ion);
+        box-shadow: 0 0 8px var(--mf-ion-glow);
+    }
+
+    .clickable {
+        cursor: pointer;
     }
 
     .orderTag {
@@ -167,13 +291,58 @@
         color: var(--mf-ion);
     }
 
-	:global(.curDraftName) {
-        color: #888;
-        font-size: 0.7em;
+    :global(.curDraftName) {
+        color: var(--mf-dim);
+        font-size: 0.8em;
         font-style: italic;
+        font-weight: 400;
+    }
+
+    @media (max-width: 600px) {
+        .draftPanel {
+            width: calc(100% - 16px);
+            padding: 16px 8px 18px;
+        }
+
+        .draftHeader {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .previous .draftHeader {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .draftTitle {
+            font-size: 1.5rem;
+        }
+
+        .previous .draftTitle {
+            font-size: 1.15rem;
+        }
+
+        .draftSubtitle {
+            text-align: left;
+        }
     }
 </style>
 
+<section class="draftPanel" class:previous class:open class:closed={!open}>
+    {#if previous}
+        <button type="button" class="draftHeader" aria-expanded={open} onclick={() => (open = !open)}>
+            <h3 class="draftTitle">{year} Draft<span class="chevron" aria-hidden="true">▸</span></h3>
+            <span class="draftSubtitle"><strong>{roundsCount}</strong> rounds · <strong>{roundsCount * teamsCount}</strong> picks</span>
+        </button>
+    {:else}
+        <div class="draftHeader">
+            <h3 class="draftTitle">{year} Rookie Draft</h3>
+            <span class="draftSubtitle"><strong>Upcoming</strong> · {roundsCount} rounds · {roundsCount * teamsCount} picks</span>
+        </div>
+    {/if}
+
+{#if open}
 {#if accuracy && accuracy !== 1 && !closed}
     <div class="accuracy">
         <div class="accuracyText">
@@ -228,3 +397,5 @@
         {/each}
     </Body>
 </DataTable>
+{/if}
+</section>
