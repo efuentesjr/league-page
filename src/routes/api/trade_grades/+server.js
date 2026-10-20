@@ -127,6 +127,9 @@ export async function GET() {
 		);
 	} catch (err) {
 		console.error('[trade_grades]', err);
-		throw error(502, 'Could not grade trades right now');
+		// short reason (no data) so problems can be diagnosed without server logs
+		const reason = String(err?.message || err).slice(0, 200);
+		const where = String(err?.stack || '').split('\n').slice(1, 4).map((l) => l.trim()).join(' | ').slice(0, 400);
+		return json({ message: 'Could not grade trades right now', reason, where }, { status: 502, headers: { 'Cache-Control': 'no-store' } });
 	}
 }
