@@ -961,7 +961,7 @@
 		}
 
 		.teams {
-			grid-template-columns: minmax(0, 1fr) 26% minmax(0, 1fr);
+			grid-template-columns: minmax(0, 1fr) 30% minmax(0, 1fr);
 		}
 
 		.team-name {
@@ -974,12 +974,17 @@
 		}
 
 		.score {
-			font-size: min(16cqh, 12cqw);
+			font-size: min(16cqh, 9.5cqw);
 		}
 
 		.h2h-title {
-			font-size: min(3.6cqh, 3cqw);
+			font-size: min(3.6cqh, 2.6cqw);
 			letter-spacing: 0.05em;
+			white-space: nowrap;
+		}
+
+		.h2h-row {
+			column-gap: 2cqw;
 		}
 
 		.h2h-number {
@@ -987,7 +992,7 @@
 		}
 
 		.h2h-points-number {
-			font-size: min(3.8cqh, 3.2cqw);
+			font-size: min(3.8cqh, 2.9cqw);
 		}
 
 		.h2h-label {
