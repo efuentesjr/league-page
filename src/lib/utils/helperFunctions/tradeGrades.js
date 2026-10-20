@@ -47,7 +47,7 @@ const key = (season, week) => Number(season) * 100 + Number(week);
  *   }]
  * @param {number} data.nowKey  key(currentSeason, currentWeek) — last week with games
  */
-export const computeTradeGrades = ({ seasons, nowKey }) => {
+export const computeTradeGrades = ({ seasons, nowKey, overrides = {} }) => {
 	// ---------- index weekly starters ----------
 	const starterWeeks = []; // [{ k, byRoster }]
 	for (const s of seasons) {
@@ -169,12 +169,22 @@ export const computeTradeGrades = ({ seasons, nowKey }) => {
 				});
 			}
 
-			for (const pick of t.draft_picks || []) {
-				if (Number(pick.owner_id) !== Number(rid)) continue;
+			const fix = overrides[String(t.transaction_id)];
+			for (const rawPick of t.draft_picks || []) {
+				if (Number(rawPick.owner_id) !== Number(rid)) continue;
+				// commissioner/conditional corrections (e.g. a 1st that became a 3rd)
+				const change = fix?.picks?.find(
+					(p) =>
+						String(p.season) === String(rawPick.season) &&
+						Number(p.originalOwner) === Number(rawPick.roster_id) &&
+						Number(p.fromRound) === Number(rawPick.round)
+				);
+				const pick = change ? { ...rawPick, round: change.toRound } : rawPick;
+				const changedFrom = change ? change.fromRound : null;
 				const made = resolvePick(pick);
 				if (!made) {
 					pending++;
-					assets.push({ type: 'pick', season: pick.season, round: pick.round, from: pick.roster_id, pending: true });
+					assets.push({ type: 'pick', season: pick.season, round: pick.round, changedFrom, from: pick.roster_id, pending: true });
 					continue;
 				}
 				const draftK = key(pick.season, 0);
@@ -186,6 +196,7 @@ export const computeTradeGrades = ({ seasons, nowKey }) => {
 					type: 'pick',
 					season: pick.season,
 					round: pick.round,
+					changedFrom,
 					from: pick.roster_id,
 					pending: false,
 					playerID: made.playerID,
@@ -243,6 +254,8 @@ export const computeTradeGrades = ({ seasons, nowKey }) => {
 
 		trades.push({
 			id: String(t.transaction_id),
+			conditional: !!overrides[String(t.transaction_id)]?.conditional,
+			note: overrides[String(t.transaction_id)]?.note || null,
 			season,
 			week: Number(t.leg || 1),
 			timestamp: t.status_updated,

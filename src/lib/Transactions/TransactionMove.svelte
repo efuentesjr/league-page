@@ -235,6 +235,11 @@
             font-size: 0.7em;
         }
     }
+
+    .wasRound {
+        font-size: 0.8em;
+        color: #e2722b;
+    }
 </style>
 
 <tr>
@@ -271,7 +276,7 @@
                             </div>
                         </div>
                         <div class="pickNameHolder">
-                            <span class="year">{cell.pick.season}</span>
+                            <span class="year">{cell.pick.season}{#if cell.pick.changedFrom} <span class="wasRound">(was {cell.pick.changedFrom}{getNumEnd(cell.pick.changedFrom)})</span>{/if}</span>
                             {#if cell.pick.original_owner}
                                 <span class="originalOwner">{getTeamFromTeamManagers(leagueTeamManagers, cell.pick.original_owner, season).name}
                                     {getTeamFromTeamManagers(leagueTeamManagers, cell.pick.original_owner, season).name != getTeamFromTeamManagers(leagueTeamManagers, cell.pick.original_owner).name ? ` (${getTeamFromTeamManagers(leagueTeamManagers, cell.pick.original_owner).name})` : ''}

@@ -6,6 +6,7 @@ import { get } from 'svelte/store';
 import {transactionsStore} from '$lib/stores';
 import { browser } from '$app/environment';
 import { getLeagueTeamManagers } from './leagueTeamManagers';
+import { TRADE_OVERRIDES, correctedPick } from '$lib/utils/tradeOverrides';
 
 export const getLeagueTransactions = async (preview, refresh = false) => {
 	const transactionsStoreVal = get(transactionsStore);
@@ -226,6 +227,11 @@ const digestTransaction = ({transaction, currentSeason}) => {
 	
 	if(transaction.type == "trade") {
 		digestedTransaction.type = "trade";
+		const fix = TRADE_OVERRIDES[String(transaction.transaction_id)];
+		if(fix) {
+			digestedTransaction.conditional = !!fix.conditional;
+			digestedTransaction.note = fix.note || null;
+		}
 	}
 	
 	if(season != currentSeason) {
@@ -265,11 +271,13 @@ const digestTransaction = ({transaction, currentSeason}) => {
 
 		let move = new Array(transactionRosters.length).fill(null);
 
+		const corrected = correctedPick(transaction.transaction_id, pick);
 		move[transactionRosters.indexOf(pick.owner_id)] = {
 			type: "trade",
 			pick: {
 				season: pick.season,
-				round: pick.round,
+				round: corrected.round,
+				changedFrom: corrected.changedFrom,
 				original_owner: null,
 			},
 		}

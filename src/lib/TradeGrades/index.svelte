@@ -46,7 +46,7 @@
 	const assetLabel = (a) => {
 		if (a.type === 'player') return { name: playerName(a.playerID), detail: `${a.points} pts${a.still ? '' : ' (gone)'}` };
 		if (a.type === 'pick') {
-			const label = `${a.season} round ${a.round} pick`;
+			const label = `${a.season} round ${a.round} pick${a.changedFrom ? ` (was round ${a.changedFrom})` : ''}`;
 			if (a.pending) return { name: label, detail: 'pending' };
 			return { name: `${label} → ${playerName(a.playerID)}`, detail: `${a.points} pts${a.still ? '' : ' (gone)'}` };
 		}
@@ -167,7 +167,9 @@
 						<div class="tradeMeta">
 							{t.season} · week {t.week}
 							{#if t.weeks}<span class="dim">· graded over {t.weeks} week{t.weeks === 1 ? '' : 's'}</span>{/if}
+							{#if t.conditional}<span class="conditionalTag">Conditional</span>{/if}
 						</div>
+						{#if t.note}<p class="tradeNote">{t.note}</p>{/if}
 						<div class="sides" style="--n: {t.sides.length}">
 							{#each t.sides as side}
 								{@const tm = team(side.rosterID, t.season)}
@@ -459,6 +461,23 @@
 		margin-bottom: 8px;
 		font-size: 0.8rem;
 		color: var(--mf-text);
+	}
+
+	.conditionalTag {
+		display: inline-block;
+		margin-left: 8px;
+		padding: 0 6px;
+		font-family: 'Chakra Petch', 'Roboto', sans-serif;
+		font-size: 0.78rem;
+		font-weight: 700;
+		color: #e2722b;
+		border: 1px solid currentColor;
+	}
+
+	.tradeNote {
+		margin: -2px 0 8px;
+		font-size: 0.82rem;
+		color: var(--mf-dim);
 	}
 
 	.sides {

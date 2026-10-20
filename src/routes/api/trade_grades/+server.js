@@ -8,6 +8,7 @@
 import { json, error } from '@sveltejs/kit';
 import { leagueID } from '$lib/utils/leagueInfo';
 import { computeTradeGrades } from '$lib/utils/helperFunctions/tradeGrades';
+import { TRADE_OVERRIDES } from '$lib/utils/tradeOverrides';
 
 const SLEEPER = 'https://api.sleeper.app/v1';
 
@@ -114,7 +115,7 @@ export async function GET() {
 			? current.season * 100 + (playedWeeks.length ? Math.max(...playedWeeks) : 0)
 			: 0;
 
-		const result = computeTradeGrades({ seasons, nowKey });
+		const result = computeTradeGrades({ seasons, nowKey, overrides: TRADE_OVERRIDES });
 
 		return json(
 			{ generated: Date.now(), currentSeason: current?.season, ...result },

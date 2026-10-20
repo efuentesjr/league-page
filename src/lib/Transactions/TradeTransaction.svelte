@@ -141,6 +141,24 @@
         color: var(--mf-dim);
     }
 
+    .conditionalTag {
+        display: inline-block;
+        margin-right: 6px;
+        padding: 1px 6px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 0.95em;
+        color: #e2722b;
+        border: 1px solid currentColor;
+    }
+
+    .tradeNote {
+        display: block;
+        margin-top: 4px;
+        font-style: normal;
+        color: var(--mf-text);
+    }
+
     .gradeNote {
         display: block;
         margin-top: 4px;
@@ -188,7 +206,13 @@
         </tbody>
     </table>
     <span class="date">
+        {#if transaction.conditional}
+            <span class="conditionalTag">Conditional</span>
+        {/if}
         {transaction.date}
+        {#if transaction.note}
+            <span class="tradeNote">{transaction.note}</span>
+        {/if}
         {#if graded}
             <span class="gradeNote">
                 Graded on starting-lineup points since the trade{graded.weeks ? ` (${graded.weeks} week${graded.weeks === 1 ? '' : 's'})` : ''}.
