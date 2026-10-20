@@ -775,6 +775,10 @@
 
       <h3 class="subSectionHeading" bind:this={oneOne}>1.1 Positional Breakdown</h3>
       <p>26 Total Players</p>
+
+      <a class="lottery-graphic" href="/roster-template.webp" target="_blank" rel="noopener">
+        <img src="/roster-template.webp" alt="Blank MFFL roster: 9 starters (QB, 2 RB, 2 WR, TE, 2 FLEX, Superflex), 10 bench, 3 IR and 4 taxi squad spots" loading="lazy" width="980" height="905" />
+      </a>
       <p class="underscore">Starters</p>
       <ul>
         <li>QB</li>
