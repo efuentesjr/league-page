@@ -3,6 +3,7 @@
 	import LinearProgress from '@smui/linear-progress';
     import { onMount } from 'svelte';
     import DraftRow from './DraftRow.svelte';
+    import { chooseProspects } from '$lib/utils/helperFunctions/rookieProjection';
     import { gotoManager } from '$lib/utils/helper'
 	import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
     
@@ -21,6 +22,26 @@
     let closed = false;
 
     onMount(loadAccuracy);
+
+    // Projected rookies for the upcoming board (commissioner's mock before the
+    // NFL draft, automatic DynastyProcess projection after it).
+    let prospects = previous ? null : chooseProspects(year, null, players);
+    onMount(async () => {
+        if (previous) return;
+        try {
+            const res = await fetch(`/api/rookie_projection?season=${year}`);
+            const projection = res.ok ? await res.json() : null;
+            prospects = chooseProspects(year, projection, players);
+        } catch {
+            // keep the mock (or nothing) if the projection can't load
+        }
+    });
+
+    const fmtDate = (d) => {
+        if (!d) return '';
+        const dt = new Date(`${d}T12:00:00`);
+        return isNaN(dt) ? d : dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    };
 
     function loadAccuracy() {
         if(!accuracy || accuracy === 1) return;
@@ -91,6 +112,10 @@
         font-size: 0.7em;
     }
 
+    :global(.upcomingBoard td) {
+        height: 10em;
+    }
+
     :global(.draftBoard td:last-of-type) {
         border-right: none;
     }
@@ -114,6 +139,10 @@
         line-height: 1.45;
         color: var(--mf-dim);
         text-align: center;
+    }
+
+    .prospectNote {
+        margin-top: -0.4em;
     }
 
     .orderTag {
@@ -163,7 +192,19 @@
     </p>
 {/if}
 
-<DataTable class="draftBoard">
+{#if prospects && !previous}
+    <p class="orderNote prospectNote">
+        <strong>Players in the squares:</strong> {prospects.label}{prospects.updated ? `, updated ${fmtDate(prospects.updated)}` : ''}.
+        {#if prospects.mode === 'auto'}
+            Rankings refresh weekly until the draft.
+        {:else}
+            After the NFL draft in April, this switches on its own to an automatic projection of real rookies, refreshed weekly.
+        {/if}
+        Just a projection: owners pick whoever they want.
+    </p>
+{/if}
+
+<DataTable class="draftBoard{prospects && !previous ? ' upcomingBoard' : ''}">
     <Head>
         <Row>
             {#each draftOrder as draftPosition}
@@ -183,7 +224,7 @@
     </Head>
     <Body>
         {#each draft as draftRow, row}
-            <DraftRow {draftRow} row={row + 1} {previous} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
+            <DraftRow {draftRow} row={row + 1} {previous} prospects={prospects?.picks} {reversalRound} {draftType} {players} {leagueTeamManagers} {year} />
         {/each}
     </Body>
 </DataTable>

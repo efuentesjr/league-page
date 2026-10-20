@@ -2,7 +2,20 @@
   import { getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
   import { Row, Cell } from '@smui/data-table';
 
-  export let draftRow, draftType, row, reversalRound, previous = false, players, year, leagueTeamManagers;
+  export let draftRow, draftType, row, reversalRound, previous = false, players, year, leagueTeamManagers, prospects = null;
+
+  // Pick number within the round, matching the label shown in the square
+  const pickInRound = (col) => {
+    const n = draftRow.length;
+    if (draftType == 'snake' && !reversalRound) return row % 2 == 0 ? n - col : col + 1;
+    if (draftType == 'snake' && reversalRound) {
+      return (row < reversalRound && row % 2 == 0) || (row >= reversalRound && row % 2 == 1) ? n - col : col + 1;
+    }
+    return !reversalRound || row < reversalRound ? col + 1 : n - col;
+  };
+
+  // Projected rookie for this square (overall pick N gets player N)
+  const prospectFor = (col) => prospects?.[(row - 1) * draftRow.length + pickInRound(col) - 1] || null;
 
   // Build path like /mockdraft/1.01.png, /mockdraft/1.16.png
   const firstRoundImg = (colIndex) => {
@@ -103,6 +116,76 @@
     color: rgba(0, 0, 0, 0.87);
   }
 
+  /* === Projected rookie in upcoming squares === */
+  .prospect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 1.9em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-align: center;
+    line-height: 1.05em;
+    z-index: 2;
+    padding: 0 3px;
+  }
+
+  .prospectFace {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--posColor, var(--mf-ion));
+    background-color: var(--mf-panel-2);
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95em;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--posColor, var(--mf-ion));
+    flex-shrink: 0;
+  }
+
+  .prospectName {
+    font-weight: 600;
+    color: var(--mf-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .prospectSub {
+    font-size: 0.85em;
+    color: var(--mf-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .prospectPos {
+    font-weight: 700;
+    color: var(--posColor, var(--mf-ion));
+  }
+
+  .prospectTBD {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 45%;
+    text-align: center;
+    color: var(--mf-dim);
+    opacity: 0.6;
+    font-style: italic;
+  }
+
   /* === First-round mock image thumbnail === */
   .mockDraftImg {
     position: absolute;
@@ -171,6 +254,27 @@
             {/if}
           {/if}
         </span>
+
+        {#if !previous && prospects}
+          {@const prospect = prospectFor(col)}
+          {#if prospect}
+            <div class="prospect" style="--posColor: var(--{prospect.pos})">
+              <div
+                class="prospectFace"
+                style={prospect.sleeperID
+                  ? `background-image: url(https://sleepercdn.com/content/nfl/players/thumb/${prospect.sleeperID}.jpg)`
+                  : ''}
+                title={prospect.name}
+              >
+                {#if !prospect.sleeperID}{prospect.initials}{/if}
+              </div>
+              <span class="prospectName">{prospect.name}</span>
+              <span class="prospectSub"><span class="prospectPos">{prospect.pos}</span> · {prospect.sub}</span>
+            </div>
+          {:else}
+            <div class="prospectTBD">TBD</div>
+          {/if}
+        {/if}
 
         {#if draftCol && !previous}
           <div class="newOwner">{getTeamNameFromTeamManagers(leagueTeamManagers, draftCol)}</div>
