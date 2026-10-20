@@ -7,14 +7,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import {
-		getLeagueRosters,
-		getLeagueData,
-		getNflState,
-		loadPlayers,
-		waitForAll
-	} from '$lib/utils/helper';
-	import { computeTeamTiers, TIER_ORDER } from '$lib/utils/helperFunctions/managerInsights';
+	import { getLiveTeamTiers, TIER_ORDER } from '$lib/utils/helperFunctions/managerInsights';
 
 	export let managers, leagueTeamManagers;
 
@@ -58,19 +51,7 @@
 
 	onMount(async () => {
 		try {
-			const [rostersData, leagueData, nflState, playerData] = await waitForAll(
-				getLeagueRosters(),
-				getLeagueData(),
-				getNflState(),
-				loadPlayers(null)
-			);
-
-			const tiers = computeTeamTiers({
-				rosters: rostersData.rosters,
-				players: playerData.players,
-				leagueData,
-				nflState
-			});
+			const tiers = await getLiveTeamTiers();
 
 			sections = buildSections(tiers);
 			state = Object.keys(tiers).length ? 'ready' : 'empty';

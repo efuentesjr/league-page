@@ -3,12 +3,20 @@
     import Matchup from './Matchup.svelte'
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
+    import { getLiveWinProbabilities } from '$lib/utils/helperFunctions/liveWinProbability';
 
     export let queryWeek, players, matchupWeeks, year, week, regularSeasonLength, selection, leagueTeamManagers;
 
     let displayWeek = queryWeek * 1 || 1;
 
+    // live win probability for the current week's games
+    let winProbs = null;
+
     onMount(() => {
+        getLiveWinProbabilities(matchupWeeks)
+            .then((wp) => (winProbs = wp))
+            .catch((err) => console.error('[Matchups] Could not compute win probability:', err));
+
         if(!queryWeek || queryWeek < 1) {
             queryWeek = week;
             displayWeek = queryWeek * 1;
@@ -119,6 +127,6 @@
         {/if}
     </div>
     {#each matchupArray as matchup, ix (rand * (ix + 1))}
-        <Matchup {ix} {matchup} {players} {displayWeek} bind:active={active} {leagueTeamManagers} />
+        <Matchup {ix} {matchup} {players} {displayWeek} bind:active={active} {leagueTeamManagers} winProb={winProbs && winProbs.week === displayWeek ? winProbs.probs : null} />
     {/each}
 </div>

@@ -413,3 +413,42 @@ export const clinchStatus = (inputs, picks = {}) => {
 		return { rosterID: team.id, clinched, eliminated };
 	});
 };
+
+/*
+ * ============================================================
+ * WIN PROBABILITY for a single week's games
+ * ============================================================
+ * Each side's score ~ Normal(expected, its swing, plus the season-long
+ * strength shift for whatever is still left to play). The chance A
+ * beats B is the chance that (A - B) > 0.
+ */
+const erf = (x) => {
+	// Abramowitz-Stegun 7.1.26
+	const sign = x < 0 ? -1 : 1;
+	const ax = Math.abs(x);
+	const t = 1 / (1 + 0.3275911 * ax);
+	const y = 1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-ax * ax);
+	return sign * y;
+};
+
+const normalCdf = (z) => 0.5 * (1 + erf(z / Math.SQRT2));
+
+/**
+ * @returns {{ week: number, probs: { [rosterID]: number } }} percent chance each team wins its game
+ */
+export const gameWinProbabilities = (inputs, week = inputs.currentWeek) => {
+	const probs = {};
+	for (const g of inputs.games) {
+		if (g.week !== week) continue;
+		const variance =
+			g.a.sd ** 2 +
+			g.b.sd ** 2 +
+			(TEAM_SHIFT_SD * g.a.shiftWeight) ** 2 +
+			(TEAM_SHIFT_SD * g.b.shiftWeight) ** 2;
+		const diff = g.a.mu - g.b.mu;
+		const p = variance > 1e-9 ? normalCdf(diff / Math.sqrt(variance)) : diff > 0 ? 1 : diff < 0 ? 0 : 0.5;
+		probs[g.a.id] = p * 100;
+		probs[g.b.id] = (1 - p) * 100;
+	}
+	return { week, probs };
+};

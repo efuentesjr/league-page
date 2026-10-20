@@ -24,6 +24,8 @@ import { getLeagueTeamManagers } from './leagueTeamManagers';
 import { getRosterIDFromManagerID } from './universalFunctions';
 import { predictScores } from './predictOptimalScore';
 import { waitForAll } from './multiPromise';
+import { getLeagueRosters } from './leagueRosters';
+import { loadPlayers } from './players';
 import { classifyBracketGame, maxBracketRound } from './playoffRounds';
 
 const CACHE_PREFIX = 'mfflSeasonGames_v2_';
@@ -454,3 +456,32 @@ export const computeTeamTiers = ({ rosters, players, leagueData, nflState }) => 
 };
 
 export const TIER_ORDER = ['Contender', 'Bubble', 'Rebuilding'];
+
+
+/*
+ * ============================================================
+ * LIVE TIERS (shared, cached)
+ * ============================================================
+ * One calculation per page load, shared by the manager rows, the
+ * League Tiers board and anything else that shows Win Now/Rebuild.
+ */
+let tiersPromise = null;
+
+export const getLiveTeamTiers = () => {
+	if (!tiersPromise) {
+		tiersPromise = waitForAll(getLeagueRosters(), getLeagueData(), getNflState(), loadPlayers(null))
+			.then(([rostersData, leagueData, nflState, playerData]) =>
+				computeTeamTiers({
+					rosters: rostersData.rosters,
+					players: playerData.players,
+					leagueData,
+					nflState
+				})
+			)
+			.catch((err) => {
+				tiersPromise = null;
+				throw err;
+			});
+	}
+	return tiersPromise;
+};

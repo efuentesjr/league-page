@@ -8,6 +8,7 @@
 		getNflGames,
 		getNflState
 	} from '$lib/utils/helper';
+	import { getLiveWinProbabilities, formatWinPct } from '$lib/utils/helperFunctions/liveWinProbability';
 
 	const title = 'MFFL LIVE SCOREBOARD';
 	const season = '2026 SEASON';
@@ -23,7 +24,12 @@
 	let showAllScores = false;
 	let transitioning = false;
 
-	const buildGames = async (matchupsData, teamManagersData) => {
+	const buildGames = async (matchupsData, teamManagersData, winProbs = null) => {
+		const winFor = (rosterID) =>
+			winProbs && Number(winProbs.week) === Number(weekNumber)
+				? winProbs.probs[String(rosterID)] ?? null
+				: null;
+
 		const nflGames = await getNflGames(2026, weekNumber);
 
 		const isLive = nflGames.some(
@@ -116,6 +122,7 @@
 					gameNumber: index + 1,
 
 					away: {
+						winPct: winFor(away.roster_id),
 						name: awayTeam?.name || 'Unknown Team',
 						logo: awayTeam?.avatar || '',
 						score: Array.isArray(away.points)
@@ -128,6 +135,7 @@
 					},
 
 					home: {
+						winPct: winFor(home.roster_id),
 						name: homeTeam?.name || 'Unknown Team',
 						logo: homeTeam?.avatar || '',
 						score: Array.isArray(home.points)
@@ -165,9 +173,17 @@
 				getLeagueTeamManagers()
 			]);
 
+			let winProbs = null;
+			try {
+				winProbs = await getLiveWinProbabilities(matchupsData.matchupWeeks);
+			} catch (err) {
+				console.error('[scoreboard] Win probability failed:', err);
+			}
+
 			const newGames = await buildGames(
 				matchupsData,
-				teamManagersData
+				teamManagersData,
+				winProbs
 			);
 
 			games = newGames;
@@ -328,6 +344,9 @@
 
 											<span class="summary-score">
 												{team.score.toFixed(2)}
+												{#if team.winPct != null}
+													<small class="summary-win">{formatWinPct(team.winPct)}</small>
+												{/if}
 											</span>
 										</div>
 									{/each}
@@ -469,6 +488,17 @@
 							</div>
 
 						</div>
+
+						{#if games[currentGame].away.winPct != null && games[currentGame].home.winPct != null}
+							<div class="winBar" aria-label="Chance to win">
+								<span class="winPct">{formatWinPct(games[currentGame].away.winPct)}</span>
+								<span class="winTrack">
+									<span class="winFill" style="width: {games[currentGame].away.winPct}%"></span>
+								</span>
+								<span class="winPct">{formatWinPct(games[currentGame].home.winPct)}</span>
+							</div>
+							<div class="winLabel">Chance to win</div>
+						{/if}
 
 					</div>
 
@@ -664,7 +694,7 @@
 		align-items: flex-end;
 		justify-content: center;
 
-		margin-bottom: 3cqh;
+		margin-bottom: 2cqh;
 
 		font-size: min(7cqh, 4.4cqw);
 		font-weight: 900;
@@ -686,8 +716,8 @@
 	}
 
 	.logo {
-		width: min(34cqh, 20cqw);
-		height: min(34cqh, 20cqw);
+		width: min(28cqh, 18cqw);
+		height: min(28cqh, 18cqw);
 
 		border-radius: 50%;
 		object-fit: cover;
@@ -710,9 +740,9 @@
 	}
 
 	.score {
-		margin-top: 3cqh;
+		margin-top: 2cqh;
 
-		font-size: min(21cqh, 11cqw);
+		font-size: min(19cqh, 11cqw);
 		font-weight: 900;
 		font-variant-numeric: tabular-nums;
 		line-height: 1;
@@ -810,6 +840,50 @@
 	.team.winning.completed .logo,
 	.team.winning.completed .score {
 		animation: completedWinnerGlow 1.8s ease-in-out infinite;
+	}
+
+	/* live win probability */
+	.winBar {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 1.5cqw;
+		margin: 4cqh 6cqw 0;
+		font-size: min(5cqh, 2.8cqw);
+		font-weight: 800;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.winTrack {
+		position: relative;
+		height: max(4px, 1.4cqh);
+		overflow: hidden;
+		background: #7c5cff;
+		box-shadow: 0 0 10px rgba(124, 92, 255, 0.55);
+	}
+
+	.winFill {
+		position: absolute;
+		inset: 0 auto 0 0;
+		background: #38e8ff;
+		box-shadow: 0 0 10px rgba(56, 232, 255, 0.8);
+		transition: width 0.6s ease;
+	}
+
+	.winLabel {
+		margin-top: 1cqh;
+		font-size: min(3.2cqh, 1.8cqw);
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		color: #8a96a3;
+	}
+
+	.summary-win {
+		display: block;
+		font-size: 0.6em;
+		font-weight: 700;
+		color: #8a96a3;
+		text-align: right;
 	}
 
 	/* ============================================================
@@ -969,8 +1043,8 @@
 		}
 
 		.logo {
-			width: min(30cqh, 26cqw);
-			height: min(30cqh, 26cqw);
+			width: min(25cqh, 24cqw);
+			height: min(25cqh, 24cqw);
 		}
 
 		.score {

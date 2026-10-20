@@ -2,6 +2,8 @@
     import { goto } from "$app/navigation";
 	import { getDatesActive, getRosterIDFromManagerID, getTeamNameFromTeamManagers } from "$lib/utils/helperFunctions/universalFunctions";
     import {dynasty} from "$lib/utils/leagueInfo"
+    import { onMount } from 'svelte';
+    import { getLiveTeamTiers } from '$lib/utils/helperFunctions/managerInsights';
 
     export let manager, leagueTeamManagers, key;
 
@@ -19,6 +21,21 @@
     }
 
     const commissioner = manager.managerID ? leagueTeamManagers.users[manager.managerID].is_owner : false;
+
+    // Win Now / Dynasty / Rebuild from the live league tiers (falls back to leagueInfo.js)
+    let liveMode = null;
+    onMount(async () => {
+        if (retired || !rosterID) return;
+        if (year && String(year) !== String(leagueTeamManagers.currentSeason)) return;
+        try {
+            const tiers = await getLiveTeamTiers();
+            liveMode = tiers[String(rosterID)]?.mode ?? null;
+        } catch (err) {
+            console.error('[ManagerRow] Could not load live tier:', err);
+        }
+    });
+
+    $: mode = liveMode ?? manager.mode;
 </script>
 
 <style>
@@ -38,8 +55,8 @@
     }
 
     .manager:hover {
-        box-shadow: 0 0 10px 0 bar(--g999);
-        background-color: bar(--eee);
+        box-shadow: 0 0 10px 0 var(--mf-ion-glow);
+        background-color: var(--eee);
     }
 
     .photo {
@@ -272,12 +289,12 @@
         <!-- Rebuild mode (optional and only displayed for dynasty leagues) -->
         {#if dynasty}
             <div class="infoSlot infoRebuild">
-                {#if manager.mode}
+                {#if mode}
                     <div class="infoIcon">
-                        <img class="infoImg" src="/{manager.mode.replace(' ', '%20')}.png" alt="win now or rebuild"/>
+                        <img class="infoImg" src="/{mode.replace(' ', '%20')}.png" alt="win now or rebuild"/>
                     </div>
                     <div class="infoAnswer">
-                        {manager.mode}
+                        {mode}
                     </div>
                 {:else}
                     <div class="infoIcon question">

@@ -3,6 +3,14 @@
 	import { getTeamFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
 
     export let matchup, players, active, ix, displayWeek, expandOverride=false, matchupWeek, leagueTeamManagers, year;
+    import { formatWinPct } from '$lib/utils/helperFunctions/liveWinProbability';
+
+    // { rosterID: percent } for the current week, or null
+    export let winProb = null;
+
+    $: homeWin = winProb ? winProb[String(matchup[0].roster_id)] : null;
+    $: awayWin = winProb ? winProb[String(matchup[1].roster_id)] : null;
+    $: showWin = homeWin != null && awayWin != null;
 
     let home = matchup[0];
     let away = matchup[1];
@@ -480,6 +488,49 @@
             left: -7px;
         }
     }
+
+    /* live win probability */
+    .winBar {
+        position: relative;
+        height: 14px;
+        margin: 0 0 2px;
+        overflow: hidden;
+        background: color-mix(in srgb, var(--mf-plasma) 45%, var(--mf-panel));
+        font-family: 'Chakra Petch', 'Roboto', sans-serif;
+    }
+
+    .winFill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        background: linear-gradient(90deg, color-mix(in srgb, var(--mf-ion) 70%, var(--mf-panel)), var(--mf-ion));
+        transition: width 0.4s ease;
+    }
+
+    .winBar em {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-style: normal;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.9);
+    }
+
+    .winL {
+        left: 6px;
+    }
+
+    .winR {
+        right: 6px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .winFill {
+            transition: none;
+        }
+    }
 </style>
 
 <div class="matchup">
@@ -496,6 +547,14 @@
             <img class="avatar" src={away.manager.avatar} alt="away team avatar" />
         </div>
     </div>
+
+    {#if showWin}
+        <div class="winBar" title="Chance to win, updated with live points and projections">
+            <span class="winFill" style="width: {homeWin}%"></span>
+            <em class="winL">{formatWinPct(homeWin)}</em>
+            <em class="winR">{formatWinPct(awayWin)}</em>
+        </div>
+    {/if}
 
     <div class="rosters" style="max-height: {active == ix ? calcHeight() + "px" : "0"}; {active != ix ? "border: none" : ""};">
         {#each starters as player}
