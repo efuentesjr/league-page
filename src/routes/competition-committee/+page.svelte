@@ -48,7 +48,7 @@
     { id: '4', title: 'Raise dues ($100). OPTION#1: We agreed to review it again and decide whether we should leave it as is or decrease it.', owner: 'Commish', notes: 'Section 7.3', status: 'OPEN' },
     { id: '5', title: 'Open Market Trading. Allow a 24hrs period to permit league owners to counter all trades. OPTION#1: All trades. OPTION#2: Only trades involving draft picks.', owner: 'Eddie Fuentes', status: 'HOLD' },
     { id: '6', title: 'League expansion analysis report', owner: 'Commish, John David', status: 'NEW' },
-    { id: '7', title: 'Draw for 2026 draft order', owner: 'League', status: 'YEARLY' },
+    { id: '7', title: 'Draw for 2027 draft order', owner: 'League', status: 'YEARLY' },
     { id: '8', title: 'Open forum: general fairness & league issues', owner: 'Commish', status: 'YEARLY' }
   ];
 

@@ -853,7 +853,7 @@
         </p>
         <ul>
           <li>Only one team may purchase this right per reshuffle cycle.</li>
-          <li>Three teams will be assigined to each division. leaving one spot open allowing the winning team to choose its division before the remaining teams are assigned.</li>
+          <li>Three teams will be assigned to each division, leaving four spots open, one per division, allowing the winning team to choose its division before the remaining teams are assigned.</li>
           <li>The purchase window, and tiebreak procedure will be a spin-off using the online tool.</li>
           <li>If no team purchases the right, divisions will be assigned according to the league’s standard reshuffle process.</li>
         </ul>
@@ -957,7 +957,7 @@
         <h5>Bottom Line</h5>
         <p>If the condition is clear, measurable, and filed upfront, it is legal.</p>
         <p>If it requires interpretation or future negotiation, it is not.</p>
-        <p>All conditional trades are subject to approval by a majority vote of the three commissioners.</p>
+        <p>All conditional trades require approval from all three commissioners.</p>
       </div>
 
       <h4 bind:this={oneThreeTwo}>1.3.2 Trade Collusion</h4>
@@ -997,7 +997,7 @@
 
       <h4 bind:this={oneThreeFour}>1.3.4 Trade Deadline</h4>
       <div class="subBlock">
-        <p>The trade deadline will be set for Wednesday of Week 7 at 8:00 p.m. CST.</p>
+        <p>The trade deadline will be set for Wednesday of Week 7 at 8:00 p.m. Central Time.</p>
       </div>
 
       <h4 bind:this={oneThreeFive}>1.3.5 Trade Restrictions</h4>
@@ -1345,7 +1345,7 @@
       <p>League payout is structured as follows:</p>
       <p>Each Divisional Champion will receive a $25 payout.</p>
       <p>
-        Commissioners will receive FAAB compensation equal to 25% of the maximum FAAB allowed for that season, evenly among
+        Commissioners will receive FAAB compensation equal to 25% of the maximum FAAB allowed for that season, split evenly among
         all active commissioners.
       </p>
 
@@ -1429,7 +1429,7 @@
             <tr>
               <td>Rings</td>
               <td class="ledger-value">GC2017, TF2019, JR2020, MA2021</td>
-              <td class="ledger-value">$ 147.46</td>
+              <td class="ledger-value">$ 155.00</td>
             </tr>
             <tr>
               <td>Trophy Base</td>
