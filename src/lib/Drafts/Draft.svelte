@@ -113,7 +113,7 @@
     }
 
     :global(.upcomingBoard td) {
-        height: 10em;
+        height: 12em;
     }
 
     :global(.draftBoard td:last-of-type) {

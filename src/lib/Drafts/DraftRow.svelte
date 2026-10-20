@@ -121,7 +121,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 1.9em;
+    top: 1.8em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -159,6 +159,8 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .prospectSub {
