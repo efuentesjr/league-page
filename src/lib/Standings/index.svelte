@@ -163,6 +163,7 @@
         padding: 0 12px;
         font-size: 0.78em;
         line-height: 1.5;
+        text-align: left;
         color: var(--mf-dim);
     }
 
