@@ -1,5 +1,6 @@
 <script>
-    import { leagueName, round, getLeagueData } from '$lib/utils/helper';
+    import { leagueName, round, getLeagueData, getLeagueRosters, getNflState, getLeagueMatchups, loadPlayers, waitForAll } from '$lib/utils/helper';
+    import { buildSimInputs, simulateSeason } from '$lib/utils/helperFunctions/playoffOdds';
 	import { getTeamFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
   	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
 	import LinearProgress from '@smui/linear-progress';
@@ -13,7 +14,7 @@
     const sortOrder = ["fptsAgainst", "divisionTies", "divisionWins", "fpts", "ties", "wins"];
 
     // Column order from left to right
-    const columnOrder = [{name: "W", field: "wins"}, {name: "T", field: "ties"}, {name: "L", field: "losses"}, {name: "Div W", field: "divisionWins"}, {name: "Div T", field: "divisionTies"}, {name: "Div L", field: "divisionLosses"}, {name: "FPTS", field: "fpts"}, {name: "FPTS Against", field: "fptsAgainst"}, {name: "Streak", field: "streak"}]
+    let columnOrder = [{name: "W", field: "wins"}, {name: "T", field: "ties"}, {name: "L", field: "losses"}, {name: "Div W", field: "divisionWins"}, {name: "Div T", field: "divisionTies"}, {name: "Div L", field: "divisionLosses"}, {name: "FPTS", field: "fpts"}, {name: "FPTS Against", field: "fptsAgainst"}, {name: "Streak", field: "streak"}]
 
     let loading = true;
     let preseason = false;
@@ -59,9 +60,48 @@
 
         standings = finalStandings;
         loading = false;
+
+        addPlayoffOdds();
     })
 
     let innerWidth;
+
+    // Playoff % column, from the same simulator as the Playoff Odds page
+    const fmtPct = (v) => {
+        if (v >= 99.95) return '100%';
+        if (v > 99.4) return '>99%';
+        if (v > 0 && v < 0.5) return '<1%';
+        return `${Math.round(v)}%`;
+    };
+
+    const addPlayoffOdds = async () => {
+        try {
+            const [rostersData, leagueData, nflState, matchupsData, playersInfo] = await waitForAll(
+                getLeagueRosters(),
+                getLeagueData(),
+                getNflState(),
+                getLeagueMatchups(),
+                loadPlayers(null)
+            );
+            const inputs = buildSimInputs({
+                rosters: rostersData.rosters,
+                players: playersInfo.players,
+                leagueData,
+                nflState,
+                matchupWeeks: matchupsData.matchupWeeks
+            });
+            if (!inputs.games.length) return; // regular season is over
+            const odds = Object.fromEntries(
+                simulateSeason(inputs, { sims: 10000 }).map((r) => [String(r.rosterID), r.playoffPct])
+            );
+            standings = standings.map((s) => ({ ...s, playoffPct: fmtPct(odds[String(s.rosterID)] ?? 0) }));
+            if (!columnOrder.find((c) => c.field === 'playoffPct')) {
+                columnOrder = [...columnOrder, { name: 'Playoff %', field: 'playoffPct' }];
+            }
+        } catch (err) {
+            console.error('[Standings] Could not add playoff odds:', err);
+        }
+    };
 
 </script>
 
