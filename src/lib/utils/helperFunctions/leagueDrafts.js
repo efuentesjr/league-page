@@ -4,6 +4,38 @@ import { waitForAll } from './multiPromise';
 import { get } from 'svelte/store';
 import {upcomingDraft, previousDrafts} from '$lib/stores';
 import { getLeagueRosters } from './leagueRosters';
+import { getNflState } from './nflState';
+import { getLeagueMatchups } from './leagueMatchups';
+import { loadPlayers } from './players';
+import { buildSimInputs, simulateSeason, projectedDraftOrder } from './playoffOdds';
+
+/*
+ * Projected order from the Playoff Odds simulation (same seed as the
+ * Lottery Watch, so the numbers match). Returns null if it can't be built.
+ */
+const getLotteryOrder = async (rosters, leagueData) => {
+	// browser only (the page re-runs in the browser; the server render shows the standings order)
+	if (typeof window === 'undefined') return null;
+	try {
+		const [nflState, matchupsData, playersInfo] = await waitForAll(
+			getNflState(),
+			getLeagueMatchups(),
+			loadPlayers(null)
+		);
+		const inputs = buildSimInputs({
+			rosters,
+			players: playersInfo.players,
+			leagueData,
+			nflState,
+			matchupWeeks: matchupsData.matchupWeeks
+		});
+		const results = simulateSeason(inputs, { sims: 10000 });
+		return projectedDraftOrder(results, inputs.playoffTeams);
+	} catch (err) {
+		console.error('[Drafts] Could not build lottery order, using standings:', err);
+		return null;
+	}
+};
 
 export const getUpcomingDraft = async () => {
 	if(get(upcomingDraft).draft) {
@@ -35,9 +67,17 @@ export const getUpcomingDraft = async () => {
 
     const rosters = rosterRes.rosters;
 
+	let orderInfo = null;
+
 	if(officialDraft.status == "complete") {
 		year = year + 1;
-		const buildRes = buildFromScratch(rosters, officialDraft.slot_to_roster_id, officialDraft.settings.rounds, picks.filter(pick => parseInt(pick.season) == year), regularSeasonLength);
+		const testRoster = rosters[Object.keys(rosters)[0]]?.settings || {};
+		const gamesPlayed = (testRoster.wins || 0) + (testRoster.ties || 0) + (testRoster.losses || 0);
+		const lotteryOrder = gamesPlayed > 0 ? await getLotteryOrder(rosters, leagueData) : null;
+		if(lotteryOrder) {
+			orderInfo = Object.fromEntries(lotteryOrder.map((t) => [t.rosterID, t]));
+		}
+		const buildRes = buildFromScratch(rosters, officialDraft.slot_to_roster_id, officialDraft.settings.rounds, picks.filter(pick => parseInt(pick.season) == year), regularSeasonLength, lotteryOrder ? lotteryOrder.map((t) => t.rosterID) : null);
 		draft = buildRes.draft;
 		draftOrder = buildRes.draftOrder;
 		accuracy = buildRes.accuracy;
@@ -52,6 +92,7 @@ export const getUpcomingDraft = async () => {
 		draft,
 		draftOrder,
 		accuracy,
+		orderInfo,
 		draftType: officialDraft.type,
 		reversalRound: officialDraft.settings.reversal_round,
 	}
@@ -62,7 +103,7 @@ export const getUpcomingDraft = async () => {
 }
 
 // Predict draft board
-const buildFromScratch = (rosters, previousOrder, rounds, picks, regularSeasonLength) => {
+const buildFromScratch = (rosters, previousOrder, rounds, picks, regularSeasonLength, projectedOrder = null) => {
 	const draftOrder = [];
     const rosterKeys = Object.keys(rosters);
     const testRoster = rosters[rosterKeys[0]].settings;
@@ -70,7 +111,12 @@ const buildFromScratch = (rosters, previousOrder, rounds, picks, regularSeasonLe
 
 	// Build starting order. If the season has started and some games have been played,
 	// use win record to predict draft order, otherwise (in preseason) use previous draft order
-	if(progression == 0) {
+	if(projectedOrder && projectedOrder.length === rosterKeys.length) {
+		// projected from Lottery Watch (see getLotteryOrder)
+		for (const key of projectedOrder) {
+			draftOrder.push(String(key));
+		}
+	} else if(progression == 0) {
 		for (const key in previousOrder) {
 			draftOrder.push(previousOrder[key]);
 		}

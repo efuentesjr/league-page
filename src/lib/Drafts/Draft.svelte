@@ -8,7 +8,14 @@
     
     export let draftData, leagueTeamManagers, previous = false, year, players;
 
-    const {draftOrder, draft, accuracy, reversalRound, draftType} = draftData;
+    const {draftOrder, draft, accuracy, reversalRound, draftType, orderInfo} = draftData;
+
+    const groupLabel = (info) => {
+        if (!info) return '';
+        if (info.group === 'lottery') return `Lottery · ${info.firstPickPct >= 0.5 ? Math.round(info.firstPickPct) : '<1'}% #1`;
+        if (info.group === 'nonPlayoff') return 'Non-playoff';
+        return 'Playoffs';
+    };
 
     let progress = 0;
     let closed = false;
@@ -100,6 +107,37 @@
         cursor: pointer;
     }
 	
+    .orderNote {
+        max-width: 72ch;
+        margin: 0 auto 1em;
+        font-size: 0.85em;
+        line-height: 1.45;
+        color: var(--mf-dim);
+        text-align: center;
+    }
+
+    .orderTag {
+        display: inline-block;
+        margin: 2px 0;
+        padding: 0 5px;
+        font-size: 0.7em;
+        font-weight: 700;
+        white-space: nowrap;
+        border: 1px solid currentColor;
+    }
+
+    .tag-lottery {
+        color: #d9a62e;
+    }
+
+    .tag-nonPlayoff {
+        color: var(--mf-dim);
+    }
+
+    .tag-playoff {
+        color: var(--mf-ion);
+    }
+
 	:global(.curDraftName) {
         color: #888;
         font-size: 0.7em;
@@ -117,6 +155,14 @@
     </div>
 {/if}
 
+{#if orderInfo && !previous}
+    <p class="orderNote">
+        Projected order from <a href="/playoff-odds">Lottery Watch</a>: lottery teams first (best #1 pick odds),
+        then other non-playoff teams (worst record first), then playoff teams by projected finish (title favorite picks last).
+        The real order is set by the lottery drawing.
+    </p>
+{/if}
+
 <DataTable class="draftBoard">
     <Head>
         <Row>
@@ -125,6 +171,10 @@
                     <Cell class="draftTeam">
                         <img class="avatar clickable" onclick={() => gotoManager({year, leagueTeamManagers, rosterID: draftPosition})} src="{getAvatarFromTeamManagers(leagueTeamManagers, draftPosition, year)}" alt="{getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year)} avatar"/>
                         <br />
+                        {#if orderInfo?.[String(draftPosition)] && !previous}
+                            <span class="orderTag tag-{orderInfo[String(draftPosition)].group}">{groupLabel(orderInfo[String(draftPosition)])}</span>
+                            <br />
+                        {/if}
                         <span class="clickable" onclick={() => gotoManager({year, leagueTeamManagers, rosterID: draftPosition})}>{getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year)}{@html getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition, year) != getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition) ? `<br /><span class="curDraftName">(${getTeamNameFromTeamManagers(leagueTeamManagers, draftPosition)})</span>` : ''}</span>
                     </Cell>
                 {/if}

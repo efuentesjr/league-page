@@ -499,3 +499,43 @@ export const gameWinProbabilities = (inputs, week = inputs.currentWeek) => {
 	}
 	return { week, probs };
 };
+
+/*
+ * ============================================================
+ * PROJECTED DRAFT ORDER (from Lottery Watch)
+ * ============================================================
+ *  1. Lottery teams (more likely than not to earn ping pong balls),
+ *     best #1 pick odds first
+ *  2. Other non-playoff teams, worst projected record first
+ *  3. Playoff teams by projected finish (title favorite picks last)
+ */
+export const projectedDraftOrder = (results, playoffTeams = 8) => {
+	const playoffSet = new Set(
+		[...results]
+			.sort((a, b) => b.playoffPct - a.playoffPct || b.projectedWins - a.projectedWins || b.pointsFor - a.pointsFor)
+			.slice(0, playoffTeams)
+			.map((r) => String(r.rosterID))
+	);
+
+	const lottery = results
+		.filter((r) => r.lotteryAnyPct >= 50)
+		.sort((a, b) => b.firstPickPct - a.firstPickPct || b.lotteryBalls - a.lotteryBalls);
+	const inLottery = new Set(lottery.map((r) => String(r.rosterID)));
+
+	const nonPlayoff = results
+		.filter((r) => !inLottery.has(String(r.rosterID)) && !playoffSet.has(String(r.rosterID)))
+		.sort((a, b) => a.projectedWins - b.projectedWins || a.pointsFor - b.pointsFor);
+
+	const playoff = results
+		.filter((r) => !inLottery.has(String(r.rosterID)) && playoffSet.has(String(r.rosterID)))
+		.sort(
+			(a, b) =>
+				(a.champPct ?? 0) - (b.champPct ?? 0) ||
+				(a.finalPct ?? 0) - (b.finalPct ?? 0) ||
+				(a.semifinalPct ?? 0) - (b.semifinalPct ?? 0) ||
+				a.playoffPct - b.playoffPct
+		);
+
+	const tag = (list, group) => list.map((r) => ({ rosterID: String(r.rosterID), group, firstPickPct: r.firstPickPct, champPct: r.champPct }));
+	return [...tag(lottery, 'lottery'), ...tag(nonPlayoff, 'nonPlayoff'), ...tag(playoff, 'playoff')];
+};
