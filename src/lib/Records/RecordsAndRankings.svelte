@@ -197,8 +197,16 @@
     }
 
     /* rank column: gold / silver / bronze for the top three */
+    .recordsScope :global(.mdc-data-table__body .mdc-data-table__cell) {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
     .recordsScope :global(.rank) {
-        width: 28px;
+        width: 1%;
+        white-space: nowrap !important;
+        padding-right: 4px !important;
         font-weight: 700;
         color: var(--mf-ion);
     }
@@ -331,7 +339,6 @@
     .spanText {
         font-size: 0.85em;
         color: var(--mf-dim);
-        white-space: nowrap;
     }
 
     .finePrint {
