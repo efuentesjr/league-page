@@ -14,7 +14,8 @@
  *       30% the team's actual average this season
  *  2. Randomness: each team's own week-to-week swing this season,
  *     pulled toward a league-typical 24 points while the sample
- *     is small.
+ *     is small, plus a season-long shift in team strength per
+ *     simulated season (rosters change; projections miss).
  *  3. The week in progress uses live points already scored plus
  *     projections for starters who haven't played yet.
  *  4. Standings: wins (ties count half), then points for — this
@@ -28,6 +29,13 @@ import { predictScores } from './predictOptimalScore';
 
 const DEFAULT_SD = 24;
 const PRIOR_WEIGHT = 4; // weeks of "typical league" variance mixed in
+// Team strength isn't fixed: trades, waivers, injuries and projection
+// misses shift it over a season. Each simulated season every team gets
+// one random shift (points per game) applied to all its remaining games.
+const TEAM_SHIFT_SD = 9;
+// Projections overstate gaps between teams, so pull them toward the
+// league average a little.
+const REGRESSION = 0.85;
 
 const mean = (arr) => (arr.length ? arr.reduce((t, v) => t + v, 0) / arr.length : 0);
 
@@ -166,6 +174,7 @@ export const buildSimInputs = ({ rosters, players, leagueData, nflState, matchup
 				const id = String(team.roster_id);
 				let mu = expected(id, week);
 				let sd = teams[index[id]].sd;
+				let shiftWeight = 1;
 
 				// week in progress: live points + projections for starters yet to play
 				if (week === currentWeek) {
@@ -181,14 +190,25 @@ export const buildSimInputs = ({ rosters, players, leagueData, nflState, matchup
 						const fraction = mu > 0 ? Math.min(1, remaining / mu) : 0;
 						mu = live + remaining;
 						sd = sd * Math.sqrt(fraction);
+						shiftWeight = fraction;
 					}
 				}
 
-				return { id, mu, sd };
+				return { id, mu, sd, shiftWeight, live: shiftWeight < 1 };
 			});
 
 			games.push({ key: `${week}-${matchupID}`, week, a: sides[0], b: sides[1] });
 		}
+	}
+
+	// pull future projections toward that week's league average
+	const byWeek = {};
+	for (const g of games) (byWeek[g.week] ??= []).push(g.a, g.b);
+	for (const sides of Object.values(byWeek)) {
+		const future = sides.filter((x) => !x.live);
+		if (!future.length) continue;
+		const avg = mean(future.map((x) => x.mu));
+		for (const x of future) x.mu = avg + REGRESSION * (x.mu - avg);
 	}
 
 	// playoff weeks
@@ -198,6 +218,10 @@ export const buildSimInputs = ({ rosters, players, leagueData, nflState, matchup
 		for (let r = 0; r < playoffRounds; r++) {
 			playoffExpected[team.id].push(expected(team.id, regEnd + 1 + r));
 		}
+	}
+	for (let r = 0; r < playoffRounds; r++) {
+		const avg = mean(teams.map((t) => playoffExpected[t.id][r]));
+		for (const t of teams) playoffExpected[t.id][r] = avg + REGRESSION * (playoffExpected[t.id][r] - avg);
 	}
 
 	return {
@@ -255,17 +279,19 @@ export const simulateSeason = (inputs, { sims = 10000, picks = {}, seed = 2026 }
 	const wins = new Float64Array(n);
 	const losses = new Float64Array(n);
 	const points = new Float64Array(n);
+	const shift = new Float64Array(n);
 
 	const playGame = (i, j, roundIndex) => {
 		const a = teams[i].id;
 		const b = teams[j].id;
-		const sa = playoffExpected[a][roundIndex] + teams[i].sd * gaussian(rand);
-		const sb = playoffExpected[b][roundIndex] + teams[j].sd * gaussian(rand);
+		const sa = playoffExpected[a][roundIndex] + shift[i] + teams[i].sd * gaussian(rand);
+		const sb = playoffExpected[b][roundIndex] + shift[j] + teams[j].sd * gaussian(rand);
 		return sa >= sb ? i : j;
 	};
 
 	for (let s = 0; s < sims; s++) {
 		for (let i = 0; i < n; i++) {
+			shift[i] = TEAM_SHIFT_SD * gaussian(rand);
 			wins[i] = baseWins[i];
 			losses[i] = teams[i].losses + teams[i].ties / 2;
 			points[i] = basePoints[i];
@@ -274,8 +300,8 @@ export const simulateSeason = (inputs, { sims = 10000, picks = {}, seed = 2026 }
 		for (const game of games) {
 			const ia = index[game.a.id];
 			const ib = index[game.b.id];
-			const sa = Math.max(0, game.a.mu + game.a.sd * gaussian(rand));
-			const sb = Math.max(0, game.b.mu + game.b.sd * gaussian(rand));
+			const sa = Math.max(0, game.a.mu + shift[ia] * game.a.shiftWeight + game.a.sd * gaussian(rand));
+			const sb = Math.max(0, game.b.mu + shift[ib] * game.b.shiftWeight + game.b.sd * gaussian(rand));
 			points[ia] += sa;
 			points[ib] += sb;
 
