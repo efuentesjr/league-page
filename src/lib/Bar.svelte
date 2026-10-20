@@ -10,6 +10,17 @@
 
   $: user = managerID ? leagueTeamManagers.users[managerID] : null;
 
+  // whole numbers stay whole; anything with decimals shows exactly two
+  const fmt = (val) => {
+    const n = Number(val);
+    if (!isFinite(n)) return val;
+    return Number.isInteger(n) ? String(n) : n.toFixed(2);
+  };
+  const fmt2 = (val) => {
+    const n = Number(val);
+    return isFinite(n) ? n.toFixed(2) : val;
+  };
+
   const pct = (val) => {
     const span = (xMax - xMin) === 0 ? 1 : (xMax - xMin);
     return Math.max(0, Math.min(100, ((val - xMin) / span) * 100));
@@ -213,7 +224,7 @@
         >
           <div class="barInner">
             {#if !secondStat}
-              <span class="barLabel">{stat}{label}</span>
+              <span class="barLabel">{fmt(stat)}{label}</span>
 														 
 																			 
 						  
@@ -230,7 +241,7 @@
           >
             <div class="barInner">
               <span class="barLabel">
-                {secondStat}&nbsp;&nbsp;of&nbsp;&nbsp;{stat}&nbsp;&nbsp;({round(secondStat/stat*100)}%)
+                {fmt2(secondStat)}&nbsp;&nbsp;of&nbsp;&nbsp;{fmt2(stat)}&nbsp;&nbsp;({round(secondStat/stat*100)}%)
               </span>
             </div>
           </div>
