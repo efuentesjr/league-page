@@ -118,7 +118,8 @@
         width: 97%;
         border-radius: 20px;
         background-color: var(--rivalryBack);
-        border: 1px solid var(--aaa);
+        border: 1px solid var(--mf-line);
+        box-shadow: 0 0 26px -14px var(--mf-ion-glow);
         margin: 2em auto;
         padding: 2em 0;
         max-width: 1000px;
@@ -160,6 +161,7 @@
         max-width: 90%;
         border-radius: 14px;
         border: 2px solid var(--tierColor);
+        box-shadow: 0 0 26px -6px var(--tierColor);
         background: color-mix(in srgb, var(--tierColor) 12%, transparent);
         text-align: center;
     }
@@ -169,7 +171,7 @@
         font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        color: #999;
+        color: var(--mf-dim);
     }
 
     .tierName {
@@ -192,7 +194,7 @@
 
     .tierReason {
         font-size: 0.9em;
-        color: #bbb;
+        color: var(--mf-dim);
     }
 
     /* regular season vs playoffs */
@@ -217,7 +219,7 @@
         font-weight: 700;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: #999;
+        color: var(--mf-dim);
     }
 
     .splitRecord {
@@ -228,7 +230,7 @@
 
     .splitNote {
         font-size: 0.75em;
-        color: #999;
+        color: var(--mf-dim);
     }
 
     .meetings {
@@ -244,7 +246,7 @@
         align-items: center;
         gap: 10px;
         padding: 8px 10px;
-        border-bottom: 1px solid var(--ddd, rgba(255,255,255,0.1));
+        border-bottom: 1px solid var(--mf-line);
         font-size: 0.95em;
     }
 
@@ -266,7 +268,7 @@
     .meetingScore {
         flex: none;
         font-variant-numeric: tabular-nums;
-        color: #aaa;
+        color: var(--mf-dim);
     }
 
     @media (max-width: 520px) {

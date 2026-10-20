@@ -76,7 +76,7 @@
     .infoDetail {
         margin-top: 0.35em;
         font-size: 0.85em;
-        color: var(--g999, #999);
+        color: var(--mf-dim);
         font-style: italic;
     }
 

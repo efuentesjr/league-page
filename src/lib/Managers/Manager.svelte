@@ -142,7 +142,10 @@
         max-width: 200px;
         height: auto;
         margin: 5em auto 1em;
-        box-shadow: 0 0 8px 4px #aaa;
+        border: 3px solid var(--mf-ion);
+        box-shadow:
+            0 0 0 6px color-mix(in srgb, var(--mf-plasma) 35%, transparent),
+            0 0 34px 6px var(--mf-ion-glow);
     }
 
     h2 {

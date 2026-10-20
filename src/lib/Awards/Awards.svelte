@@ -13,6 +13,10 @@
 
 	h3 {
 		margin: 2.5em 0 1.5em;
+		font-size: 2.6em;
+		font-weight: 700;
+		color: #d9a62e;
+		text-shadow: 0 0 22px rgba(229, 181, 42, 0.45);
 	}
 
 	.awards {

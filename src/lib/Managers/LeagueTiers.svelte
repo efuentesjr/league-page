@@ -137,7 +137,7 @@
 	.subhead {
 		text-align: center;
 		font-size: 0.8em;
-		color: #888;
+		color: var(--mf-dim);
 		margin: 0 1em 1.5em;
 	}
 
@@ -150,8 +150,8 @@
 	.tierColumn {
 		border-radius: 10px;
 		padding: 10px;
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: var(--mf-panel);
+		border: 1px solid var(--mf-line);
 		border-top: 3px solid var(--tierColor);
 	}
 
@@ -184,7 +184,7 @@
 
 	.tierBlurb {
 		font-size: 0.72em;
-		color: #888;
+		color: var(--mf-dim);
 	}
 
 	.tierTeam {
@@ -211,13 +211,13 @@
 	}
 
 	.tierTeam.clickable:hover {
-		background: rgba(255, 255, 255, 0.06);
+		background: color-mix(in srgb, var(--mf-ion) 8%, transparent);
 	}
 
 	.tierRank {
 		font-size: 0.8em;
 		font-weight: 700;
-		color: #888;
+		color: var(--mf-dim);
 		text-align: right;
 	}
 

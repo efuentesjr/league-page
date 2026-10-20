@@ -77,9 +77,11 @@
   }
 
   .title {
-    font-size: 1.7rem;
+    font-size: 2rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
+    color: var(--mf-text);
+    text-shadow: 0 0 18px var(--mf-ion-glow);
   }
 
   .player {
@@ -88,7 +90,8 @@
     margin: 0 0 1.5rem;
     border-radius: 0;
     overflow: hidden;
-    box-shadow: none;
+    border: 1px solid var(--mf-line-strong);
+    box-shadow: 0 0 30px -8px var(--mf-ion-glow);
     background: #000;
     position: relative;
   }
