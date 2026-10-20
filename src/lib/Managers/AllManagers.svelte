@@ -22,6 +22,10 @@
         margin: 0 auto;
     }
 
+    .tiersBelow {
+        margin-top: 4em;
+    }
+
     h2 {
         text-align: center;
         font-size: 2.8em;
@@ -42,11 +46,13 @@
 <div class="managerContainer">
     <h2>{leagueName} Managers</h2>
     <div class="managerConstrained">
-        <LeagueTiers {managers} {leagueTeamManagers} />
-
         {#each managers as manager, key}
             <ManagerRow {manager} {leagueTeamManagers} {key} />
         {/each}
+
+        <div class="tiersBelow">
+            <LeagueTiers {managers} {leagueTeamManagers} />
+        </div>
     </div>
 
 </div>
