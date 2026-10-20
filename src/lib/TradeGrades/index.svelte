@@ -9,6 +9,7 @@
 	import { getLeagueTeamManagers, loadPlayers, waitForAll, gotoManager } from '$lib/utils/helper';
 	import { getTradeGrades, gradeTone } from '$lib/utils/helperFunctions/tradeGradesClient';
 	import { MIN_WEEKS } from '$lib/utils/helperFunctions/tradeGrades';
+	import { GHOST_MANAGERS } from '$lib/utils/helperFunctions/playoffRounds';
 
 	let state = 'loading';
 	let data = null;
@@ -100,7 +101,7 @@
 	$: records = data
 		? Object.entries(data.managers)
 				.map(([id, m]) => ({ id, ...m }))
-				.filter((m) => m.trades > 0)
+				.filter((m) => m.trades > 0 && !GHOST_MANAGERS[String(m.id)]) // former managers left out
 				.sort((a, b) => b.net - a.net)
 		: [];
 	$: maxNet = Math.max(1, ...records.map((m) => Math.abs(m.net)));
