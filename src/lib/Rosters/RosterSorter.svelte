@@ -112,8 +112,11 @@
 		width: 160px;
 		background-repeat: no-repeat;
 		background-position: center;
-		background-size: contain;
-		filter: drop-shadow(0 0 12px var(--mf-ion-glow));
+		background-size: cover;
+		background-color: #000;
+		border: 1px solid var(--mf-line-strong);
+		box-shadow: 0 0 14px var(--mf-ion-glow);
+		clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
 	}
 
 	.banner-D-1 { background-image: url("/division-1-banner.png"); }
@@ -171,7 +174,7 @@
 	<div class="rostersHeader">
 		<div>
 			<h2 class="rostersTitle">Rosters</h2>
-			<div class="rostersSub"><strong>{Object.keys(rosters).length}</strong> teams{numDivisions > 1 ? ` · ${numDivisions} divisions` : ''} · tap a team for its manager page</div>
+			<div class="rostersSub"><strong>{divisions.reduce((n, d) => n + d.rosters.length, 0)}</strong> teams{numDivisions > 1 ? ` · ${numDivisions} divisions` : ''} · tap a team for its manager page</div>
 		</div>
 		<button type="button" class="expandAll" onclick={() => {expanded = !expanded}}>
 			{expanded ? 'Hide' : 'Show'} all benches
