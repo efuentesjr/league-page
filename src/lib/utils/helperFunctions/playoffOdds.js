@@ -37,6 +37,19 @@ const TEAM_SHIFT_SD = 9;
 // league average a little.
 const REGRESSION = 0.85;
 
+/*
+ * Draft lottery (Constitution 3.4). Ping pong balls by final
+ * regular season place, plus Toilet Bowl finish (1st, 2nd, 3rd).
+ * Every ball is always awarded, so #1 pick odds = balls / total.
+ */
+export const LOTTERY = {
+	regularSeason: { 8: 1, 11: 3, 12: 2, 13: 1 },
+	toiletBowl: [3, 2, 1]
+};
+const LOTTERY_TOTAL =
+	Object.values(LOTTERY.regularSeason).reduce((t, b) => t + b, 0) +
+	LOTTERY.toiletBowl.reduce((t, b) => t + b, 0);
+
 const mean = (arr) => (arr.length ? arr.reduce((t, v) => t + v, 0) / arr.length : 0);
 
 /** Standard normal sample (Box-Muller). */
@@ -272,6 +285,12 @@ export const simulateSeason = (inputs, { sims = 10000, picks = {}, seed = 2026 }
 	const champion = new Array(n).fill(0);
 	const winTotals = new Array(n).fill(0);
 	const lossTotals = new Array(n).fill(0);
+	const ballTotals = new Array(n).fill(0);
+	const anyBalls = new Array(n).fill(0);
+	const firstPickShare = new Array(n).fill(0);
+	const simBalls = new Float64Array(n);
+	// Toilet Bowl: seeds after the playoff teams, mirrored bracket, winners advance
+	const toiletBowl = playoffTeams === 8 && n >= 16;
 
 	const baseWins = teams.map((t) => t.wins + t.ties / 2);
 	const basePoints = teams.map((t) => t.pointsFor);
@@ -320,12 +339,37 @@ export const simulateSeason = (inputs, { sims = 10000, picks = {}, seed = 2026 }
 		}
 
 		const order = rankTeams(wins, points, n);
+		simBalls.fill(0);
 		for (let place = 0; place < n; place++) {
 			const t = order[place];
 			seeds[t][place]++;
 			winTotals[t] += wins[t];
 			lossTotals[t] += losses[t];
 			if (place < playoffTeams) playoffs[t]++;
+			simBalls[t] += LOTTERY.regularSeason[place + 1] || 0;
+		}
+
+		if (toiletBowl) {
+			const tb = (k) => order[playoffTeams + k]; // k = 0..7 -> seeds 9..16
+			const r1 = [[0, 7], [3, 4], [2, 5], [1, 6]].map(([x, y]) => [tb(x), tb(y)]);
+			const r1w = r1.map(([x, y]) => playGame(x, y, 0));
+			const sf = [[r1w[0], r1w[1]], [r1w[2], r1w[3]]];
+			const sfw = sf.map(([x, y]) => playGame(x, y, 1));
+			const sfl = sf.map(([x, y], k) => (sfw[k] === x ? y : x));
+			const first = playGame(sfw[0], sfw[1], 2);
+			const second = first === sfw[0] ? sfw[1] : sfw[0];
+			const third = playGame(sfl[0], sfl[1], 2);
+			simBalls[first] += LOTTERY.toiletBowl[0];
+			simBalls[second] += LOTTERY.toiletBowl[1];
+			simBalls[third] += LOTTERY.toiletBowl[2];
+		}
+
+		const totalBalls = toiletBowl ? LOTTERY_TOTAL : LOTTERY_TOTAL - LOTTERY.toiletBowl.reduce((t, b) => t + b, 0);
+		for (let i = 0; i < n; i++) {
+			if (!simBalls[i]) continue;
+			ballTotals[i] += simBalls[i];
+			anyBalls[i]++;
+			firstPickShare[i] += simBalls[i] / totalBalls;
 		}
 
 		if (!bracket) continue;
@@ -366,7 +410,10 @@ export const simulateSeason = (inputs, { sims = 10000, picks = {}, seed = 2026 }
 		projectedLosses: lossTotals[i] / sims,
 		semifinalPct: bracket ? pct(wonRound1[i]) : null,
 		finalPct: bracket ? pct(madeFinal[i]) : null,
-		champPct: bracket ? pct(champion[i]) : null
+		champPct: bracket ? pct(champion[i]) : null,
+		lotteryBalls: ballTotals[i] / sims,
+		lotteryAnyPct: pct(anyBalls[i]),
+		firstPickPct: (firstPickShare[i] / sims) * 100
 	}));
 };
 

@@ -96,6 +96,12 @@
 	$: pickCount = Object.keys(picks).length;
 	$: seasonOver = inputs && !inputs.games.length;
 
+	// Lottery Watch: teams with a real shot at ping pong balls, best #1 pick odds first
+	$: lottery = results
+		.filter((r) => r.firstPickPct >= 0.5 || r.lotteryAnyPct >= 1)
+		.sort((a, b) => b.firstPickPct - a.firstPickPct || b.lotteryBalls - a.lotteryBalls);
+	$: maxFirstPick = Math.max(1, ...lottery.map((r) => r.firstPickPct));
+
 	const togglePick = (game, rosterID) => {
 		const next = { ...picks };
 		if (next[game.key] === rosterID) delete next[game.key];
@@ -275,6 +281,48 @@
 			Semis = wins Round 1 · Final = reaches the Championship · Title = wins it all.
 			Clinched and Eliminated are mathematical locks based on wins alone.
 		</p>
+
+		<!-- LOTTERY WATCH -->
+		{#if lottery.length}
+			<div class="lottery" class:busy={simulating}>
+				<div class="lotteryHead">
+					<h2><span class="lotteryBall" aria-hidden="true"></span>Lottery Watch</h2>
+					<p>
+						Projected ping pong balls for the draft lottery, from the same simulated seasons: regular
+						season finish (8th, 11th, 12th, 13th) plus the Toilet Bowl (1st, 2nd, 3rd).
+					</p>
+				</div>
+
+				<div class="lotteryRows">
+					<div class="lotteryRow lotteryLabels" aria-hidden="true">
+						<span>Team</span>
+						<span>Balls</span>
+						<span>Gets any</span>
+						<span>#1 pick odds</span>
+					</div>
+					{#each lottery as r (r.rosterID)}
+						{@const team = teamInfo(r.rosterID)}
+						<div class="lotteryRow">
+							<button type="button" class="teamCell" onclick={() => openManager(r.rosterID)}>
+								<img src={team.avatar} alt="" />
+								<span class="teamName">{team.name}</span>
+							</button>
+							<span class="balls">{r.lotteryBalls.toFixed(1)}</span>
+							<span class="anyPct">{fmtPct(r.lotteryAnyPct)}</span>
+							<span class="firstPick">
+								<span class="firstPickPct">{fmtPct(r.firstPickPct)}</span>
+								<span class="goldMeter"><span style="width: {(r.firstPickPct / maxFirstPick) * 100}%"></span></span>
+							</span>
+						</div>
+					{/each}
+				</div>
+
+				<p class="footnote">
+					Balls = average ping pong balls earned. #1 pick odds = share of all 13 balls, before any
+					FAAB-purchased entries. See <a href="/constitution#draft-order">Constitution §3.4–3.5</a>.
+				</p>
+			</div>
+		{/if}
 	{/if}
 </section>
 
@@ -694,6 +742,108 @@
 		color: var(--mf-dim);
 	}
 
+	/* ---------- Lottery Watch ---------- */
+
+	.lottery {
+		margin-top: 2.5em;
+		padding: 18px 18px 10px;
+		background: var(--mf-panel);
+		border: 1px solid color-mix(in srgb, #ffd400 40%, var(--mf-line));
+		box-shadow: 0 0 26px -14px rgba(255, 212, 0, 0.5);
+		transition: opacity 0.15s ease;
+	}
+
+	.lottery.busy {
+		opacity: 0.6;
+	}
+
+	.lotteryHead h2 {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin: 0 0 4px;
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #d9a62e;
+	}
+
+	.lotteryHead p {
+		max-width: 70ch;
+		margin: 0 0 14px;
+		font-family: 'Roboto', sans-serif;
+		font-size: 0.88rem;
+		color: var(--mf-dim);
+	}
+
+	.lotteryBall {
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		background: radial-gradient(circle at 35% 30%, #fff6b3 0%, #ffd400 45%, #c99a00 100%);
+		box-shadow: 0 0 10px rgba(255, 212, 0, 0.6);
+	}
+
+	.lotteryRow {
+		display: grid;
+		grid-template-columns: minmax(0, 2.2fr) 0.6fr 0.7fr 1.6fr;
+		align-items: center;
+		gap: 12px;
+		min-height: 48px;
+		border-top: 1px solid var(--mf-line);
+	}
+
+	.lotteryLabels {
+		min-height: 0;
+		padding-bottom: 6px;
+		border-top: none;
+		font-size: 0.78rem;
+		font-weight: 700;
+		color: #d9a62e;
+	}
+
+	.balls,
+	.anyPct {
+		font-variant-numeric: tabular-nums;
+	}
+
+	.balls {
+		font-weight: 700;
+	}
+
+	.firstPick {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.firstPickPct {
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+		color: #d9a62e;
+	}
+
+	.goldMeter {
+		position: relative;
+		height: 4px;
+		background: color-mix(in srgb, var(--mf-dim) 22%, transparent);
+		overflow: hidden;
+	}
+
+	.goldMeter span {
+		position: absolute;
+		inset: 0 auto 0 0;
+		background: linear-gradient(90deg, #c99a00, #ffd400);
+		box-shadow: 0 0 8px rgba(255, 212, 0, 0.5);
+		transition: width 0.4s ease;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.goldMeter span,
+		.lottery {
+			transition: none;
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.meter span,
 		.board {
@@ -747,6 +897,16 @@
 		.round.title {
 			display: block;
 			grid-area: title;
+		}
+
+		.lotteryRow {
+			grid-template-columns: minmax(0, 1fr) auto minmax(90px, 0.8fr);
+			gap: 10px;
+		}
+
+		.lotteryRow .anyPct,
+		.lotteryLabels span:nth-child(3) {
+			display: none;
 		}
 
 		.round.title::before {
