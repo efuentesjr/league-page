@@ -1031,7 +1031,7 @@
       <h4 bind:this={oneThreeThree}>1.3.3 Lending Players Prohibition</h4>
       <div class="subBlock">
         <p>
-          For trades involving any player ranked in the top 50, reacquisition by the original team is prohibited for two years
+          For trades involving any player ranked in the top 50 in Sleeper's rankings, reacquisition by the original team is prohibited for two years
           after the trade, with no offseason exception. These players will be tagged with “NO TRADE BACK TO/FROM” to enforce this
           rule.
         </p>
@@ -1096,7 +1096,7 @@
 
       <h3 class="subSectionHeading" bind:this={twoOne}>2.1 Playoffs</h3>
       <p>
-        At the end of the season, 8 teams will make the playoffs. The first round of playoffs will commence in Week 15. Each
+        At the end of the season, 8 teams will make the playoffs. The Quarterfinals will begin in Week 15. Each
         team that wins its division, North, South, East, and West (4), and the 4 wild card teams that finish with the best
         records overall from the remaining teams, will receive a playoff berth. Each playoff matchup will last one week, and
         the winner will advance. Week 18 will not be used.
@@ -1223,7 +1223,7 @@
         <img src="/lottery-night.webp" alt="MFFL Draft Lottery Night: how the draft order is drawn, from pick 16 down to pick 1" loading="lazy" width="1400" height="1372" />
       </a>
 
-      <p>A team keeps every ball it earns, so one team can hold balls from more than one line.</p>
+      <p>A team keeps every ball it earns, so one team can earn balls from both the regular season and the Toilet Bowl.</p>
 
       <h4>The 8th seed</h4>
       <p>
@@ -1304,7 +1304,7 @@
       </p>
       <p>Three Strikes and You're Out Rule:</p>
       <p>
-        If a manager’s team finishes 14th, 15th, or 16th in back-to-back seasons, they must plead their strategy to the
+        If a manager’s team finishes 14th, 15th, or 16th in the regular-season standings in back-to-back seasons, they must plead their strategy to the
         Commissioner and co-commissioners. If approved, they will get one final season, a probation year, where their team must
         improve as outlined by the commissioners. Failure to do so means strike three, and they are out.
       </p>
