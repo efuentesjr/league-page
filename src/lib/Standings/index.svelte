@@ -1,5 +1,5 @@
 <script>
-    import { leagueName, round, waitForAll, getLeagueData, getLeagueRosters } from '$lib/utils/helper';
+    import { leagueName, round, waitForAll } from '$lib/utils/helper';
 	import { getTeamFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
   	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
 	import LinearProgress from '@smui/linear-progress';
@@ -40,17 +40,11 @@
         const {standingsInfo, yearData} = asyncStandingsData;
         leagueTeamManagers = await leagueTeamManagersData;
 
-        let divisionCount = 0;
-        let divisionOf = {};
         try {
-            const [leagueData, rostersData] = await waitForAll(getLeagueData(), getLeagueRosters());
+            const leagueData = await getLeagueData();
             playoffTeams = Number(leagueData?.settings?.playoff_teams) || playoffTeams;
-            divisionCount = Number(leagueData?.settings?.divisions) || 0;
-            for (const id in rostersData?.rosters || {}) {
-                divisionOf[id] = Number(rostersData.rosters[id]?.settings?.division) || 0;
-            }
         } catch (err) {
-            console.error('[Standings] Could not read league settings, using 8 playoff teams:', err);
+            console.error('[Standings] Could not read playoff teams, using 8:', err);
         }
         year = yearData;
 
@@ -61,24 +55,6 @@
                 continue;
             }
             finalStandings = [...finalStandings].sort((a,b) => b[sortType] - a[sortType]);
-        }
-
-        // Seed like Sleeper: division winners take the top spots (by record),
-        // then everyone else by record
-        if (divisionCount > 1 && finalStandings.length > playoffTeams) {
-            const winners = [];
-            const seen = new Set();
-            for (const team of finalStandings) {
-                const d = divisionOf[team.rosterID];
-                if (d && !seen.has(d)) {
-                    seen.add(d);
-                    winners.push(team);
-                }
-            }
-            if (winners.length && winners.length <= playoffTeams) {
-                const isWinner = new Set(winners);
-                finalStandings = [...winners, ...finalStandings.filter((t) => !isWinner.has(t))];
-            }
         }
 
         standings = finalStandings;

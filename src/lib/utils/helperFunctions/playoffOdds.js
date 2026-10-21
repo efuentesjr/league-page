@@ -161,7 +161,6 @@ export const buildSimInputs = ({ rosters, players, leagueData, nflState, matchup
 			losses: Number(s.losses || 0),
 			ties: Number(s.ties || 0),
 			pointsFor: Number(s.fpts || 0) + Number(s.fpts_decimal || 0) / 100,
-			division: Number(settings.divisions) > 1 ? Number(s.division || 0) : 0,
 			avg: n ? avg : null,
 			sd
 		};
@@ -252,27 +251,10 @@ export const buildSimInputs = ({ rosters, players, leagueData, nflState, matchup
 	};
 };
 
-/*
- * Seeds, the way Sleeper does it: with divisions, each division winner
- * (best record, then points for) takes the top seeds, ordered by record;
- * everyone else follows by record. Without divisions it's record, then points.
- */
-const rankTeams = (wins, points, n, divisions = null, playoffTeams = 8) => {
+const rankTeams = (wins, points, n) => {
 	const order = Array.from({ length: n }, (_, i) => i);
 	order.sort((x, y) => wins[y] - wins[x] || points[y] - points[x]);
-	if (!divisions || !divisions.some(Boolean)) return order;
-	const winners = [];
-	const seen = new Set();
-	for (const t of order) {
-		const d = divisions[t];
-		if (d && !seen.has(d)) {
-			seen.add(d);
-			winners.push(t);
-		}
-	}
-	if (!winners.length || winners.length > playoffTeams) return order;
-	const isWinner = new Set(winners);
-	return [...winners, ...order.filter((t) => !isWinner.has(t))];
+	return order;
 };
 
 /** Bracket pairs by seed (0-based), for supported sizes. */
@@ -293,7 +275,6 @@ const bracketFor = (size) => {
 export const simulateSeason = (inputs, { sims = 10000, picks = {}, seed = 2026 } = {}) => {
 	const { teams, index, games, playoffTeams, playoffExpected } = inputs;
 	const n = teams.length;
-	const divisionOf = teams.map((t) => t.division || 0);
 	const rand = mulberry32(seed);
 	const bracket = bracketFor(playoffTeams);
 
@@ -357,7 +338,7 @@ export const simulateSeason = (inputs, { sims = 10000, picks = {}, seed = 2026 }
 			}
 		}
 
-		const order = rankTeams(wins, points, n, divisionOf, playoffTeams);
+		const order = rankTeams(wins, points, n);
 		simBalls.fill(0);
 		for (let place = 0; place < n; place++) {
 			const t = order[place];
