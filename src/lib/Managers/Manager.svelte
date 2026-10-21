@@ -251,7 +251,6 @@
         align-items: center;
         gap: 26px;
         padding: 26px 28px;
-        margin-bottom: 64px;
     }
 
     .hero::before {
@@ -266,25 +265,21 @@
             var(--mf-bg);
         border: 1px solid var(--mf-line);
         border-top: 2px solid var(--team);
-        border-bottom: 2px solid color-mix(in srgb, var(--team) 70%, transparent);
-        box-shadow: inset 0 -18px 24px -18px color-mix(in srgb, var(--team) 60%, transparent);
         clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px));
     }
 
-    /* 16-sided photo: team-colored edge with a soft glow, hanging off the bottom of the header */
+    /* photo in the site's cut-corner card shape, with a team-colored edge */
     .photoWrap {
-        position: relative;
-        z-index: 1;
         align-self: end;
-        margin-bottom: -74px;
+        margin-bottom: -16px;
         filter: drop-shadow(0 0 16px color-mix(in srgb, var(--team) 55%, transparent));
     }
 
     .photoHex {
-        width: 132px;
-        height: 132px;
+        width: 200px;
+        height: 124px;
         padding: 3px;
-        clip-path: polygon(59.8% 1.0%, 77.8% 8.4%, 91.6% 22.2%, 99.0% 40.2%, 99.0% 59.8%, 91.6% 77.8%, 77.8% 91.6%, 59.8% 99.0%, 40.2% 99.0%, 22.2% 91.6%, 8.4% 77.8%, 1.0% 59.8%, 1.0% 40.2%, 8.4% 22.2%, 22.2% 8.4%, 40.2% 1.0%);
+        clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
         background: linear-gradient(160deg, var(--team), color-mix(in srgb, var(--team) 35%, #000) 50%, var(--team));
     }
 
@@ -293,8 +288,9 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        object-position: 50% 25%;
         background: #000;
-        clip-path: polygon(59.8% 1.0%, 77.8% 8.4%, 91.6% 22.2%, 99.0% 40.2%, 99.0% 59.8%, 91.6% 77.8%, 77.8% 91.6%, 59.8% 99.0%, 40.2% 99.0%, 22.2% 91.6%, 8.4% 77.8%, 1.0% 59.8%, 1.0% 40.2%, 8.4% 22.2%, 22.2% 8.4%, 40.2% 1.0%);
+        clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
     }
 
     .kicker {
@@ -635,7 +631,7 @@
             margin-bottom: 0;
         }
         .photoHex {
-            width: 112px;
+            width: 180px;
             height: 112px;
         }
         h1 {
