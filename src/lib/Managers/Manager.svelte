@@ -257,16 +257,27 @@
         transition: border-color 0.4s;
     }
 
+    /* hexagon photo: team-colored edge with a soft glow */
+    .photoWrap {
+        align-self: end;
+        filter: drop-shadow(0 0 16px color-mix(in srgb, var(--team) 55%, transparent));
+    }
+
+    .photoHex {
+        width: 118px;
+        height: 136px;
+        padding: 3px;
+        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        background: linear-gradient(160deg, var(--team), color-mix(in srgb, var(--team) 35%, #000) 50%, var(--team));
+    }
+
     .photo {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
+        display: block;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         background: #000;
-        border: 3px solid var(--team);
-        box-shadow:
-            0 0 0 6px color-mix(in srgb, var(--team) 25%, transparent),
-            0 0 34px 4px color-mix(in srgb, var(--team) 45%, transparent);
+        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
     }
 
     .kicker {
@@ -585,8 +596,11 @@
             text-align: center;
             padding: 22px 16px;
         }
-        .photo {
-            width: 120px;
+        .photoWrap {
+            align-self: center;
+        }
+        .photoHex {
+            width: 104px;
             height: 120px;
         }
         h1 {
@@ -616,7 +630,11 @@
     </nav>
 
     <header class="hero">
-        <img class="photo" src={viewManager.photo} alt={viewManager.name} />
+        <div class="photoWrap">
+            <div class="photoHex">
+                <img class="photo" src={viewManager.photo} alt={viewManager.name} />
+            </div>
+        </div>
 
         <div class="heroMain">
             <div class="kicker">{coOwners ? 'Co-Manager' : 'Manager'}</div>

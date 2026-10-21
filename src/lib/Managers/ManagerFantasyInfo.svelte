@@ -43,18 +43,29 @@
         background: var(--mf-panel);
     }
 
+    /* hexagon icon: the outer hex is the glowing edge, ::before is the fill */
     .infoIcon {
+        --fill: var(--mf-bg);
+        position: relative;
+        isolation: isolate;
         display: inline-flex;
-        height: 70px;
+        height: 80px;
         width: 70px;
         justify-content: center;
         align-items: center;
-        border-radius: 100%;
-        border: 1px solid var(--mf-line-strong);
         overflow: hidden;
-        background-color: var(--mf-bg);
-        box-shadow: 0 0 16px -6px var(--mf-ion-glow);
-		transition: box-shadow 0.4s;
+        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        background: linear-gradient(160deg, var(--mf-ion), color-mix(in srgb, var(--mf-ion) 25%, transparent) 50%, var(--mf-ion));
+        transition: filter 0.3s;
+    }
+
+    .infoIcon::before {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        z-index: -1;
+        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        background: var(--fill);
     }
 
     .playerIcon {
@@ -124,8 +135,7 @@
     }
 
     .infoRival:hover .infoIcon {
-        box-shadow: 0 0 18px -2px var(--mf-ion-glow);
-        border: 1px solid var(--mf-ion);
+        filter: brightness(1.25) drop-shadow(0 0 6px var(--mf-ion-glow));
     }
 
     .rival {
@@ -150,54 +160,54 @@
     }
 
     .QB {
-        background-color: var(--QB);
+        --fill: var(--QB);
     }
 
     .WR {
-        background-color: var(--WR);
+        --fill: var(--WR);
     }
 
     .RB {
-        background-color: var(--RB);
+        --fill: var(--RB);
     }
 
     .TE {
-        background-color: var(--TE);
+        --fill: var(--TE);
     }
 
     .Picks {
-        background: #73b647;
+        --fill: #73b647;
     }
     .K {
-        background-color: var(--K);
+        --fill: var(--K);
     }
 
     .DEF {
-        background-color: var(--DEF);
+        --fill: var(--DEF);
     }
 
     .CB {
-        background-color: #ffcc7a;
+        --fill: #ffcc7a;
     }
 
     .SS {
-        background-color: #b7a1db;
+        --fill: #b7a1db;
     }
 
     .FS {
-        background-color: #ebe7b3;
+        --fill: #ebe7b3;
     }
 
     .DE {
-        background-color: #b1d0e9;
+        --fill: #b1d0e9;
     }
 
     .DL {
-        background-color: #c392d3;
+        --fill: #c392d3;
     }
 
     .LB {
-        background-color: #98c097;
+        --fill: #98c097;
     }
 
     .favoritePlayer {
