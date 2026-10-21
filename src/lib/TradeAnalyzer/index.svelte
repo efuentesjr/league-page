@@ -93,38 +93,118 @@
 	});
 
 	/* ---------- valuing ---------- */
+	/*
+	 * Picks are valued by the rookie they actually land. In a 16-team league
+	 * overall pick N is the Nth rookie, which a 12-team league takes at its own
+	 * pick N (so 16-team 1.14 = 12-team 2.02). DynastyProcess publishes a value
+	 * for every 12-team slot; we scale that slot curve to each year's round
+	 * values and read it at overall pick N. The old "any 1st is a 1st" value is
+	 * kept as a label so managers can see the gap.
+	 */
+	const LEAGUE_SIZE_DP = 12;
 	const tierFor = (slot) => (slot <= 5 ? 'Early' : slot <= 11 ? 'Mid' : 'Late');
-	const pickValue = (season, round, orig, slots) => {
-		const ord = ORD[round] || `${round}th`;
+	const latestPickValue = (season, label) => {
 		const P = values.picks || {};
+		if (P[`${season} ${label}`] != null) return P[`${season} ${label}`];
+		const years = [...new Set(Object.keys(P).map((k) => Number(k.slice(0, 4))).filter((y) => y && y <= Number(season)))].sort((x, y) => y - x);
+		for (const y of years) if (P[`${y} ${label}`] != null) return P[`${y} ${label}`];
+		return null;
+	};
+	// the "any 1st is a 1st" market label value (12-team tiers)
+	const labelValue = (season, round, orig, slots) => {
+		const ord = ORD[round] || `${round}th`;
 		if (season === seasons[0] && slots?.[orig]) {
-			const v = P[`${season} ${tierFor(slots[orig])} ${ord}`];
+			const v = (values.picks || {})[`${season} ${tierFor(slots[orig])} ${ord}`];
 			if (v != null) return v;
 		}
-		if (P[`${season} ${ord}`] != null) return P[`${season} ${ord}`];
-		// furthest year DynastyProcess doesn't list yet: use the latest year it does
-		const years = Object.keys(P).map((k) => Number(k.slice(0, 4))).filter((y) => y && y <= Number(season));
-		for (const y of [...new Set(years)].sort((a, b) => b - a)) if (P[`${y} ${ord}`] != null) return P[`${y} ${ord}`];
-		return 0;
+		return latestPickValue(season, ord) ?? 0;
 	};
 
-	const assetsFor = (rid, slots) => {
+	// DynastyProcess's per-slot curve (e.g. "2026 Pick 1.01" ... "2026 Pick 5.12")
+	$: slotCurve = (() => {
+		const P = values.picks || {};
+		const byYear = {};
+		for (const [k, v] of Object.entries(P)) {
+			const m = k.match(/^(\d{4}) Pick (\d+)\.(\d{2})$/);
+			if (!m) continue;
+			const n = (Number(m[2]) - 1) * LEAGUE_SIZE_DP + Number(m[3]);
+			(byYear[m[1]] ??= {})[n] = v;
+		}
+		const year = Object.keys(byYear).filter((y) => Object.keys(byYear[y]).length >= 48).sort().pop();
+		return year ? { year, c: byYear[year], max: Math.max(...Object.keys(byYear[year]).map(Number)) } : null;
+	})();
+
+	const curveAt = (curve, season, n) => {
+		const { c, max, year } = curve;
+		const round12 = Math.ceil(Math.min(n, max) / LEAGUE_SIZE_DP);
+		const scaleFor = (R) => {
+			if (String(season) === String(year)) return 1;
+			const target = latestPickValue(season, ORD[R] || `${R}th`);
+			const slots = Array.from({ length: LEAGUE_SIZE_DP }, (_, i) => c[(R - 1) * LEAGUE_SIZE_DP + i + 1]).filter((v) => v != null);
+			const avg = slots.reduce((t, v) => t + v, 0) / (slots.length || 1);
+			return target != null && avg > 0 ? target / avg : 1;
+		};
+		if (n <= max) return (c[n] ?? 0) * scaleFor(round12);
+		// past the last published slot: keep the same rate of decline
+		const last = c[max] * scaleFor(Math.ceil(max / LEAGUE_SIZE_DP));
+		const decay = Math.pow(c[max] / c[max - LEAGUE_SIZE_DP + 1], 1 / (LEAGUE_SIZE_DP - 1));
+		return last * Math.pow(decay, n - max);
+	};
+
+	const twelveTeamPick = (n) => {
+		const r = Math.ceil(n / LEAGUE_SIZE_DP);
+		const sl = n - (r - 1) * LEAGUE_SIZE_DP;
+		return `${r}.${String(sl).padStart(2, '0')}`;
+	};
+
+	const pickValue = (season, round, orig, slots) => {
+		const T = rosterIDs.length || 16;
+		const label = labelValue(season, round, orig, slots);
+		if (!slotCurve) return { value: label, label, equiv: null };
+		const slot = season === seasons[0] ? slots?.[orig] : null;
+		if (slot) {
+			const n = (round - 1) * T + slot;
+			return { value: Math.round(curveAt(slotCurve, season, n)), label, equiv: twelveTeamPick(n) };
+		}
+		// slot unknown: average over every slot in the round
+		let sum = 0;
+		for (let k = 1; k <= T; k++) sum += curveAt(slotCurve, season, (round - 1) * T + k);
+		return { value: Math.round(sum / T), label, equiv: null };
+	};
+
+	/*
+	 * 16-team superflex QB depth: about 32 QBs start every week, so backup-level
+	 * QBs (ranked ~20-44) are worth more here than in a 12-team league.
+	 */
+	const qbDepthBoost = (rank) => (rank >= 25 && rank <= 36 ? 1.2 : rank >= 20 && rank <= 44 ? 1.1 : 1);
+	$: qbRank = (() => {
+		const ids = Object.keys(values.players || {}).filter((id) => players[id]?.pos === 'QB' && values.players[id] > 0);
+		ids.sort((x, y) => values.players[y] - values.players[x]);
+		return Object.fromEntries(ids.map((id, i) => [id, i + 1]));
+	})();
+
+	const fmtVal = (n) => Math.round(n).toLocaleString();
+
+	const assetsFor = (rid, slots, curve, qbRanks) => {
 		if (!rid) return [];
 		const list = [];
 		for (const pid of rosterPlayers[rid] || []) {
 			const p = players[pid];
 			if (!p) continue;
 			const base = values.players?.[pid] ?? 0;
-			const boost = values.teBoost?.[pid] || 1;
+			const teBoost = values.teBoost?.[pid] || 1;
+			const qbBoost = p.pos === 'QB' ? qbDepthBoost(qbRanks?.[pid] || 0) : 1;
 			const age = values.ages?.[pid];
-			const bonus = boost > 1.005 && base ? ` · TE premium +${Math.round((boost - 1) * 100)}%` : '';
+			const tags = [];
+			if (teBoost > 1.005 && base) tags.push(`TE premium +${Math.round((teBoost - 1) * 100)}%`);
+			if (qbBoost > 1 && base) tags.push(`16-team QB depth +${Math.round((qbBoost - 1) * 100)}%`);
 			list.push({
 				key: `pl:${pid}`,
 				kind: 'player',
 				label: `${p.fn} ${p.ln}`,
-				sub: `${p.pos}${p.t ? ` · ${p.t}` : ''}${age ? ` · ${Math.floor(age)}` : ''}${bonus}`,
+				sub: `${p.pos}${p.t ? ` · ${p.t}` : ''}${age ? ` · ${Math.floor(age)}` : ''}${tags.map((t) => ` · ${t}`).join('')}`,
 				pos: p.pos,
-				value: Math.round(base * boost)
+				value: Math.round(base * teBoost * qbBoost)
 			});
 		}
 		for (const s of seasons) {
@@ -132,13 +212,19 @@
 				for (const orig of rosterIDs) {
 					if (pickOwner[s]?.[r]?.[orig] !== Number(rid)) continue;
 					const slot = s === seasons[0] && slots?.[orig];
+					const pv = curve ? pickValue(s, r, orig, slots) : { value: labelValue(s, r, orig, slots), label: null, equiv: null };
+					const parts = [orig === Number(rid) ? 'Own' : name(orig)];
+					if (slot) parts.push(`projected #${slot}`);
+					if (pv.equiv) parts.push(`= 12-team ${pv.equiv}`);
+					else if (curve) parts.push('16-team round average');
+					if (pv.label && Math.abs(pv.label - pv.value) / Math.max(pv.label, 1) > 0.1) parts.push(`"${ORD[r]}" label ${fmtVal(pv.label)}`);
 					list.push({
 						key: `pk:${s}:${r}:${orig}`,
 						kind: 'pick',
 						label: `${s} ${ORD[r]}`,
-						sub: `${orig === Number(rid) ? 'Own' : name(orig)}${slot ? ` · projected #${slot}` : ''}`,
+						sub: parts.join(' · '),
 						from: orig,
-						value: pickValue(s, r, orig, slots)
+						value: pv.value
 					});
 				}
 			}
@@ -146,8 +232,8 @@
 		return list.sort((a, b) => b.value - a.value);
 	};
 
-	$: assetsA = assetsFor(sideA, slotOf);
-	$: assetsB = assetsFor(sideB, slotOf);
+	$: assetsA = assetsFor(sideA, slotOf, slotCurve, qbRank);
+	$: assetsB = assetsFor(sideB, slotOf, slotCurve, qbRank);
 
 	const chosen = (assets, set) => assets.filter((a) => set.has(a.key));
 	$: givesA = chosen(assetsA, picked.A);
@@ -667,9 +753,10 @@
 		<p class="note">
 			Player values come from DynastyProcess's weekly superflex dynasty ratings, which already price in age; players without a market value show "—".
 			{#if values.tePremium}Tight ends get a TE premium boost for this league's scoring (+{values.tePremium.perRec} per catch, +{values.tePremium.perFd} per first down), based on each TE's catches and first downs over the last two seasons, toned down and capped at +40%.{/if}
-			DynastyProcess assumes a 12-team league; in a 16-team league, good starters are a little scarcer than these values suggest.
-			{seasons[0]} picks are valued by projected slot from Lottery Watch (picks 1–5 early, 6–11 mid, 12–16 late in each round){slotOf ? '' : ' once the projection finishes loading'}.
-			Later picks use a round value; {seasons[2]} uses the {seasons[1]} values until DynastyProcess publishes them.
+			DynastyProcess assumes a 12-team league, so this page adjusts for 16 teams. Picks are valued by the rookie they actually land: overall pick N here is the Nth rookie off the board, so a projected 1.14 is valued like a 12-team 2.02. The plain market value for the round (the "any 1st" price) is shown next to it when the two differ by more than 10%.
+			{seasons[0]} picks use their projected slot from Lottery Watch{slotOf ? '' : ' once the projection finishes loading'}; later picks use the average of all 16 slots in the round, and {seasons[2]} uses the {seasons[1]} round values until DynastyProcess publishes them.
+			With about 32 starting QBs every week in a 16-team superflex, QBs ranked roughly 20–44 get a 16-team QB depth bump (+10%, or +20% for QB25–36).
+			Pick values follow the market: they're lowest midseason and rise toward draft day, so trading for picks now is buying low, and selling picks is best in the spring.
 			FAAB counts {FAAB_RATE} point per dollar (about an early 3rd per $100). It's a market guide, not a verdict: your Trade Grades judge trades afterward by points actually scored.
 		</p>
 	{/if}
