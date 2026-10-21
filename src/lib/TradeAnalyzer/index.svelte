@@ -157,18 +157,47 @@
 		return `${r}.${String(sl).padStart(2, '0')}`;
 	};
 
+	// When the market prices a year's picks as Early/Mid/Late (12-team slots
+	// 1-4 / 5-8 / 9-12), read the value straight off those prices: each tier is
+	// anchored at its middle slot and we interpolate (log scale) between them.
+	const tierAnchors = (season) => {
+		const P = values.picks || {};
+		const pts = [];
+		for (let R = 1; R <= 5; R++) {
+			const ord = ORD[R] || `${R}th`;
+			[['Early', 2.5], ['Mid', 6.5], ['Late', 10.5]].forEach(([t, c]) => {
+				const v = P[`${season} ${t} ${ord}`];
+				if (v > 0) pts.push([(R - 1) * LEAGUE_SIZE_DP + c, v]);
+			});
+		}
+		return pts.length >= 9 ? pts.sort((a, b) => a[0] - b[0]) : null;
+	};
+	const anchorAt = (pts, n) => {
+		const lg = (i, x) => {
+			const [x0, y0] = pts[i], [x1, y1] = pts[i + 1];
+			return Math.exp(Math.log(y0) + ((Math.log(y1) - Math.log(y0)) * (x - x0)) / (x1 - x0));
+		};
+		if (n <= pts[0][0]) return lg(0, n);
+		for (let i = 0; i < pts.length - 1; i++) if (n <= pts[i + 1][0]) return lg(i, n);
+		return lg(pts.length - 2, n);
+	};
+	const valueAt = (season, n) => {
+		const pts = tierAnchors(season);
+		return pts ? anchorAt(pts, n) : curveAt(slotCurve, season, n);
+	};
+
 	const pickValue = (season, round, orig, slots) => {
 		const T = rosterIDs.length || 16;
 		const label = labelValue(season, round, orig, slots);
-		if (!slotCurve) return { value: label, label, equiv: null };
+		if (!slotCurve && !tierAnchors(season)) return { value: label, label, equiv: null };
 		const slot = season === seasons[0] ? slots?.[orig] : null;
 		if (slot) {
 			const n = (round - 1) * T + slot;
-			return { value: Math.round(curveAt(slotCurve, season, n)), label, equiv: twelveTeamPick(n) };
+			return { value: Math.round(valueAt(season, n)), label, equiv: twelveTeamPick(n) };
 		}
 		// slot unknown: average over every slot in the round
 		let sum = 0;
-		for (let k = 1; k <= T; k++) sum += curveAt(slotCurve, season, (round - 1) * T + k);
+		for (let k = 1; k <= T; k++) sum += valueAt(season, (round - 1) * T + k);
 		return { value: Math.round(sum / T), label, equiv: null };
 	};
 
@@ -179,6 +208,7 @@
 	const qbDepthBoost = (rank) => (rank >= 25 && rank <= 36 ? 1.2 : rank >= 20 && rank <= 44 ? 1.1 : 1);
 	$: qbRank = (() => {
 		const ids = Object.keys(values.players || {}).filter((id) => players[id]?.pos === 'QB' && values.players[id] > 0);
+		// (players worth almost nothing are ranked but never bumped; see assetsFor)
 		ids.sort((x, y) => values.players[y] - values.players[x]);
 		return Object.fromEntries(ids.map((id, i) => [id, i + 1]));
 	})();
@@ -193,7 +223,7 @@
 			if (!p) continue;
 			const base = values.players?.[pid] ?? 0;
 			const teBoost = values.teBoost?.[pid] || 1;
-			const qbBoost = p.pos === 'QB' ? qbDepthBoost(qbRanks?.[pid] || 0) : 1;
+			const qbBoost = p.pos === 'QB' && base >= 50 ? qbDepthBoost(qbRanks?.[pid] || 0) : 1;
 			const age = values.ages?.[pid];
 			const tags = [];
 			if (teBoost > 1.005 && base) tags.push(`TE premium +${Math.round((teBoost - 1) * 100)}%`);
