@@ -15,6 +15,7 @@
   } from '$lib/utils/helperFunctions/universalFunctions';
 
   import { leagueID } from '$lib/utils/leagueInfo';
+  import { getLogoColor } from '$lib/utils/logoColor';
 
   export let nflState;
   export let rostersData;
@@ -27,6 +28,20 @@
   let validGraph = false;
   let seasonOver = false;
   let rankings = [];
+
+  // Team colors pulled from each team's logo (falls back to the hand-set list below)
+  let logoColors = {};
+  $: for (const team of rankings) {
+    const id = String(team.rosterID);
+    if (id in logoColors) continue;
+    logoColors[id] = null;
+    getLogoColor(getAvatarFromTeamManagers(leagueTeamManagers, team.rosterID, leagueData.season)).then((c) => {
+      if (c) logoColors = { ...logoColors, [id]: c };
+    });
+  }
+  const cardColor = (team, colors) => colors[String(team.rosterID)] || team.color;
+  const cardDark = (team, colors) =>
+    colors[String(team.rosterID)] ? `color-mix(in srgb, ${colors[String(team.rosterID)]} 30%, #000)` : team.darkColor;
 
   let players = playersInfo.players;
 
@@ -865,7 +880,7 @@
         <div
           class="rankingCard"
           class:topRank={team.rank <= 3}
-          style="--teamColor: {team.color}; --teamDark: {team.darkColor}; --score: {team.powerScore}; --rank: {team.rank};"
+          style="--teamColor: {cardColor(team, logoColors)}; --teamDark: {cardDark(team, logoColors)}; --score: {team.powerScore}; --rank: {team.rank};"
           role="button"
           tabindex="0"
           aria-label="#{team.rank} {team.manager?.name || 'Unknown Team'}, power score {team.powerScore}"
