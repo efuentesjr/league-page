@@ -124,7 +124,11 @@ export const getRivalryMatchups = async (userOneID, userTwoID) => {
             lastSeason: rivalry.matchups.reduce((max, m) => Math.max(max, Number(m.year) || 0), 0) || null,
         }
         : null;
-    rivalry.tier = getRivalryTier(rivalry.playoffMeetings, rivalry.matchups.length, ghost);
+    rivalry.tier = getRivalryTier(
+        rivalry.playoffMeetings,
+        rivalry.regular.one + rivalry.regular.two + rivalry.regular.ties,
+        ghost
+    );
 
 	return rivalry;
 }

@@ -183,8 +183,8 @@
     }
 
     .tierFlames {
-        font-size: 1.1em;
-        letter-spacing: 2px;
+        font-size: 0.95em;
+        letter-spacing: 1px;
     }
 
     .tierFlames .dim {
@@ -326,7 +326,7 @@
                     <span class="tierLabel">{rivalry.tier.label ?? `Rivalry Tier ${rivalry.tier.tier}`}</span>
                     <span class="tierName">{rivalry.tier.name}</span>
                     <span class="tierFlames" aria-hidden="true">
-                        {#each Array.from({ length: rivalry.tier.slots ?? 6 }, (_, i) => i + 1) as n}
+                        {#each Array.from({ length: rivalry.tier.slots ?? 10 }, (_, i) => i + 1) as n}
                             <span class:dim={n > rivalry.tier.flames}>{rivalry.tier.icon ?? '🔥'}</span>
                         {/each}
                     </span>
