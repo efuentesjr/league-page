@@ -247,7 +247,6 @@
 					if (slot) parts.push(`projected #${slot}`);
 					if (pv.equiv) parts.push(`= 12-team ${pv.equiv}`);
 					else if (curve) parts.push('16-team round average');
-					if (pv.label && Math.abs(pv.label - pv.value) / Math.max(pv.label, 1) > 0.1) parts.push(`"${ORD[r]}" label ${fmtVal(pv.label)}`);
 					list.push({
 						key: `pk:${s}:${r}:${orig}`,
 						kind: 'pick',
@@ -783,7 +782,7 @@
 		<p class="note">
 			Player values come from DynastyProcess's weekly superflex dynasty ratings, which already price in age; players without a market value show "—".
 			{#if values.tePremium}Tight ends get a TE premium boost for this league's scoring (+{values.tePremium.perRec} per catch, +{values.tePremium.perFd} per first down), based on each TE's catches and first downs over the last two seasons, toned down and capped at +40%.{/if}
-			DynastyProcess assumes a 12-team league, so this page adjusts for 16 teams. Picks are valued by the rookie they actually land: overall pick N here is the Nth rookie off the board, so a projected 1.14 is valued like a 12-team 2.02. The plain market value for the round (the "any 1st" price) is shown next to it when the two differ by more than 10%.
+			DynastyProcess assumes a 12-team league, so this page adjusts for 16 teams. Picks are valued by the rookie they actually land: overall pick N here is the Nth rookie off the board, so a projected 1.14 is valued like a 12-team 2.02.
 			{seasons[0]} picks use their projected slot from Lottery Watch{slotOf ? '' : ' once the projection finishes loading'}; later picks use the average of all 16 slots in the round, and {seasons[2]} uses the {seasons[1]} round values until DynastyProcess publishes them.
 			With about 32 starting QBs every week in a 16-team superflex, QBs ranked roughly 20–44 get a 16-team QB depth bump (+10%, or +20% for QB25–36).
 			Pick values follow the market: they're lowest midseason and rise toward draft day, so trading for picks now is buying low, and selling picks is best in the spring.
