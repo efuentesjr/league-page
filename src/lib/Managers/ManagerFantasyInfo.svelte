@@ -6,6 +6,9 @@
     export let topScorer = null;
     export let teamTier = null;
     export let historyState = 'loading';
+    export let favoritePosition = null;
+
+    $: assetPos = favoritePosition?.pos ?? viewManager.valuePosition;
 
     $: favoriteID = topScorer?.playerID ?? viewManager.favoritePlayer;
     $: favoriteInfo = favoriteID ? players?.[favoriteID] : null;
@@ -223,14 +226,19 @@
         </div>
     {/if}
     <!-- Favorite fantasy position (optional) -->
-    {#if viewManager.valuePosition}
+    {#if assetPos}
         <div class="infoSlot">
             <div class="infoLabel">
                 Favorite Fantasy Asset
             </div>
-            <div class="infoIcon {viewManager.valuePosition}">
-                <span class="valuePosition">{viewManager.valuePosition}</span>
+            <div class="infoIcon {assetPos}">
+                <span class="valuePosition">{assetPos}</span>
             </div>
+            {#if favoritePosition}
+                <div class="infoAnswer">
+                    {favoritePosition.count} {favoritePosition.pos}{favoritePosition.count === 1 ? '' : 's'} rostered
+                </div>
+            {/if}
         </div>
     {/if}
     {#if viewManager.tradingScale}

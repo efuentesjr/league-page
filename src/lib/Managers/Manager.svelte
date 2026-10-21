@@ -78,6 +78,27 @@
     $: topScorer = history ? findTopScorer(history, roster) : null;
     $: teamTier = rosterID != null ? tiers[String(rosterID)] ?? null : null;
 
+    // Favorite Fantasy Asset: the position this team rosters the most of
+    // (ties go to the position with more starters, then QB > RB > WR > TE)
+    const POS_ORDER = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'];
+    $: favoritePosition = (() => {
+        if (!roster || !players) return null;
+        const counts = {}, starters = {};
+        for (const pid of roster.players || []) {
+            const pos = players[pid]?.pos;
+            if (pos) counts[pos] = (counts[pos] || 0) + 1;
+        }
+        for (const pid of roster.starters || []) {
+            const pos = players[pid]?.pos;
+            if (pos) starters[pos] = (starters[pos] || 0) + 1;
+        }
+        const rank = (p) => (POS_ORDER.indexOf(p) + 1 || 99);
+        const best = Object.keys(counts).sort(
+            (x, y) => counts[y] - counts[x] || (starters[y] || 0) - (starters[x] || 0) || rank(x) - rank(y)
+        )[0];
+        return best ? { pos: best, count: counts[best] } : null;
+    })();
+
     const refreshTransactions = async () => {
         const newTransactions = await getLeagueTransactions(false, true);
         transactions = newTransactions.transactions;
@@ -534,7 +555,7 @@
     </div>
 
     {#if !loading}
-        <ManagerFantasyInfo {viewManager} {players} {changeManager} {dynamicRival} {topScorer} {teamTier} {historyState} />
+        <ManagerFantasyInfo {viewManager} {players} {changeManager} {dynamicRival} {topScorer} {teamTier} {historyState} {favoritePosition} />
     {/if}
 
     <ManagerAwards
