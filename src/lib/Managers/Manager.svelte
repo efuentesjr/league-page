@@ -191,6 +191,9 @@
         const want = teamAvatar;
         getLogoColor(want).then((c) => { if (c && colorFor === want) teamColor = c; }).catch(() => {});
     }
+
+    // Sleeper marks every commissioner the same; the lead is set here
+    const LEAD_COMMISSIONER = '844760551790858240'; // Eddie Fuentes Jr
 </script>
 
 <style>
@@ -241,11 +244,21 @@
 
     /* ---------- hero ---------- */
     .hero {
+        position: relative;
+        isolation: isolate;
         display: grid;
         grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center;
         gap: 26px;
         padding: 26px 28px;
+        margin-bottom: 64px;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
         background:
             linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 28px,
             linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 28px 100%,
@@ -254,13 +267,14 @@
         border: 1px solid var(--mf-line);
         border-top: 2px solid var(--team);
         clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px));
-        transition: border-color 0.4s;
     }
 
-    /* octagon photo: team-colored edge with a soft glow, sitting low in the header */
+    /* 16-sided photo: team-colored edge with a soft glow, hanging off the bottom of the header */
     .photoWrap {
+        position: relative;
+        z-index: 1;
         align-self: end;
-        margin-bottom: -16px;
+        margin-bottom: -74px;
         filter: drop-shadow(0 0 16px color-mix(in srgb, var(--team) 55%, transparent));
     }
 
@@ -268,7 +282,7 @@
         width: 132px;
         height: 132px;
         padding: 3px;
-        clip-path: polygon(29.3% 0, 70.7% 0, 100% 29.3%, 100% 70.7%, 70.7% 100%, 29.3% 100%, 0 70.7%, 0 29.3%);
+        clip-path: polygon(59.8% 1.0%, 77.8% 8.4%, 91.6% 22.2%, 99.0% 40.2%, 99.0% 59.8%, 91.6% 77.8%, 77.8% 91.6%, 59.8% 99.0%, 40.2% 99.0%, 22.2% 91.6%, 8.4% 77.8%, 1.0% 59.8%, 1.0% 40.2%, 8.4% 22.2%, 22.2% 8.4%, 40.2% 1.0%);
         background: linear-gradient(160deg, var(--team), color-mix(in srgb, var(--team) 35%, #000) 50%, var(--team));
     }
 
@@ -278,7 +292,7 @@
         height: 100%;
         object-fit: cover;
         background: #000;
-        clip-path: polygon(29.3% 0, 70.7% 0, 100% 29.3%, 100% 70.7%, 70.7% 100%, 29.3% 100%, 0 70.7%, 0 29.3%);
+        clip-path: polygon(59.8% 1.0%, 77.8% 8.4%, 91.6% 22.2%, 99.0% 40.2%, 99.0% 59.8%, 91.6% 77.8%, 77.8% 91.6%, 59.8% 99.0%, 40.2% 99.0%, 22.2% 91.6%, 8.4% 77.8%, 1.0% 59.8%, 1.0% 40.2%, 8.4% 22.2%, 22.2% 8.4%, 40.2% 1.0%);
     }
 
     .kicker {
@@ -350,6 +364,15 @@
         letter-spacing: 0.06em;
         background: var(--mf-ion);
         border-color: var(--mf-ion);
+    }
+
+    .chip.honor {
+        color: #1a1203;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        background: linear-gradient(180deg, #fff3c4, #f5d56b 60%, #c9962c);
+        border-color: #f5d56b;
+        box-shadow: 0 0 12px -2px rgba(245, 213, 107, 0.6);
     }
 
     /* earnings tile */
@@ -581,6 +604,11 @@
     @media (max-width: 860px) {
         .hero {
             grid-template-columns: auto minmax(0, 1fr);
+            margin-bottom: 0;
+        }
+        .photoWrap {
+            align-self: center;
+            margin-bottom: 0;
         }
         .earn {
             grid-column: 1 / -1;
@@ -596,6 +624,9 @@
             justify-items: center;
             text-align: center;
             padding: 22px 16px;
+        }
+        .hero {
+            margin-bottom: 0;
         }
         .photoWrap {
             align-self: center;
@@ -663,7 +694,10 @@
                     </span>
                 {/if}
                 {#if commissioner}
-                    <span class="chip comm">Commissioner</span>
+                    <span class="chip comm">{viewManager.managerID === LEAD_COMMISSIONER ? 'Commissioner' : 'Co-Commissioner'}</span>
+                {/if}
+                {#if viewManager.title}
+                    <span class="chip honor">{viewManager.title}</span>
                 {/if}
             </div>
         </div>

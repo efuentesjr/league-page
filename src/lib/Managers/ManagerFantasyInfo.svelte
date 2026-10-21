@@ -43,7 +43,7 @@
         background: var(--mf-panel);
     }
 
-    /* octagon icon: the outer shape is the glowing edge, ::before is the fill */
+    /* 16-sided icon: the outer shape is the glowing edge, ::before is the fill */
     .infoIcon {
         --fill: var(--mf-bg);
         position: relative;
@@ -54,7 +54,7 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
-        clip-path: polygon(29.3% 0, 70.7% 0, 100% 29.3%, 100% 70.7%, 70.7% 100%, 29.3% 100%, 0 70.7%, 0 29.3%);
+        clip-path: polygon(59.8% 1.0%, 77.8% 8.4%, 91.6% 22.2%, 99.0% 40.2%, 99.0% 59.8%, 91.6% 77.8%, 77.8% 91.6%, 59.8% 99.0%, 40.2% 99.0%, 22.2% 91.6%, 8.4% 77.8%, 1.0% 59.8%, 1.0% 40.2%, 8.4% 22.2%, 22.2% 8.4%, 40.2% 1.0%);
         background: linear-gradient(160deg, var(--mf-ion), color-mix(in srgb, var(--mf-ion) 25%, transparent) 50%, var(--mf-ion));
         transition: filter 0.3s;
     }
@@ -64,7 +64,7 @@
         position: absolute;
         inset: 2px;
         z-index: -1;
-        clip-path: polygon(29.3% 0, 70.7% 0, 100% 29.3%, 100% 70.7%, 70.7% 100%, 29.3% 100%, 0 70.7%, 0 29.3%);
+        clip-path: polygon(59.8% 1.0%, 77.8% 8.4%, 91.6% 22.2%, 99.0% 40.2%, 99.0% 59.8%, 91.6% 77.8%, 77.8% 91.6%, 59.8% 99.0%, 40.2% 99.0%, 22.2% 91.6%, 8.4% 77.8%, 1.0% 59.8%, 1.0% 40.2%, 8.4% 22.2%, 22.2% 8.4%, 40.2% 1.0%);
         background: var(--fill);
     }
 
