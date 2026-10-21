@@ -3,11 +3,8 @@
 
     export let leagueTeamManagers, managerID = null, rosterID = null, year, compressed = false, points = null;
 
-    let user = null;
-
-    if(managerID) {
-        user = leagueTeamManagers.users[managerID];
-    }
+    // reactive so the name follows the row when a table re-sorts
+    $: user = managerID ? leagueTeamManagers.users[managerID] : null;
 </script>
 
 <style>
