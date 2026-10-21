@@ -20,54 +20,76 @@
 </script>
 
 <style>
-  :global(body) {
-    background:
-      radial-gradient(circle at top, rgba(178, 140, 56, 0.08), transparent 24%),
-      linear-gradient(180deg, #09111f 0%, #0c1524 38%, #101826 100%);
-    color: #e5e7eb;
+  /* ============================================================
+     CONSTITUTION — same panel language as the rest of the site.
+     Everything is scoped to .constitution-shell so nothing leaks.
+     ============================================================ */
+  .constitution-shell {
+    width: min(980px, 92%);
+    margin: 2.2rem auto 6rem;
+    font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+    color: var(--mf-text);
   }
 
-  :global(h1, h2, h3, h4, h5) {
-    color: #f8fafc;
+  .constitution-shell :global(h1),
+  .constitution-shell :global(h2),
+  .constitution-shell :global(h3),
+  .constitution-shell :global(h4),
+  .constitution-shell :global(h5) {
+    color: var(--mf-text);
+    font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
   }
 
-  :global(p),
-  :global(li) {
-    color: #cbd5e1;
+  .constitution-shell :global(p),
+  .constitution-shell :global(li) {
+    color: color-mix(in srgb, var(--mf-text) 82%, var(--mf-dim));
     line-height: 1.62;
   }
 
-  :global(p) {
+  .constitution-shell :global(p) {
     margin: 0.6rem 0 0.9rem;
   }
 
-  :global(ul) {
-    padding-left: 1.15rem;
+  .constitution-shell :global(ul),
+  .constitution-shell :global(ol) {
+    padding-left: 1.2rem;
     margin: 0.5rem 0 0.95rem;
   }
 
-  :global(ul li) {
-    margin-bottom: 0.28rem;
+  .constitution-shell :global(li) {
+    margin-bottom: 0.3rem;
   }
 
-  :global(hr) {
+  .constitution-shell :global(li::marker) {
+    color: var(--mf-ion);
+  }
+
+  .constitution-shell :global(strong) {
+    color: var(--mf-text);
+  }
+
+  .constitution-shell :global(hr) {
     border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--mf-line);
     margin: 2rem 0;
   }
 
-  .constitution-shell {
-    width: min(980px, 92%);
-    margin: 3rem auto 6rem;
+  /* panels */
+  .constitution-hero,
+  .content-card {
+    border: 1px solid var(--mf-line);
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
   }
 
   .constitution-hero {
-    padding: 1.2rem 1.2rem 1.3rem;
-    margin-bottom: 1.35rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.018));
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    padding: 1.4rem 1.4rem 1.3rem;
+    margin-bottom: 1.2rem;
+    border-top: 2px solid var(--mf-ion);
+    background:
+      linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 28px,
+      linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 28px 100%,
+      radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--mf-plasma) 22%, transparent), transparent 60%),
+      var(--mf-bg);
   }
 
   .constitution-body {
@@ -77,55 +99,57 @@
   }
 
   .content-card {
-    padding: 1.35rem 1.25rem 1.4rem;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.018));
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 18px;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+    padding: 1.35rem 1.3rem 1.4rem;
+    background:
+      radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--mf-ion) 7%, transparent), transparent 55%),
+      var(--mf-panel);
   }
 
   .eyebrow {
     display: block;
     text-align: center;
     font-size: 0.75rem;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #d4af37;
-    margin-bottom: 0.75rem;
+    color: var(--mf-ion);
+    margin-bottom: 0.7rem;
     font-weight: 700;
   }
 
   .hero-title {
     margin: 0;
     text-align: center;
-    font-size: clamp(2rem, 4vw, 2.7rem);
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 700;
     line-height: 1.08;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 18px var(--mf-line-strong);
   }
 
   .hero-subtitle {
-    margin: 0.85rem auto 0;
+    margin: 0.8rem auto 0;
     max-width: 760px;
     text-align: center;
-    color: #94a3b8;
-    font-size: 0.96rem;
+    color: var(--mf-dim) !important;
+    font-size: 0.95rem;
     line-height: 1.55;
   }
 
+  /* table of contents */
   .toc-card {
     margin-top: 1.1rem;
-    padding: 1rem 1rem 0.2rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 16px;
+    padding: 1rem 1rem 0.3rem;
+    border: 1px solid var(--mf-line);
+    background: var(--mf-panel);
   }
 
   .toc-title {
     margin: 0 0 0.85rem;
     text-align: center;
-    font-size: 0.95rem;
-    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #d4af37;
+    color: var(--mf-ion) !important;
   }
 
   .toc-grid {
@@ -136,7 +160,8 @@
   }
 
   .toc-group {
-    padding: 0.2rem 0 0.5rem;
+    padding: 0.2rem 0 0.5rem 0.7rem;
+    border-left: 2px solid var(--mf-line-strong);
   }
 
   .toc-group h3,
@@ -148,27 +173,34 @@
 
   .toc-group h3 {
     font-size: 0.95rem;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.4rem;
   }
 
   .toc-group h4,
   .toc-group h5 {
-    font-size: 0.85rem;
-    color: #9fb3c8;
-    margin-bottom: 0.28rem;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--mf-dim) !important;
+    margin-bottom: 0.3rem;
   }
 
+  /* headings */
   .sectionHeading {
     margin: 0 0 1rem;
     padding-bottom: 0.65rem;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.22);
-    font-size: clamp(1.45rem, 3vw, 1.9rem);
+    border-bottom: 1px solid var(--mf-line-strong);
+    font-size: clamp(1.4rem, 3vw, 1.85rem);
+    font-weight: 700;
     line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 18px var(--mf-line-strong);
   }
 
   .subSectionHeading {
-    margin: 1.45rem 0 0.8rem;
-    font-size: 1.16rem;
+    margin: 1.5rem 0 0.8rem;
+    padding-left: 0.6rem;
+    border-left: 3px solid var(--mf-ion);
+    font-size: 1.14rem;
     line-height: 1.24;
   }
 
@@ -181,7 +213,6 @@
 
   h5 {
     font-size: 0.92rem;
-    color: #cbd5e1;
     margin-top: 0.85rem;
     margin-bottom: 0.3rem;
     line-height: 1.2;
@@ -190,9 +221,8 @@
   .subBlock {
     margin: 0.45rem 0 1rem;
     padding: 0.85rem 0.95rem;
-    border-left: 3px solid rgba(212, 175, 55, 0.2);
-    background: rgba(255, 255, 255, 0.025);
-    border-radius: 0 12px 12px 0;
+    border-left: 3px solid color-mix(in srgb, var(--mf-ion) 45%, transparent);
+    background: var(--mf-panel-2);
   }
 
   .subBlock p:last-child,
@@ -202,16 +232,15 @@
 
   .info-callout {
     margin: 0.75rem 0 1rem;
-    padding: 0.8rem 0.9rem;
-    border: 1px solid rgba(212, 175, 55, 0.16);
-    background: rgba(212, 175, 55, 0.06);
-    border-radius: 12px;
-    color: #dbe4ef;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid color-mix(in srgb, var(--mf-ion) 30%, transparent);
+    background: color-mix(in srgb, var(--mf-ion) 7%, transparent);
+    color: var(--mf-text);
   }
 
   .underscore {
     text-decoration: underline;
-    text-decoration-color: rgba(212, 175, 55, 0.7);
+    text-decoration-color: var(--mf-ion);
     text-underline-offset: 3px;
   }
 
@@ -229,24 +258,23 @@
 
   .clickable {
     cursor: pointer;
-    transition: color 0.18s ease, transform 0.18s ease;
+    transition: color 0.15s ease, transform 0.15s ease;
   }
 
   .clickable:hover {
-    color: #f5d56b;
+    color: var(--mf-ion) !important;
     transform: translateX(2px);
   }
 
+  /* tables */
   .draft-order-table,
   .positionMaximums,
   table {
     width: 100%;
     border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    overflow: hidden;
+    font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+    background: var(--mf-panel);
+    border: 1px solid var(--mf-line);
   }
 
   .draft-order-table {
@@ -258,26 +286,32 @@
   .draft-order-table td,
   table th,
   table td {
-    padding: 12px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 11px 14px;
+    border: 1px solid var(--mf-line);
     vertical-align: top;
+    color: var(--mf-text);
   }
 
   .table-header,
   table thead tr {
-    background: rgba(122, 28, 28, 0.75);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--mf-ion) 16%, transparent), transparent 70%), var(--mf-panel-2);
   }
 
   .table-header th,
   table thead th {
-    color: #fff;
+    color: var(--mf-ion);
+    font-size: 0.8em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-top: 2px solid var(--mf-ion);
   }
 
   .total-row td {
     font-weight: 700;
-    color: #f5d56b;
+    color: var(--mf-ion);
   }
 
+  /* playoff bracket */
   .bracket-container {
     display: flex;
     justify-content: center;
@@ -286,9 +320,11 @@
     margin: 1.3rem auto 1.15rem;
     padding: 1.1rem 1rem;
     overflow-x: auto;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
+    background:
+      linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 24px,
+      linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 24px 100%,
+      var(--mf-bg);
+    border: 1px solid var(--mf-line);
   }
 
   .round {
@@ -301,19 +337,27 @@
   }
 
   .round-title {
-    font-size: 0.82rem;
-    color: #d4af37;
+    font-size: 0.8rem;
+    color: var(--mf-ion);
     font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     text-align: center;
     margin-bottom: 0.25rem;
   }
 
+  .round-title small {
+    color: var(--mf-dim);
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+
   .matchup {
     position: relative;
-    background: linear-gradient(180deg, #1e293b, #0f172a);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--mf-panel);
+    border: 1px solid var(--mf-line);
+    border-left: 3px solid var(--mf-line-strong);
     padding: 10px;
-    border-radius: 10px;
     width: 120px;
     min-height: 58px;
     display: flex;
@@ -331,15 +375,15 @@
   }
 
   .team {
-    color: #f8fafc;
+    color: var(--mf-text);
   }
 
   .tbd {
-    color: #94a3b8;
+    color: var(--mf-dim);
   }
 
   .championship {
-    color: #f5d56b;
+    color: #e5b52a;
   }
 
   .round:nth-child(2) {
@@ -350,6 +394,10 @@
     justify-content: center;
   }
 
+  .round:nth-child(3) .matchup {
+    border-left-color: #e5b52a;
+  }
+
   .round:nth-child(1) .matchup::after,
   .round:nth-child(2) .matchup::after {
     content: '';
@@ -357,7 +405,7 @@
     right: -12px;
     top: 50%;
     width: 12px;
-    border-top: 1px solid rgba(212, 175, 55, 0.45);
+    border-top: 1px solid var(--mf-ion);
   }
 
   .round:nth-child(2) .matchup::before {
@@ -366,14 +414,14 @@
     left: -12px;
     top: 50%;
     width: 12px;
-    border-top: 1px solid rgba(212, 175, 55, 0.45);
+    border-top: 1px solid var(--mf-ion);
   }
 
+  /* bookkeeping ledger */
   .ledger-wrap {
     width: 100%;
     margin: 1rem 0 1.3rem;
     overflow-x: auto;
-    border-radius: 14px;
   }
 
   .ledger-table {
@@ -381,35 +429,41 @@
     min-width: 620px;
     border-collapse: collapse;
     table-layout: fixed;
-    background: #f3f3f3;
-    color: #111;
-    border: 1px solid #222;
+    background: var(--mf-panel);
+    color: var(--mf-text);
+    border: 1px solid var(--mf-line);
   }
 
   .ledger-table th,
   .ledger-table td {
-    border: 1px solid #222;
-    padding: 0.45rem 0.4rem;
-    font-size: 0.94rem;
+    border: 1px solid var(--mf-line);
+    padding: 0.5rem 0.55rem;
+    font-size: 0.92rem;
     line-height: 1.2;
-    color: #111;
+    color: var(--mf-text);
+    font-variant-numeric: tabular-nums;
   }
 
   .ledger-title-row th {
-    background: #9a9a9a;
-    color: #000;
-    font-size: 1.05rem;
+    background: var(--mf-panel-2);
+    border-top: 2px solid var(--mf-ion);
+    color: var(--mf-text);
+    font-size: 1.02rem;
     font-weight: 700;
+    letter-spacing: 0.04em;
     text-align: center;
-    padding: 0.6rem 0.45rem;
+    padding: 0.65rem 0.45rem;
   }
 
   .ledger-section-row th {
-    background: #375da3;
-    color: #fff;
+    background: color-mix(in srgb, var(--mf-ion) 14%, var(--mf-panel));
+    color: var(--mf-ion);
+    font-size: 0.78rem;
     font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     text-align: left;
-    padding: 0.35rem 0.4rem;
+    padding: 0.4rem 0.55rem;
   }
 
   .ledger-section-row th:nth-child(2),
@@ -418,13 +472,13 @@
   }
 
   .ledger-highlight-row td {
-    background: #375da3;
-    color: #fff;
+    background: color-mix(in srgb, var(--mf-ion) 18%, var(--mf-panel));
+    color: var(--mf-text);
     font-weight: 700;
   }
 
   .ledger-highlight-row .ledger-value {
-    color: #fff;
+    color: var(--mf-ion);
   }
 
   .ledger-table td:first-child,
@@ -444,6 +498,7 @@
     white-space: nowrap;
   }
 
+  /* divisions */
   .division-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -458,23 +513,24 @@
     justify-content: flex-start;
     min-height: 132px;
     padding: 0.9rem;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
+    background: var(--mf-panel-2);
+    border: 1px solid var(--mf-line);
+    border-top: 2px solid var(--mf-ion);
   }
 
   .division-card h4 {
     margin: 0 0 0.45rem;
     font-size: 0.95rem;
     line-height: 1.15;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .division-card .subBlock {
     margin: 0;
-    padding: 0.65rem 0.75rem;
-    border-left: 2px solid rgba(212, 175, 55, 0.16);
+    padding: 0.55rem 0.7rem;
+    border-left: 2px solid var(--mf-line-strong);
     background: transparent;
-    border-radius: 0;
   }
 
   .division-card .subBlock p {
@@ -483,16 +539,29 @@
     font-size: 0.84rem;
   }
 
+  /* graphics */
+  .lottery-graphic {
+    display: block;
+    margin: 1rem 0 1.4rem;
+    border: 1px solid var(--mf-line-strong);
+    box-shadow: 0 0 18px var(--mf-line);
+  }
+
+  .lottery-graphic img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
   @media (max-width: 700px) {
     .constitution-shell {
-      width: min(100% - 1rem, 100%);
+      width: calc(100% - 16px);
       margin: 1rem auto 3.5rem;
     }
 
     .constitution-hero {
-      padding: 1rem 0.85rem 1rem;
-      margin-bottom: 0.95rem;
-      border-radius: 16px;
+      padding: 1rem 0.85rem;
+      margin-bottom: 0.9rem;
     }
 
     .constitution-body {
@@ -501,63 +570,44 @@
 
     .content-card {
       padding: 1rem 0.85rem 1.05rem;
-      border-radius: 14px;
     }
 
     .eyebrow {
       margin-bottom: 0.55rem;
       font-size: 0.68rem;
-      letter-spacing: 0.12em;
     }
 
     .hero-title {
-      font-size: 1.42rem;
+      font-size: 1.5rem;
       line-height: 1.15;
     }
 
     .hero-subtitle {
       margin-top: 0.7rem;
       font-size: 0.86rem;
-      line-height: 1.5;
-      padding: 0 0.1rem;
     }
 
     .toc-card {
-      padding: 0.85rem 0.75rem 0.15rem;
-      border-radius: 14px;
-    }
-
-    .toc-title {
-      margin-bottom: 0.7rem;
-      font-size: 0.82rem;
+      padding: 0.85rem 0.75rem 0.2rem;
     }
 
     .toc-grid {
       grid-template-columns: 1fr;
-      gap: 0.75rem;
-    }
-
-    .toc-group {
-      padding: 0.7rem 0.75rem;
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
+      gap: 0.7rem;
     }
 
     .toc-group h3 {
       font-size: 0.92rem;
-      margin-bottom: 0.35rem;
     }
 
     .toc-group h4,
     .toc-group h5 {
       font-size: 0.8rem;
-      margin-bottom: 0.24rem;
       line-height: 1.25;
     }
 
     .sectionHeading {
-      font-size: 1.16rem;
+      font-size: 1.2rem;
       margin-bottom: 0.8rem;
       padding-bottom: 0.5rem;
     }
@@ -573,42 +623,37 @@
       font-size: 0.92rem;
       margin-top: 0.95rem;
       margin-bottom: 0.38rem;
-      line-height: 1.28;
     }
 
     h5 {
       font-size: 0.82rem;
-      margin-top: 0.75rem;
-      margin-bottom: 0.26rem;
-      line-height: 1.28;
     }
 
-    :global(p),
-    :global(li) {
+    .constitution-shell :global(p),
+    .constitution-shell :global(li) {
       font-size: 0.9rem;
       line-height: 1.55;
     }
 
-    :global(p) {
+    .constitution-shell :global(p) {
       margin: 0.5rem 0 0.8rem;
     }
 
-    :global(ul) {
+    .constitution-shell :global(ul),
+    .constitution-shell :global(ol) {
       margin: 0.45rem 0 0.85rem;
-      padding-left: 1rem;
+      padding-left: 1.05rem;
     }
 
     .subBlock {
       margin: 0.45rem 0 0.9rem;
       padding: 0.75rem 0.8rem;
-      border-left-width: 3px;
-      border-radius: 0 10px 10px 0;
     }
 
     .draft-order-table,
     .positionMaximums,
     table {
-      min-width: 560px;
+      min-width: 0;
     }
 
     .draft-order-table th,
@@ -616,14 +661,14 @@
     table th,
     table td {
       padding: 9px 10px;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       line-height: 1.2;
     }
 
     .compact-mobile-table th,
     .compact-mobile-table td {
       padding: 8px 9px;
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       line-height: 1.15;
     }
 
@@ -631,7 +676,6 @@
       justify-content: flex-start;
       padding: 0.9rem 0.75rem;
       gap: 16px;
-      border-radius: 14px;
     }
 
     .round {
@@ -654,16 +698,20 @@
       font-size: 0.7rem;
     }
 
+    .ledger-table {
+      min-width: 560px;
+    }
+
     .ledger-table th,
     .ledger-table td {
-      padding: 0.38rem 0.34rem;
-      font-size: 0.76rem;
+      padding: 0.4rem 0.36rem;
+      font-size: 0.78rem;
       line-height: 1.15;
     }
 
     .ledger-title-row th {
       font-size: 0.9rem;
-      padding: 0.45rem 0.3rem;
+      padding: 0.5rem 0.3rem;
     }
 
     .division-grid {
@@ -675,16 +723,6 @@
     .division-card {
       min-height: auto;
       padding: 0.8rem;
-      border-radius: 12px;
-    }
-
-    .division-card h4 {
-      font-size: 0.9rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .division-card .subBlock {
-      padding: 0.55rem 0.65rem;
     }
 
     .division-card .subBlock p {
@@ -692,18 +730,6 @@
       line-height: 1.25;
       margin: 0.16rem 0;
     }
-  }
-
-  .lottery-graphic {
-    display: block;
-    margin: 1rem 0 1.4rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .lottery-graphic img {
-    display: block;
-    width: 100%;
-    height: auto;
   }
 </style>
 
