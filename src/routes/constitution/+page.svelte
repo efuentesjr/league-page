@@ -1087,7 +1087,7 @@
 
       <div class="bracket-container">
         <div class="round">
-          <div class="round-title">Round 1 <br /><small>(Week 15)</small></div>
+          <div class="round-title">Quarterfinals <br /><small>(Week 15)</small></div>
 
           <div class="matchup">
             <div class="team">#1 TEAM</div>
@@ -1111,7 +1111,7 @@
         </div>
 
         <div class="round">
-          <div class="round-title">Round 2 <br /><small>(Week 16)</small></div>
+          <div class="round-title">Semifinals <br /><small>(Week 16)</small></div>
 
           <div class="matchup">
             <div class="tbd">#1/#8</div>
@@ -1125,7 +1125,7 @@
         </div>
 
         <div class="round">
-          <div class="round-title">Finals <br /><small>(Week 17)</small></div>
+          <div class="round-title">Championship <br /><small>(Week 17)</small></div>
 
           <div class="matchup">
             <div class="championship">Champ</div>

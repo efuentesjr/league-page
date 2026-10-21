@@ -495,11 +495,11 @@ const getStartWeek = (i, playoffRounds, consolation, playoffsStart) => {
 
 	switch (playoffRounds - i) {
 		case 1:
-			return "Finals";
+			return "Championship";
 		case 2:
-			return "Semi-Finals"
+			return "Semifinals"
 		case 3:
-			return "Quarter-Finals"
+			return "Quarterfinals"
 	
 		default:
 			return "Qualifiers";

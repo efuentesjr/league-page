@@ -34,7 +34,7 @@ export const classifyBracketGame = (game, maxRound) => {
 
 	return {
 		stage: `round${round}`,
-		label: `Playoff Round ${round}`,
+		label: round === maxRound - 2 ? 'Quarterfinals' : `Playoff Round ${round}`,
 		depth: 1
 	};
 };

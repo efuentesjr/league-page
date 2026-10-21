@@ -226,9 +226,9 @@
 				<span>Record</span>
 				<span>Playoffs</span>
 				<span class="colSeeds">Finish 1st → {inputs.teams.length}th</span>
-				<span class="colRound">Semis</span>
-				<span class="colRound">Final</span>
-				<span class="colRound">Title</span>
+				<span class="colRound">Semifinals</span>
+				<span class="colRound">Championship</span>
+				<span class="colRound">Champion</span>
 			</div>
 
 			{#each results as r (r.rosterID)}
@@ -278,7 +278,7 @@
 		</div>
 
 		<p class="footnote">
-			Semis = wins Round 1 · Final = reaches the Championship · Title = wins it all.
+			Semifinals = wins the Quarterfinals · Championship = reaches the Championship Match · Champion = wins it all.
 			Clinched and Eliminated are mathematical locks based on wins alone.
 		</p>
 
@@ -567,7 +567,7 @@
 	.boardHead,
 	.row {
 		display: grid;
-		grid-template-columns: minmax(0, 2.4fr) 0.9fr 1.3fr 1.6fr 0.55fr 0.55fr 0.55fr;
+		grid-template-columns: minmax(0, 2.3fr) 0.85fr 1.2fr 1.4fr 0.8fr 0.95fr 0.8fr;
 		align-items: center;
 		gap: 12px;
 		padding: 0 14px;
@@ -910,7 +910,7 @@
 		}
 
 		.round.title::before {
-			content: 'Title ';
+			content: 'Champion ';
 			font-weight: 400;
 			font-size: 0.75rem;
 			color: var(--mf-dim);
