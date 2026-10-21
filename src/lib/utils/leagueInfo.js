@@ -152,6 +152,7 @@ export const managers = [
     "managerID": "850894566360997888",
     "slug": "pete-weber-bowl-club",
     "name": "John Diaz-Decaro",
+    "title": "Beat Producer",
     "location": "Los Angeles, CA",
     "bio": "I am inevitable",
     "photo": "/managers/JDD.jpg",
