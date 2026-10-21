@@ -113,6 +113,13 @@
         height: 100%;
     }
 
+    .rivalTier {
+        color: var(--tierColor) !important;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
     .rebuildOrWin {
         height: 70px;
     }
@@ -274,7 +281,7 @@
             </div>
         </div>
     {/if}
-    <!-- Rival: the opponent who has beaten this manager the most, all time -->
+    <!-- Rival: the current manager with the hottest rivalry (same tiers as the Rivalry pages) -->
     {#if rival}
         <div
             class="infoSlot"
@@ -293,6 +300,9 @@
             <div class="infoAnswer">
                 {rival.name}
                 {#if dynamicRival}
+                    {#if dynamicRival.tier}
+                        <div class="infoDetail rivalTier" style="--tierColor: {dynamicRival.tier.color}">{dynamicRival.tier.name} · {dynamicRival.tier.score} pts</div>
+                    {/if}
                     <div class="infoDetail">
                         {dynamicRival.yourWins}–{dynamicRival.theirWins}{dynamicRival.ties ? `–${dynamicRival.ties}` : ''} all time
                     </div>

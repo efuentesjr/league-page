@@ -26,7 +26,7 @@ import { predictScores } from './predictOptimalScore';
 import { waitForAll } from './multiPromise';
 import { getLeagueRosters } from './leagueRosters';
 import { loadPlayers } from './players';
-import { classifyBracketGame, maxBracketRound } from './playoffRounds';
+import { classifyBracketGame, maxBracketRound, getRivalryTier } from './playoffRounds';
 
 const CACHE_PREFIX = 'mfflSeasonGames_v2_';
 
@@ -323,42 +323,47 @@ export const getManagerHistory = (forceRefresh = false) => {
 export const findRival = (history, managerID) => {
 	if (!history || !managerID) return null;
 
+	const { teamManagers } = history;
+	const current = teamManagers?.teamManagersMap?.[teamManagers.currentSeason] || {};
+	const currentIDs = new Set(Object.values(current).flatMap((e) => e.managers || []));
+
+	/*
+	 * Top rival = the current manager this manager has the hottest rivalry
+	 * with, using the same rivalry points and tiers as the Rivalry pages.
+	 * Ties go to whoever has beaten this manager more, then to whoever this
+	 * manager has beaten less.
+	 */
 	let best = null;
-
-	const inLeague = (id) => managersConfig.some((m) => String(m.managerID) === String(id));
-
-	for (const opponentID in history.beats) {
-		if (opponentID === managerID) continue;
-
-		const theirWins = history.beats[opponentID]?.[managerID] || 0;
-		if (!theirWins) continue;
-
-		const yourWins = history.beats[managerID]?.[opponentID] || 0;
-		const current = inLeague(opponentID);
-
-		// most wins over you → fewest of your wins over them → still in the league
+	for (const opponentID of currentIDs) {
+		if (String(opponentID) === String(managerID)) continue;
+		const k = managerID < opponentID ? `${managerID}|${opponentID}` : `${opponentID}|${managerID}`;
+		const p = history.pairs?.[k];
+		if (!p) continue;
+		const meetings = [
+			...Array(p.ch).fill({ depth: 3 }),
+			...Array(p.sf).fill({ depth: 2 }),
+			...Array(p.qf).fill({ depth: 1 })
+		];
+		const tier = getRivalryTier(meetings, p.reg);
+		if (!tier) continue;
+		const theirWins = history.beats?.[opponentID]?.[managerID] || 0;
+		const yourWins = history.beats?.[managerID]?.[opponentID] || 0;
 		if (
 			!best ||
-			theirWins > best.theirWins ||
-			(theirWins === best.theirWins && yourWins < best.yourWins) ||
-			(theirWins === best.theirWins && yourWins === best.yourWins && current && !best.current)
+			tier.score > best.tier.score ||
+			(tier.score === best.tier.score && theirWins > best.theirWins) ||
+			(tier.score === best.tier.score && theirWins === best.theirWins && yourWins < best.yourWins)
 		) {
-			best = { opponentID, theirWins, yourWins, current };
+			best = { opponentID, tier, theirWins, yourWins };
 		}
 	}
 
 	if (!best) return null;
 
-	const { teamManagers } = history;
-	const configIndex = managersConfig.findIndex(
-		(m) => String(m.managerID) === String(best.opponentID)
-	);
+	const configIndex = managersConfig.findIndex((m) => String(m.managerID) === String(best.opponentID));
 	const config = configIndex > -1 ? managersConfig[configIndex] : null;
-
 	const location = getRosterIDFromManagerID(teamManagers, best.opponentID);
-	const team = location
-		? teamManagers.teamManagersMap[location.year]?.[location.rosterID]?.team
-		: null;
+	const team = location ? teamManagers.teamManagersMap[location.year]?.[location.rosterID]?.team : null;
 
 	return {
 		managerID: best.opponentID,
@@ -367,7 +372,8 @@ export const findRival = (history, managerID) => {
 		link: configIndex > -1 ? configIndex : null,
 		theirWins: best.theirWins,
 		yourWins: best.yourWins,
-		ties: history.ties?.[managerID]?.[best.opponentID] || 0
+		ties: history.ties?.[managerID]?.[best.opponentID] || 0,
+		tier: best.tier
 	};
 };
 
