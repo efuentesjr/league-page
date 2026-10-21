@@ -473,8 +473,9 @@
 		</div>
 
 		<p class="note">
-			Balances are the {money(cap)} cap minus what Sleeper shows each team has used, so carryover and bonus FAAB set by the
-			commissioners are included. FAAB carries over between seasons up to {money(cap)}.
+			FAAB is earned each year: $50 for taking part in the Competition Committee and $75 for the draft, and commissioners get a
+			25% bonus on top for serving. Unspent FAAB carries over every year, up to {money(cap)}. Balances are each team's
+			remaining FAAB as Sleeper shows it.
 			{#if minBid}Minimum bid: {money(minBid)}.{/if} Spending and trades cover the {season} season.
 		</p>
 	{/if}
