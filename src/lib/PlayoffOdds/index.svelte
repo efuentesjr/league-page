@@ -41,7 +41,15 @@
 		return leagueTeamManagers?.teamManagersMap?.[year]?.[rosterID]?.team || { name: 'Unknown Team', avatar: '' };
 	};
 
+	let baselineList = [];
+	let baselineStatus = {};
 	const run = () => {
+		// no picks: the server's baseline is the answer, no need to re-simulate
+		if (!Object.keys(picks).length && baselineList.length) {
+			results = [...baselineList];
+			status = baselineStatus;
+			return;
+		}
 		simulating = true;
 		// let the "simulating" state paint before the work starts
 		setTimeout(() => {
@@ -57,65 +65,74 @@
 		}, 20);
 	};
 
-	onMount(async () => {
-		try {
-			const [rostersData, leagueData, nflState, matchupsData, ltm, playersInfo] = await waitForAll(
-				getLeagueRosters(),
-				getLeagueData(),
-				getNflState(),
-				getLeagueMatchups(),
-				getLeagueTeamManagers(),
-				loadPlayers(null)
-			);
-
-			leagueTeamManagers = ltm;
-
-			inputs = buildSimInputs({
+	// fallback: build and run the simulation in the browser
+	const simulateLocally = async () => {
+		const [rostersData, leagueData, nflState, matchupsData, playersInfo] = await waitForAll(
+			getLeagueRosters(),
+			getLeagueData(),
+			getNflState(),
+			getLeagueMatchups(),
+			loadPlayers(null)
+		);
+		const sim = {
+			inputs: buildSimInputs({
 				rosters: rostersData.rosters,
 				players: playersInfo.players,
 				leagueData,
 				nflState,
 				matchupWeeks: matchupsData.matchupWeeks
-			});
+			}),
+			mode: 'live'
+		};
+		if (!sim.inputs.games.length) {
+			const played = sim.inputs.teams.some((t) => t.wins + t.losses + t.ties > 0);
+			sim.mode = played ? 'final' : 'waiting';
+			if (played) {
+				sim.field = finalPlayoffField(rostersData.rosters, leagueData.settings);
+				sim.fieldSeason = leagueData.season;
+			}
+		}
+		if (sim.mode !== 'waiting') sim.results = simulateSeason(sim.inputs, { sims: SIMS });
+		return sim;
+	};
 
-			if (!inputs.teams.length) {
+	onMount(async () => {
+		try {
+			const [sim, ltm] = await Promise.all([
+				fetch('/api/season_sim')
+					.then((r) => (r.ok ? r.json() : Promise.reject(new Error(`season_sim ${r.status}`))))
+					.catch((err) => {
+						console.warn('[Playoff Odds] Server simulation unavailable, simulating locally:', err);
+						return simulateLocally();
+					}),
+				getLeagueTeamManagers()
+			]);
+
+			leagueTeamManagers = ltm;
+			inputs = sim.inputs;
+			mode = sim.mode || 'live';
+			field = sim.field || [];
+			fieldSeason = sim.fieldSeason || null;
+
+			if (!inputs?.teams?.length) {
 				state = 'empty';
 				return;
 			}
-
-			if (!inputs.games.length) {
-				const played = inputs.teams.some((t) => t.wins + t.losses + t.ties > 0);
-				if (played) {
-					// regular season is over: show the actual playoff field
-					mode = 'final';
-					field = finalPlayoffField(rostersData.rosters, leagueData.settings);
-					fieldSeason = leagueData.season;
-				} else {
-					// new season with no schedule yet: show last season's field
-					mode = 'waiting';
-					const prevID = leagueData.previous_league_id;
-					if (prevID && prevID !== '0') {
-						try {
-							const [prevLeague, prevRosters] = await Promise.all([
-								fetch(`https://api.sleeper.app/v1/league/${prevID}`).then((r) => r.json()),
-								fetch(`https://api.sleeper.app/v1/league/${prevID}/rosters`).then((r) => r.json())
-							]);
-							field = finalPlayoffField(prevRosters, prevLeague?.settings);
-							fieldSeason = prevLeague?.season;
-						} catch (e) {
-							console.error('[Playoff Odds] Could not load last season:', e);
-						}
-					}
-					state = 'ready';
-					return;
-				}
+			if (mode === 'waiting') {
+				state = 'ready';
+				return;
 			}
 
-			const base = simulateSeason(inputs, { sims: SIMS });
+			const base = sim.results || [];
 			baseline = Object.fromEntries(base.map((r) => [r.rosterID, r]));
+			results = [...base].sort(
+				(a, b) => b.playoffPct - a.playoffPct || b.projectedWins - a.projectedWins || b.pointsFor - a.pointsFor
+			);
+			status = Object.fromEntries((sim.status || clinchStatus(inputs, {})).map((c) => [c.rosterID, c]));
+			baselineList = results;
+			baselineStatus = status;
 			selectedWeek = inputs.games[0]?.week ?? null;
 			state = 'ready';
-			run();
 		} catch (err) {
 			console.error('[Playoff Odds] Could not build simulation:', err);
 			errorMessage = 'Could not load league data from Sleeper. Refresh the page to try again.';

@@ -16,6 +16,16 @@ import { buildSimInputs, simulateSeason, projectedDraftOrder } from './playoffOd
 const getLotteryOrder = async (rosters, leagueData) => {
 	// browser only (the page re-runs in the browser; the server render shows the standings order)
 	if (typeof window === 'undefined') return null;
+	// fast path: the server-side, CDN-cached simulation
+	try {
+		const res = await fetch('/api/season_sim');
+		if (res.ok) {
+			const sim = await res.json();
+			if (sim.draftOrder?.length) return sim.draftOrder;
+		}
+	} catch (err) {
+		console.warn('[Drafts] Server simulation unavailable, simulating locally:', err);
+	}
 	try {
 		const [nflState, matchupsData, playersInfo] = await waitForAll(
 			getNflState(),
