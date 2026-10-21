@@ -99,6 +99,39 @@
         return best ? { pos: best, count: counts[best] } : null;
     })();
 
+    // Desire to Trade: trades this calendar year, scaled so the league's most
+    // active trader is a 10 and a team with none is a 1
+    $: tradeYear = Number(leagueTeamManagers?.currentSeason) || new Date().getFullYear();
+    $: tradeCounts = (() => {
+        const counts = Object.fromEntries(Object.keys(rosters).map((id) => [id, 0]));
+        for (const t of transactions || []) {
+            if (t.type !== 'trade' || Number(t.season) !== tradeYear) continue;
+            for (const r of t.rosters || []) if (String(r) in counts) counts[String(r)]++;
+        }
+        return counts;
+    })();
+    $: tradeDesire = (() => {
+        if (rosterID == null) return null;
+        const max = Math.max(0, ...Object.values(tradeCounts));
+        const count = tradeCounts[String(rosterID)] || 0;
+        return { count, score: max ? Math.round(1 + (9 * count) / max) : 1, year: tradeYear };
+    })();
+
+    // Rookie or Vet: average age of the roster, split at the league median
+    $: ageTier = (() => {
+        if (!players || rosterID == null) return null;
+        const avgAge = (r) => {
+            const ages = (r?.players || []).map((pid) => Number(players[pid]?.a)).filter((a) => a > 0);
+            return ages.length ? ages.reduce((t, a) => t + a, 0) / ages.length : null;
+        };
+        const all = Object.values(rosters).map(avgAge).filter((a) => a != null).sort((x, y) => x - y);
+        const mine = avgAge(roster);
+        if (mine == null || !all.length) return null;
+        const mid = all.length / 2;
+        const median = all.length % 2 ? all[Math.floor(mid)] : (all[mid - 1] + all[mid]) / 2;
+        return { label: mine <= median ? 'Rookies' : 'Vets', avg: mine };
+    })();
+
     const refreshTransactions = async () => {
         const newTransactions = await getLeagueTransactions(false, true);
         transactions = newTransactions.transactions;
@@ -555,7 +588,7 @@
     </div>
 
     {#if !loading}
-        <ManagerFantasyInfo {viewManager} {players} {changeManager} {dynamicRival} {topScorer} {teamTier} {historyState} {favoritePosition} />
+        <ManagerFantasyInfo {viewManager} {players} {changeManager} {dynamicRival} {topScorer} {teamTier} {historyState} {favoritePosition} {tradeDesire} {ageTier} />
     {/if}
 
     <ManagerAwards

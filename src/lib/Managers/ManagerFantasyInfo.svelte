@@ -7,6 +7,11 @@
     export let teamTier = null;
     export let historyState = 'loading';
     export let favoritePosition = null;
+    export let tradeDesire = null;
+    export let ageTier = null;
+
+    $: ageLabel = ageTier?.label ?? viewManager.rookieOrVets;
+    $: tradeScore = tradeDesire?.score ?? viewManager.tradingScale;
 
     $: assetPos = favoritePosition?.pos ?? viewManager.valuePosition;
 
@@ -65,6 +70,12 @@
         width: 90px;
         text-align: center;
         line-height: 1.2em;
+    }
+
+    .subAnswer {
+        font-style: italic;
+        color: var(--blueOne);
+        font-size: 0.9em;
     }
 
     .infoAnswer {
@@ -212,16 +223,16 @@
 
 <div class="fantasyInfos">
     <!-- Rookies or Vets (optional) -->
-    {#if viewManager.rookieOrVets}
+    {#if ageLabel}
         <div class="infoSlot">
             <div class="infoLabel">
                 Rookie or Vet Preference
             </div>
             <div class="infoIcon">
-                <img class="rookiesOrVets" src="/{viewManager.rookieOrVets}.png" alt="rookie or vet preference"/>
+                <img class="rookiesOrVets" src="/{ageLabel}.png" alt="rookie or vet preference"/>
             </div>
             <div class="infoAnswer">
-                {viewManager.rookieOrVets}
+                {ageLabel}{#if ageTier}<br /><span class="subAnswer">avg age {ageTier.avg.toFixed(1)}</span>{/if}
             </div>
         </div>
     {/if}
@@ -241,17 +252,17 @@
             {/if}
         </div>
     {/if}
-    {#if viewManager.tradingScale}
+    {#if tradeScore}
         <!-- Trading Scale -->
         <div class="infoSlot">
             <div class="infoLabel">
                 Desire to Trade
             </div>
             <div class="infoIcon">
-                <span class="tradingScale">{viewManager.tradingScale}</span>
+                <span class="tradingScale">{tradeScore}</span>
             </div>
             <div class="infoAnswer">
-                {viewManager.tradingScale} out of 10
+                {tradeScore} out of 10{#if tradeDesire}<br /><span class="subAnswer">{tradeDesire.count} trade{tradeDesire.count === 1 ? '' : 's'} in {tradeDesire.year}</span>{/if}
             </div>
         </div>
     {/if}
