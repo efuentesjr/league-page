@@ -99,8 +99,8 @@
         return best ? { pos: best, count: counts[best] } : null;
     })();
 
-    // Desire to Trade: trades this calendar year, scaled so the league's most
-    // active trader is a 10 and a team with none is a 1
+    // Desire to Trade: trades this calendar year, ranked against the league
+    // (most active trader = 10, no trades = 1, everyone else by rank)
     $: tradeYear = Number(leagueTeamManagers?.currentSeason) || new Date().getFullYear();
     $: tradeCounts = (() => {
         const counts = Object.fromEntries(Object.keys(rosters).map((id) => [id, 0]));
@@ -112,9 +112,13 @@
     })();
     $: tradeDesire = (() => {
         if (rosterID == null) return null;
-        const max = Math.max(0, ...Object.values(tradeCounts));
+        const all = Object.values(tradeCounts);
         const count = tradeCounts[String(rosterID)] || 0;
-        return { count, score: max ? Math.round(1 + (9 * count) / max) : 1, year: tradeYear };
+        if (!count || all.length < 2) return { count, score: 1, year: tradeYear };
+        const below = all.filter((c) => c < count).length;
+        const equal = all.filter((c) => c === count).length;
+        const pct = (below + (equal - 1) / 2) / (all.length - 1);
+        return { count, score: Math.max(2, Math.round(1 + 9 * pct)), year: tradeYear };
     })();
 
     // Rookie or Vet: average age of the roster, split at the league median
