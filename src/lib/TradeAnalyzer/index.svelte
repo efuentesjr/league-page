@@ -107,7 +107,14 @@
 		const P = values.picks || {};
 		if (P[`${season} ${label}`] != null) return P[`${season} ${label}`];
 		const years = [...new Set(Object.keys(P).map((k) => Number(k.slice(0, 4))).filter((y) => y && y <= Number(season)))].sort((x, y) => y - x);
-		for (const y of years) if (P[`${y} ${label}`] != null) return P[`${y} ${label}`];
+		for (const y of years) {
+			if (P[`${y} ${label}`] == null) continue;
+			// no market value for this year yet: borrow the latest year's and
+			// apply the market's own one-year drop for each extra year out
+			const prev = P[`${y - 1} ${label}`];
+			const drop = prev > 0 ? Math.min(1, P[`${y} ${label}`] / prev) : 1;
+			return P[`${y} ${label}`] * Math.pow(drop, Number(season) - y);
+		}
 		return null;
 	};
 	// the "any 1st is a 1st" market label value (12-team tiers)
@@ -228,7 +235,10 @@
 			const lo = Math.max(1, Math.round((tier.slots[0] / 16) * T));
 			const hi = Math.min(T, Math.round((tier.slots[1] / 16) * T));
 			const w = TIER_WEIGHT[idx] ?? 0.25;
-			return { value: Math.round(w * avgSlots(lo, hi) + (1 - w) * roundAvg), label, equiv: null, tier: { name: tier.name, rank } };
+			let value = Math.round(w * avgSlots(lo, hi) + (1 - w) * roundAvg);
+			// a pick further out is never worth more than the same team's earlier one
+			if (idx > 1) value = Math.min(value, pickValue(seasons[idx - 1], round, orig, slots, ranks).value);
+			return { value, label, equiv: null, tier: { name: tier.name, rank } };
 		}
 		return { value: Math.round(roundAvg), label, equiv: null, tier: null };
 	};
@@ -828,7 +838,7 @@
 			{#if values.tePremium}Tight ends get a TE premium boost for this league's scoring (+{values.tePremium.perRec} per catch, +{values.tePremium.perFd} per first down), based on each TE's catches and first downs over the last two seasons, toned down and capped at +40%.{/if}
 			DynastyProcess assumes a 12-team league, so this page adjusts for 16 teams. Picks are valued by the rookie they actually land: overall pick N here is the Nth rookie off the board, so a projected 1.14 is valued like a 12-team 2.02.
 			{seasons[0]} picks use their projected slot from Lottery Watch{slotOf ? '' : ' once the projection finishes loading'}.
-			{seasons[1]} and {seasons[2]} picks are tiered by how strong the original team's roster is today (total dynasty value): the 5 strongest rosters' picks are valued like late picks, the middle 6 like mid picks, the 5 weakest like early picks. Rosters change, so the tier counts for half the value in {seasons[1]} and a quarter in {seasons[2]}; the rest is the plain round average. {seasons[2]} uses the {seasons[1]} round values until DynastyProcess publishes them.
+			{seasons[1]} and {seasons[2]} picks are tiered by how strong the original team's roster is today (total dynasty value): the 5 strongest rosters' picks are valued like late picks, the middle 6 like mid picks, the 5 weakest like early picks. Rosters change, so the tier counts for half the value in {seasons[1]} and a quarter in {seasons[2]}; the rest is the plain round average. Until DynastyProcess publishes {seasons[2]} values, {seasons[2]} picks use the {seasons[1]} values minus the market's usual one-year drop, and a pick is never worth more than the same team's pick a year earlier.
 			With about 32 starting QBs every week in a 16-team superflex, QBs ranked roughly 20–44 get a 16-team QB depth bump (+10%, or +20% for QB25–36).
 			Pick values follow the market: they're lowest midseason and rise toward draft day, so trading for picks now is buying low, and selling picks is best in the spring.
 			FAAB counts {FAAB_RATE} point per dollar (about an early 3rd per $100). It's a market guide, not a verdict: your Trade Grades judge trades afterward by points actually scored.
