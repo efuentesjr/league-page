@@ -13,7 +13,7 @@ import { ROOKIE_MOCK } from '$lib/utils/rookieMock';
 const POSITIONS = new Set(['QB', 'RB', 'WR', 'TE']);
 const MIN_CLASS = 16;
 
-const parseLine = (line) => {
+export const parseLine = (line) => {
 	const out = [];
 	let cur = '', quoted = false;
 	for (let i = 0; i < line.length; i++) {
