@@ -1063,9 +1063,9 @@
       </p>
 
       <p>
-        FAAB Waiver Wire System: Each team will begin the season with a Free Agent Acquisition Budget (FAAB) between $100 and
-        $200, with the exact amount announced by the Commissioner before the season starts. No $0 bids are allowed. Waiver bids
-        will process every Thursday at 2:00 a.m.
+        FAAB Waiver Wire System: FAAB is earned each season, $50 for participating in the Competition Committee and $75 for
+        participating in the draft. Commissioners receive an additional 25% of what they earn for serving (see 7.2). No $0 bids
+        are allowed. Waiver bids will process every Thursday at 2:00 a.m.
       </p>
 
       <p>FAAB budgets carry over to the next season, up to a maximum of $999.</p>
@@ -1345,8 +1345,8 @@
       <p>League payout is structured as follows:</p>
       <p>Each Divisional Champion will receive a $25 payout.</p>
       <p>
-        Commissioners will receive FAAB compensation equal to 25% of the maximum FAAB allowed for that season, split evenly among
-        all active commissioners.
+        Commissioners will receive a FAAB bonus for serving, equal to 25% of the FAAB they earn that season from the Competition
+        Committee and the draft (see 1.4).
       </p>
 
       <div class="ledger-wrap">
