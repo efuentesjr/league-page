@@ -1101,6 +1101,7 @@
         records overall from the remaining teams, will receive a playoff berth. Each playoff matchup will last one week, and
         the winner will advance. Week 18 will not be used.
       </p>
+      <p>Division winners are seeded 1–4 by record, and the four wild cards are seeded 5–8 by record.</p>
       <p>The seed determination is as follows:</p>
       <p>1. Overall record.</p>
       <p>2. Points For.</p>
