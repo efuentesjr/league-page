@@ -257,17 +257,18 @@
         transition: border-color 0.4s;
     }
 
-    /* hexagon photo: team-colored edge with a soft glow */
+    /* octagon photo: team-colored edge with a soft glow, sitting low in the header */
     .photoWrap {
         align-self: end;
+        margin-bottom: -16px;
         filter: drop-shadow(0 0 16px color-mix(in srgb, var(--team) 55%, transparent));
     }
 
     .photoHex {
-        width: 118px;
-        height: 136px;
+        width: 132px;
+        height: 132px;
         padding: 3px;
-        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        clip-path: polygon(29.3% 0, 70.7% 0, 100% 29.3%, 100% 70.7%, 70.7% 100%, 29.3% 100%, 0 70.7%, 0 29.3%);
         background: linear-gradient(160deg, var(--team), color-mix(in srgb, var(--team) 35%, #000) 50%, var(--team));
     }
 
@@ -277,7 +278,7 @@
         height: 100%;
         object-fit: cover;
         background: #000;
-        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        clip-path: polygon(29.3% 0, 70.7% 0, 100% 29.3%, 100% 70.7%, 70.7% 100%, 29.3% 100%, 0 70.7%, 0 29.3%);
     }
 
     .kicker {
@@ -598,10 +599,11 @@
         }
         .photoWrap {
             align-self: center;
+            margin-bottom: 0;
         }
         .photoHex {
-            width: 104px;
-            height: 120px;
+            width: 112px;
+            height: 112px;
         }
         h1 {
             font-size: 2rem;

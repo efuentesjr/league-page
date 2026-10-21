@@ -43,18 +43,18 @@
         background: var(--mf-panel);
     }
 
-    /* hexagon icon: the outer hex is the glowing edge, ::before is the fill */
+    /* octagon icon: the outer shape is the glowing edge, ::before is the fill */
     .infoIcon {
         --fill: var(--mf-bg);
         position: relative;
         isolation: isolate;
         display: inline-flex;
-        height: 80px;
-        width: 70px;
+        height: 74px;
+        width: 74px;
         justify-content: center;
         align-items: center;
         overflow: hidden;
-        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        clip-path: polygon(29.3% 0, 70.7% 0, 100% 29.3%, 100% 70.7%, 70.7% 100%, 29.3% 100%, 0 70.7%, 0 29.3%);
         background: linear-gradient(160deg, var(--mf-ion), color-mix(in srgb, var(--mf-ion) 25%, transparent) 50%, var(--mf-ion));
         transition: filter 0.3s;
     }
@@ -64,7 +64,7 @@
         position: absolute;
         inset: 2px;
         z-index: -1;
-        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        clip-path: polygon(29.3% 0, 70.7% 0, 100% 29.3%, 100% 70.7%, 70.7% 100%, 29.3% 100%, 0 70.7%, 0 29.3%);
         background: var(--fill);
     }
 

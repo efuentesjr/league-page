@@ -182,7 +182,34 @@
         }
     }
 
+    /*
+     * Trophy-case order: championships first, then 2nd, 3rd, division titles,
+     * all-time records (#1, #2, #3), and the Toilet Bowl last. Newest first
+     * within each tier.
+     */
+    const tierOf = (a) => {
+        if (a.type === 'award') {
+            const name = String(a.award).toLowerCase();
+            if (name === 'champion') return 0;
+            if (name === 'second') return 1;
+            if (name === 'third') return 2;
+            if (name.includes('champion')) return 3; // division / regular season
+            if (name === 'toilet') return 9;
+            return 8;
+        }
+        return 3 + (Number(a.award) || 5); // records: #1 -> 4, #2 -> 5, #3 -> 6
+    };
+    const metalOf = (a) => {
+        const t = tierOf(a);
+        if (t === 0 || t === 3 || t === 4) return 'gold';
+        if (t === 1 || t === 5) return 'silver';
+        if (t === 2 || t === 6) return 'bronze';
+        return 'plain';
+    };
+    const yearOf = (a) => Number(a.year) || Number(String(a.type).slice(0, 4)) || 0;
+
     $: computePodiums(rosterID);
+    $: sortedAwards = [...displayAwards].sort((x, y) => tierOf(x) - tierOf(y) || yearOf(y) - yearOf(x));
 
     const computeAward = (award) => {
         switch (award) {
@@ -281,6 +308,31 @@
             var(--mf-panel-2);
     }
 
+    /* metal per tier: the hex edge and title pick up silver / bronze */
+    .award.silver {
+        --metal: linear-gradient(150deg, #ffffff 0%, #c9d1dc 25%, #6d7785 55%, #c9d1dc 80%, #ffffff 100%);
+        --metal-text: linear-gradient(180deg, #ffffff, #c9d1dc 55%, #8b95a3);
+        --metal-glow: rgba(201, 209, 220, 0.45);
+        border-top-color: #c9d1dc;
+        border-color: rgba(201, 209, 220, 0.25);
+    }
+
+    .award.bronze {
+        --metal: linear-gradient(150deg, #ffe0c2 0%, #e0a46a 25%, #8a5122 55%, #e0a46a 80%, #ffe0c2 100%);
+        --metal-text: linear-gradient(180deg, #ffe7cf, #e0a46a 55%, #a8662f);
+        --metal-glow: rgba(224, 164, 106, 0.45);
+        border-top-color: #e0a46a;
+        border-color: rgba(224, 164, 106, 0.25);
+    }
+
+    .award.plain {
+        --metal: linear-gradient(150deg, #9fb3cc 0%, #5d708a 50%, #9fb3cc 100%);
+        --metal-text: linear-gradient(180deg, #e8f4ff, #9fb3cc);
+        --metal-glow: rgba(112, 136, 170, 0.35);
+        border-top-color: var(--mf-plasma);
+        border-color: var(--mf-line);
+    }
+
     .awardHeader {
         min-height: 2.4em;
         margin-bottom: 8px;
@@ -294,7 +346,7 @@
 
     /* hexagon trophy with a gold edge, glow, and a light sweep */
     .hexWrap {
-        filter: drop-shadow(0 0 10px rgba(245, 213, 107, 0.45));
+        filter: drop-shadow(0 0 10px var(--metal-glow, rgba(245, 213, 107, 0.45)));
     }
 
     .champ .hexWrap {
@@ -315,7 +367,7 @@
         height: 90px;
         isolation: isolate;
         clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-        background: linear-gradient(150deg, #fff3c4 0%, #f5d56b 25%, #a7781d 55%, #f5d56b 80%, #fff3c4 100%);
+        background: var(--metal, linear-gradient(150deg, #fff3c4 0%, #f5d56b 25%, #a7781d 55%, #f5d56b 80%, #fff3c4 100%));
     }
 
     .awardIcon::before {
@@ -358,7 +410,7 @@
         font-size: 0.95rem;
         font-weight: 700;
         line-height: 1.2em;
-        background: linear-gradient(180deg, #fff6d0, #f5d56b 55%, #c9962c);
+        background: var(--metal-text, linear-gradient(180deg, #fff6d0, #f5d56b 55%, #c9962c));
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -410,8 +462,8 @@
 
 <div class="awardsCase">
     <div class="awardsCaseInner">
-        {#each displayAwards as award, i}
-            <div class="award" class:champ={/champ|1st place/i.test(`${computeAward(award.award)}`) || award.award === 1}>
+        {#each sortedAwards as award, i}
+            <div class="award {metalOf(award)}" class:champ={tierOf(award) === 0}>
                 <div class="awardHeader">{award.type != 'award' ? award.type : ''}</div>
                 <div class="hexWrap">
                     <div class="awardIcon" style="--d: {(i % 6) * 0.7}s">
