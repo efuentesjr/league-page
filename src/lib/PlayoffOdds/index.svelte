@@ -16,7 +16,7 @@
 		waitForAll,
 		gotoManager
 	} from '$lib/utils/helper';
-	import { buildSimInputs, simulateSeason, clinchStatus } from '$lib/utils/helperFunctions/playoffOdds';
+	import { buildSimInputs, simulateSeason, clinchStatus, finalPlayoffField } from '$lib/utils/helperFunctions/playoffOdds';
 
 	const SIMS = 10000;
 
@@ -27,13 +27,17 @@
 	let baseline = {};
 	let results = [];
 	let status = {};
+
+	// offseason: 'live' (games left), 'final' (regular season done), 'waiting' (new season, no schedule yet)
+	let mode = 'live';
+	let field = [];
+	let fieldSeason = null;
 	let simulating = false;
 
 	let picks = {};
 	let selectedWeek = null;
 
-	const teamInfo = (rosterID) => {
-		const year = leagueTeamManagers?.currentSeason;
+	const teamInfo = (rosterID, year = leagueTeamManagers?.currentSeason) => {
 		return leagueTeamManagers?.teamManagersMap?.[year]?.[rosterID]?.team || { name: 'Unknown Team', avatar: '' };
 	};
 
@@ -77,6 +81,34 @@
 			if (!inputs.teams.length) {
 				state = 'empty';
 				return;
+			}
+
+			if (!inputs.games.length) {
+				const played = inputs.teams.some((t) => t.wins + t.losses + t.ties > 0);
+				if (played) {
+					// regular season is over: show the actual playoff field
+					mode = 'final';
+					field = finalPlayoffField(rostersData.rosters, leagueData.settings);
+					fieldSeason = leagueData.season;
+				} else {
+					// new season with no schedule yet: show last season's field
+					mode = 'waiting';
+					const prevID = leagueData.previous_league_id;
+					if (prevID && prevID !== '0') {
+						try {
+							const [prevLeague, prevRosters] = await Promise.all([
+								fetch(`https://api.sleeper.app/v1/league/${prevID}`).then((r) => r.json()),
+								fetch(`https://api.sleeper.app/v1/league/${prevID}/rosters`).then((r) => r.json())
+							]);
+							field = finalPlayoffField(prevRosters, prevLeague?.settings);
+							fieldSeason = prevLeague?.season;
+						} catch (e) {
+							console.error('[Playoff Odds] Could not load last season:', e);
+						}
+					}
+					state = 'ready';
+					return;
+				}
 			}
 
 			const base = simulateSeason(inputs, { sims: SIMS });
@@ -142,7 +174,11 @@
 <section class="odds">
 	<header class="oddsHeader">
 		<h1>Playoff Odds</h1>
-		{#if state === 'ready'}
+		{#if state === 'ready' && mode === 'final'}
+			<p class="sub">The {fieldSeason} regular season is over. Here's the final playoff field, seeded the way Sleeper's bracket does it.</p>
+		{:else if state === 'ready' && mode === 'waiting'}
+			<p class="sub">Playoff Odds return when the {inputs.season} schedule drops in Sleeper.</p>
+		{:else if state === 'ready'}
 			<p class="sub">
 				{SIMS.toLocaleString()} simulated seasons using Sleeper projections and how each team has
 				actually scored. Top {inputs.playoffTeams} make the playoffs.
@@ -219,6 +255,49 @@
 			</div>
 		{/if}
 
+		{#if mode !== 'live'}
+			<!-- FINAL PLAYOFF FIELD -->
+			{#if field.length}
+				<h2 class="fieldTitle">{mode === 'final' ? 'Final' : `${fieldSeason} Final`}: Playoff Field</h2>
+				<div class="board">
+					<div class="fieldRow fieldHead" aria-hidden="true">
+						<span>Seed</span>
+						<span>Team</span>
+						<span>Record</span>
+						<span>Points</span>
+					</div>
+					{#each field as t (t.rosterID)}
+						{@const team = teamInfo(t.rosterID, mode === 'final' ? leagueTeamManagers?.currentSeason : fieldSeason)}
+						{#if !t.inPlayoffs && t.seed === field.filter((x) => x.inPlayoffs).length + 1}
+							<div class="cutLine"><span>Missed the playoffs</span></div>
+						{/if}
+						<div class="fieldRow" class:out={!t.inPlayoffs}>
+							<span class="seedNum">{t.inPlayoffs ? t.seed : '–'}</span>
+							{#if mode === 'final'}
+								<button type="button" class="teamCell" onclick={() => openManager(t.rosterID)}>
+									<img src={team.avatar} alt="" />
+									<span class="teamName">{team.name}</span>
+									{#if t.divisionWinner}<span class="badge in">Division winner</span>{/if}
+								</button>
+							{:else}
+								<span class="teamCell">
+									<img src={team.avatar} alt="" />
+									<span class="teamName">{team.name}</span>
+									{#if t.divisionWinner}<span class="badge in">Division winner</span>{/if}
+								</span>
+							{/if}
+							<span class="now">{fmtRecord(t.wins, t.losses, t.ties)}</span>
+							<span class="pts">{t.pointsFor.toFixed(2)}</span>
+						</div>
+					{/each}
+				</div>
+				<p class="footnote">
+					Division winners take seeds 1–4 by record; seeds 5–8 are the best remaining records (points for breaks ties).
+				</p>
+			{:else if mode === 'waiting'}
+				<p class="message">Check back once the schedule is set.</p>
+			{/if}
+		{:else}
 		<!-- ODDS TABLE -->
 		<div class="board" class:busy={simulating}>
 			<div class="boardHead" aria-hidden="true">
@@ -277,10 +356,14 @@
 			{/each}
 		</div>
 
+		{/if}
+
+		{#if mode === 'live'}
 		<p class="footnote">
 			Semifinals = wins the Quarterfinals · Championship = reaches the Championship Match · Champion = wins it all.
 			Clinched and Eliminated are mathematical locks based on wins alone.
 		</p>
+		{/if}
 
 		<!-- LOTTERY WATCH -->
 		{#if lottery.length}
@@ -740,6 +823,81 @@
 		font-family: 'Roboto', sans-serif;
 		font-size: 0.78rem;
 		color: var(--mf-dim);
+	}
+
+	/* ---------- Final playoff field ---------- */
+
+	.fieldTitle {
+		margin: 0 0 10px;
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--mf-ion);
+	}
+
+	.fieldRow {
+		display: grid;
+		grid-template-columns: 3.2em minmax(0, 1fr) 5.5em 6.5em;
+		align-items: center;
+		gap: 12px;
+		min-height: 52px;
+		padding: 0 14px;
+		border-top: 1px solid var(--mf-line);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.fieldHead {
+		min-height: 0;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		border-top: none;
+		font-size: 0.78rem;
+		font-weight: 700;
+		color: var(--mf-ion);
+		background: var(--mf-panel-2);
+		border-bottom: 1px solid var(--mf-line-strong);
+	}
+
+	.fieldRow.out {
+		opacity: 0.55;
+	}
+
+	.seedNum {
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: var(--mf-ion);
+		text-align: center;
+	}
+
+	.fieldRow .pts {
+		text-align: right;
+		color: var(--mf-dim);
+	}
+
+	.cutLine {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 8px 14px;
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--mf-dim);
+		border-top: 1px dashed var(--mf-line-strong);
+	}
+
+	@media (max-width: 600px) {
+		.fieldRow {
+			grid-template-columns: 2.4em minmax(0, 1fr) 4.6em;
+			gap: 8px;
+		}
+		.fieldRow .pts,
+		.fieldHead span:last-child {
+			display: none;
+		}
+		.fieldRow .badge {
+			display: none;
+		}
 	}
 
 	/* ---------- Lottery Watch ---------- */

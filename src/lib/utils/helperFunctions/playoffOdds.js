@@ -276,6 +276,42 @@ const rankTeams = (wins, points, n, divisions = null, playoffTeams = 8) => {
 	return [...winners, ...order.filter((t) => !isWinner.has(t))];
 };
 
+/**
+ * The final playoff field from Sleeper's regular-season records (no simulation):
+ * seeds 1-N the way Sleeper's bracket does it, then everyone else.
+ * rosters: object keyed by roster_id, or Sleeper's roster array.
+ */
+export const finalPlayoffField = (rosters, leagueSettings = {}) => {
+	const list = (Array.isArray(rosters) ? rosters : Object.values(rosters || {})).filter(Boolean);
+	const playoffTeams = Number(leagueSettings.playoff_teams) || 8;
+	const useDivisions = Number(leagueSettings.divisions) > 1;
+	const teams = list.map((r) => {
+		const s = r.settings || {};
+		return {
+			rosterID: Number(r.roster_id),
+			wins: Number(s.wins || 0),
+			losses: Number(s.losses || 0),
+			ties: Number(s.ties || 0),
+			pointsFor: Number(s.fpts || 0) + Number(s.fpts_decimal || 0) / 100,
+			division: useDivisions ? Number(s.division || 0) : 0
+		};
+	});
+	const order = rankTeams(
+		teams.map((t) => t.wins + t.ties / 2),
+		teams.map((t) => t.pointsFor),
+		teams.length,
+		teams.map((t) => t.division),
+		playoffTeams
+	);
+	const divWinners = useDivisions ? new Set(order.slice(0, Number(leagueSettings.divisions)).filter((i) => teams[i].division)) : new Set();
+	return order.map((i, place) => ({
+		...teams[i],
+		seed: place + 1,
+		inPlayoffs: place < playoffTeams,
+		divisionWinner: divWinners.has(i)
+	}));
+};
+
 /** Bracket pairs by seed (0-based), for supported sizes. */
 const bracketFor = (size) => {
 	if (size === 8) return { round1: [[0, 7], [3, 4], [2, 5], [1, 6]], byes: [] };
