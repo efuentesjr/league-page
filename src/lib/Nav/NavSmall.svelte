@@ -1,5 +1,5 @@
 <script>
-	import { tabs } from '$lib/utils/tabs';
+	import { resolvedNav } from '$lib/utils/tabs';
 	import Drawer, {
 	  Content,
 	  Header,
@@ -18,6 +18,7 @@
 
 	const selectTab = (tab) => {
 		open = false;
+		active = tab.dest;
 		goto(tab.dest);
 	}
 </script>
@@ -71,33 +72,22 @@
 	</Header>
 	<Content>
 		<List>
-			{#each tabs as tab}
-				{#if !tab.nest && (tab.label != 'Blog' || (tab.label == 'Blog' && enableBlog))}
-					<Item href="javascript:void(0)" onSMUIAction={() => selectTab(tab)} ontouchstart={() => preloadData(tab.dest)} onmouseover={() => preloadData(tab.dest)} activated={active == tab.dest} >
-						<Graphic class="material-icons{active == tab.dest ? "" : " nav-item"}" aria-hidden="true">{tab.icon}</Graphic>
-						<Text class="{active == tab.dest ? "" : "nav-item"}">{tab.label}</Text>
+			{#each resolvedNav as item, gi}
+				{#if item.single}
+					<Item href="javascript:void(0)" onSMUIAction={() => item.external ? window.open(item.dest, '_blank') : selectTab(item)} activated={active == item.dest}>
+						<Graphic class="material-icons{active == item.dest ? "" : " nav-item"}" aria-hidden="true">{item.icon}</Graphic>
+						<Text class="{active == item.dest ? "" : "nav-item"}">{item.label}</Text>
 					</Item>
-				{/if}
-			{/each}
-			{#each tabs as tab}
-				{#if tab.nest}
+				{:else}
 					<Separator />
-					<Subheader>{tab.label}</Subheader>
-					{#each tab.children as subTab}
-						{#if subTab.label == 'Managers'}
-							{#if managers.length}
-								<Item href="javascript:void(0)" onSMUIAction={() => selectTab(subTab)} activated={active == subTab.dest}  ontouchstart={() => preloadData(subTab.dest)} onmouseover={() => preloadData(subTab.dest)}>
-									<Graphic class="material-icons{active == subTab.dest ? "" : " nav-item"}" aria-hidden="true">{subTab.icon}</Graphic>
-									<Text class="{active == subTab.dest ? "" : "nav-item"}">{subTab.label}</Text>
-								</Item>
-							{/if}
-						{:else}
-							<Item href="javascript:void(0)" onSMUIAction={() => selectTab(subTab)} activated={active == subTab.dest}  ontouchstart={() => {if(subTab.label != 'Go to Sleeper') preloadData(subTab.dest)}} onmouseover={() => {if(subTab.label != 'Go to Sleeper') preloadData(subTab.dest)}}>
-								<Graphic class="material-icons{active == subTab.dest ? "" : " nav-item"}" aria-hidden="true">{subTab.icon}</Graphic>
-								<Text class="{active == subTab.dest ? "" : "nav-item"}">{subTab.label}</Text>
-							</Item>
-						{/if}
+					<Subheader>{item.label}</Subheader>
+					{#each item.children as subTab}
+						<Item href="javascript:void(0)" onSMUIAction={() => selectTab(subTab)} activated={active == subTab.dest} ontouchstart={() => preloadData(subTab.dest)} onmouseover={() => preloadData(subTab.dest)}>
+							<Graphic class="material-icons{active == subTab.dest ? "" : " nav-item"}" aria-hidden="true">{subTab.icon}</Graphic>
+							<Text class="{active == subTab.dest ? "" : "nav-item"}">{subTab.label}</Text>
+						</Item>
 					{/each}
+					{#if resolvedNav[gi + 1]?.single}<Separator />{/if}
 				{/if}
 			{/each}
 		</List>

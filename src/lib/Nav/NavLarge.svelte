@@ -1,158 +1,191 @@
 <script>
-	import { tabs } from '$lib/utils/tabs';
-	import Tab, { Icon, Label } from '@smui/tab';
-	import List, { Item, Graphic, Text, Separator } from '@smui/list';
-	import TabBar from '@smui/tab-bar';
-    import { page } from '$app/state';
-	import { goto, preloadData } from '$app/navigation';
-	import { enableBlog, managers } from '$lib/utils/leagueInfo';
+	import { resolvedNav } from '$lib/utils/tabs';
+	import { page } from '$app/state';
+	import { preloadData } from '$app/navigation';
 
-	let active = $state(tabs.find(tab => tab.dest == page.url.pathname || (tab.nest && tab.children.find(subTab => subTab.dest == page.url.pathname))));
+	let openGroup = $state(null);
 
-	let display = $state(false);
-	let el = $state();
-	let width = $state();
-	let height= $state();
-	let left = $state();
-	let top = $state();
+	const path = $derived(page.url.pathname);
+	const isActive = (item) =>
+		item.single ? item.dest === path : item.children.some((c) => c.dest === path);
 
-	$effect(() => {
-		top = el?.getBoundingClientRect() ? el?.getBoundingClientRect().top  : 0;
-		const bottom = el?.getBoundingClientRect() ? el?.getBoundingClientRect().bottom  : 0;
+	const toggle = (label) => (openGroup = openGroup === label ? null : label);
+	const close = () => (openGroup = null);
+	const preload = (tab) => { if (!tab.external) preloadData(tab.dest); };
 
-		height = bottom - top + 1;
-
-		left = el?.getBoundingClientRect() ? el?.getBoundingClientRect().left  : 0;
-		const right = el?.getBoundingClientRect() ? el?.getBoundingClientRect().right  : 0;
-
-		width = right - left;
-	});
-
-	let innerWidth = $state();
-
-	const open = () => {
-		display = !display;
-	}
-
-	const subGoto = (dest) => {
-		open(false);
-		goto(dest);
-	}
-
-	let tabChildren = $state([]);
-
-	for(const tab of tabs) {
-		if(tab.nest) {
-			tabChildren = tab.children;
-		}
-	}
-
+	// close when the route changes
+	$effect(() => { path; close(); });
 </script>
 
-<svelte:window bind:innerWidth={innerWidth} />
+<svelte:window onkeydown={(e) => e.key === 'Escape' && close()} />
 
 <style>
-    :global(.navBar) {
-		display: inline-flex;
-		position: relative;
-    	justify-content: center;
-    }
-
-	:global(.navBar .material-icons) {
-		font-size: 1.8em;
-		height: 25px;
-		width: 22px;
+	.navRow {
+		display: flex;
+		justify-content: center;
+		align-items: stretch;
+		gap: 2px;
+		padding: 0 12px;
+		font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
 	}
 
-	.parent {
+	.item {
 		position: relative;
 	}
 
-	.subMenu {
-		overflow-y: hidden;
-		display: block;
+	.navLink {
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		height: 50px;
+		padding: 0 13px;
+		font: inherit;
+		font-size: 0.86rem;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: var(--mf-dim);
+		background: none;
+		border: 0;
+		border-bottom: 2px solid transparent;
+		cursor: pointer;
+		white-space: nowrap;
+		transition: color 0.15s ease, border-color 0.15s ease;
+	}
+
+	.navLink .material-icons {
+		font-size: 1.35em;
+	}
+
+	.navLink:hover,
+	.navLink:focus-visible,
+	.item.open > .navLink {
+		color: var(--mf-text);
+		outline: none;
+	}
+
+	.navLink:focus-visible {
+		box-shadow: inset 0 0 0 2px var(--mf-ion);
+	}
+
+	.item.active > .navLink {
+		color: var(--mf-ion);
+		border-bottom-color: var(--mf-ion);
+		text-shadow: 0 0 10px var(--mf-ion-glow);
+	}
+
+	.caret {
+		font-size: 0.7em;
+		transition: transform 0.15s ease;
+	}
+
+	.item.open .caret {
+		transform: rotate(180deg);
+	}
+
+	.menu {
 		position: absolute;
-		z-index: 5;
-		background-color: var(--mf-panel);
-		transition: all 0.4s;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		min-width: 230px;
+		z-index: 20;
+		padding: 6px;
+		background: var(--mf-panel);
+		border: 1px solid var(--mf-line-strong);
+		border-top: 2px solid var(--mf-ion);
+		box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 14px var(--mf-ion-glow);
 	}
 
-	.overlay {
-		display: block;
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		height: 100vh;
-		z-index: 4;
+	.menu a {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 12px;
+		font-size: 0.9rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		color: var(--mf-text);
+		text-decoration: none;
+		white-space: nowrap;
 	}
 
-	:global(.mdc-deprecated-list) {
-		padding: 0;
+	.menu a .material-icons {
+		font-size: 1.25em;
+		color: var(--mf-dim);
 	}
 
-	:global(.subText) {
-		font-size: 0.8em;
+	.menu a:hover,
+	.menu a:focus-visible {
+		background: var(--mf-panel-2);
+		outline: none;
 	}
 
-	:global(.dontDisplay) {
-		display: none;
+	.menu a.current {
+		color: var(--mf-ion);
+		box-shadow: inset 2px 0 0 var(--mf-ion);
+	}
+
+	.menu a.current .material-icons {
+		color: var(--mf-ion);
+	}
+
+	.scrim {
+		position: fixed;
+		inset: 0;
+		z-index: 10;
 	}
 </style>
 
-<div tabindex="0" role="button" class="overlay" style="display: {display ? "block" : "none"};" onclick={() => open(true)}></div>
+{#if openGroup}
+	<div class="scrim" role="presentation" onclick={close}></div>
+{/if}
 
-<div class="parent">
-	<TabBar class="navBar" {tabs} key={(tab) => tab.key} bind:active>
-		{#snippet tab(tab)}
-			{#if tab.nest}
-				<div bind:this={el}>
-					<Tab
-						{tab}
-						minWidth
-						onclick={() => open()}
-					>
-						<Icon class="material-icons">{tab.icon}</Icon>
-						<Label>{tab.label}</Label>
-					</Tab>
-				</div>
-			{:else}
-				<Tab
-					class="{tab.label == 'Blog' && !enableBlog ? 'dontDisplay' : ''}"
-					{tab}
-					onTouchstart={() => preloadData(tab.dest)}
-					onMouseover={() => preloadData(tab.dest)}
-					href={tab.dest}
-					minWidth
+<div class="navRow">
+	{#each resolvedNav as item}
+		<div class="item" class:active={isActive(item)} class:open={openGroup === item.label}>
+			{#if item.single}
+				<a
+					class="navLink"
+					href={item.dest}
+					target={item.external ? '_blank' : undefined}
+					rel={item.external ? 'noopener' : undefined}
+					onmouseover={() => preload(item)}
+					onfocus={() => preload(item)}
 				>
-					<Icon class="material-icons">{tab.icon}</Icon>
-					<Label>{tab.label}</Label>
-				</Tab>
-			{/if}
-		{/snippet}
-	</TabBar>
-	<div class="subMenu" style="max-height: {display ? 49 * tabChildren.length - 1 - (managers.length ? 0 : 48) : 0}px; width: {width}px; top: {height}px; left: {left}px; box-shadow: 0 0 {display ? "12px" : "0"} 0 var(--mf-ion-glow); border: {display ? "1px" : "0"} solid var(--mf-line-strong); border-top: none;">
-		<List>
-			{#each tabChildren as subTab, ix}
-				{#if subTab.label == 'Managers'}
-					<Item class="{managers.length ? '' : 'dontDisplay'}" onSMUIAction={() => subGoto(subTab.dest)} ontouchstart={() => preloadData(subTab.dest)} onmouseover={() => preloadData(subTab.dest)}>
-						<Graphic class="material-icons">{subTab.icon}</Graphic>
-						<Text class="subText">{subTab.label}</Text>
-					</Item>
-					{#if ix != tabChildren.length - 1}
-						<Separator />
-					{/if}
-				{:else}
-					<Item onSMUIAction={() => subGoto(subTab.dest)} ontouchstart={() => {if(subTab.label != 'Go to Sleeper') preloadData(subTab.dest)}} onmouseover={() => {if(subTab.label != 'Go to Sleeper') preloadData(subTab.dest)}}>
-						<Graphic class="material-icons">{subTab.icon}</Graphic>
-						<Text class="subText">{subTab.label}</Text>
-					</Item>
-					{#if ix != tabChildren.length - 1}
-						<Separator />
-					{/if}
+					<span class="material-icons" aria-hidden="true">{item.icon}</span>
+					{item.key === 'sleeper' ? 'Sleeper' : item.label}
+				</a>
+			{:else}
+				<button
+					type="button"
+					class="navLink"
+					aria-expanded={openGroup === item.label}
+					aria-haspopup="true"
+					onclick={() => toggle(item.label)}
+				>
+					<span class="material-icons" aria-hidden="true">{item.icon}</span>
+					{item.label}
+					<span class="caret" aria-hidden="true">▾</span>
+				</button>
+				{#if openGroup === item.label}
+					<div class="menu" role="menu">
+						{#each item.children as child}
+							<a
+								role="menuitem"
+								href={child.dest}
+								class:current={child.dest === path}
+								onmouseover={() => preload(child)}
+								onclick={close}
+							>
+								<span class="material-icons" aria-hidden="true">{child.icon}</span>
+								{child.label}
+							</a>
+						{/each}
+					</div>
 				{/if}
-			{/each}
-		</List>
-	</div>
+			{/if}
+		</div>
+	{/each}
 </div>

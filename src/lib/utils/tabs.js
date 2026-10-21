@@ -105,3 +105,23 @@ export const tabs = [
     external: true
   }
 ];
+
+/*
+ * Menu layout: top-level links and dropdown groups, by tab key.
+ * Every page still lives in `tabs` above (the footer lists them all).
+ */
+export const navGroups = [
+  { key: 'home' },
+  { key: 'matchups' },
+  { label: 'League', icon: 'leaderboard', keys: ['standings', 'playoff-odds', 'records'] },
+  { label: 'Teams', icon: 'groups', keys: ['rosters', 'managers', 'rivalry'] },
+  { label: 'Moves', icon: 'swap_horiz', keys: ['transactions', 'trade-grades'] },
+  { label: 'History', icon: 'emoji_events', keys: ['awards', 'drafts', 'champ-videos'] },
+  { label: 'Rules', icon: 'gavel', keys: ['constitution', 'competition-committee', 'resources'] },
+  { key: 'sleeper' }
+];
+
+const byKey = Object.fromEntries(tabs.map((t) => [t.key, t]));
+export const resolvedNav = navGroups.map((g) =>
+  g.key ? { ...byKey[g.key], single: true } : { ...g, children: g.keys.map((k) => byKey[k]).filter(Boolean) }
+);
