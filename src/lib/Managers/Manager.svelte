@@ -266,6 +266,8 @@
             var(--mf-bg);
         border: 1px solid var(--mf-line);
         border-top: 2px solid var(--team);
+        border-bottom: 2px solid color-mix(in srgb, var(--team) 70%, transparent);
+        box-shadow: inset 0 -18px 24px -18px color-mix(in srgb, var(--team) 60%, transparent);
         clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px));
     }
 
