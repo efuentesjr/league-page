@@ -30,8 +30,8 @@
     .fantasyInfos {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1px;
-        background: var(--mf-line);
+        gap: 0;
+        background: var(--mf-panel);
     }
 
     .infoSlot {
@@ -41,6 +41,7 @@
         padding: 16px 10px 18px;
         text-align: center;
         background: var(--mf-panel);
+        box-shadow: inset -1px -1px 0 var(--mf-line);
     }
 
     /* 16-sided icon: the outer shape is the glowing edge, ::before is the fill */
