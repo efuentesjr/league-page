@@ -130,7 +130,7 @@
 	<span class="copyright">&copy; 2021 - {year} <a href="https://manor-dynasty-league.vercel.app/">League Page</a></span>
 	<br />
 	<!-- PLEASE DO NOT REMOVE THE BUILT BY -->
-	<span class="creator">Built by <a href="">E. Fuentes Jr</a><br /></span>
+	<span class="creator">Built by <a href="">Eddie Fuentes Jr</a>, with an assist from Claude<br /></span>
 	<!-- You can remove the donation link (although any donations to help
 	 maintain and enhance League Page would be greatly appreciated!) -->
 	
