@@ -194,6 +194,84 @@
 
     // Sleeper marks every commissioner the same; the lead is set here
     const LEAD_COMMISSIONER = '844760551790858240'; // Eddie Fuentes Jr
+
+    /*
+     * Self-service philosophy / bio (saved in Upstash via /api/manager_bio).
+     * Managers unlock editing with the personal code the commissioner gave them.
+     */
+    const PLACEHOLDERS = ["your fantasy team's philosophy", 'loading...', 'loading…'];
+    const plain = (html) =>
+        String(html || '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim();
+    const isPlaceholder = (t) => PLACEHOLDERS.includes(plain(t).toLowerCase());
+
+    let bios = {};
+    let editing = false;
+    let formPhilosophy = '';
+    let formBio = '';
+    let formCode = '';
+    let saving = false;
+    let editError = '';
+    let editFor = null;
+
+    $: saved = viewManager?.managerID ? bios[viewManager.managerID] : null;
+    $: showPhilosophy = saved ? saved.philosophy : isPlaceholder(viewManager.philosophy) ? '' : viewManager.philosophy;
+    $: showBio = saved ? saved.bio : isPlaceholder(viewManager.bio) ? '' : viewManager.bio;
+    $: if (viewManager?.managerID !== editFor) {
+        editFor = viewManager?.managerID;
+        editing = false;
+        editError = '';
+    }
+
+    const loadBios = () =>
+        fetch('/api/manager_bio')
+            .then((r) => (r.ok ? r.json() : { bios: {} }))
+            .then((d) => (bios = d.bios || {}))
+            .catch(() => {});
+
+    const startEdit = () => {
+        formPhilosophy = saved ? saved.philosophy : plain(showPhilosophy);
+        formBio = saved ? saved.bio : plain(showBio);
+        try {
+            formCode = localStorage.getItem(`bioCode:${viewManager.managerID}`) || localStorage.getItem('bioCode:commissioner') || '';
+        } catch {
+            formCode = '';
+        }
+        editError = '';
+        editing = true;
+    };
+
+    const saveBio = async (reset = false) => {
+        if (!formCode.trim()) {
+            editError = 'Enter your edit code.';
+            return;
+        }
+        saving = true;
+        editError = '';
+        try {
+            const res = await fetch('/api/manager_bio', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ managerID: viewManager.managerID, code: formCode, philosophy: formPhilosophy, bio: formBio, reset })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.message || 'Could not save. Try again.');
+            const next = { ...bios };
+            if (data.entry) next[viewManager.managerID] = data.entry;
+            else delete next[viewManager.managerID];
+            bios = next;
+            try {
+                localStorage.setItem(`bioCode:${viewManager.managerID}`, formCode.trim());
+            } catch {
+                /* private mode */
+            }
+            editing = false;
+        } catch (err) {
+            editError = err.message;
+        }
+        saving = false;
+    };
+
+    onMount(loadBios);
 </script>
 
 <style>
@@ -573,6 +651,120 @@
         margin-top: 18px;
     }
 
+    .editBtn {
+        padding: 2px 10px;
+        font: inherit;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--mf-ion);
+        background: transparent;
+        border: 1px solid var(--mf-line-strong);
+        cursor: pointer;
+    }
+
+    .editBtn:hover {
+        color: var(--mf-on-ion);
+        background: var(--mf-ion);
+    }
+
+    .userText {
+        white-space: pre-line;
+    }
+
+    .bioForm {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .bioForm label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .bioForm label > span {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--mf-dim);
+    }
+
+    .bioForm small {
+        font-weight: 500;
+        letter-spacing: 0;
+    }
+
+    .bioForm textarea,
+    .bioForm input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 10px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 0.92rem;
+        color: var(--mf-text);
+        background: var(--mf-bg);
+        border: 1px solid var(--mf-line-strong);
+        resize: vertical;
+    }
+
+    .bioForm textarea:focus,
+    .bioForm input:focus {
+        outline: none;
+        border-color: var(--mf-ion);
+        box-shadow: 0 0 12px -4px var(--mf-ion-glow);
+    }
+
+    .codeRow input {
+        max-width: 240px;
+        letter-spacing: 0.1em;
+    }
+
+    .editError {
+        margin: 0;
+        font-size: 0.82rem;
+        color: var(--mf-down);
+    }
+
+    .formBtns {
+        display: flex;
+        gap: 8px;
+    }
+
+    .formBtns button {
+        padding: 7px 16px;
+        font: inherit;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: 1px solid var(--mf-line-strong);
+        background: transparent;
+        color: var(--mf-dim);
+    }
+
+    .formBtns .saveBtn {
+        color: var(--mf-on-ion);
+        background: var(--mf-ion);
+        border-color: var(--mf-ion);
+    }
+
+    .formBtns .resetBtn {
+        margin-left: auto;
+        color: var(--mf-down);
+        border-color: color-mix(in srgb, var(--mf-down) 50%, transparent);
+    }
+
+    .formBtns button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+
     .rosterWrap :global(.rosterContainer),
     .rosterWrap :global(> *) {
         margin-top: 0 !important;
@@ -747,16 +939,54 @@
         </section>
 
         <section class="panel">
-            <div class="panelHead"><span>Team Philosophy</span></div>
+            <div class="panelHead">
+                <span>Team Philosophy</span>
+                {#if viewManager.managerID && !editing}
+                    <button type="button" class="editBtn" onclick={startEdit}>Edit</button>
+                {/if}
+            </div>
             <div class="panelBody">
-                {#if viewManager.philosophy}
-                    <p class="philosophy">{@html viewManager.philosophy}</p>
-                {/if}
-                {#if viewManager.bio}
-                    <p class="bio">{@html viewManager.bio}</p>
-                {/if}
-                {#if !viewManager.philosophy && !viewManager.bio}
-                    <p class="empty">No philosophy shared yet.</p>
+                {#if editing}
+                    <form class="bioForm" onsubmit={(e) => { e.preventDefault(); saveBio(); }}>
+                        <label>
+                            <span>Team philosophy <small>{formPhilosophy.length}/600</small></span>
+                            <textarea rows="4" maxlength="600" bind:value={formPhilosophy} placeholder="How do you build and run your team?"></textarea>
+                        </label>
+                        <label>
+                            <span>Bio / tagline <small>{formBio.length}/300</small></span>
+                            <textarea rows="2" maxlength="300" bind:value={formBio} placeholder="A line about you"></textarea>
+                        </label>
+                        <label class="codeRow">
+                            <span>Your edit code</span>
+                            <input type="password" autocomplete="off" bind:value={formCode} placeholder="From the commissioner" />
+                        </label>
+                        {#if editError}<p class="editError">{editError}</p>{/if}
+                        <div class="formBtns">
+                            <button type="submit" class="saveBtn" disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
+                            <button type="button" class="cancelBtn" onclick={() => (editing = false)} disabled={saving}>Cancel</button>
+                            {#if saved}
+                                <button type="button" class="resetBtn" onclick={() => saveBio(true)} disabled={saving} title="Go back to the original text">Reset</button>
+                            {/if}
+                        </div>
+                    </form>
+                {:else}
+                    {#if showPhilosophy}
+                        {#if saved}
+                            <p class="philosophy userText">{showPhilosophy}</p>
+                        {:else}
+                            <p class="philosophy">{@html showPhilosophy}</p>
+                        {/if}
+                    {/if}
+                    {#if showBio}
+                        {#if saved}
+                            <p class="bio userText">{showBio}</p>
+                        {:else}
+                            <p class="bio">{@html showBio}</p>
+                        {/if}
+                    {/if}
+                    {#if !showPhilosophy && !showBio}
+                        <p class="empty">No philosophy shared yet.</p>
+                    {/if}
                 {/if}
             </div>
         </section>
