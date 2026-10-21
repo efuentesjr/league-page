@@ -151,14 +151,26 @@ const buildHistory = async () => {
 	const beats = {};
 	const ties = {};
 	const timeline = {}; // managerID -> [{ year, week, playoff, r: 'W'|'L'|'T' }]
+	const pairs = {}; // 'idA|idB' (sorted) -> { reg, qf, sf, ch } meetings between two managers
 	let seasonPlayerPoints = {};
 
 	const managersOf = (year, rosterID) =>
 		teamManagers.teamManagersMap?.[year]?.[rosterID]?.managers || [];
 
-	const record = (year, game) => {
+	const record = (year, game, depth = 0) => {
 		const left = managersOf(year, game.tie ? game.a : game.winner);
 		const right = managersOf(year, game.tie ? game.b : game.loser);
+
+		// meeting counts per manager pair (depth 3 = Championship, 2 = Semifinals, 1 = earlier round)
+		const field = !game.playoff ? 'reg' : depth === 3 ? 'ch' : depth === 2 ? 'sf' : 'qf';
+		for (const x of left) {
+			for (const y of right) {
+				if (x === y) continue;
+				const k = x < y ? `${x}|${y}` : `${y}|${x}`;
+				const p = (pairs[k] ??= { reg: 0, qf: 0, sf: 0, ch: 0 });
+				p[field]++;
+			}
+		}
 
 		const log = (ids, r) => {
 			for (const id of ids) (timeline[id] ??= []).push({ year, week: game.week, playoff: game.playoff, r });
@@ -215,13 +227,20 @@ const buildHistory = async () => {
 			}
 		}
 
-		for (const game of season.games) record(year, game);
+		// playoff games are stored at week = last regular week + bracket round
+		const lastRegularWeek = Number(league.settings?.playoff_week_start || 15) - 1;
+		const bracketRounds = Math.max(1, Math.ceil(Math.log2(Number(league.settings?.playoff_teams) || 8)));
+		for (const game of season.games) {
+			const round = game.week - lastRegularWeek;
+			const depth = game.playoff ? Math.max(1, 3 - (bracketRounds - round)) : 0;
+			record(year, game, depth);
+		}
 
 		currentLeagueID = league.previous_league_id;
 		isCurrentSeason = false;
 	}
 
-	return { beats, ties, timeline, seasonPlayerPoints, teamManagers };
+	return { beats, ties, timeline, pairs, seasonPlayerPoints, teamManagers };
 };
 
 let historyPromise = null;
