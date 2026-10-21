@@ -43,9 +43,9 @@ export const maxBracketRound = (bracket) =>
 	(bracket || []).reduce((max, g) => Math.max(max, Number(g.r) || 0), 0);
 
 /*
- * Rivalry tiers: the deepest playoff meeting decides tiers 1-3;
- * without a playoff meeting, the number of regular season games
- * decides tiers 4-5.
+ * Rivalry tiers: Championship meetings decide tiers 1-2 (2+ = Legendary,
+ * 1 = Title Clash), other playoff meetings tiers 3-4; without a playoff
+ * meeting, the number of regular season games decides tiers 5-6.
  */
 export const OLD_RIVALS_GAMES = 6;
 
@@ -62,29 +62,35 @@ export const RIVALRY_TIERS = {
 	legendary: {
 		tier: 1,
 		name: 'Legendary',
-		flames: 5,
+		flames: 6,
 		color: '#e5b52a'
 	},
-	heated: {
+	titleClash: {
 		tier: 2,
+		name: 'Title Clash',
+		flames: 5,
+		color: '#c9d3e0'
+	},
+	heated: {
+		tier: 3,
 		name: 'Heated',
 		flames: 4,
 		color: '#e2452b'
 	},
 	badBlood: {
-		tier: 3,
+		tier: 4,
 		name: 'Bad Blood',
 		flames: 3,
 		color: '#e2722b'
 	},
 	oldRivals: {
-		tier: 4,
+		tier: 5,
 		name: 'Old Rivals',
 		flames: 2,
 		color: '#4a90d9'
 	},
 	familiar: {
-		tier: 5,
+		tier: 6,
 		name: 'Familiar Foes',
 		flames: 1,
 		color: '#8a96a3'
@@ -115,14 +121,18 @@ export const getRivalryTier = (playoffMeetings = [], totalGames = 0, ghost = nul
 	const count = (depth) => playoffMeetings.filter((m) => m.depth === depth).length;
 	const times = (n) => (n > 1 ? ` (${n}×)` : '');
 
-	if (count(3)) {
+	// two or more Championship meetings = Legendary, one = Title Clash
+	if (count(3) >= 2) {
 		return { ...RIVALRY_TIERS.legendary, reason: `Met in the Championship${times(count(3))}` };
+	}
+	if (count(3) === 1) {
+		return { ...RIVALRY_TIERS.titleClash, reason: 'Met in the Championship' };
 	}
 	if (count(2)) {
 		return { ...RIVALRY_TIERS.heated, reason: `Met in the Semifinals${times(count(2))}` };
 	}
 	if (count(1)) {
-		return { ...RIVALRY_TIERS.badBlood, reason: `Met in the playoffs${times(count(1))}` };
+		return { ...RIVALRY_TIERS.badBlood, reason: `Met in the Quarterfinals${times(count(1))}` };
 	}
 	// regular season only: 6+ games = Old Rivals, 1-5 = Familiar Foes
 	const reason = `${totalGames} regular season game${totalGames === 1 ? '' : 's'}`;
