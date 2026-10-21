@@ -532,8 +532,31 @@
         color: var(--mf-dim);
     }
 
-    .rosterWrap {
+    .lower {
+        display: grid;
+        grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
         margin-top: 18px;
+    }
+
+    .rosterWrap :global(.rosterContainer),
+    .rosterWrap :global(> *) {
+        margin-top: 0 !important;
+    }
+
+    .txPanel {
+        margin-top: 0;
+    }
+
+    @media (max-width: 980px) {
+        .lower {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .rosterWrap {
+            display: flex;
+            justify-content: center;
+        }
     }
 
     .loading {
@@ -706,6 +729,7 @@
         />
     </section>
 
+    <div class="lower">
     <div class="rosterWrap">
         {#if loading}
             <div class="loading">
@@ -725,7 +749,7 @@
         {/if}
     </div>
 
-    <section class="panel">
+    <section class="panel txPanel">
         <div class="panelHead"><span>Team Transactions</span></div>
         <div class="panelBody">
             {#if loading}
@@ -746,4 +770,5 @@
             {/if}
         </div>
     </section>
+    </div>
 </div>
