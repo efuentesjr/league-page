@@ -215,12 +215,7 @@
 
 <style>
     .awardsCase {
-        background-color: var(--fff);
-        padding: 0 0 2em;
-        margin: 3em 0 4em;
-        border-bottom: 1px solid var(--aaa);
-        border-top: 1px solid var(--aaa);
-        box-shadow: 0 0 8px 4px var(--ccc);
+        padding: 4px 0 10px;
     }
 
     .awardsCaseInner {
@@ -266,7 +261,7 @@
     .subText {
         font-size: 0.8em;
         width: 130px;
-        color: var(--g555);
+        color: var(--mf-dim);
         margin-top: 0.3em;
         font-style: italic;
     }
@@ -280,7 +275,8 @@
         height: 80px;
         width: 80px;
         border-radius: 100%;
-        box-shadow: 0 0 4px 1px var(--ccc);
+        border: 1px solid color-mix(in srgb, #f5d56b 50%, transparent);
+        box-shadow: 0 0 18px -6px rgba(245, 213, 107, 0.6);
         text-align: center;
         overflow: hidden;
     }
@@ -341,7 +337,6 @@
 </style>
 
 <div class="awardsCase">
-    <h3>Team Awards & Records</h3>
     <div class="awardsCaseInner">
         {#each displayAwards as award}
             <div class="award">

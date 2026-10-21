@@ -1,6 +1,5 @@
 <!-- src/lib/Managers/Manager.svelte -->
 <script>
-    import Button, { Group, Label } from '@smui/button';
     import LinearProgress from '@smui/linear-progress';
     import { loadPlayers, getLeagueTransactions, getLeagueData, getNflState, waitForAll } from '$lib/utils/helper';
     import {
@@ -15,7 +14,8 @@
     import ManagerFantasyInfo from './ManagerFantasyInfo.svelte';
     import ManagerAwards from './ManagerAwards.svelte';
     import { onMount } from 'svelte';
-    import { getDatesActive, getRosterIDFromManagerID, getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
+    import { getDatesActive, getRosterIDFromManagerID, getTeamNameFromTeamManagers, getAvatarFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
+    import { getLogoColor } from '$lib/utils/logoColor';
 
     export let manager, managers, rostersData, leagueTeamManagers, rosterPositions, transactionsData, awards, records;
 
@@ -179,151 +179,203 @@
         manager = newManager;
         goto(`/manager?manager=${newManager}`, { noscroll });
     };
+
+    // team color pulled from the team's logo (same as Power Rankings)
+    $: teamAvatar = rosterID != null ? getAvatarFromTeamManagers(leagueTeamManagers, rosterID, year) : null;
+    $: teamName = rosterID != null ? getTeamNameFromTeamManagers(leagueTeamManagers, rosterID, year) : '';
+    let teamColor = null;
+    let colorFor = null;
+    $: if (teamAvatar && teamAvatar !== colorFor) {
+        colorFor = teamAvatar;
+        teamColor = null;
+        const want = teamAvatar;
+        getLogoColor(want).then((c) => { if (c && colorFor === want) teamColor = c; }).catch(() => {});
+    }
 </script>
 
 <style>
-    .managerContainer {
-        width: 100%;
-        margin: 2em 0 5em;
+    .wrap {
+        --team: var(--mf-ion);
+        width: 96%;
+        max-width: 1150px;
+        margin: 0 auto;
+        padding: 22px 0 60px;
+        font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
+        color: var(--mf-text);
     }
 
-    .managerConstrained {
-        width: 97%;
-        max-width: 800px;
-        margin: 0 auto 3em;
+    /* ---------- prev / all / next ---------- */
+    .topNav {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 12px;
     }
 
-    .managerPhoto {
-        display: block;
-        border-radius: 100%;
-        width: 70%;
-        max-width: 200px;
-        height: auto;
-        margin: 5em auto 1em;
-        border: 3px solid var(--mf-ion);
+    .navBtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        font: inherit;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--mf-dim);
+        background: var(--mf-panel);
+        border: 1px solid var(--mf-line);
+        cursor: pointer;
+        transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .navBtn:hover {
+        color: var(--mf-ion);
+        border-color: var(--mf-line-strong);
+        box-shadow: 0 0 14px -6px var(--mf-ion-glow);
+    }
+
+    .navBtn.mid {
+        margin: 0 auto;
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 26px;
+        padding: 26px 28px;
+        background:
+            linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 28px,
+            linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 28px 100%,
+            radial-gradient(ellipse at 12% 50%, color-mix(in srgb, var(--team) 22%, transparent), transparent 55%),
+            var(--mf-bg);
+        border: 1px solid var(--mf-line);
+        border-top: 2px solid var(--team);
+        clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px));
+        transition: border-color 0.4s;
+    }
+
+    .photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #000;
+        border: 3px solid var(--team);
         box-shadow:
-            0 0 0 6px color-mix(in srgb, var(--mf-plasma) 35%, transparent),
-            0 0 34px 6px var(--mf-ion-glow);
+            0 0 0 6px color-mix(in srgb, var(--team) 25%, transparent),
+            0 0 34px 4px color-mix(in srgb, var(--team) 45%, transparent);
     }
 
-    h2 {
-        text-align: center;
-        font-size: 2.8em;
-        margin: 1em 0 0;
+    .kicker {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--mf-dim);
     }
 
-    h3 {
-        text-align: center;
-        font-size: 1.5em;
-        margin: 1.5em 0 0.5em;
-        font-weight: 200;
+    h1 {
+        margin: 4px 0 8px;
+        font-size: 2.6rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        text-shadow: 0 0 18px var(--mf-line-strong);
     }
 
-    .basicInfo {
+    .teamLine {
         display: flex;
-        justify-content: space-evenly;
         align-items: center;
-        height: 24px;
-        margin: 2em 0;
-    }
-
-    .basicInfo span {
-        color: #888;
-        font-size: 0.9em;
-    }
-
-    .infoChild {
-        font-style: italic;
-    }
-
-    .infoContact {
-        height: 20px;
-        vertical-align: middle;
-        padding-left: 1em;
-    }
-
-    .infoTeam {
-        height: 48px;
-    }
-
-    .bio,
-    .philosophy {
-        margin: 1em 1.2em;
-        text-indent: 1.5em;
-        font-size: 0.95em;
-        line-height: 1.4;
-        text-align: center;
-    }
-
-    .loading {
-        display: block;
-        width: 85%;
-        max-width: 500px;
-        margin: 80px auto;
-    }
-
-    .teamSub {
-        font-size: 0.4em;
-        color: #666;
-    }
-
-    .managerNav {
-        margin: 3em 0 2em;
-        text-align: center;
-    }
-
-    .upper {
-        margin-top: 0;
-    }
-
-    .commissionerBadge {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 25px;
-        width: 25px;
+        gap: 10px;
+        font-size: 1.1rem;
         font-weight: 600;
-        border-radius: 15px;
-        background-color: var(--blueTwo);
-        border: 1px solid var(--blueOne);
+        color: var(--team);
     }
 
-    .commissionerBadge span {
-        color: #fff;
+    .teamLine img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--mf-line-strong);
     }
 
-    /* Earnings card */
-
-    .managerEarnings {
-        width: min(520px, 90%);
-        margin: 0 auto 1.1em;
-        padding: 10px 12px 11px;
-        border-radius: 10px;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.018));
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        box-shadow:
-            0 0 35px rgba(255, 255, 255, 0.06),
-            0 0 28px rgba(255, 255, 255, 0.35),
-            0 12px 30px rgba(0, 0, 0, 0.45);
+    .chips {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin-top: 14px;
     }
 
-    .careerEarningsTop {
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 28px;
+        padding: 0 10px;
+        font-size: 0.78rem;
+        color: var(--mf-text);
+        background: var(--mf-panel);
+        border: 1px solid var(--mf-line);
+    }
+
+    .chip img {
+        height: 16px;
+        width: auto;
+    }
+
+    .chip.logo img {
+        height: 22px;
+    }
+
+    .chip.comm {
+        color: var(--mf-on-ion);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        background: var(--mf-ion);
+        border-color: var(--mf-ion);
+    }
+
+    /* earnings tile */
+    .earn {
+        min-width: 200px;
+        padding: 14px 16px;
+        background: var(--mf-panel);
+        border: 1px solid color-mix(in srgb, #f5d56b 45%, var(--mf-line));
+        border-top: 2px solid #f5d56b;
+    }
+
+    .earnTop {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2px;
+        gap: 10px;
     }
 
-    .careerEarningsLabel {
-        font-size: 11px;
-        letter-spacing: 0.08em;
+    .earnLabel {
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #9ca3af;
+        color: var(--mf-dim);
+    }
+
+    .earnValue {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.05;
+        color: #f5d56b;
+        text-shadow: 0 0 16px rgba(245, 213, 107, 0.35);
+        font-variant-numeric: tabular-nums;
     }
 
     .moneyIcon {
-        width: 54px;
-        height: 54px;
+        width: 40px;
+        height: 40px;
         object-fit: contain;
     }
 
@@ -332,313 +384,366 @@
     }
 
     @keyframes goldPulse {
-        0% {
-            filter:
-                drop-shadow(0 0 2px rgba(255, 215, 0, 0.3))
-                drop-shadow(0 0 6px rgba(255, 215, 0, 0.2));
+        0%, 100% {
+            filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.3));
             transform: scale(1);
         }
-
         50% {
-            filter:
-                drop-shadow(0 0 6px rgba(255, 215, 0, 0.9))
-                drop-shadow(0 0 14px rgba(255, 215, 0, 0.7));
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.85));
             transform: scale(1.08);
         }
-
-        100% {
-            filter:
-                drop-shadow(0 0 2px rgba(255, 215, 0, 0.3))
-                drop-shadow(0 0 6px rgba(255, 215, 0, 0.2));
-            transform: scale(1);
-        }
     }
 
-    .careerEarningsValue {
-        font-size: 16px;
-        font-weight: 700;
-        color: #f5d56b;
-        margin: -8px 0 0px;
-    }
-
-    .earningsBar {
-        width: 100%;
-        height: 10px;
-        border-radius: 999px;
+    .earnBar {
+        height: 6px;
+        margin-top: 10px;
         background: rgba(255, 255, 255, 0.08);
         overflow: hidden;
     }
 
-    .earningsBarFill {
+    .earnFill {
         position: relative;
         height: 100%;
         background: linear-gradient(90deg, #f5d56b, #ffd700);
         box-shadow: 0 0 10px rgba(245, 213, 107, 0.45);
-        transition: width 0.4s ease;
     }
 
     .championBar::after {
         content: '';
         position: absolute;
-        top: 0;
-        left: -40%;
+        inset: 0 auto 0 -40%;
         width: 40%;
-        height: 100%;
-        background: linear-gradient(
-            120deg,
-            transparent,
-            rgba(255, 255, 255, 0.6),
-            transparent
-        );
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.6), transparent);
         animation: shimmer 3s infinite;
     }
 
     @keyframes shimmer {
-        0% {
-            left: -40%;
-        }
-
-        100% {
-            left: 120%;
-        }
+        from { left: -40%; }
+        to { left: 120%; }
     }
 
-    .managerEarningsTable {
+    .earnNote {
+        margin-top: 6px;
+        font-size: 0.72rem;
+        color: var(--mf-dim);
+    }
+
+    /* ---------- panels ---------- */
+    .cols {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+        gap: 18px;
+        margin-top: 18px;
+        align-items: start;
+    }
+
+    .panel {
+        margin-top: 18px;
+        background: var(--mf-panel);
+        border: 1px solid var(--mf-line);
+    }
+
+    .cols .panel {
+        margin-top: 0;
+    }
+
+    .panelHead {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 10px 14px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--mf-dim);
+        background: var(--mf-panel-2);
+        border-bottom: 1px solid var(--mf-line);
+        border-top: 2px solid var(--mf-ion);
+    }
+
+    .panelHead.gold {
+        border-top-color: #f5d56b;
+    }
+
+    .panelHead small {
+        font-size: 0.9em;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-transform: none;
+    }
+
+    .panelBody {
+        padding: 12px 14px;
+    }
+
+    .earnTable {
         width: 100%;
         border-collapse: collapse;
-        font-size: 13px;
-        margin-top: 8px;
+        font-size: 0.9rem;
+        font-variant-numeric: tabular-nums;
     }
 
-    .managerEarningsTable th {
+    .earnTable th {
+        padding: 0 0 6px;
         text-align: left;
-        font-size: 11px;
-        color: #94a3b8;
-        padding-bottom: 6px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--mf-dim);
+        border-bottom: 1px solid var(--mf-line);
     }
 
-    .managerEarningsTable td {
-        padding: 7px 0 4px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        color: #e5e7eb;
+    .earnTable td {
+        padding: 8px 0 6px;
+        border-bottom: 1px solid var(--mf-line);
     }
 
-    .managerEarningsTable tbody tr:last-child td {
-        border-bottom: none;
+    .earnTable tr:last-child td {
+        border-bottom: 0;
     }
 
-    .managerEarningsTable td:last-child {
-        font-weight: 600;
+    .earnTable td:last-child {
+        font-weight: 700;
     }
 
-    .earningsChampion td:last-child {
-        color: #f5d56b;
+    .earningsChampion td:last-child { color: #f5d56b; }
+    .earningsSecond td:last-child { color: #c0c0c0; }
+    .earningsThird td:last-child { color: #cd7f32; }
+
+    .empty {
+        margin: 0;
+        font-size: 0.85rem;
+        font-style: italic;
+        color: var(--mf-dim);
     }
 
-    .earningsSecond td:last-child {
-        color: #c0c0c0;
+    .philosophy,
+    .bio {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: var(--mf-text);
     }
 
-    .earningsThird td:last-child {
-        color: #cd7f32;
+    .bio {
+        margin-top: 10px;
+        color: var(--mf-dim);
     }
 
-    @media (max-width: 450px) {
-        .managerEarnings {
-            width: min(94%, 94%);
-            padding: 10px 12px 11px;
+    .rosterWrap {
+        margin-top: 18px;
+    }
+
+    .loading {
+        width: 85%;
+        max-width: 500px;
+        margin: 40px auto;
+        color: var(--mf-dim);
+    }
+
+    @media (max-width: 860px) {
+        .hero {
+            grid-template-columns: auto minmax(0, 1fr);
         }
-
-        .careerEarningsValue {
-            font-size: 20px;
+        .earn {
+            grid-column: 1 / -1;
         }
+        .cols {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
 
-        .managerEarningsTable th,
-        .managerEarningsTable td {
-            font-size: 12px;
+    @media (max-width: 560px) {
+        .hero {
+            grid-template-columns: minmax(0, 1fr);
+            justify-items: center;
+            text-align: center;
+            padding: 22px 16px;
+        }
+        .photo {
+            width: 120px;
+            height: 120px;
+        }
+        h1 {
+            font-size: 2rem;
+        }
+        .teamLine,
+        .chips {
+            justify-content: center;
+        }
+        .earn {
+            width: 100%;
+            text-align: left;
+        }
+        .navBtn {
+            padding: 7px 10px;
+            font-size: 0.7rem;
+            letter-spacing: 0.06em;
         }
     }
 </style>
 
-<div class="managerContainer">
-    <div class="managerConstrained">
-        <img class="managerPhoto" src="{viewManager.photo}" alt="manager" />
+<div class="wrap" style="--team: {teamColor || 'var(--mf-ion)'}">
+    <nav class="topNav" aria-label="Managers">
+        <button type="button" class="navBtn" onclick={() => changeManager(parseInt(manager) - 1, true)}>← Previous</button>
+        <button type="button" class="navBtn mid" onclick={() => goto('/managers')}>All Managers</button>
+        <button type="button" class="navBtn" onclick={() => changeManager(parseInt(manager) + 1, true)}>Next →</button>
+    </nav>
 
-        <h2>
-            {viewManager.name}
-            <div class="teamSub">
-                {coOwners ? 'Co-' : ''}Manager of
-                <i>{getTeamNameFromTeamManagers(leagueTeamManagers, rosterID, year)}</i>
+    <header class="hero">
+        <img class="photo" src={viewManager.photo} alt={viewManager.name} />
+
+        <div class="heroMain">
+            <div class="kicker">{coOwners ? 'Co-Manager' : 'Manager'}</div>
+            <h1>{viewManager.name}</h1>
+            <div class="teamLine">
+                {#if teamAvatar}<img src={teamAvatar} alt="" />{/if}
+                <span>{teamName}</span>
             </div>
-        </h2>
-
-        <div class="basicInfo">
-            <span class="infoChild">{viewManager.location || 'Undisclosed Location'}</span>
-
-            {#if viewManager.fantasyStart}
-                <span>|</span>
-                <span class="infoChild">EST '{viewManager.fantasyStart.toString().substr(2)}</span>
-            {/if}
-
-            {#if viewManager.preferredContact}
-                <span>|</span>
-                <span class="infoChild">
-                    {viewManager.preferredContact}
-                    <img class="infoChild infoContact" src="/{viewManager.preferredContact}.png" alt={viewManager.preferredContact} />
-                </span>
-            {/if}
-
-            {#if viewManager.favoriteTeam}
-                <span>|</span>
-                <img
-                    class="infoChild infoTeam"
-                    src="https://sleepercdn.com/images/team_logos/nfl/{viewManager.favoriteTeam}.png"
-                    alt={viewManager.favoriteTeam}
-                />
-            {/if}
-
-            {#if commissioner}
-                <span>|</span>
-                <div class="commissionerBadge"><span>C</span></div>
-            {/if}
+            <div class="chips">
+                <span class="chip">{viewManager.location || 'Undisclosed Location'}</span>
+                {#if viewManager.fantasyStart}
+                    <span class="chip">Playing since {viewManager.fantasyStart}</span>
+                {/if}
+                {#if viewManager.preferredContact}
+                    <span class="chip">
+                        <img src="/{viewManager.preferredContact}.png" alt="" />
+                        {viewManager.preferredContact}
+                    </span>
+                {/if}
+                {#if viewManager.favoriteTeam}
+                    <span class="chip logo" title="Favorite NFL team">
+                        <img src="https://sleepercdn.com/images/team_logos/nfl/{viewManager.favoriteTeam}.png" alt={viewManager.favoriteTeam} />
+                        {viewManager.favoriteTeam.toUpperCase()}
+                    </span>
+                {/if}
+                {#if commissioner}
+                    <span class="chip comm">Commissioner</span>
+                {/if}
+            </div>
         </div>
 
-        <!-- Earnings card -->
-        <div class="managerEarnings">
-            <div class="careerEarningsTop">
-                <div class="careerEarningsLabel">Career Earnings</div>
-                <img
-                    src="/Money.png"
-                    alt="Money"
-                    class="moneyIcon"
-                    class:champGlow={isChampion}
-                />
+        <div class="earn">
+            <div class="earnTop">
+                <div>
+                    <div class="earnLabel">Career Earnings</div>
+                    <div class="earnValue">{formatMoney(managerTotalEarnings)}</div>
+                </div>
+                <img src="/Money.png" alt="" class="moneyIcon" class:champGlow={isChampion} />
             </div>
-
-            <div class="careerEarningsValue">{formatMoney(managerTotalEarnings)}</div>
-
-            <div class="earningsBar">
-                <div
-                    class="earningsBarFill"
-                    class:championBar={isChampion}
-                    style="width:{earningsPercent}%"
-                ></div>
+            <div class="earnBar">
+                <div class="earnFill" class:championBar={isChampion} style="width:{earningsPercent}%"></div>
             </div>
-
-            {#if managerEarnings.length}
-                <table class="managerEarningsTable">
-                    <thead>
-                        <tr>
-                            <th>Year</th>
-                            <th>Amount</th>
-                            <th>Result</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {#each managerEarnings as item}
-                            <tr
-                                class:earningsChampion={item.title === 'Champion'}
-                                class:earningsSecond={item.title === '2nd Place'}
-                                class:earningsThird={item.title === '3rd Place'}
-                            >
-                                <td>{item.year}</td>
-                                <td>{formatMoney(item.amount)}</td>
-                                <td>{item.title}</td>
-                            </tr>
-                        {/each}
-                    </tbody>
-                </table>
-            {:else}
-                <div class="managerEarningsEmpty">No winnings recorded</div>
-            {/if}
+            <div class="earnNote">
+                {managerEarnings.length ? `${managerEarnings.length} paid finish${managerEarnings.length === 1 ? '' : 'es'}` : 'No winnings yet'}
+            </div>
         </div>
+    </header>
 
-        <div class="managerNav upper">
-            <Group variant="outlined">
-                <Button
-                    class="selectionButtons"
-                    onclick={() => changeManager(parseInt(manager) - 1, true)}
-                    variant="outlined"
-                >
-                    <Label>Previous Manager</Label>
-                </Button>
+    <div class="cols">
+        <section class="panel">
+            <div class="panelHead gold"><span>Payouts</span></div>
+            <div class="panelBody">
+                {#if managerEarnings.length}
+                    <table class="earnTable">
+                        <thead>
+                            <tr><th>Year</th><th>Amount</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            {#each managerEarnings as item}
+                                <tr
+                                    class:earningsChampion={item.title === 'Champion'}
+                                    class:earningsSecond={item.title === '2nd Place'}
+                                    class:earningsThird={item.title === '3rd Place'}
+                                >
+                                    <td>{item.year}</td>
+                                    <td>{formatMoney(item.amount)}</td>
+                                    <td>{item.title}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
+                {:else}
+                    <p class="empty">No winnings recorded yet.</p>
+                {/if}
+            </div>
+        </section>
 
-                <Button
-                    class="selectionButtons"
-                    onclick={() => goto('/managers')}
-                    variant="outlined"
-                >
-                    <Label>All Managers</Label>
-                </Button>
-
-                <Button
-                    class="selectionButtons"
-                    onclick={() => changeManager(parseInt(manager) + 1, true)}
-                    variant="outlined"
-                >
-                    <Label>Next Manager</Label>
-                </Button>
-            </Group>
-        </div>
-
-        {#if viewManager.philosophy}
-            <h3>Team Philosophy</h3>
-            <p class="philosophy">{@html viewManager.philosophy}</p>
-        {/if}
-
-        <p class="bio">{@html viewManager.bio}</p>
+        <section class="panel">
+            <div class="panelHead"><span>Team Philosophy</span></div>
+            <div class="panelBody">
+                {#if viewManager.philosophy}
+                    <p class="philosophy">{@html viewManager.philosophy}</p>
+                {/if}
+                {#if viewManager.bio}
+                    <p class="bio">{@html viewManager.bio}</p>
+                {/if}
+                {#if !viewManager.philosophy && !viewManager.bio}
+                    <p class="empty">No philosophy shared yet.</p>
+                {/if}
+            </div>
+        </section>
     </div>
 
     {#if !loading}
-        <ManagerFantasyInfo {viewManager} {players} {changeManager} {dynamicRival} {topScorer} {teamTier} {historyState} {favoritePosition} {tradeDesire} {ageTier} />
+        <section class="panel">
+            <div class="panelHead"><span>Scouting Report</span><small>updates automatically</small></div>
+            <ManagerFantasyInfo {viewManager} {players} {changeManager} {dynamicRival} {topScorer} {teamTier} {historyState} {favoritePosition} {tradeDesire} {ageTier} />
+        </section>
     {/if}
 
-    <ManagerAwards
-        {leagueTeamManagers}
-        tookOver={viewManager.tookOver}
-        {awards}
-        {records}
-        {rosterID}
-        managerID={viewManager.managerID}
-    />
-
-    {#if loading}
-        <div class="loading">
-            <p>Retrieving players...</p>
-            <LinearProgress indeterminate />
-        </div>
-    {:else}
-        <Roster
-            division="1"
-            expanded={false}
-            {rosterPositions}
-            {roster}
+    <section class="panel">
+        <div class="panelHead gold"><span>Awards &amp; Records</span></div>
+        <ManagerAwards
             {leagueTeamManagers}
-            {players}
-            {startersAndReserve}
+            tookOver={viewManager.tookOver}
+            {awards}
+            {records}
+            {rosterID}
+            managerID={viewManager.managerID}
         />
-    {/if}
+    </section>
 
-    <h3>Team Transactions</h3>
-
-    <div class="managerConstrained">
+    <div class="rosterWrap">
         {#if loading}
             <div class="loading">
                 <p>Retrieving players...</p>
                 <LinearProgress indeterminate />
             </div>
         {:else}
-            <TransactionsPage
-                {playersInfo}
-                transactions={teamTransactions}
+            <Roster
+                division="1"
+                expanded={false}
+                {rosterPositions}
+                {roster}
                 {leagueTeamManagers}
-                show="both"
-                query=""
-                page={0}
-                perPage={5}
+                {players}
+                {startersAndReserve}
             />
         {/if}
     </div>
+
+    <section class="panel">
+        <div class="panelHead"><span>Team Transactions</span></div>
+        <div class="panelBody">
+            {#if loading}
+                <div class="loading">
+                    <p>Retrieving players...</p>
+                    <LinearProgress indeterminate />
+                </div>
+            {:else}
+                <TransactionsPage
+                    {playersInfo}
+                    transactions={teamTransactions}
+                    {leagueTeamManagers}
+                    show="both"
+                    query=""
+                    page={0}
+                    perPage={5}
+                />
+            {/if}
+        </div>
+    </section>
 </div>

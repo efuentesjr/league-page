@@ -28,20 +28,19 @@
 
 <style>
     .fantasyInfos {
-        display: flex;
-        justify-content: space-around;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        padding: 0 0 2em;
-        margin: 3em 0 4em;
-        border-bottom: 1px solid var(--aaa);
-        border-top: 1px solid var(--aaa);
-        box-shadow: 0 0 8px 4px var(--ccc);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1px;
+        background: var(--mf-line);
     }
 
     .infoSlot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px 10px 18px;
         text-align: center;
-        margin: 2em 1em 0;
+        background: var(--mf-panel);
     }
 
     .infoIcon {
@@ -51,9 +50,10 @@
         justify-content: center;
         align-items: center;
         border-radius: 100%;
-        border: 1px solid var(--ccc);
+        border: 1px solid var(--mf-line-strong);
         overflow: hidden;
-        background-color: var(--fff);
+        background-color: var(--mf-bg);
+        box-shadow: 0 0 16px -6px var(--mf-ion-glow);
 		transition: box-shadow 0.4s;
     }
 
@@ -62,10 +62,13 @@
     }
 
     .infoLabel {
-        font-size: 0.7em;
-        color: var(--blueOne);
+        min-height: 2.4em;
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--mf-dim);
         font-weight: 700;
-        margin-bottom: 1em;
+        margin-bottom: 0.8em;
         height: 30px;
         width: 90px;
         text-align: center;
@@ -73,16 +76,16 @@
     }
 
     .subAnswer {
-        font-style: italic;
-        color: var(--blueOne);
+        font-style: normal;
+        color: var(--mf-dim);
         font-size: 0.9em;
     }
 
     .infoAnswer {
         font-size: 0.8em;
-        color: var(--g555);
-        margin-top: 1em;
-        width: 90px;
+        color: var(--mf-text);
+        margin-top: 0.9em;
+        max-width: 140px;
         text-align: center;
         line-height: 1.2em;
     }
@@ -105,8 +108,10 @@
 
     .tradingScale {
         line-height: 70px;
-        font-size: 55px;
-        color: var(--blueOne);
+        font-size: 42px;
+        font-weight: 700;
+        color: var(--mf-ion);
+        text-shadow: 0 0 14px var(--mf-ion-glow);
     }
 
     .rookiesOrVets {
@@ -119,8 +124,8 @@
     }
 
     .infoRival:hover .infoIcon {
-        box-shadow: 0 0 6px 4px var(--aaa);
-        border: 1px solid var(--aaa);
+        box-shadow: 0 0 18px -2px var(--mf-ion-glow);
+        border: 1px solid var(--mf-ion);
     }
 
     .rival {
@@ -200,23 +205,9 @@
         vertical-align: bottom;
     }
 
-    /* media queries */
-
-    @media (max-width: 731px) {
-        .infoSlot {
-            margin: 2em 3em 0;
-        }
-    }
-
-    @media (max-width: 558px) {
-        .infoSlot {
-            margin: 2em 2em 0;
-        }
-    }
-
-    @media (max-width: 461px) {
-        .infoSlot {
-            margin: 2em 1em 0;
+    @media (max-width: 560px) {
+        .fantasyInfos {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
     }
 </style>
