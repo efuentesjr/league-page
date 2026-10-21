@@ -1,5 +1,5 @@
 <script>
-    import { leagueName, round, waitForAll } from '$lib/utils/helper';
+    import { leagueName, round, waitForAll, getLeagueData } from '$lib/utils/helper';
 	import { getTeamFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
   	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
 	import LinearProgress from '@smui/linear-progress';
