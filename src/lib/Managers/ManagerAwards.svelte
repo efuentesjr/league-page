@@ -241,9 +241,14 @@
 
     .awardsCaseInner {
         position: relative;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 14px;
+    }
+
+    .award {
+        width: 170px;
     }
 
     .award {
@@ -383,8 +388,10 @@
 
     @media (max-width: 560px) {
         .awardsCaseInner {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 10px;
+        }
+        .award {
+            width: calc(50% - 5px);
         }
         .awardIcon {
             width: 64px;
