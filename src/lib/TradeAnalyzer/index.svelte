@@ -114,13 +114,17 @@
 		for (const pid of rosterPlayers[rid] || []) {
 			const p = players[pid];
 			if (!p) continue;
+			const base = values.players?.[pid] ?? 0;
+			const boost = values.teBoost?.[pid] || 1;
+			const age = values.ages?.[pid];
+			const bonus = boost > 1.005 && base ? ` · TE premium +${Math.round((boost - 1) * 100)}%` : '';
 			list.push({
 				key: `pl:${pid}`,
 				kind: 'player',
 				label: `${p.fn} ${p.ln}`,
-				sub: `${p.pos}${p.t ? ` · ${p.t}` : ''}`,
+				sub: `${p.pos}${p.t ? ` · ${p.t}` : ''}${age ? ` · ${Math.floor(age)}` : ''}${bonus}`,
 				pos: p.pos,
-				value: values.players?.[pid] ?? 0
+				value: Math.round(base * boost)
 			});
 		}
 		for (const s of seasons) {
@@ -661,7 +665,9 @@
 		</div>
 
 		<p class="note">
-			Player values come from DynastyProcess's weekly superflex ratings; players without a market value show "—".
+			Player values come from DynastyProcess's weekly superflex dynasty ratings, which already price in age; players without a market value show "—".
+			{#if values.tePremium}Tight ends get a TE premium boost for this league's scoring (+{values.tePremium.perRec} per catch, +{values.tePremium.perFd} per first down), based on each TE's catches and first downs over the last two seasons, toned down and capped at +40%.{/if}
+			DynastyProcess assumes a 12-team league; in a 16-team league, good starters are a little scarcer than these values suggest.
 			{seasons[0]} picks are valued by projected slot from Lottery Watch (picks 1–5 early, 6–11 mid, 12–16 late in each round){slotOf ? '' : ' once the projection finishes loading'}.
 			Later picks use a round value; {seasons[2]} uses the {seasons[1]} values until DynastyProcess publishes them.
 			FAAB counts {FAAB_RATE} point per dollar (about an early 3rd per $100). It's a market guide, not a verdict: your Trade Grades judge trades afterward by points actually scored.
