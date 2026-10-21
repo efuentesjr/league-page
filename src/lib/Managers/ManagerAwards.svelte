@@ -275,6 +275,7 @@
     }
 
     .award {
+        box-sizing: border-box;
         width: 170px;
     }
 
@@ -439,15 +440,33 @@
     }
 
     @media (max-width: 560px) {
+        .awardsCase {
+            padding: 12px 8px;
+        }
         .awardsCaseInner {
-            gap: 10px;
+            gap: 6px;
         }
         .award {
-            width: calc(50% - 5px);
+            width: calc((100% - 12px) / 3);
+            padding: 10px 4px 10px;
+            clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+        }
+        .awardHeader {
+            min-height: 2.6em;
+            margin-bottom: 6px;
+            font-size: 0.52rem;
+            letter-spacing: 0.06em;
         }
         .awardIcon {
-            width: 64px;
-            height: 74px;
+            width: 52px;
+            height: 60px;
+        }
+        .awardLabel {
+            margin-top: 7px;
+            font-size: 0.72rem;
+        }
+        .subText {
+            font-size: 0.6rem;
         }
     }
 
