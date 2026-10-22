@@ -89,8 +89,10 @@ export async function GET({ url }) {
 		out.draftOrder = projectedDraftOrder(out.results, inputs.playoffTeams);
 	}
 
-	// fresh for 5 minutes, then served instantly while a new run happens in the background
+	// always served instantly from the CDN: fresh for an hour, then the saved copy
+	// (up to a day old) is shown while a new run happens in the background.
+	// A daily cron (vercel.json) also refreshes it overnight after the late games.
 	return json(out, {
-		headers: { 'Cache-Control': 'public, max-age=0, s-maxage=300, stale-while-revalidate=3600' }
+		headers: { 'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400' }
 	});
 }

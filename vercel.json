@@ -1,0 +1,5 @@
+{
+  "crons": [
+    { "path": "/api/season_sim", "schedule": "0 9 * * *" }
+  ]
+}
