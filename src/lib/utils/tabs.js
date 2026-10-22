@@ -38,6 +38,12 @@ export const tabs = [
     key: 'trade-grades'
   },
   {
+    icon: 'hub',
+    label: 'Trade Partners',
+    dest: '/trade-partners',
+    key: 'trade-partners'
+  },
+  {
     icon: 'balance',
     label: 'Trade Analyzer',
     dest: '/trade-analyzer',
@@ -139,7 +145,7 @@ export const navGroups = [
   { key: 'matchups' },
   { label: 'League', icon: 'leaderboard', keys: ['standings', 'playoff-odds', 'records'] },
   { label: 'Teams', icon: 'groups', keys: ['rosters', 'managers', 'rivalry', 'rivalries'] },
-  { label: 'Moves', icon: 'swap_horiz', keys: ['transactions', 'trade-analyzer', 'trade-grades', 'picks', 'faab'] },
+  { label: 'Moves', icon: 'swap_horiz', keys: ['transactions', 'trade-analyzer', 'trade-grades', 'trade-partners', 'picks', 'faab'] },
   { label: 'History', icon: 'emoji_events', keys: ['awards', 'drafts', 'champ-videos'] },
   { label: 'Rules', icon: 'gavel', keys: ['constitution', 'competition-committee', 'resources'] },
   { key: 'sleeper' }
