@@ -251,7 +251,10 @@
 				break;
 			}
 		}
+		// a same-day swap-back is an undone trade; don't also flag the redo that follows it
+		const undoIDs = new Set(Object.values(boomerangs).filter((g) => g.days < 1).map((g) => g.m2.t.id));
 		for (const g of Object.values(boomerangs)) {
+			if (undoIDs.has(g.m1.t.id)) continue;
 			const sameDay = g.days < 1;
 			out.push({
 				level: 'high',
