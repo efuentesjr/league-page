@@ -1,5 +1,6 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
+  import Ballot from '$lib/Committee/Ballot.svelte';
 
   type Proposal = {
     id: string; // ✅ was number
@@ -90,14 +91,32 @@
     parsed: splitOptions(p.title)
   }));
 
+  // Committee Night results saved on the site join the history automatically
+  const BALLOT_SEASON = 2027;
+  let liveOutcomes: Outcome[] = [];
+  const onBallotResults = (closed: any[]) => {
+    liveOutcomes = closed.map((p, i) => {
+      const yesNo = p.options.length === 2 && p.options[0] === 'Yes' && p.options[1] === 'No';
+      const counts = (p.options as string[]).map((o: string, k: number) => `${o} ${p.result?.counts?.[k] ?? 0}`).join(' · ');
+      const chosen = !yesNo && p.type === 'regular' && p.result?.winner != null ? ` Chosen: ${p.options[p.result.winner]}.` : '';
+      return {
+        id: 1000 + i,
+        title: `${p.title}${chosen}`,
+        notes: [p.ref, counts, p.result?.tieBroken ? 'tie broken by commissioner' : ''].filter(Boolean).join(' · '),
+        status: p.result?.passed === false ? 'Rejected' : 'Approved',
+        year: Number(p.season)
+      } as Outcome;
+    });
+  };
+
   // parse previous outcomes
-  const parsedPrevious = previous.map((o) => ({
+  $: parsedPrevious = [...liveOutcomes, ...previous].map((o) => ({
     ...o,
     parsed: splitOptions(o.title)
   }));
 
   // --- GROUP PREVIOUS BY YEAR ---
-  const grouped = Object.values(
+  $: grouped = Object.values(
     parsedPrevious.reduce((acc, item) => {
       const y = item.year ?? 0;
       if (!acc[y]) acc[y] = { year: y, items: [] };
@@ -107,13 +126,13 @@
   ).sort((a, b) => b.year - a.year); // newest first
 
   // collapsed state per year (most recent year starts open)
-  let openYears: Record<number, boolean> = grouped.length ? { [grouped[0].year]: true } : {};
+  let openYears: Record<number, boolean> = { [Math.max(...previous.map((o) => o.year ?? 0))]: true };
 
   const tally = (items: any[]) => ({
     approved: items.filter((o) => o.status === 'Approved' || o.status === 'Enacted by Commish').length,
     rejected: items.filter((o) => o.status === 'Rejected').length
   });
-  const allTime = tally(previous);
+  $: allTime = tally([...liveOutcomes, ...previous]);
 
   const proposalTone = (s: Proposal['status']) =>
     ({ NEW: 'new', OPEN: 'open', CARRIED: 'ok', REJECTED: 'bad', YEARLY: 'yearly', REVOTE: 'hold', HOLD: 'hold' })[s] || 'yearly';
@@ -148,6 +167,9 @@
       <div class="cc-stat bad"><strong>{allTime.rejected}</strong><span>Voted down</span></div>
     </div>
   </header>
+
+  <!-- COMMITTEE NIGHT VOTING -->
+  <Ballot cards={parsedProposals} season={BALLOT_SEASON} onresults={onBallotResults} />
 
   <!-- ACTIVE PROPOSALS -->
   <div class="cc-sectionHead">
