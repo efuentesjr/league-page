@@ -481,9 +481,6 @@
 
   const refreshDaily = async () => {
     try {
-      console.log(
-        '[Power Rankings] Running daily refresh...'
-      );
 
       /*
        * Get the current NFL week.
@@ -514,9 +511,6 @@
       buildRankings();
       await loadPreviousRosters();
 
-      console.log(
-        '[Power Rankings] Daily refresh complete.'
-      );
     } catch (error) {
       console.error(
         '[Power Rankings] Daily refresh failed:',

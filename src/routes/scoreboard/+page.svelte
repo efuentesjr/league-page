@@ -37,18 +37,6 @@
 				game.status === 'in_game'
 		);
 
-		console.log('[scoreboard] NFL games:', nflGames);
-		console.log(
-			'[scoreboard] LIVE statuses:',
-			nflGames.map((game) => ({
-				game_id: game.game_id,
-				status: game.status,
-				home: game.home,
-				away: game.away,
-				week: game.week
-			}))
-		);
-
 		const weekData = matchupsData?.matchupWeeks?.find(
 			(item) => Number(item.week) === weekNumber
 		);
@@ -202,34 +190,15 @@
 	const nextGame = () => {
 		if (games.length <= 1) return;
 
-		console.log(
-			'[scoreboard] ROTATION:',
-			'currentGame =',
-			currentGame,
-			'showAllScores =',
-			showAllScores,
-			'games =',
-			games.length
-		);
-
 		transitioning = true;
 
 		setTimeout(() => {
 			if (showAllScores) {
-				console.log('[scoreboard] ALL SCORES → GAME 1');
-
 				showAllScores = false;
 				currentGame = 0;
 			} else if (currentGame === games.length - 1) {
-				console.log('[scoreboard] LAST GAME → ALL SCORES');
-
 				showAllScores = true;
 			} else {
-				console.log(
-					'[scoreboard] NEXT GAME →',
-					currentGame + 2
-				);
-
 				currentGame += 1;
 			}
 

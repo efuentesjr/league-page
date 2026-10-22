@@ -274,8 +274,6 @@
 		return Object.fromEntries(totals.map(([rid], i) => [rid, i + 1]));
 	})();
 
-	const fmtVal = (n) => Math.round(n).toLocaleString();
-
 	const assetsFor = (rid, slots, curve, qbRanks, ranks) => {
 		if (!rid) return [];
 		const list = [];

@@ -14,18 +14,10 @@
     ...v,
     src: v.src + (v.src.includes('?') ? '&' : '?') + 'v=' + Date.now()
   }));
-
-  // Debug: print the URL actually used at runtime
-  console.log('[WeeklyRecap] video src ->', RECAPS_WITH_CACHEBUST[0].src);
 </script>
 
 <div class="wrap">
   <h1 class="title">Season Intro</h1>
-
-  <!-- Debug: show the URL on the page so we can confirm the build is current -->
-  <p style="font-size:0.9rem;opacity:.8;word-break:break-all;margin:0 1rem 1rem;">
-    Using video: <code>{RECAPS_WITH_CACHEBUST[0].src}</code>
-  </p>
 
   {#each RECAPS_WITH_CACHEBUST as v}
     <section class="card">

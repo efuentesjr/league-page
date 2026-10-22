@@ -14,7 +14,7 @@
     import ManagerFantasyInfo from './ManagerFantasyInfo.svelte';
     import ManagerAwards from './ManagerAwards.svelte';
     import { onMount } from 'svelte';
-    import { getDatesActive, getRosterIDFromManagerID, getTeamNameFromTeamManagers, getAvatarFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
+    import { getRosterIDFromManagerID, getTeamNameFromTeamManagers, getAvatarFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
     import { getLogoColor } from '$lib/utils/logoColor';
 
     export let manager, managers, rostersData, leagueTeamManagers, rosterPositions, transactionsData, awards, records;
@@ -22,8 +22,6 @@
     let transactions = transactionsData.transactions;
 
     $: viewManager = managers[manager];
-
-    $: datesActive = getDatesActive(leagueTeamManagers, viewManager.managerID);
 
     const startersAndReserve = rostersData.startersAndReserve;
     let rosters = rostersData.rosters;
