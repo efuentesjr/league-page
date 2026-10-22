@@ -502,7 +502,7 @@
 				</div>
 				<p class="bigHint">Vote on your phone: Competition Committee page · secret ballot</p>
 			{:else if current.result}
-				<div class="bigStamp {current.status === 'tie' ? 'tie' : current.result.passed === false ? 'bad' : 'ok'}">
+				<div class="bigStamp {current.status === 'tie' ? 'tie' : current.result.passed === false ? 'bad' : 'ok'}" class:long={winnerText(current).length > 10}>
 					{current.status === 'tie' ? 'TIE' : winnerText(current)}
 				</div>
 				<div class="bigResults">
@@ -1077,6 +1077,14 @@
 		border: 6px solid var(--stamp);
 		box-shadow: 0 0 40px -6px var(--stamp);
 		animation: stamp 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+	}
+
+	.bigStamp.long {
+		max-width: 100%;
+		padding: 14px 26px;
+		font-size: clamp(1.8rem, 5.5vw, 4.2rem);
+		line-height: 1.1;
+		text-wrap: balance;
 	}
 
 	.bigStamp.ok { --stamp: var(--mf-up); }

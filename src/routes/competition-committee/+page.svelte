@@ -95,6 +95,7 @@
   const BALLOT_SEASON = 2027;
   let liveOutcomes: Outcome[] = [];
   const onBallotResults = (closed: any[]) => {
+    if (closed.length && !(BALLOT_SEASON in openYears)) openYears = { ...openYears, [BALLOT_SEASON]: true };
     liveOutcomes = closed.map((p, i) => {
       const yesNo = p.options.length === 2 && p.options[0] === 'Yes' && p.options[1] === 'No';
       const counts = (p.options as string[]).map((o: string, k: number) => `${o} ${p.result?.counts?.[k] ?? 0}`).join(' · ');
