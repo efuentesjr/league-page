@@ -17,8 +17,8 @@
 	const SHARE_PCT = 0.4; // ...and this share with one partner
 	const ONEWAY_MIN = 2; // graded trades between a pair, all won by the same side
 	const ONEWAY_EDGE = 100; // combined points edge
-	const LOPSIDED_SHARE = 0.85; // one side got this share of a trade's value
-	const LOPSIDED_MARGIN = 80; // ...by at least this many points
+	const LOPSIDED_SHARE = 0.9; // one side got this share of a trade's value
+	const LOPSIDED_MARGIN = 150; // ...by at least this many points (hindsight, so low priority)
 	const BOOMERANG_DAYS = 365;
 	const DUMP_SELLER_PCT = 0.35; // seller's win % at the time (min 4 games)
 	const DUMP_BUYER_PCT = 0.5;
@@ -37,6 +37,7 @@
 	let codeInput = '';
 	let unlockError = '';
 	let unlocking = false;
+	let showLow = false;
 
 	onMount(async () => {
 		try {
@@ -221,7 +222,7 @@
 			if (!isSettled(t) || t.sides.length !== 2) continue;
 			const [hi, lo] = [...t.sides].sort((x, y) => y.value - x.value);
 			if (hi.share >= LOPSIDED_SHARE && hi.value - lo.value >= LOPSIDED_MARGIN) {
-				out.push({ level: 'medium', type: 'Lopsided result', pair: pairKey(sideManager(hi), sideManager(lo)), trade: t.id, text: `${when(t)}: ${managerName(sideManager(hi))} got ${Math.round(hi.share * 100)}% of the value from ${managerName(sideManager(lo))} (${signed(hi.value - lo.value)} pts).` });
+				out.push({ level: 'low', type: 'Lopsided result', pair: pairKey(sideManager(hi), sideManager(lo)), trade: t.id, text: `${when(t)}: ${managerName(sideManager(hi))} got ${Math.round(hi.share * 100)}% of the value from ${managerName(sideManager(lo))} (${signed(hi.value - lo.value)} pts).` });
 			}
 		}
 		// 4. boomerang: same player sent back to his original team
@@ -237,16 +238,30 @@
 			}
 		}
 		moves.sort((x, y) => (x.t.timestamp || 0) - (y.t.timestamp || 0));
+		const boomerangs = {};
 		for (let i = 0; i < moves.length; i++) {
 			for (let j = i + 1; j < moves.length; j++) {
 				const m1 = moves[i], m2 = moves[j];
 				if (m1.pid !== m2.pid || m2.from !== m1.to || m2.to !== m1.from) continue;
 				const days = ((m2.t.timestamp || 0) - (m1.t.timestamp || 0)) / 86400000;
 				if (days >= 0 && days <= BOOMERANG_DAYS) {
-					out.push({ level: 'high', type: 'Boomerang', pair: pairKey(m1.from, m1.to), trade: m2.t.id, text: `${playerName(m1.pid)} went ${managerName(m1.from)} → ${managerName(m1.to)} (${when(m1.t)}) and back (${when(m2.t)}), ${Math.round(days)} days apart.` });
+					const g = (boomerangs[`${m1.t.id}>${m2.t.id}`] ??= { m1, m2, days, names: [] });
+					g.names.push(playerName(m1.pid));
 				}
 				break;
 			}
+		}
+		for (const g of Object.values(boomerangs)) {
+			const sameDay = g.days < 1;
+			out.push({
+				level: 'high',
+				type: sameDay ? 'Undone trade' : 'Boomerang',
+				pair: pairKey(g.m1.from, g.m1.to),
+				trade: g.m2.t.id,
+				text: sameDay
+					? `${managerName(g.m1.from)} and ${managerName(g.m1.to)} traded ${g.names.join(', ')} and swapped back the same day (${when(g.m1.t)}).`
+					: `${g.names.join(', ')} went ${managerName(g.m1.from)} → ${managerName(g.m1.to)} (${when(g.m1.t)}) and back (${when(g.m2.t)}), ${Math.round(g.days)} days apart.`
+			});
 		}
 		// 5. dumping: a struggling team sends players to a winning team for picks/FAAB only
 		// 6. thin return: players out, only FAAB or late picks back
@@ -336,7 +351,7 @@
 				</p>
 				{#if flags.length}
 					<div class="flags">
-						{#each flags as f}
+						{#each flags.filter((f) => showLow || f.level !== 'low') as f}
 							<button type="button" class="flag {f.level}" onclick={() => f.pair && choose(f.pair)}>
 								<span class="lvl">{f.level}</span>
 								<span class="ftype">{f.type}</span>
@@ -344,6 +359,11 @@
 							</button>
 						{/each}
 					</div>
+					{#if flags.some((f) => f.level === 'low')}
+						<button type="button" class="moreBtn" onclick={() => (showLow = !showLow)}>
+							{showLow ? 'Hide' : 'Show'} {flags.filter((f) => f.level === 'low').length} lower-priority flags
+						</button>
+					{/if}
 				{:else}
 					<p class="empty">Nothing flagged for this period.</p>
 				{/if}
@@ -908,6 +928,20 @@
 		font-family: 'Roboto', sans-serif;
 		font-size: 0.84rem;
 		line-height: 1.35;
+	}
+
+	.moreBtn {
+		margin: 0 14px 14px;
+		padding: 6px 12px;
+		font: inherit;
+		font-size: 0.74rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--mf-dim);
+		background: transparent;
+		border: 1px dashed var(--mf-line-strong);
+		cursor: pointer;
 	}
 
 	.empty {
