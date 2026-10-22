@@ -245,7 +245,7 @@
 				if (m1.pid !== m2.pid || m2.from !== m1.to || m2.to !== m1.from) continue;
 				const days = ((m2.t.timestamp || 0) - (m1.t.timestamp || 0)) / 86400000;
 				if (days >= 0 && days <= BOOMERANG_DAYS) {
-					const g = (boomerangs[`${m1.t.id}>${m2.t.id}`] ??= { m1, m2, days, names: [] });
+					const g = (boomerangs[`${m1.t.id}>${m2.t.id}|${m1.from}>${m1.to}`] ??= { m1, m2, days, names: [] });
 					g.names.push(playerName(m1.pid));
 				}
 				break;
@@ -253,9 +253,16 @@
 		}
 		// a same-day swap-back is an undone trade; don't also flag the redo that follows it
 		const undoIDs = new Set(Object.values(boomerangs).filter((g) => g.days < 1).map((g) => g.m2.t.id));
+		const seenUndo = new Set();
 		for (const g of Object.values(boomerangs)) {
 			if (undoIDs.has(g.m1.t.id)) continue;
 			const sameDay = g.days < 1;
+			if (sameDay) {
+				const k = `${g.m1.t.id}>${g.m2.t.id}`;
+				if (seenUndo.has(k)) continue;
+				seenUndo.add(k);
+				g.names = Object.values(boomerangs).filter((x) => `${x.m1.t.id}>${x.m2.t.id}` === k).flatMap((x) => x.names);
+			}
 			out.push({
 				level: 'high',
 				type: sameDay ? 'Undone trade' : 'Boomerang',
