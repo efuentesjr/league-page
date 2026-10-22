@@ -366,8 +366,8 @@
 						{/each}
 					</div>
 
-					<span class="round">{fmtPct(r.semifinalPct)}</span>
-					<span class="round">{fmtPct(r.finalPct)}</span>
+					<span class="round semi">{fmtPct(r.semifinalPct)}</span>
+					<span class="round final">{fmtPct(r.finalPct)}</span>
 					<span class="round title">{fmtPct(r.champPct)}</span>
 				</div>
 			{/each}
@@ -1038,10 +1038,11 @@
 		}
 
 		.row {
-			grid-template-columns: minmax(0, 1fr) auto auto;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
 			grid-template-areas:
 				'team team team'
-				'record playoff title'
+				'record playoff playoff'
+				'semi final title'
 				'seeds seeds seeds';
 			gap: 6px 14px;
 			padding: 12px 12px;
@@ -1065,13 +1066,45 @@
 			height: 10px;
 		}
 
+		/* Semifinals / Championship / Champion as a small labeled strip */
 		.round {
-			display: none;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 2px;
+			padding: 5px 0 4px;
+			text-align: center;
+			background: var(--mf-panel-2);
+			border: 1px solid var(--mf-line);
+		}
+
+		.round::before {
+			font-size: 0.6rem;
+			font-weight: 700;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			color: var(--mf-dim);
+		}
+
+		.row .round.semi {
+			grid-area: semi;
+		}
+
+		.row .round.semi::before {
+			content: 'Semifinals';
+		}
+
+		.row .round.final {
+			grid-area: final;
+		}
+
+		.row .round.final::before {
+			content: 'Championship';
 		}
 
 		.round.title {
-			display: block;
 			grid-area: title;
+			border-color: color-mix(in srgb, #d9a62e 45%, var(--mf-line));
 		}
 
 		.lotteryRow {
@@ -1084,11 +1117,8 @@
 			display: none;
 		}
 
-		.round.title::before {
-			content: 'Champion ';
-			font-weight: 400;
-			font-size: 0.75rem;
-			color: var(--mf-dim);
+		.row .round.title::before {
+			content: 'Champion';
 		}
 	}
 </style>
