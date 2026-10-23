@@ -5,6 +5,7 @@
 
     export let leagueTeamManagers, players, matchCol, playoffsStart, ix, playoffLength, consolation = false, losers = false, numRosters, consolationNum, selected;
     export let balls = {}; // rosterID -> { n, why } ping pong balls (losers bracket)
+    export let toiletPrizes = [3, 2, 1]; // Toilet Bowl champion, runner-up, 3rd place
 
     let label = '';
 
@@ -164,7 +165,7 @@
             anchors[key].yBottom = (bBottom + bTop) / 2 - colTop;
             anchors[key].yMiddle = (anchors[key].yTop + anchors[key].yBottom) / 2;
 
-            anchors[key].xLeft = (tRight + tLeft) / 2 - (colWidth * ix);
+            anchors[key].xLeft = (tRight + tLeft) / 2 - colLeft;
             anchors[key].xMiddle = anchors[key].xLeft + (colWidth / 2);
             anchors[key].xRight = anchors[key].xLeft + colWidth;
         }
@@ -194,6 +195,11 @@
 
 
     $: isFinal = label === 'Championship Match';
+    // ping pong balls at stake: Toilet Bowl final (winner + runner-up), 3rd-place game (winner)
+    $: prize = !losers ? null
+        : !consolation && playoffLength - ix == 1 ? [{ n: toiletPrizes[0], who: 'winner' }, { n: toiletPrizes[1], who: 'runner-up' }]
+        : consolation && consolationNum == 0 && playoffLength - ix == 1 ? [{ n: toiletPrizes[2], who: 'winner' }]
+        : null;
     $: shortLabel = ({ 'Championship Match': 'Final', Quarterfinals: 'Quarters', Semifinals: 'Semis', 'Toilet Bowl': 'Toilet Bowl' })[label] || label.replace(' Place', '');
 
     // the team ahead once both have scored (highlights the leader / winner)
@@ -337,6 +343,28 @@
         border-radius: 50%;
         background: radial-gradient(circle at 35% 30%, #fff7b0, #ffd400 45%, #c79a00);
         box-shadow: 0 0 6px rgba(255, 212, 0, 0.7);
+    }
+
+    .prize {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+        padding: 6px 8px;
+        font-size: 0.66rem;
+        color: #ffd400;
+        background: color-mix(in srgb, #ffd400 6%, transparent);
+        border-top: 1px dashed color-mix(in srgb, #ffd400 35%, transparent);
+    }
+
+    .prizeItem {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .prizeItem span {
+        margin-left: 3px;
     }
 
     .bye,
@@ -525,6 +553,13 @@
                     {/if}
                 </div>
             {/each}
+            {#if prize && matchups[0].m}
+                <div class="prize" title="Ping pong balls at stake">
+                    {#each prize as p, pi}
+                        <span class="prizeItem">{#each Array(p.n) as _}<i class="ball"></i>{/each}<span>{p.who}</span></span>
+                    {/each}
+                </div>
+            {/if}
         </div>
         {#if drawBracket && inx % 2 == 0}
             <!-- Only draw the bracket once for each pair -->
