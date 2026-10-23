@@ -190,6 +190,7 @@
 <style>
     .bracketColumn {
         position: relative;
+        padding-top: 40px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -200,6 +201,7 @@
 
     .label {
         position: absolute;
+        top: 0;
         margin: 0;
         padding: 3px 12px;
         font-size: 0.72rem;
@@ -457,7 +459,7 @@
 
 <div class="bracketColumn" bind:this={el}>
     {#if matchCol.length}
-        <p bind:this={labelEl} class="label" class:final={isFinal} class:toilet={label === 'Toilet Bowl'} style="top: {labelY}px;"><span class="long">{label}</span><span class="short">{shortLabel}</span></p>
+        <p bind:this={labelEl} class="label" class:final={isFinal} class:toilet={label === 'Toilet Bowl'} ><span class="long">{label}</span><span class="short">{shortLabel}</span></p>
     {/if}
     <!-- If we need to draw a bracket, include anchor points and include svgs to draw the  bracket -->
     {#each matchCol as matchups, inx}

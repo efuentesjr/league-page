@@ -94,7 +94,7 @@
 
     .bracket {
         margin: 1em 0;
-        padding-top: 1.2em;
+        padding-top: 0.6em;
         display: flex;
         justify-content: center;
     }
@@ -107,7 +107,7 @@
             border-right: 0;
         }
         .bracket {
-            padding-top: 1.6em;
+            padding-top: 0.8em;
         }
     }
 
