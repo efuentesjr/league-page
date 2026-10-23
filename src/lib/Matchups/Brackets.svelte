@@ -4,9 +4,8 @@
     import Button, { Group, Label } from '@smui/button';
     import BracketsColumn from "./BracketsColumn.svelte";
     import Matchup from "./Matchup.svelte";
-    import { getLeagueRosters, getLeagueData } from '$lib/utils/helper';
     import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers } from '$lib/utils/helperFunctions/universalFunctions';
-    import { finalPlayoffField, LOTTERY } from '$lib/utils/helperFunctions/playoffOdds';
+    import { LOTTERY } from '$lib/utils/helperFunctions/playoffOdds';
 
     export let leagueTeamManagers, players, brackets, selection, queryWeek;
 
@@ -78,18 +77,6 @@
     $: winnerID = finalMatch?.[0]?.w ?? null;
     $: isLosers = selection == 'losers';
 
-    // regular-season place -> balls (Constitution 3.4), from Sleeper's standings
-    let regPlace = {};
-    onMount(async () => {
-        try {
-            const [rostersData, leagueData] = await Promise.all([getLeagueRosters(), getLeagueData()]);
-            const field = finalPlayoffField(rostersData.rosters, leagueData.settings);
-            regPlace = Object.fromEntries(field.map((t) => [String(t.rosterID), t.seed]));
-        } catch (err) {
-            console.error('[Brackets] Could not load standings for ping pong balls', err);
-        }
-    });
-
     // Toilet Bowl finish: champion, runner-up, and the 3rd-place game winner
     $: toiletFinish = (() => {
         const out = {};
@@ -105,10 +92,6 @@
 
     $: balls = (() => {
         const out = {};
-        for (const [rid, place] of Object.entries(regPlace)) {
-            const n = LOTTERY.regularSeason[place] || 0;
-            if (n) out[rid] = { n, why: [`${n} for finishing ${place}th`] };
-        }
         for (const [rid, finish] of Object.entries(toiletFinish)) {
             const n = LOTTERY.toiletBowl[finish - 1] || 0;
             if (!n) continue;
@@ -290,7 +273,15 @@
     }
 
     .champBalls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
         color: #ffd400;
+    }
+
+    .champBalls span {
+        margin-left: 4px;
     }
 
     .ballKey {
@@ -382,12 +373,16 @@
                     {#if winnerID}
                         <img class="champAvatar" src={getAvatarFromTeamManagers(leagueTeamManagers, winnerID, leagueTeamManagers.currentYear)} alt="" />
                         <div class="champName">{getTeamNameFromTeamManagers(leagueTeamManagers, winnerID, leagueTeamManagers.currentYear)}</div>
-                        {#if isLosers && balls[String(winnerID)]}
-                            <div class="champBalls">+{LOTTERY.toiletBowl[0]} ping pong balls</div>
-                        {/if}
                     {:else}
                         <div class="champName tbd">TBD</div>
-                        <div class="champSub">{isLosers ? `Wins ${LOTTERY.toiletBowl[0]} ping pong balls` : 'Decided in the Championship Match'}</div>
+                    {/if}
+                    {#if isLosers}
+                        <div class="champBalls" title="{LOTTERY.toiletBowl[0]} ping pong balls">
+                            {#each Array(LOTTERY.toiletBowl[0]) as _}<i class="ballDot"></i>{/each}
+                            <span>{winnerID ? 'earned' : 'to the winner'}</span>
+                        </div>
+                    {:else if !winnerID}
+                        <div class="champSub">Decided in the Championship Match</div>
                     {/if}
                 </div>
             </div>
@@ -396,9 +391,8 @@
     {#if isLosers}
         <p class="ballKey">
             <span class="ballDot"></span>
-            Ping pong balls (Constitution 3.4): regular-season 11th place {LOTTERY.regularSeason[11]}, 12th {LOTTERY.regularSeason[12]}, 13th {LOTTERY.regularSeason[13]};
-            Toilet Bowl champion {LOTTERY.toiletBowl[0]}, runner-up {LOTTERY.toiletBowl[1]}, 3rd {LOTTERY.toiletBowl[2]}.
-            Toilet Bowl balls appear once those games are final.
+            Toilet Bowl ping pong balls (Constitution 3.4): champion {LOTTERY.toiletBowl[0]}, runner-up {LOTTERY.toiletBowl[1]}, 3rd place {LOTTERY.toiletBowl[2]}.
+            They show next to each team once those games are final.
         </p>
     {/if}
 
