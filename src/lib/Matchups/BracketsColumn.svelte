@@ -4,6 +4,7 @@
 	import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers } from "$lib/utils/helperFunctions/universalFunctions";
 
     export let leagueTeamManagers, players, matchCol, playoffsStart, ix, playoffLength, consolation = false, losers = false, numRosters, consolationNum, selected;
+    export let balls = {}; // rosterID -> { n, why } ping pong balls (losers bracket)
 
     let label = '';
 
@@ -324,6 +325,20 @@
         color: #f5d56b;
     }
 
+    .balls {
+        display: flex;
+        gap: 3px;
+        margin-top: 4px;
+    }
+
+    .ball {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #fff7b0, #ffd400 45%, #c79a00);
+        box-shadow: 0 0 6px rgba(255, 212, 0, 0.7);
+    }
+
     .bye,
     .tbd {
         font-weight: 500;
@@ -491,7 +506,15 @@
                     {:else}
                         <span></span>
                     {/if}
-                    <div class="name{matchups.bye && !matchup.roster_id ? ' bye': ''}{!matchups.bye && !matchup.roster_id ? ' tbd' : ''}">{getPlayoffName(matchup.roster_id, matchups.bye, leagueTeamManagers.currentYear) || 'TBD'}</div>
+                    <div class="name{matchups.bye && !matchup.roster_id ? ' bye': ''}{!matchups.bye && !matchup.roster_id ? ' tbd' : ''}">
+                        {getPlayoffName(matchup.roster_id, matchups.bye, leagueTeamManagers.currentYear) || 'TBD'}
+                        {#if losers && matchup.roster_id && balls[String(matchup.roster_id)]}
+                            {@const b = balls[String(matchup.roster_id)]}
+                            <span class="balls" title="{b.n} ping pong ball{b.n === 1 ? '' : 's'}: {b.why.join(', ')}">
+                                {#each Array(b.n) as _}<i class="ball"></i>{/each}
+                            </span>
+                        {/if}
+                    </div>
                     {#if matchup.roster_id}
                         <div class="points">
                             <div class="actualPoints">{calculatePoints(matchup.points)}</div>

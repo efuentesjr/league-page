@@ -188,6 +188,8 @@ const processPlayoffMatchup = ({playoffBracket, playoffMatchups, i, consolationM
     const t1From = teamsSeen[playoffBracket.t1];
     const t2From = teamsSeen[playoffBracket.t2];
     const winners = playoffBracket.t1_from?.w && playoffBracket.t2_from?.w ? true : false;
+    const w = playoffBracket.w ?? null;
+    const l = playoffBracket.l ?? null;
 
     const fromWinners = fromWs.indexOf(t2From || -999) > -1 ? true : false;
 
@@ -198,16 +200,16 @@ const processPlayoffMatchup = ({playoffBracket, playoffMatchups, i, consolationM
 
     // first team in matchup
     const t1 = playoffBracket.t1;
-    matchup.push(generateMatchupData(t1, t1From, {m, r, playoffMatchups, i, playoffType, winners, fromWinners, consolation, p}));
+    matchup.push(generateMatchupData(t1, t1From, {m, r, playoffMatchups, i, playoffType, winners, fromWinners, consolation, p, w, l}));
 
     // second team in matchup
     const t2 = playoffBracket.t2;
-    matchup.push(generateMatchupData(t2, t2From, {m, r, playoffMatchups, i, playoffType, winners, fromWinners, consolation, p}));
+    matchup.push(generateMatchupData(t2, t2From, {m, r, playoffMatchups, i, playoffType, winners, fromWinners, consolation, p, w, l}));
 
     return matchup;
 }
 
-const generateMatchupData = (t, tFrom, {m, r, playoffMatchups, i, playoffType, winners, fromWinners, consolation, p}) => {
+const generateMatchupData = (t, tFrom, {m, r, playoffMatchups, i, playoffType, winners, fromWinners, consolation, p, w = null, l = null}) => {
     let matchup = {
         roster_id: null,
         points: undefined,
@@ -218,6 +220,8 @@ const generateMatchupData = (t, tFrom, {m, r, playoffMatchups, i, playoffType, w
         r,
         winners,
         fromWinners,
+        w, // winning roster_id once the game is final (from Sleeper)
+        l,
     }
 
     if(t) {
