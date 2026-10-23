@@ -8,6 +8,7 @@
     import { LOTTERY } from '$lib/utils/helperFunctions/playoffOdds';
 
     export let leagueTeamManagers, players, brackets, selection, queryWeek;
+    export let syncUrl = true; // false when shown outside the Matchups page
 
     const {playoffsStart, champs, losers, numRosters} = brackets;
 
@@ -24,6 +25,7 @@
     let el, top;
 
     onMount(() => {
+        if(!syncUrl) return;
         if(queryWeek && queryWeek > 0 && queryWeek < playoffsStart) {
             goto(`/matchups?week=1`, {noscroll: true});
             selection = 'regular';
