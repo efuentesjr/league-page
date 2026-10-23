@@ -171,6 +171,16 @@
         selected = m;
     }
 
+
+    $: isFinal = label === 'Championship Match';
+
+    // the team ahead once both have scored (highlights the leader / winner)
+    const leaderOf = (matchups) => {
+        if (!matchups?.[0]?.roster_id || !matchups?.[1]?.roster_id) return -1;
+        const a = calculatePoints(matchups[0].points), b = calculatePoints(matchups[1].points);
+        if (!a || !b || a === b) return -1;
+        return a > b ? 0 : 1;
+    };
 </script>
 
 <svelte:window bind:innerWidth={innerWidth} />
@@ -183,146 +193,239 @@
         justify-content: space-around;
         align-items: center;
         flex-grow: 1;
+        font-family: 'Chakra Petch', 'Roboto', Arial, sans-serif;
     }
 
     .label {
         position: absolute;
-        text-align: center;
         margin: 0;
+        padding: 3px 12px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        color: var(--mf-ion);
+        background: var(--mf-panel);
+        border: 1px solid var(--mf-line-strong);
+        box-shadow: 0 0 14px -6px var(--mf-ion-glow);
+    }
+
+    .label.final {
+        color: #1a1203;
+        background: linear-gradient(180deg, #fff3c4, #f5d56b 60%, #c9962c);
+        border-color: #f5d56b;
+        box-shadow: 0 0 18px -4px rgba(245, 213, 107, 0.7);
+    }
+
+    .label.toilet {
+        color: #d9a62e;
+        border-color: color-mix(in srgb, #d9a62e 50%, var(--mf-line));
     }
 
     .match {
+        position: relative;
         width: 280px;
-        border: 1px solid var(--ccc);
-        background-color: var(--bracketMatch);
-        border-radius: 10px;
         margin: 2em 1em;
         z-index: 2;
+        background:
+            linear-gradient(180deg, color-mix(in srgb, var(--mf-ion) 6%, transparent), transparent 40%),
+            var(--mf-panel);
+        border: 1px solid var(--mf-line);
+        border-left: 3px solid var(--mf-line-strong);
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        transition: border-color 0.2s, background 0.2s, transform 0.2s;
     }
 
-    .selected {
-        background-color: var(--matchupSelected);
-        box-shadow: 0 0 8px 6px var(--matchupSelected);
+    .match.final {
+        border-color: color-mix(in srgb, #f5d56b 55%, transparent);
+        border-left-color: #f5d56b;
+        background:
+            radial-gradient(ellipse at 50% 0%, rgba(245, 213, 107, 0.18), transparent 70%),
+            var(--mf-panel);
     }
 
     .clickable {
         cursor: pointer;
     }
 
-    .manager {
-        flex-direction: column;
-        margin: 1em 0.5em;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
+    .clickable:hover {
+        transform: translateY(-2px);
+        border-color: var(--mf-line-strong);
     }
 
-    .avatarPointsBlock {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+    .selected {
+        border-color: var(--mf-ion);
+        border-left-color: var(--mf-ion);
+        background:
+            linear-gradient(180deg, color-mix(in srgb, var(--mf-ion) 16%, transparent), transparent 70%),
+            var(--mf-panel-2);
+    }
+
+    .match.final.selected {
+        border-left-color: #f5d56b;
+    }
+
+    .manager {
+        display: grid;
+        grid-template-columns: 30px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+    }
+
+    .manager + .manager {
+        border-top: 1px solid var(--mf-line);
     }
 
     .name {
-        margin-top: 0.3em;
-        font-size: 1em;
-        line-height: 1.1em;
-        flex-grow: 1;
-        word-break: break-word;
-        color: var(--g444);
-        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        font-size: 0.92rem;
+        font-weight: 600;
+        line-height: 1.15;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: var(--mf-text);
     }
 
-    .bye {
-        color: #999;
+    .manager.lead .name {
+        color: var(--mf-ion);
+    }
+
+    .final .manager.lead .name {
+        color: #f5d56b;
+    }
+
+    .bye,
+    .tbd {
+        font-weight: 500;
         font-style: italic;
+        color: var(--mf-dim);
     }
 
     .avatar {
-        vertical-align: middle;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
-        height: 25px;
-        width: 25px;
-        margin: 0;
-        border: 0.25px solid #777;
-        background-color: #eee;
+        object-fit: cover;
+        background: #000;
+        border: 1px solid var(--mf-line-strong);
+    }
+
+    .avatarBye {
+        opacity: 0.25;
+        border-style: dashed;
     }
 
     .points {
-        line-height: 1.1em;
-        font-size: 0.85em;
-        padding-left: 1em;
-        color: var(--g333);
         text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .actualPoints {
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--mf-text);
+    }
+
+    .manager.lead .actualPoints {
+        color: var(--mf-ion);
+        text-shadow: 0 0 10px var(--mf-ion-glow);
+    }
+
+    .final .manager.lead .actualPoints {
+        color: #f5d56b;
+        text-shadow: 0 0 10px rgba(245, 213, 107, 0.5);
     }
 
     .projectedPoints {
-        font-size: 0.8em;
-        color: var(--g999);
+        margin-top: 2px;
+        font-size: 0.66rem;
+        color: var(--mf-dim);
     }
 
-    /* SVG styling */
-
-	.lineParent {
+    /* SVG connector lines */
+    .lineParent {
         top: 0;
         left: 0;
         position: absolute;
-		overflow: visible;
-		width: 1px;
-		height: 1px;
-		pointer-events: none;
-	}
+        overflow: visible;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+    }
 
-	.line{
+    .line {
+        position: absolute;
         top: 0;
         left: 0;
-		position: absolute;
-		z-index: 1;
-	}
+        z-index: 1;
+        stroke: var(--mf-line-strong);
+        stroke-width: 2px;
+        filter: drop-shadow(0 0 3px var(--mf-ion-glow));
+    }
 
-    /* media queries */
-	@media (max-width: 1000px) {
+    @media (max-width: 1000px) {
         .match {
             width: 220px;
         }
-	}
+    }
 
-	@media (max-width: 800px) {
+    @media (max-width: 800px) {
         .match {
             width: 180px;
         }
-	}
+        .manager {
+            grid-template-columns: 24px minmax(0, 1fr) auto;
+            gap: 6px;
+            padding: 7px 8px;
+        }
+        .avatar {
+            width: 24px;
+            height: 24px;
+        }
+    }
 
     @media (max-width: 610px) {
         .match {
             width: 130px;
-            font-size: 0.9em;
+            margin: 1.5em 0.4em;
+            font-size: 0.85em;
         }
-
+        .manager {
+            grid-template-columns: 20px minmax(0, 1fr);
+        }
+        .points {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            text-align: left;
+        }
         .avatar {
-            height: 20px;
             width: 20px;
+            height: 20px;
+        }
+        .label {
+            font-size: 0.6rem;
+            letter-spacing: 0.08em;
+            padding: 2px 6px;
         }
     }
 
     @media (max-width: 500px) {
         .match {
-            width: 110px;
-            font-size: 0.8em;
+            width: 108px;
         }
     }
 
     @media (max-width: 410px) {
         .match {
-            width: 80px;
-            font-size: 0.6em;
+            width: 86px;
+            font-size: 0.7em;
         }
-    }
-
-    .avatarBye {
-        opacity: 0.3;
-        border: none;
     }
 
     .spacer {
@@ -333,44 +436,38 @@
 
 <div class="bracketColumn" bind:this={el}>
     {#if matchCol.length}
-        <p class="label" style="top: {labelY}px;">{label}</p>
+        <p class="label" class:final={isFinal} class:toilet={label === 'Toilet Bowl'} style="top: {labelY}px;">{label}</p>
     {/if}
     <!-- If we need to draw a bracket, include anchor points and include svgs to draw the  bracket -->
     {#each matchCol as matchups, inx}
-        <div class="match{matchups[0].m == selected ? ' selected' : ''}{matchups[0].m && matchups[1].roster_id ? ' clickable' : ''}" bind:this={anchors[Math.floor(inx / 2)][inx % 2 == 0 ? 't' : 'b']} onclick={() => {changeSelection(matchups[0].m, matchups[1].roster_id)}}>
-            {#each matchups as matchup}
-                <div class="manager">
-                    <div class="avatarPointsBlock">
-                        {#if !matchup.roster_id}
-                            <span />
-                        {/if}
-                        {#if matchup.roster_id || (!matchups.bye && !matchup.roster_id)}
-                            <img class="avatar{!matchups.bye && !matchup.roster_id ? ' avatarBye': ''}" src={getAvatarFromTeamManagers(leagueTeamManagers, matchup.roster_id, leagueTeamManagers.currentYear)} alt="team avatar" />
-                        {/if}
-                        {#if matchup.roster_id}
-                            <div class="points">
-                                <div class="actualPoints">{calculatePoints(matchup.points)}</div>
-                                <div class="projectedPoints">{calculatePotentialPoints(matchup.starters, ix, players)}</div>
-                            </div>
-                        {:else}
-                            <span />
-                        {/if}
-                    </div>
-                    <div class="name{matchups.bye && !matchup.roster_id ? ' bye': ''}">{getPlayoffName(matchup.roster_id, matchups.bye, leagueTeamManagers.currentYear)}</div>
+        {@const lead = leaderOf(matchups)}
+        <div class="match{matchups[0].m == selected ? ' selected' : ''}{matchups[0].m && matchups[1].roster_id ? ' clickable' : ''}{isFinal ? ' final' : ''}" bind:this={anchors[Math.floor(inx / 2)][inx % 2 == 0 ? 't' : 'b']} onclick={() => {changeSelection(matchups[0].m, matchups[1].roster_id)}}>
+            {#each matchups as matchup, side}
+                <div class="manager" class:lead={lead === side}>
+                    {#if matchup.roster_id || (!matchups.bye && !matchup.roster_id)}
+                        <img class="avatar{!matchups.bye && !matchup.roster_id ? ' avatarBye': ''}" src={getAvatarFromTeamManagers(leagueTeamManagers, matchup.roster_id, leagueTeamManagers.currentYear)} alt="" />
+                    {:else}
+                        <span></span>
+                    {/if}
+                    <div class="name{matchups.bye && !matchup.roster_id ? ' bye': ''}{!matchups.bye && !matchup.roster_id ? ' tbd' : ''}">{getPlayoffName(matchup.roster_id, matchups.bye, leagueTeamManagers.currentYear) || 'TBD'}</div>
+                    {#if matchup.roster_id}
+                        <div class="points">
+                            <div class="actualPoints">{calculatePoints(matchup.points)}</div>
+                            <div class="projectedPoints">proj {calculatePotentialPoints(matchup.starters, ix, players)}</div>
+                        </div>
+                    {:else}
+                        <span></span>
+                    {/if}
                 </div>
             {/each}
         </div>
         {#if drawBracket && inx % 2 == 0}
             <!-- Only draw the bracket once for each pair -->
             <svg class="lineParent">
-                <!-- top line of bracket -->
-                <line stroke-width="2px" stroke="#ccc"  x1="{anchors[Math.floor(inx / 2)].xLeft}" y1="{anchors[Math.floor(inx / 2)].yTop}" x2="{anchors[Math.floor(inx / 2)].xMiddle}" y2="{anchors[Math.floor(inx / 2)].yTop}" class="line"/>
-                <!-- vertical line of bracket -->
-                <line stroke-width="2px" stroke="#ccc"  x1="{anchors[Math.floor(inx / 2)].xMiddle}" y1="{anchors[Math.floor(inx / 2)].yTop}" x2="{anchors[Math.floor(inx / 2)].xMiddle}" y2="{anchors[Math.floor(inx / 2)].yBottom}" class="line"/>
-                <!-- right line of bracket -->
-                <line stroke-width="2px" stroke="#ccc"  x1="{anchors[Math.floor(inx / 2)].xMiddle}" y1="{anchors[Math.floor(inx / 2)].yMiddle}" x2="{anchors[Math.floor(inx / 2)].xRight}" y2="{anchors[Math.floor(inx / 2)].yMiddle}" class="line"/>
-                <!-- bottom line of bracket -->
-                <line stroke-width="2px" stroke="#ccc"  x1="{anchors[Math.floor(inx / 2)].xLeft}" y1="{anchors[Math.floor(inx / 2)].yBottom}" x2="{anchors[Math.floor(inx / 2)].xMiddle}" y2="{anchors[Math.floor(inx / 2)].yBottom}" class="line"/>
+                <line x1="{anchors[Math.floor(inx / 2)].xLeft}" y1="{anchors[Math.floor(inx / 2)].yTop}" x2="{anchors[Math.floor(inx / 2)].xMiddle}" y2="{anchors[Math.floor(inx / 2)].yTop}" class="line"/>
+                <line x1="{anchors[Math.floor(inx / 2)].xMiddle}" y1="{anchors[Math.floor(inx / 2)].yTop}" x2="{anchors[Math.floor(inx / 2)].xMiddle}" y2="{anchors[Math.floor(inx / 2)].yBottom}" class="line"/>
+                <line x1="{anchors[Math.floor(inx / 2)].xMiddle}" y1="{anchors[Math.floor(inx / 2)].yMiddle}" x2="{anchors[Math.floor(inx / 2)].xRight}" y2="{anchors[Math.floor(inx / 2)].yMiddle}" class="line"/>
+                <line x1="{anchors[Math.floor(inx / 2)].xLeft}" y1="{anchors[Math.floor(inx / 2)].yBottom}" x2="{anchors[Math.floor(inx / 2)].xMiddle}" y2="{anchors[Math.floor(inx / 2)].yBottom}" class="line"/>
             </svg>
         {/if}
     {:else}

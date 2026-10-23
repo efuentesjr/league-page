@@ -78,13 +78,30 @@
 
 <style>
     .brackets {
-        margin: 2em 0 6em;
+        width: 96%;
+        max-width: 1250px;
+        margin: 1.5em auto 4em;
+        padding: 10px 0 20px;
+        background:
+            linear-gradient(var(--mf-grid) 1px, transparent 1px) 0 0 / 100% 28px,
+            linear-gradient(90deg, var(--mf-grid) 1px, transparent 1px) 0 0 / 28px 100%,
+            radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--mf-ion) 10%, transparent), transparent 60%),
+            var(--mf-bg);
+        border: 1px solid var(--mf-line);
+        border-top: 2px solid var(--mf-ion);
+        clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
     }
 
     .bracket {
         margin: 1em 0;
+        padding-top: 1.2em;
         display: flex;
         justify-content: center;
+    }
+
+    .bracket + .bracket {
+        margin-top: 0.5em;
+        border-top: 1px dashed var(--mf-line);
     }
 
     .matchupEnclosure {
