@@ -133,6 +133,7 @@
     let el;
 
     let labelY = 0;
+    let labelEl;
 
     const resize = () => {
         const colTop = el?.getBoundingClientRect()?.top || 0;
@@ -142,8 +143,8 @@
         for(const key in anchors) {
             const tTop = anchors[key]?.t?.getBoundingClientRect()?.top || 0;
             const tBottom = anchors[key]?.t?.getBoundingClientRect()?.bottom || 0;
-            if(labelY == 0 && tTop > 0) {
-                labelY = tTop - colTop - 34;
+            if(key == 0 && tTop > 0) {
+                labelY = tTop - colTop - (labelEl?.offsetHeight || 24) - 8;
             };
 
             const tLeft= anchors[key]?.t?.getBoundingClientRect()?.left || 0;
@@ -456,7 +457,7 @@
 
 <div class="bracketColumn" bind:this={el}>
     {#if matchCol.length}
-        <p class="label" class:final={isFinal} class:toilet={label === 'Toilet Bowl'} style="top: {labelY}px;"><span class="long">{label}</span><span class="short">{shortLabel}</span></p>
+        <p bind:this={labelEl} class="label" class:final={isFinal} class:toilet={label === 'Toilet Bowl'} style="top: {labelY}px;"><span class="long">{label}</span><span class="short">{shortLabel}</span></p>
     {/if}
     <!-- If we need to draw a bracket, include anchor points and include svgs to draw the  bracket -->
     {#each matchCol as matchups, inx}
