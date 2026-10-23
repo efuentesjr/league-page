@@ -8,6 +8,11 @@
     let label = '';
 
     const setLabel = (l) => {
+        // consolation brackets end in a placement game (3rd place, 5th place...)
+        if(consolation && playoffLength - ix == 1) {
+            label = losers ? nThPlace(numRosters - (2 * (consolationNum + 1))) : nThPlace(1 + (2 * (consolationNum + 1)));
+            return;
+        }
         if(matchCol.length > 1) {
             switch (playoffLength - ix) {
                 case 1:
