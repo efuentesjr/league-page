@@ -998,8 +998,22 @@
     {/if}
 
     <section class="panel">
-        <div class="panelHead gold"><span>Awards &amp; Records</span></div>
+        <div class="panelHead gold"><span>Awards</span><small>titles won</small></div>
         <ManagerAwards
+            section="awards"
+            {leagueTeamManagers}
+            tookOver={viewManager.tookOver}
+            {awards}
+            {records}
+            {rosterID}
+            managerID={viewManager.managerID}
+        />
+    </section>
+
+    <section class="panel">
+        <div class="panelHead"><span>Records</span><small>spots in the league record book</small></div>
+        <ManagerAwards
+            section="records"
             {leagueTeamManagers}
             tookOver={viewManager.tookOver}
             {awards}

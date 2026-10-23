@@ -4,6 +4,8 @@
 	import { checkIfManagerReceivedAward, getTeamNameFromTeamManagers } from "$lib/utils/helperFunctions/universalFunctions";
 
     export let awards, records, rosterID, tookOver, leagueTeamManagers, managerID;
+    // 'awards' = titles only, 'records' = record book only, 'all' = both
+    export let section = 'all';
 
     let displayAwards = [];
 
@@ -213,6 +215,34 @@
 
     $: computePodiums(rosterID);
     $: sortedAwards = [...displayAwards].sort((x, y) => tierOf(x) - tierOf(y) || yearOf(y) - yearOf(x));
+    $: titles = sortedAwards.filter((a) => a.type === 'award');
+    $: recordRows = sortedAwards.filter((a) => a.type !== 'award');
+    $: allTimeRows = recordRows.filter((a) => String(a.type).startsWith('All-Time'));
+    $: seasonRows = recordRows.filter((a) => !String(a.type).startsWith('All-Time'));
+    $: formerTitles = titles.some((a) => a.former);
+    $: formerRecords = recordRows.some((a) => a.former);
+
+    const titleKicker = (a) => {
+        const t = tierOf(a);
+        if (t === 0) return 'League Champion';
+        if (t === 1) return 'Runner-up';
+        if (t === 2) return 'Third Place';
+        if (t === 3) return String(a.award).replace(/ Champion$/, '');
+        if (t === 9) return 'Toilet Bowl';
+        return String(a.award);
+    };
+    const titleName = (a) => {
+        const t = tierOf(a);
+        if (t === 0) return '1st Place';
+        if (t === 1) return '2nd Place';
+        if (t === 2) return '3rd Place';
+        if (t === 3) return 'Division Title';
+        if (t === 9) return 'Consolation Champion';
+        return computeAward(a.award);
+    };
+    const placeText = (n) => (n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : `${n}th`);
+    const recordStat = (a) =>
+        `${a.year ? `${a.year} ` : ''}${a.week ? `Week ${a.week} · ` : a.year ? '· ' : ''}${a.extraInfo}${a.wins ? ' wins' : a.iq ? '%' : ' pts'}`;
 
     const computeAward = (award) => {
         switch (award) {
@@ -480,28 +510,428 @@
             animation: none;
         }
     }
+
+    /* ================= TITLES: more bling ================= */
+    .titlesCase {
+        position: relative;
+        padding: 22px 14px 18px;
+        overflow: hidden;
+        background:
+            radial-gradient(ellipse at 50% -20%, rgba(255, 215, 0, 0.22), transparent 60%),
+            radial-gradient(circle at 15% 120%, rgba(245, 213, 107, 0.08), transparent 45%),
+            radial-gradient(circle at 85% 120%, rgba(245, 213, 107, 0.08), transparent 45%);
+    }
+
+    .titlesCase::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(115deg, transparent 40%, rgba(255, 236, 170, 0.1) 50%, transparent 60%);
+        background-size: 250% 100%;
+        animation: caseSweep 6s linear infinite;
+        pointer-events: none;
+    }
+
+    .titlesInner {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .title {
+        --metal: linear-gradient(150deg, #fff7d6 0%, #ffd84d 22%, #a8761a 50%, #ffd84d 78%, #fff7d6 100%);
+        --metal-text: linear-gradient(180deg, #fffbe8, #ffd84d 50%, #c48a1e);
+        --metal-glow: rgba(255, 210, 60, 0.6);
+        --edge: #f5d56b;
+        position: relative;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 200px;
+        padding: 16px 12px 18px;
+        text-align: center;
+        isolation: isolate;
+        overflow: hidden;
+        background:
+            radial-gradient(ellipse at 50% 30%, color-mix(in srgb, var(--edge) 26%, transparent), transparent 70%),
+            linear-gradient(180deg, #1a1606, var(--mf-panel-2) 60%);
+        border: 1px solid color-mix(in srgb, var(--edge) 55%, transparent);
+        border-top: 3px solid var(--edge);
+        box-shadow: inset 0 0 30px -12px var(--metal-glow);
+        clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+        transition: transform 0.25s ease;
+    }
+
+    /* foil sheen sweeping across each card */
+    .title::after {
+        content: '';
+        position: absolute;
+        inset: -40% -60%;
+        z-index: -1;
+        background: linear-gradient(105deg, transparent 42%, rgba(255, 245, 200, 0.16) 50%, transparent 58%);
+        transform: translateX(-60%);
+        animation: foil 5s ease-in-out infinite;
+        animation-delay: var(--d, 0s);
+        pointer-events: none;
+    }
+
+    @keyframes foil {
+        0%, 55% { transform: translateX(-60%); }
+        85%, 100% { transform: translateX(60%); }
+    }
+
+    .title:hover {
+        transform: translateY(-4px) scale(1.02);
+    }
+
+    .title.silver {
+        --metal: linear-gradient(150deg, #ffffff 0%, #d7dee8 25%, #6d7785 52%, #d7dee8 78%, #ffffff 100%);
+        --metal-text: linear-gradient(180deg, #ffffff, #d7dee8 55%, #8b95a3);
+        --metal-glow: rgba(215, 222, 232, 0.5);
+        --edge: #d7dee8;
+    }
+
+    .title.silver {
+        background:
+            radial-gradient(ellipse at 50% 30%, rgba(215, 222, 232, 0.2), transparent 70%),
+            linear-gradient(180deg, #13161c, var(--mf-panel-2) 60%);
+    }
+
+    .title.bronze {
+        --metal: linear-gradient(150deg, #ffe4c8 0%, #e3a56b 25%, #8a5122 52%, #e3a56b 78%, #ffe4c8 100%);
+        --metal-text: linear-gradient(180deg, #ffe9d4, #e3a56b 55%, #a8662f);
+        --metal-glow: rgba(227, 165, 107, 0.5);
+        --edge: #e3a56b;
+        background:
+            radial-gradient(ellipse at 50% 30%, rgba(227, 165, 107, 0.2), transparent 70%),
+            linear-gradient(180deg, #19110a, var(--mf-panel-2) 60%);
+    }
+
+    .title.plain {
+        --metal: linear-gradient(150deg, #b9c7da 0%, #5d708a 50%, #b9c7da 100%);
+        --metal-text: linear-gradient(180deg, #e8f4ff, #9fb3cc);
+        --metal-glow: rgba(112, 136, 170, 0.4);
+        --edge: var(--mf-plasma);
+        background: linear-gradient(180deg, #0d1422, var(--mf-panel-2) 60%);
+    }
+
+    .title.champ {
+        width: 230px;
+        border-top-width: 4px;
+        box-shadow: inset 0 0 40px -10px rgba(255, 215, 0, 0.75);
+    }
+
+    .titleKicker {
+        min-height: 1.2em;
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        background: var(--metal-text);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .hexWrap.big {
+        position: relative;
+        margin: 12px 0 10px;
+        filter: drop-shadow(0 0 14px var(--metal-glow));
+    }
+
+    .champ .hexWrap.big {
+        animation: champPulse 2.4s ease-in-out infinite;
+    }
+
+    .hexWrap.big .awardIcon {
+        width: 96px;
+        height: 110px;
+        background: var(--metal);
+    }
+
+    .champ .hexWrap.big .awardIcon {
+        width: 112px;
+        height: 128px;
+    }
+
+    .hexWrap.big .awardIcon::before {
+        inset: 4px;
+    }
+
+    .hexWrap.big .awardImage {
+        inset: 4px;
+        width: calc(100% - 8px);
+        height: calc(100% - 8px);
+    }
+
+    /* slow spinning ray burst behind the trophy */
+    .halo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: -1;
+        width: 170px;
+        height: 170px;
+        margin: -85px 0 0 -85px;
+        border-radius: 50%;
+        background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--edge) 38%, transparent) 0deg 8deg, transparent 8deg 22deg);
+        -webkit-mask: radial-gradient(circle, #000 25%, transparent 70%);
+        mask: radial-gradient(circle, #000 25%, transparent 70%);
+        animation: spin 18s linear infinite;
+        opacity: 0.85;
+    }
+
+    .champ .halo {
+        width: 210px;
+        height: 210px;
+        margin: -105px 0 0 -105px;
+        animation-duration: 12s;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .titleYear {
+        font-size: 1.9rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.04em;
+        background: var(--metal-text);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 0 10px var(--metal-glow));
+        font-variant-numeric: tabular-nums;
+    }
+
+    .champ .titleYear {
+        font-size: 2.3rem;
+    }
+
+    .titleName {
+        margin-top: 4px;
+        font-size: 0.86rem;
+        font-weight: 600;
+        color: var(--mf-text);
+    }
+
+    /* twinkling sparkles */
+    .spark {
+        position: absolute;
+        z-index: 1;
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+        filter: drop-shadow(0 0 4px var(--edge));
+        opacity: 0;
+        animation: twinkle 3.2s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .spark.s1 { top: 22%; left: 16%; animation-delay: calc(var(--d, 0s) + 0.2s); }
+    .spark.s2 { top: 30%; right: 14%; width: 9px; height: 9px; animation-delay: calc(var(--d, 0s) + 1.1s); }
+    .spark.s3 { top: 58%; left: 12%; width: 8px; height: 8px; animation-delay: calc(var(--d, 0s) + 1.9s); }
+    .spark.s4 { top: 50%; right: 18%; animation-delay: calc(var(--d, 0s) + 2.6s); }
+    .title.plain .spark { display: none; }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+        15% { opacity: 1; transform: scale(1.1) rotate(45deg); }
+        30% { opacity: 0; transform: scale(0.4) rotate(90deg); }
+    }
+
+    /* ================= RECORDS: compact list ================= */
+    .recordsCase {
+        padding: 6px 14px 14px;
+    }
+
+    .recGroup + .recGroup {
+        margin-top: 10px;
+    }
+
+    .recGroupHead {
+        padding: 8px 0 6px;
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--mf-dim);
+        border-bottom: 1px solid var(--mf-line);
+    }
+
+    .recRow {
+        --metal: linear-gradient(150deg, #fff3c4, #f5d56b 30%, #a7781d 60%, #f5d56b);
+        --tone: #f5d56b;
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 0;
+        border-bottom: 1px solid var(--mf-line);
+    }
+
+    .recRow:last-child {
+        border-bottom: 0;
+    }
+
+    .recRow.silver {
+        --metal: linear-gradient(150deg, #ffffff, #c9d1dc 30%, #6d7785 60%, #c9d1dc);
+        --tone: #c9d1dc;
+    }
+
+    .recRow.bronze {
+        --metal: linear-gradient(150deg, #ffe0c2, #e0a46a 30%, #8a5122 60%, #e0a46a);
+        --tone: #e0a46a;
+    }
+
+    .recRow.plain {
+        --metal: linear-gradient(150deg, #9fb3cc, #5d708a);
+        --tone: var(--mf-plasma);
+    }
+
+    .recHex {
+        position: relative;
+        width: 34px;
+        height: 39px;
+        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        background: var(--metal);
+    }
+
+    .recHex img {
+        position: absolute;
+        inset: 2px;
+        width: calc(100% - 4px);
+        height: calc(100% - 4px);
+        object-fit: cover;
+        clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        background: #050a16;
+    }
+
+    .recName {
+        min-width: 0;
+        font-size: 0.88rem;
+        font-weight: 600;
+    }
+
+    .recPlace {
+        min-width: 36px;
+        padding: 1px 6px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--tone);
+        border: 1px solid color-mix(in srgb, var(--tone) 60%, transparent);
+    }
+
+    .recStat {
+        min-width: 120px;
+        font-size: 0.8rem;
+        text-align: right;
+        color: var(--mf-dim);
+        font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 560px) {
+        .title,
+        .title.champ {
+            width: calc(50% - 8px);
+            padding: 12px 6px 14px;
+        }
+        .titlesInner {
+            gap: 10px;
+        }
+        .hexWrap.big .awardIcon,
+        .champ .hexWrap.big .awardIcon {
+            width: 72px;
+            height: 83px;
+        }
+        .halo,
+        .champ .halo {
+            width: 130px;
+            height: 130px;
+            margin: -65px 0 0 -65px;
+        }
+        .titleYear,
+        .champ .titleYear {
+            font-size: 1.5rem;
+        }
+        .recRow {
+            grid-template-columns: 34px minmax(0, 1fr) auto;
+        }
+        .recStat {
+            grid-column: 2 / -1;
+            min-width: 0;
+            text-align: left;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .titlesCase::before,
+        .title::after,
+        .halo,
+        .spark,
+        .champ .hexWrap.big {
+            animation: none;
+        }
+    }
 </style>
 
-<div class="awardsCase">
-    <div class="awardsCaseInner">
-        {#each sortedAwards as award, i}
-            <div class="award {metalOf(award)}" class:champ={tierOf(award) === 0}>
-                <div class="awardHeader">{award.type != 'award' ? award.type : ''}</div>
-                <div class="hexWrap">
-                    <div class="awardIcon" style="--d: {(i % 6) * 0.7}s">
-                        <img class="awardImage" src="{award.icon}" alt="trophy" />
+{#if section !== 'records'}
+<div class="titlesCase">
+    <div class="titlesInner">
+        {#each titles as award, i}
+            <div class="title {metalOf(award)}" class:champ={tierOf(award) === 0} style="--d: {(i % 5) * 0.9}s">
+                <span class="spark s1" aria-hidden="true"></span>
+                <span class="spark s2" aria-hidden="true"></span>
+                <span class="spark s3" aria-hidden="true"></span>
+                <span class="spark s4" aria-hidden="true"></span>
+                <div class="titleKicker">{titleKicker(award)}</div>
+                <div class="hexWrap big">
+                    <span class="halo" aria-hidden="true"></span>
+                    <div class="awardIcon" style="--d: {(i % 5) * 0.9}s">
+                        <img class="awardImage" src="{award.icon}" alt="" />
                     </div>
                 </div>
-                <div class="awardLabel">{award.type == 'award' ? `${award.year} ` : ''}{computeAward(award.award)}{award.former ? '*' : ''}</div>
-                {#if award.extraInfo}
-                    <div class="subText">{award.year ? `${award.year} ` : ''}{award.week ? `Week ${award.week} ` : ''}{award.year || award.week ? ' - ' : ''}{award.extraInfo}{award.wins ? ' Wins' : ''}{award.iq ? '%' : ''}{!award.wins && !award.iq ? 'pts' : ''}</div>
-                {/if}
+                <div class="titleYear">{award.year}{award.former ? '*' : ''}</div>
+                <div class="titleName">{titleName(award)}</div>
             </div>
         {:else}
-            <p class="sad">...nothing yet</p>
+            <p class="sad">No titles yet.</p>
         {/each}
     </div>
-    {#if formerGlobal}
-        <p class="disclaimer">*Awarded under a previous manager</p>
+    {#if formerTitles}
+        <p class="disclaimer">*Won under a previous manager</p>
     {/if}
 </div>
+{/if}
+
+{#if section !== 'awards'}
+<div class="recordsCase">
+    {#each [['All-Time Records', allTimeRows], ['Season Records', seasonRows]] as [label, rows]}
+        {#if rows.length}
+            <div class="recGroup">
+                <div class="recGroupHead">{label}</div>
+                {#each rows as award}
+                    <div class="recRow {metalOf(award)}">
+                        <div class="recHex"><img src="{award.icon}" alt="" /></div>
+                        <div class="recName">{award.type.replace(/^All-Time /, '')}</div>
+                        <span class="recPlace">{placeText(award.award)}</span>
+                        <span class="recStat">{recordStat(award)}{award.former ? '*' : ''}</span>
+                    </div>
+                {/each}
+            </div>
+        {/if}
+    {/each}
+    {#if !recordRows.length}
+        <p class="sad">Not in the record book yet.</p>
+    {/if}
+    {#if formerRecords}
+        <p class="disclaimer">*Set under a previous manager</p>
+    {/if}
+</div>
+{/if}
