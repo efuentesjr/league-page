@@ -1,5 +1,6 @@
 <script>
     import { round } from "$lib/utils/helper";
+    import { onMount, onDestroy, tick } from "svelte";
 	import { getAvatarFromTeamManagers, getTeamNameFromTeamManagers } from "$lib/utils/helperFunctions/universalFunctions";
 
     export let leagueTeamManagers, players, matchCol, playoffsStart, ix, playoffLength, consolation = false, losers = false, numRosters, consolationNum, selected;
@@ -164,6 +165,19 @@
     }
 
     $: resize(innerWidth);
+
+    // measure again once the cards are laid out, and whenever the column changes size
+    let ro;
+    onMount(async () => {
+        await tick();
+        requestAnimationFrame(() => { resize(); anchors = anchors; });
+        setTimeout(() => { resize(); anchors = anchors; }, 400);
+        if (typeof ResizeObserver !== 'undefined' && el) {
+            ro = new ResizeObserver(() => { resize(); anchors = anchors; });
+            ro.observe(el);
+        }
+    });
+    onDestroy(() => ro?.disconnect());
     
     let innerWidth;
 
