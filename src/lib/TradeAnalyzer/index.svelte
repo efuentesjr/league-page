@@ -304,7 +304,6 @@
 					const pv = curve ? pickValue(s, r, orig, slots, ranks) : { value: labelValue(s, r, orig, slots), label: null, equiv: null };
 					const parts = [orig === Number(rid) ? 'Own' : name(orig)];
 					if (slot) parts.push(`projected #${slot}`);
-					if (pv.equiv) parts.push(`= 12-team ${pv.equiv}`);
 					else if (pv.tier) parts.push(`${pv.tier.name} tier (roster #${pv.tier.rank})`);
 					else if (curve) parts.push('16-team round average');
 					list.push({
