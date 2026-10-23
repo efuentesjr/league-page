@@ -99,6 +99,18 @@
         justify-content: center;
     }
 
+    @media (max-width: 610px) {
+        .brackets {
+            width: 100%;
+            clip-path: none;
+            border-left: 0;
+            border-right: 0;
+        }
+        .bracket {
+            padding-top: 1.6em;
+        }
+    }
+
     .bracket + .bracket {
         margin-top: 0.5em;
         border-top: 1px dashed var(--mf-line);

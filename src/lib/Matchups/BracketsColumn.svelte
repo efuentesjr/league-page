@@ -143,7 +143,7 @@
             const tTop = anchors[key]?.t?.getBoundingClientRect()?.top || 0;
             const tBottom = anchors[key]?.t?.getBoundingClientRect()?.bottom || 0;
             if(labelY == 0 && tTop > 0) {
-                labelY = tTop - colTop - 25;
+                labelY = tTop - colTop - 34;
             };
 
             const tLeft= anchors[key]?.t?.getBoundingClientRect()?.left || 0;
@@ -173,6 +173,7 @@
 
 
     $: isFinal = label === 'Championship Match';
+    $: shortLabel = ({ 'Championship Match': 'Final', Quarterfinals: 'Quarters', Semifinals: 'Semis', 'Toilet Bowl': 'Toilet Bowl' })[label] || label.replace(' Place', '');
 
     // the team ahead once both have scored (highlights the leader / winner)
     const leaderOf = (matchups) => {
@@ -209,6 +210,10 @@
         background: var(--mf-panel);
         border: 1px solid var(--mf-line-strong);
         box-shadow: 0 0 14px -6px var(--mf-ion-glow);
+    }
+
+    .label .short {
+        display: none;
     }
 
     .label.final {
@@ -390,41 +395,56 @@
 
     @media (max-width: 610px) {
         .match {
-            width: 130px;
-            margin: 1.5em 0.4em;
-            font-size: 0.85em;
+            width: 112px;
+            margin: 2.2em 0.25em 1.2em;
+            font-size: 0.82em;
+            clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
         }
         .manager {
-            grid-template-columns: 20px minmax(0, 1fr);
+            grid-template-columns: 18px minmax(0, 1fr);
+            gap: 5px;
+            padding: 6px 6px;
+        }
+        .name {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            font-size: 0.8rem;
+            line-height: 1.15;
         }
         .points {
             grid-column: 1 / -1;
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
             text-align: left;
         }
+        .actualPoints {
+            font-size: 0.92rem;
+        }
+        .projectedPoints {
+            font-size: 0.62rem;
+        }
         .avatar {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
         }
         .label {
-            font-size: 0.6rem;
-            letter-spacing: 0.08em;
+            max-width: 104px;
             padding: 2px 6px;
+            font-size: 0.58rem;
+            letter-spacing: 0.08em;
+        }
+        .label .long {
+            display: none;
+        }
+        .label .short {
+            display: inline;
         }
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 400px) {
         .match {
-            width: 108px;
+            width: 100px;
         }
-    }
-
-    @media (max-width: 410px) {
-        .match {
-            width: 86px;
-            font-size: 0.7em;
+        .name {
+            font-size: 0.74rem;
         }
     }
 
@@ -436,7 +456,7 @@
 
 <div class="bracketColumn" bind:this={el}>
     {#if matchCol.length}
-        <p class="label" class:final={isFinal} class:toilet={label === 'Toilet Bowl'} style="top: {labelY}px;">{label}</p>
+        <p class="label" class:final={isFinal} class:toilet={label === 'Toilet Bowl'} style="top: {labelY}px;"><span class="long">{label}</span><span class="short">{shortLabel}</span></p>
     {/if}
     <!-- If we need to draw a bracket, include anchor points and include svgs to draw the  bracket -->
     {#each matchCol as matchups, inx}
