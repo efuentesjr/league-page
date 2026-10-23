@@ -1,5 +1,6 @@
 <script>
     import { round } from "$lib/utils/helper";
+    import { calculateManagerLineupIQ } from "$lib/utils/managerLineupIQ";
 	import { checkIfManagerReceivedAward, getTeamNameFromTeamManagers } from "$lib/utils/helperFunctions/universalFunctions";
 
     export let awards, records, rosterID, tookOver, leagueTeamManagers, managerID;
@@ -88,7 +89,9 @@
         }
         const winRecords = [...leagueManagerRecords].sort((a, b) => b.wins - a.wins);
         const pointsRecords = [...leagueManagerRecords].sort((a, b) => b.fptsFor - a.fptsFor);
-        const iqRecords = [...leagueManagerRecords].sort((a, b) => (b.fptsFor/b.potentialPoints) - (a.fptsFor/a.potentialPoints));
+        // same Manager Lineup IQ as the Records page (70% efficiency, 30% roster strength)
+        const iqRecords = calculateManagerLineupIQ(records.regularSeasonData.leagueManagerRecords)
+            .map((m) => ({ ...m, rosterID: m.managerID }));
 
         for(let i = 0; i < records.regularSeasonData.leagueWeekHighs.length; i++) {
             const leagueWeekRecord = records.regularSeasonData.leagueWeekHighs[i];
@@ -121,7 +124,7 @@
                     award: i + 1,
                     icon: '/awards/record-' + (i+1) + '.png',
                     type: 'All-Time Lineup IQ Record',
-                    extraInfo: round(iqRecord.fptsFor * 100 / iqRecord.potentialPoints),
+                    extraInfo: iqRecord.iq,
                     iq: true
                 })
             }
