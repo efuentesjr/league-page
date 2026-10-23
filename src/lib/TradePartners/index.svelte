@@ -499,6 +499,7 @@
 									</div>
 									{#each s.assets as a}
 										<div class="asset">{assetText(a)}{#if a.type !== 'faab' && a.points != null}<small> · {a.points} pts</small>{/if}</div>
+   										{#if a.flip}<div class="asset"><small>↪ Flipped {a.flip.season} wk {a.flip.week} for {a.flip.received.map(assetText).join(', ') || 'nothing'}</small></div>{/if}
 									{:else}
 										<div class="asset none">nothing</div>
 									{/each}
