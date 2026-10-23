@@ -222,6 +222,7 @@ const generateMatchupData = (t, tFrom, {m, r, playoffMatchups, i, playoffType, w
         fromWinners,
         w, // winning roster_id once the game is final (from Sleeper)
         l,
+        p: p ?? null, // placement game: 1 = final, 3 = 3rd place, 5 = 5th place...
     }
 
     if(t) {

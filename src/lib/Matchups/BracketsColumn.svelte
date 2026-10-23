@@ -12,7 +12,8 @@
     const setLabel = (l) => {
         // consolation brackets end in a placement game (3rd place, 5th place...)
         if(consolation && playoffLength - ix == 1) {
-            label = losers ? nThPlace(numRosters - (2 * (consolationNum + 1))) : nThPlace(1 + (2 * (consolationNum + 1)));
+            // MFFL's consolation bracket is winners-advance, so placement games count up from the top
+            label = losers ? 'Placement Games' : nThPlace(1 + (2 * (consolationNum + 1)));
             return;
         }
         if(matchCol.length > 1) {
@@ -196,10 +197,13 @@
 
     $: isFinal = label === 'Championship Match';
     // ping pong balls at stake: Toilet Bowl final (winner + runner-up), 3rd-place game (winner)
-    $: prize = !losers ? null
-        : !consolation && playoffLength - ix == 1 ? [{ n: toiletPrizes[0], who: 'winner' }, { n: toiletPrizes[1], who: 'runner-up' }]
-        : consolation && consolationNum == 0 && playoffLength - ix == 1 ? [{ n: toiletPrizes[2], who: 'winner' }]
-        : null;
+    const prizeFor = (matchups) => {
+        if (!losers || !matchups?.[0]?.m) return null;
+        const p = matchups[0].p;
+        if (p == 1 || (p == null && !consolation && playoffLength - ix == 1)) return [{ n: toiletPrizes[0], who: 'winner' }, { n: toiletPrizes[1], who: 'runner-up' }];
+        if (p == 3) return [{ n: toiletPrizes[2], who: 'winner · Toilet Bowl 3rd' }];
+        return null;
+    };
     $: shortLabel = ({ 'Championship Match': 'Final', Quarterfinals: 'Quarters', Semifinals: 'Semis', 'Toilet Bowl': 'Toilet Bowl' })[label] || label.replace(' Place', '');
 
     // the team ahead once both have scored (highlights the leader / winner)
@@ -553,9 +557,9 @@
                     {/if}
                 </div>
             {/each}
-            {#if prize && matchups[0].m}
+            {#if prizeFor(matchups)}
                 <div class="prize" title="Ping pong balls at stake">
-                    {#each prize as p, pi}
+                    {#each prizeFor(matchups) as p}
                         <span class="prizeItem">{#each Array(p.n) as _}<i class="ball"></i>{/each}<span>{p.who}</span></span>
                     {/each}
                 </div>
