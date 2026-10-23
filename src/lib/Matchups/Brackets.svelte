@@ -313,33 +313,33 @@
     }
 
     @media (max-width: 610px) {
+        /* phones: the champion box sits under the bracket, full width */
+        .bracket {
+            flex-wrap: wrap;
+        }
         .champCol {
-            width: 96px;
-            padding: 40px 2px 0;
+            flex: 0 0 100%;
+            width: 100%;
+            margin-top: 10px;
+            padding: 38px 0 0;
         }
         .champCol::before {
-            left: -0.5em;
-            width: calc(0.5em + 2px);
-        }
-        .champLabel {
-            font-size: 0.56rem;
-            letter-spacing: 0.06em;
-            padding: 2px 5px;
-            white-space: nowrap;
+            display: none;
         }
         .champCard {
-            padding: 10px 4px;
+            max-width: 240px;
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 12px;
         }
         .champHex {
-            width: 38px;
-            height: 44px;
+            width: 40px;
+            height: 46px;
         }
-        .champName {
-            font-size: 0.74rem;
-            overflow-wrap: anywhere;
-        }
-        .champSub {
-            display: none;
+        .champSub,
+        .champBalls {
+            flex-basis: 100%;
         }
     }
 
