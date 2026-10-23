@@ -87,7 +87,7 @@ export const tabs = [
   },
   {
     icon: 'movie',
-    label: 'Championship Videos',
+    label: 'Hall of Champions',
     dest: '/champ-videos',
     key: 'champ-videos'
   },
