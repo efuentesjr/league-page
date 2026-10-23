@@ -32,3 +32,29 @@ export const gradeTone = (grade) => {
 	if (grade === 'F') return 'bad';
 	return 'muted'; // Too early, Pending, Wash, FAAB deal
 };
+
+/*
+ * When a trade happened. Sleeper files every offseason trade under "week 1" of
+ * the new season, so trades made before that season's Week 1 kickoff (the
+ * Thursday after Labor Day) are labeled "Offseason" with their real date.
+ */
+const kickoff = (season) => {
+	const d = new Date(Number(season), 8, 1); // Sept 1
+	while (d.getDay() !== 1) d.setDate(d.getDate() + 1); // Labor Day (first Monday)
+	d.setDate(d.getDate() + 3); // Thursday opener
+	return d.getTime();
+};
+
+export const tradeDate = (t) =>
+	t?.timestamp
+		? new Date(Number(t.timestamp)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/Chicago' })
+		: null;
+
+export const isOffseasonTrade = (t) => !!t?.timestamp && Number(t.week || 1) <= 1 && Number(t.timestamp) < kickoff(t.season);
+
+/** "Mar 14, 2023 · Offseason" or "Oct 2, 2023 · Week 5" */
+export const tradeWhen = (t) => {
+	const date = tradeDate(t);
+	if (!date) return `${t.season} · Week ${t.week}`;
+	return isOffseasonTrade(t) ? `${date} · Offseason` : `${date} · Week ${t.week}`;
+};

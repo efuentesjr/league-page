@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 	import LinearProgress from '@smui/linear-progress';
 	import { getLeagueTeamManagers, loadPlayers, waitForAll, gotoManager } from '$lib/utils/helper';
-	import { getTradeGrades, gradeTone } from '$lib/utils/helperFunctions/tradeGradesClient';
+	import { getTradeGrades, gradeTone, tradeWhen } from '$lib/utils/helperFunctions/tradeGradesClient';
 	import { getManagerHistory } from '$lib/utils/helperFunctions/managerInsights';
 	import { GHOST_MANAGERS } from '$lib/utils/helperFunctions/playoffRounds';
 
@@ -110,7 +110,7 @@
 	const sideManager = (side) => String(side.managers?.[0] ?? `r${side.rosterID}`);
 	const pairKey = (a, b) => (a < b ? `${a}|${b}` : `${b}|${a}`);
 	const isSettled = (t) => t.sides.every((s) => !['Too early', 'Pending', 'Wash', 'FAAB deal'].includes(s.grade));
-	const when = (t) => `${t.season} wk ${t.week}`;
+	const when = (t) => tradeWhen(t);
 	const signed = (v) => `${v > 0 ? '+' : ''}${Math.round(v)}`;
 
 	// ---------- partnerships ----------

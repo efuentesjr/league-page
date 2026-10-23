@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 	import LinearProgress from '@smui/linear-progress';
 	import { getLeagueTeamManagers, loadPlayers, waitForAll, gotoManager } from '$lib/utils/helper';
-	import { getTradeGrades, gradeTone } from '$lib/utils/helperFunctions/tradeGradesClient';
+	import { getTradeGrades, gradeTone, tradeWhen } from '$lib/utils/helperFunctions/tradeGradesClient';
 	import { MIN_WEEKS } from '$lib/utils/helperFunctions/tradeGrades';
 	import { GHOST_MANAGERS } from '$lib/utils/helperFunctions/playoffRounds';
 
@@ -69,7 +69,7 @@
 	const continuesText = (side, trades) => {
 		const earlier = side.continues.map((id) => trades.find((t) => t.id === id)).filter(Boolean);
 		if (!earlier.length) return '';
-		const labels = [...new Set(earlier.map((t) => `${t.season} week ${t.week}`))];
+		const labels = [...new Set(earlier.map((t) => tradeWhen(t)))];
 		const from =
 			earlier.length === 1
 				? `the ${labels[0]} trade`
@@ -171,7 +171,7 @@
 									<span class="grade tone-{gradeTone(f.loser.grade)}">{f.loser.grade}</span>
 								</div>
 								<div class="fleeceDetail">
-									{f.t.season} week {f.t.week}: {Math.round(f.winner.value)} pts vs {Math.round(f.loser.value)} pts
+									{tradeWhen(f.t)}: {Math.round(f.winner.value)} pts vs {Math.round(f.loser.value)} pts
 									<span class="dim">(+{Math.round(f.margin)})</span>
 								</div>
 							</div>
@@ -195,7 +195,7 @@
 				{#each shown as t (t.id)}
 					<article class="trade">
 						<div class="tradeMeta">
-							{t.season} · week {t.week}
+							{tradeWhen(t)}
 							{#if t.weeks}<span class="dim">· graded over {t.weeks} week{t.weeks === 1 ? '' : 's'}</span>{/if}
 							{#if t.conditional}<span class="conditionalTag">Conditional</span>{/if}
 						</div>
